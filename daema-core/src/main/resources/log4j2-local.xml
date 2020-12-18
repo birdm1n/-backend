@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" scan="true" scanPeriod="60 seconds">
+    <Properties>
+        <Property name="logNm">sellove</Property>
+        <Property name="layoutPattern">%d{yyyy/MM/dd HH:mm:ss,SSS} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red,
+            INFO=green, DEBUG=blue} %highlight{[%t]} %c{1}(%M:%L) - %m%n
+        </Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console_Appender" target="SYSTEM_OUT">
+            <PatternLayout pattern="${layoutPattern}"/>
+        </Console>
+        <RollingFile name="File_Appender" fileName="d://logs/${logNm}.log" filePattern="d://logs/%d{yyyy}/%d{MM}/%d{dd}/%i.log.gz">
+            <PatternLayout pattern="${layoutPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10Mb"/>
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy max="500" fileIndex="min"/>
+        </RollingFile>
+        <RollingFile name="Error_Appender" fileName="d://logs/error_${logNm}.log" filePattern="d://logs/%d{yyyy}/%d{MM}/%d{dd}/error_%i.log.gz">
+            <PatternLayout pattern="${layoutPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10Mb"/>
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy max="500" fileIndex="min"/>
+        </RollingFile>
+    </Appenders>
+    <Root level="info" additivity="false">
+        <AppenderRef ref="Console_Appender"/>
+        <AppenderRef ref="File_Appender"/>
+    </Root>
+    <Logger name="org.springframework" level="debug" additivity="false">
+        <AppenderRef ref="Console_Appender" />
+        <AppenderRef ref="File_Appender"/>
+    </Logger>
+    <Logger name="org.springframework" level="error" additivity="false">
+        <AppenderRef ref="Error_Appender"/>
+        <AppenderRef ref="Console_Appender" />
+    </Logger>
+    <Logger name="com.daema" level="info" additivity="false">
+        <AppenderRef ref="Console_Appender" />
+        <AppenderRef ref="File_Appender"/>
+    </Logger>
+    <Logger name="com.daema" level="error" additivity="false">
+        <AppenderRef ref="Error_Appender"/>
+        <AppenderRef ref="Console_Appender" />
+    </Logger>
+
+    <Logger name="jdbc" level="FATAL" additivity="false" >
+        <AppenderRef ref="Console_Appender" />
+    </Logger>
+    <Logger name="jdbc.connection" level="FATAL" additivity="false">
+        <AppenderRef ref="Console_Appender" />
+    </Logger>
+    <Logger name="jdbc.sqlonly" level="FATAL" additivity="false">
+        <AppenderRef ref="Console_Appender" />
+    </Logger>
+    <Logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+        <AppenderRef ref="Console_Appender" />
+    </Logger>
+    <Logger name="jdbc.audit" level="FATAL" additivity="false">
+        <AppenderRef ref="Console_Appender" />
+    </Logger>
+    <Logger name="jdbc.resultset" level="FATAL" additivity="false">
+        <AppenderRef ref="Console_Appender" />
+    </Logger>
+    <Logger name="jdbc.resultsettable" level="DEBUG" additivity="false">
+        <AppenderRef ref="Console_Appender" />
+    </Logger>
+</Configuration>

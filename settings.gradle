@@ -1,0 +1,3 @@
+rootProject.name = 'daema'
+include 'daema-core'
+include 'daema-adjustment'

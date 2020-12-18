@@ -1,0 +1,57 @@
+buildscript {
+    ext {
+        springBootVersion = '2.3.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+subprojects {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+
+    group = 'com.daema'
+    version = ''
+    sourceCompatibility = '1.8'
+
+    repositories {
+        mavenCentral()
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+        /*all {
+            exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        }*/
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
+}
+
+project(':daema-core'){
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+
+    }
+}
+
+project(':daema-adjustment'){
+    dependencies {
+        compile project(':daema-core')
+    }
+}
