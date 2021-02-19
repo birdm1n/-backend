@@ -1,3 +1,5 @@
 rootProject.name = 'daema'
 include 'daema-core'
 include 'daema-adjustment'
+include 'daema-api'
+

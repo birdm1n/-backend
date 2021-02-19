@@ -55,3 +55,9 @@ project(':daema-adjustment'){
         compile project(':daema-core')
     }
 }
+
+project(':daema-api'){
+    dependencies {
+        compile project(':daema-core')
+    }
+}

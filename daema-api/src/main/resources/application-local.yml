@@ -1,0 +1,10 @@
+--- #local 환경
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: local
+
+logging:
+  config: classpath:logback-spring.xml
