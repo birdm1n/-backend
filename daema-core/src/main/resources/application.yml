@@ -1,0 +1,45 @@
+--- #local 환경
+
+spring:
+  profiles:
+    active: local
+  h2:
+    console:
+      enabled: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/daema
+    username: 1000lima
+    password: 1000lima
+  jpa:
+    generate-ddl: true
+    show-sql: true
+
+--- #test 환경
+
+spring:
+  profiles:
+    active: test
+  jpa:
+    generate-ddl: false
+      show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://211.115.206.199:3306/cardmobile?serverTimezone=UTC
+    username: cardmobile
+    password: Zkemahqkdlf199@
+
+--- #prod 환경
+
+spring:
+  profiles:
+    active: prod
+  jpa:
+    generate-ddl: false
+      show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://211.115.206.199:3306/cardmobile?serverTimezone=UTC
+    username: cardmobile
+    password: Zkemahqkdlf199@
+
