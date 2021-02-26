@@ -7,8 +7,7 @@ server:
   port: 8080
 
 spring:
-  profiles:
-    active: local
+  profiles: local
   redis:
     host: localhost
     port: 6379
@@ -17,6 +16,23 @@ spring:
         min-idle: 2
         max-idle: 10
         max-active: 10
+  h2:
+    console:
+      enabled: true
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/daema
+    username: 1000lima
+    password: 1000lima
+    sql-script-encoding: UTF-8
+    schema: classpath:./db/h2/schema.sql
+    data: classpath:./db/h2/data.sql
+    continue-on-error: true #table, data exists exception ignore
 
 --- #test 환경
 
@@ -24,8 +40,22 @@ server:
   port: 8080
 
 spring:
-  profiles:
-    active: test
+  profiles: test
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/daema?characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Seoul
+    username: root
+    password: qwer1324
+    sql-script-encoding: UTF-8
+    schema: classpath:./db/mysql/schema.sql
+    data: classpath:./db/mysql/data.sql
+    initialization-mode: always
+
 
 --- #prod 환경
 
@@ -33,5 +63,4 @@ server:
   port: 8080
 
 spring:
-  profiles:
-    active: prod
+  profiles: prod

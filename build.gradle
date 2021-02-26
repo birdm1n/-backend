@@ -50,12 +50,6 @@ project(':daema-core'){
     }
 }
 
-project(':daema-adjustment'){
-    dependencies {
-        compile project(':daema-core')
-    }
-}
-
 project(':daema-api'){
     dependencies {
         compile project(':daema-core')

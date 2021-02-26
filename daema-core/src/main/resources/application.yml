@@ -1,8 +1,7 @@
 --- #local 환경
 
 spring:
-  profiles:
-    active: local
+  profiles: local
   h2:
     console:
       enabled: true
@@ -18,8 +17,7 @@ spring:
 --- #test 환경
 
 spring:
-  profiles:
-    active: test
+  profiles: test
   jpa:
     generate-ddl: false
       show-sql: true
@@ -32,8 +30,7 @@ spring:
 --- #prod 환경
 
 spring:
-  profiles:
-    active: prod
+  profiles: prod
   jpa:
     generate-ddl: false
       show-sql: true
