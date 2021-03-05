@@ -55,6 +55,7 @@ spring:
     schema: classpath:./db/mysql/schema.sql
     data: classpath:./db/mysql/data.sql
     initialization-mode: always
+    continue-on-error: true #table, data exists exception ignore
 
 
 --- #prod 환경
