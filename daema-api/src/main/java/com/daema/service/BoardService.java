@@ -17,8 +17,11 @@ import java.util.stream.Stream;
 @Service
 public class BoardService {
 
-	@Autowired
-	private BoardRepository boardRepository;
+	private final BoardRepository boardRepository;
+
+	public BoardService(BoardRepository boardRepository) {
+		this.boardRepository = boardRepository;
+	}
 
 	public BoardResponseDto getBoardList() {
 

@@ -4,22 +4,22 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class PagingDto {
 
-	@ApiModelProperty(value = "게시물 총 개수")
+	@ApiModelProperty(value = "게시물 총 개수", example = "0")
 	private int totalCnt;
 
-	@ApiModelProperty(value = "페이지 번호")
+	@ApiModelProperty(value = "페이지 번호", example = "0")
 	private int pageNo;
 
-	@ApiModelProperty(value = "페이지당 노출 갯수")
+	@ApiModelProperty(value = "페이지당 노출 갯수", example = "10")
 	private int perPageCnt;
 
-	@ApiModelProperty(value = "노출 페이징수")
+	@ApiModelProperty(value = "노출 페이징수", example = "10")
 	private int pageRange;
 
-	@ApiModelProperty(value = "페이징 시작")
+	@ApiModelProperty(value = "페이징 시작", example = "0")
 	private int pageStartNo;
 
-	@ApiModelProperty(value = "페이징 종료", hidden = true)
+	@ApiModelProperty(value = "페이징 종료", hidden = true, example = "0")
 	private int pageEndNo;
 
 	public PagingDto () {

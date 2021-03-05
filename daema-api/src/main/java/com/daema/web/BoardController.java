@@ -4,7 +4,6 @@ import com.daema.api.response.enums.ResponseCodeEnum;
 import com.daema.api.response.exception.ProcessErrorException;
 import com.daema.api.response.io.CommonResponse;
 import com.daema.api.response.service.ResponseService;
-import com.daema.domain.Board;
 import com.daema.dto.BoardDto;
 import com.daema.dto.BoardRequestDto;
 import com.daema.dto.BoardResponseDto;
@@ -12,7 +11,6 @@ import com.daema.service.BoardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,11 +19,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/api/sample")
 public class BoardController {
 
-    @Autowired
-    private BoardService boardService;
+    private final BoardService boardService;
 
-    @Autowired
-    private ResponseService responseService;
+    private final ResponseService responseService;
+
+    public BoardController(BoardService boardService, ResponseService responseService) {
+        this.boardService = boardService;
+        this.responseService = responseService;
+    }
 
     @ApiOperation(value = "게시판 조회", notes = "게시판을 목록으로 조회합니다")
     @GetMapping("")
@@ -78,7 +79,7 @@ public class BoardController {
 
     @ApiOperation(value = "게시물 상세", notes = "특정 게시물을 조회합니다")
     @GetMapping("/{boardNo}")
-    public ResponseEntity<CommonResponse<Board>> getBoardDetail(@ApiParam(value = "게시글 번호", required = true) @PathVariable(value = "boardNo") String boardNo) {
+    public ResponseEntity<CommonResponse<BoardDto>> getBoardDetail(@ApiParam(value = "게시글 번호", required = true) @PathVariable(value = "boardNo") String boardNo) {
         try{
             return responseService.getResponseMessageAsRetrieveResult(boardService.getBoardDetail(boardNo), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
         }catch (Exception e){
@@ -89,7 +90,7 @@ public class BoardController {
 
     @ApiOperation(value = "게시물 삭제", notes = "특정 게시물을 삭제합니다")
     @DeleteMapping("/{boardNo}")
-    public ResponseEntity<CommonResponse<Void>> deleteBoard(@ApiParam(value = "게시글 번호", required = true) @PathVariable(value = "boardNo") String boardNo) throws Exception {
+    public ResponseEntity<CommonResponse<Void>> deleteBoard(@ApiParam(value = "게시글 번호", required = true) @PathVariable(value = "boardNo") String boardNo) {
         return responseService.getResponseMessageAsCUD(boardService.deleteBoard(boardNo));
     }
 }
