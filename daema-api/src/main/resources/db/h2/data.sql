@@ -1,4 +1,4 @@
-truncate table board;
+truncate table board restart identity;
 truncate table comte_cop_seq;
 truncate table comtn_bbs;
 truncate table comtn_bbsmaster;
@@ -33,9 +33,9 @@ truncate table comtn_login_log;
 truncate table comtn_progrm_list;
 
 
-insert into board values (1, '11','11','11');
-insert into board values (2, '22','22','22');
-insert into board values (3, '33','33','33');
+insert into board (title, writer, content) values ('11','11','11');
+insert into board (title, writer, content) values ('22','22','22');
+insert into board (title, writer, content) values ('33','33','33');
 
 -- ID Generator
 INSERT INTO comte_cop_seq ( TABLE_NAME, NEXT_ID ) VALUES ('ADBKUSER_ID', 1);

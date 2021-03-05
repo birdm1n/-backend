@@ -1,13 +1,18 @@
 package com.daema.service;
 
+import com.daema.api.response.enums.ServiceReturnMsgEnum;
 import com.daema.domain.Board;
 import com.daema.dto.BoardDto;
+import com.daema.dto.BoardResponseDto;
 import com.daema.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class BoardService {
@@ -15,8 +20,18 @@ public class BoardService {
 	@Autowired
 	private BoardRepository boardRepository;
 
-	public List<Board> getBoardList() {
-		return boardRepository.findAll();
+	public BoardResponseDto getBoardList() {
+
+		List<Board> boardList = boardRepository.findAll();
+
+		BoardResponseDto boardResponseDto = new BoardResponseDto();
+		boardResponseDto.setTotalCnt(boardList.size());
+		boardResponseDto.setBoardList(boardList.stream()
+				.map(BoardDto::new)
+				//.map(boardEntity -> BoardDto.from(boardEntity))
+				.collect(Collectors.toList()));
+
+		return boardResponseDto;
 	}
 
 	public String saveBoard(BoardDto boardDto) throws Exception {
@@ -28,20 +43,15 @@ public class BoardService {
 			// 강제 오류 발생. 예외 처리 테스트
 			// RaiseException.numberFormatException();
 
-			Optional<Board> boardInfo = boardRepository.findById(boardDto.getBoardNo());
+			Board board = new Board();
+			board.setTitle(boardDto.getTitle());
+			board.setWriter(boardDto.getWriter());
+			board.setContent(boardDto.getContent());
 
-			if (!boardInfo.isPresent()) {
-				Board board = new Board();
-				board.setTitle(boardDto.getTitle());
-				board.setWriter(boardDto.getWriter());
-				board.setContent(boardDto.getContent());
+			boardRepository.save(board);
 
-				boardRepository.save(board);
+			retVal = ServiceReturnMsgEnum.SUCCESS.name();
 
-				retVal = "success";
-			} else {
-				retVal = "isPresent";
-			}
 		}catch (Exception e){
 			e.printStackTrace();
 			throw new Exception(e);
@@ -50,30 +60,32 @@ public class BoardService {
 		return retVal;
 	}
 
-	public Board getBoardDetail(String boardNo) {
-		return boardRepository.findById(Long.parseLong(boardNo)).orElseGet(() -> null);
+	public BoardDto getBoardDetail(String boardNo) {
+		Board board = boardRepository.findById(Long.parseLong(boardNo)).orElseGet(() -> null);
+
+		return board != null ? BoardDto.from(board) : null;
 	}
 
 	public String updateBoard(BoardDto boardDto) {
 
-		String retVal = "false";
+		String retVal = ServiceReturnMsgEnum.FALSE.name();
 
 		try {
 			Optional<Board> boardInfo = boardRepository.findById(boardDto.getBoardNo());
 
 			if (boardInfo.isPresent()) {
 
-				Board board = new Board();
-				board.setBoardNo(boardDto.getBoardNo());
-				board.setTitle(boardDto.getTitle());
-				board.setWriter(boardDto.getWriter());
-				board.setContent(boardDto.getContent());
+				//Board.updateBoard(boardDto);
+				boardInfo.get().setBoardNo(boardDto.getBoardNo());
+				boardInfo.get().setTitle(boardDto.getTitle());
+				boardInfo.get().setWriter(boardDto.getWriter());
+				boardInfo.get().setContent(boardDto.getContent());
 
-				boardRepository.save(board);
+				boardRepository.flush();
 
-				retVal = "success";
+				retVal = ServiceReturnMsgEnum.SUCCESS.name();
 			} else {
-				retVal = "isNotPresent";
+				retVal = ServiceReturnMsgEnum.IS_NOT_PRESENT.name();
 			}
 		}catch (Exception e){
 			e.printStackTrace();
@@ -84,16 +96,16 @@ public class BoardService {
 
 	public String deleteBoard(String boardNo) {
 
-		String retVal = "false";
+		String retVal = ServiceReturnMsgEnum.FALSE.name();
 
 		try {
 			Optional<Board> boardInfo = boardRepository.findById(Long.parseLong(boardNo));
 
 			if (boardInfo.isPresent()) {
 				boardRepository.deleteById(Long.parseLong(boardNo));
-				retVal = "success";
+				retVal = ServiceReturnMsgEnum.SUCCESS.name();
 			} else {
-				retVal = "isNotPresent";
+				retVal = ServiceReturnMsgEnum.IS_NOT_PRESENT.name();
 			}
 		}catch (Exception e){
 			e.printStackTrace();

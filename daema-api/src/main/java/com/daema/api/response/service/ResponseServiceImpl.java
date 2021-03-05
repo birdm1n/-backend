@@ -1,5 +1,6 @@
 package com.daema.api.response.service;
 
+import com.daema.api.response.enums.ServiceReturnMsgEnum;
 import com.daema.api.response.io.CommonResponse;
 import com.daema.api.response.io.FailResponse;
 import com.daema.api.response.io.SuccessResponse;
@@ -88,7 +89,7 @@ public class ResponseServiceImpl implements ResponseService {
                 return fail();
             }
         }else if(retVal instanceof String){
-            if("success".equals(String.valueOf(retVal))) {
+            if( ServiceReturnMsgEnum.SUCCESS.name().equals(String.valueOf(retVal))) {
                 return ok();
             }else{
                 return fail(String.valueOf(retVal));

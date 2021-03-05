@@ -6,6 +6,8 @@ import com.daema.api.response.io.CommonResponse;
 import com.daema.api.response.service.ResponseService;
 import com.daema.domain.Board;
 import com.daema.dto.BoardDto;
+import com.daema.dto.BoardRequestDto;
+import com.daema.dto.BoardResponseDto;
 import com.daema.service.BoardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,8 +15,6 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Api(value = "Sample API", tags = "Sample API")
 @RestController
@@ -29,13 +29,13 @@ public class BoardController {
 
     @ApiOperation(value = "게시판 조회", notes = "게시판을 목록으로 조회합니다")
     @GetMapping("")
-    public ResponseEntity<CommonResponse<List<Board>>> getBoardList(BoardDto boardDto) {
+    public ResponseEntity<CommonResponse<BoardResponseDto>> getBoardList(BoardRequestDto requestDto) {
         try{
             // 단순 응답
-            // return responseService.ok(boardService.getBoardList());
+            return responseService.ok(boardService.getBoardList());
 
             // 조회 object 상태에 따라 성공, 실패 판단하여 응답
-            return responseService.getResponseMessageAsRetrieveResult(boardService.getBoardList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+            //return responseService.getResponseMessageAsRetrieveResult(boardService.getBoardList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
         }catch (Exception e){
             e.printStackTrace();
             return responseService.exception(e.getMessage());
