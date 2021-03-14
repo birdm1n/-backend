@@ -1,5 +1,6 @@
-package com.daema.dto;
+package com.daema.dto.response;
 
+import com.daema.dto.BoardDto;
 import com.daema.dto.common.PagingDto;
 import lombok.Getter;
 import lombok.Setter;

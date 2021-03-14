@@ -1,4 +1,4 @@
-package com.daema.dto;
+package com.daema.dto.request;
 
 import com.daema.dto.common.SearchParamDto;
 import lombok.Getter;
