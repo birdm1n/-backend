@@ -1,18 +1,15 @@
 package com.daema.service;
 
-import com.daema.api.response.enums.ServiceReturnMsgEnum;
+import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.domain.Board;
 import com.daema.dto.BoardDto;
 import com.daema.dto.BoardResponseDto;
 import com.daema.repository.BoardRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class BoardService {

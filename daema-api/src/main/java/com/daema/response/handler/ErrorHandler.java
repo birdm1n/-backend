@@ -1,9 +1,8 @@
-package com.daema.api.response.handler;
+package com.daema.response.handler;
 
-import com.daema.api.response.exception.CustomException;
-import com.daema.api.response.exception.ProcessErrorException;
-import com.daema.api.response.exception.RaiseException;
-import com.daema.api.response.exception.SearchErrorException;
+import com.daema.response.exception.CustomException;
+import com.daema.response.exception.ProcessErrorException;
+import com.daema.response.exception.SearchErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -30,13 +29,15 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception ex, Object body, HttpHeaders headers, HttpStatus httpErrorStatus, WebRequest request) {
 
-        CustomException customException = new CustomException(
-                httpErrorStatus.value(), ex.getMessage(), httpErrorStatus);
+        CustomException customException;
 
-        /*
-        CustomException customException = new CustomException(
-                httpErrorStatus.value(), "Exception occurred", httpErrorStatus);
-        */
+        if("prod".equals(System.getProperty("spring.profiles.active"))) {
+            customException = new CustomException(
+                    httpErrorStatus.value(), "Exception occurred", httpErrorStatus);
+        }else{
+            customException = new CustomException(
+                    httpErrorStatus.value(), ex.getMessage(), httpErrorStatus);
+        }
 
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put(STATUS, customException.getStatus());

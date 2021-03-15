@@ -1,16 +1,16 @@
-package com.daema.api.response.exception;
+package com.daema.response.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class SearchErrorException extends CustomException {
+public class ProcessErrorException extends CustomException {
 
     private static final long serialVersionUID = 7131287990911664640L;
 
-    public SearchErrorException(String message) {
+    public ProcessErrorException(String message) {
         super(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public SearchErrorException(int status, String message, HttpStatus httpErrorStatus) {
+    public ProcessErrorException(int status, String message, HttpStatus httpErrorStatus) {
         super(status, message, httpErrorStatus);
     }
 }

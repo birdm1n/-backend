@@ -1,4 +1,4 @@
-package com.daema.api.response.exception;
+package com.daema.response.exception;
 
 
 import lombok.Getter;

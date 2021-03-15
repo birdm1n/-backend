@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class PagingDto {
 
 	@ApiModelProperty(value = "게시물 총 개수", example = "0")
-	private int totalCnt;
+	private long totalCnt;
 
 	@ApiModelProperty(value = "페이지 번호", example = "0")
 	private int pageNo;
@@ -72,11 +72,11 @@ public class PagingDto {
 		this.pageEndNo = pageEndNo;
 	}
 
-	public int getTotalCnt() {
+	public long getTotalCnt() {
 		return totalCnt;
 	}
 
-	public void setTotalCnt(int totalCnt) {
+	public void setTotalCnt(long totalCnt) {
 		this.totalCnt = totalCnt;
 	}
 }

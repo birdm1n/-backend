@@ -1,4 +1,4 @@
-package com.daema.api.response.exception;
+package com.daema.response.exception;
 
 /**
  * 예외 처리 테스트를 위해 강제 에러 발생

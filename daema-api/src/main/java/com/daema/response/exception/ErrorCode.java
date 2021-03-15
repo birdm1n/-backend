@@ -1,4 +1,4 @@
-package com.daema.api.response.exception;
+package com.daema.response.exception;
 
 public class ErrorCode {
     public final static String E_401 = "401"; //Auth failure

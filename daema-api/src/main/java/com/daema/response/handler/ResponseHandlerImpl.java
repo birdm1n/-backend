@@ -1,54 +1,54 @@
-package com.daema.api.response.service;
+package com.daema.response.handler;
 
-import com.daema.api.response.enums.ServiceReturnMsgEnum;
-import com.daema.api.response.io.CommonResponse;
-import com.daema.api.response.io.FailResponse;
-import com.daema.api.response.io.SuccessResponse;
+import com.daema.response.enums.ServiceReturnMsgEnum;
+import com.daema.response.io.CommonResponseMessage;
+import com.daema.response.io.FailResponseMessage;
+import com.daema.response.io.SuccessResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-@Service
-public class ResponseServiceImpl implements ResponseService {
+@Component
+public class ResponseHandlerImpl implements ResponseHandler {
 
     @Override
-    public <T> ResponseEntity<CommonResponse<T>> ok() {
-        return makeResponseMessage(new SuccessResponse());
+    public <T> ResponseEntity<CommonResponseMessage<T>> ok() {
+        return makeResponseMessage(new SuccessResponseMessage());
     }
 
     @Override
-    public <T> ResponseEntity<CommonResponse<T>> ok(Object resultObj) {
-        return makeResponseMessage(new SuccessResponse(resultObj));
+    public <T> ResponseEntity<CommonResponseMessage<T>> ok(Object resultObj) {
+        return makeResponseMessage(new SuccessResponseMessage(resultObj));
     }
 
     @Override
-    public <T> ResponseEntity<CommonResponse<T>> fail() {
-        return makeResponseMessage(new FailResponse());
+    public <T> ResponseEntity<CommonResponseMessage<T>> fail() {
+        return makeResponseMessage(new FailResponseMessage());
     }
 
     @Override
-    public <T> ResponseEntity<CommonResponse<T>> fail(String resultMsg) {
-        return makeResponseMessage(new FailResponse(resultMsg));
+    public <T> ResponseEntity<CommonResponseMessage<T>> fail(String resultMsg) {
+        return makeResponseMessage(new FailResponseMessage(resultMsg));
     }
 
     @Override
-    public <T> ResponseEntity<CommonResponse<T>> fail(String resultCode, String resultMsg) {
-        return makeResponseMessage(new FailResponse(resultCode, resultMsg));
+    public <T> ResponseEntity<CommonResponseMessage<T>> fail(String resultCode, String resultMsg) {
+        return makeResponseMessage(new FailResponseMessage(resultCode, resultMsg));
     }
 
     @Override
-    public <T> ResponseEntity<CommonResponse<T>> exception(String exceptionMsg) {
-        return makeResponseMessage(new FailResponse(exceptionMsg));
+    public <T> ResponseEntity<CommonResponseMessage<T>> exception(String exceptionMsg) {
+        return makeResponseMessage(new FailResponseMessage(exceptionMsg));
     }
 
     /**
      * 조회 결과에 대한 분기만 처리. 2021-02-17. rhko
      */
     @Override
-    public <T> ResponseEntity<CommonResponse<T>> getResponseMessageAsRetrieveResult(Object retVal, String failCode, String failMsg) {
+    public <T> ResponseEntity<CommonResponseMessage<T>> getResponseMessageAsRetrieveResult(Object retVal, String failCode, String failMsg) {
         if(retVal != null){
             if(retVal instanceof List) {
                 try {
@@ -81,7 +81,7 @@ public class ResponseServiceImpl implements ResponseService {
      * 추가되는 타입은 add else if
      */
     @Override
-    public <T> ResponseEntity<CommonResponse<T>> getResponseMessageAsCUD(Object retVal) {
+    public <T> ResponseEntity<CommonResponseMessage<T>> getResponseMessageAsCUD(Object retVal) {
         if(retVal instanceof Boolean){
             if((Boolean) retVal) {
                 return ok();
@@ -102,7 +102,7 @@ public class ResponseServiceImpl implements ResponseService {
     /**
      * failCode 유무에 따라 리턴 구분 처리
      */
-    private <T> ResponseEntity<CommonResponse<T>> checkFailCode(String failCode, String failMsg){
+    private <T> ResponseEntity<CommonResponseMessage<T>> checkFailCode(String failCode, String failMsg){
         if(!StringUtils.isEmpty(failCode)){
             return fail(failCode, failMsg);
         }else{
@@ -110,7 +110,7 @@ public class ResponseServiceImpl implements ResponseService {
         }
     }
 
-    private <T> ResponseEntity<CommonResponse<T>> makeResponseMessage(CommonResponse commonResponse){
-        return new ResponseEntity<>(commonResponse, HttpStatus.OK);
+    private <T> ResponseEntity<CommonResponseMessage<T>> makeResponseMessage(CommonResponseMessage commonResponseMessage){
+        return new ResponseEntity<>(commonResponseMessage, HttpStatus.OK);
     }
 }

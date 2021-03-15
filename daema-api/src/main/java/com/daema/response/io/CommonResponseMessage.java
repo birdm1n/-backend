@@ -1,4 +1,4 @@
-package com.daema.api.response.io;
+package com.daema.response.io;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -16,7 +16,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @ApiModel
-public class CommonResponse<T> {
+public class CommonResponseMessage<T> {
 
     @ApiModelProperty(value = "응답 상태 코드", example = "200")
     private final int status = HttpStatus.OK.value();
@@ -33,12 +33,12 @@ public class CommonResponse<T> {
     @ApiModelProperty(value = "응답 일시", example = "yyyy-MM-dd kk:mm:ss")
     private String responseDateTime;
 
-    public CommonResponse(String resultCode){
+    public CommonResponseMessage(String resultCode){
         this.resultCode = resultCode;
         this.responseDateTime = LocalDate.now() + " " + LocalTime.now();
     }
 
-    public CommonResponse(String resultCode, String resultMsg, T resultObj){
+    public CommonResponseMessage(String resultCode, String resultMsg, T resultObj){
         this.resultCode = resultCode;
         this.resultMsg = resultMsg;
         this.data = resultObj;
@@ -50,15 +50,12 @@ public class CommonResponse<T> {
         String jsonString = null;
         try {
             jsonString = makeJson(this);
-        } catch (Exception e) {
-            jsonString = null;
-        }
+        } catch (Exception e) {}
         return jsonString;
     }
 
     private String makeJson(Object obj) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(obj);
-        return jsonString;
+        return mapper.writeValueAsString(obj);
     }
 }

@@ -1,4 +1,4 @@
-package com.daema.api.response.enums;
+package com.daema.response.enums;
 
 public enum ServiceReturnMsgEnum {
     SUCCESS,
