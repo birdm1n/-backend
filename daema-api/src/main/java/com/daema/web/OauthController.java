@@ -1,12 +1,12 @@
 package com.daema.web;
 
-import com.daema.api.response.io.CommonResponse;
 import com.daema.common.util.CookieUtil;
 import com.daema.common.util.JwtUtil;
 import com.daema.common.util.RedisUtil;
 import com.daema.domain.Member;
 import com.daema.dto.request.SocialDataRequest;
 import com.daema.service.AuthService;
+import com.daema.response.io.CommonResponse;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;

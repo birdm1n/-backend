@@ -1,8 +1,8 @@
 package com.daema.common.handler;
 
-import com.daema.api.response.io.CommonResponse;
 import com.daema.domain.enums.UserRole;
 import com.daema.dto.SecurityMember;
+import com.daema.response.io.CommonResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
 import org.springframework.security.access.AccessDeniedException;

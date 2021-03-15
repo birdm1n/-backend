@@ -1,4 +1,4 @@
-package com.daema.api.response.io;
+package com.daema.response.io;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

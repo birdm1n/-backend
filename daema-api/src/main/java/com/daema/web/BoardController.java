@@ -1,10 +1,10 @@
 package com.daema.web;
 
-import com.daema.api.response.enums.ResponseCodeEnum;
-import com.daema.api.response.exception.ProcessErrorException;
-import com.daema.api.response.io.CommonResponse;
-import com.daema.api.response.service.ResponseService;
 import com.daema.dto.BoardDto;
+import com.daema.response.enums.ResponseCodeEnum;
+import com.daema.response.exception.ProcessErrorException;
+import com.daema.response.handler.ResponseHandler;
+import com.daema.response.io.CommonResponse;
 import com.daema.dto.request.BoardRequestDto;
 import com.daema.dto.response.BoardResponseDto;
 import com.daema.service.BoardService;
@@ -21,11 +21,11 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    private final ResponseService responseService;
+    private final ResponseHandler responseHandler;
 
-    public BoardController(BoardService boardService, ResponseService responseService) {
+    public BoardController(BoardService boardService, ResponseHandler responseHandler) {
         this.boardService = boardService;
-        this.responseService = responseService;
+        this.responseHandler = responseHandler;
     }
 
     @ApiOperation(value = "게시판 조회", notes = "게시판을 목록으로 조회합니다")
@@ -33,13 +33,13 @@ public class BoardController {
     public ResponseEntity<CommonResponse<BoardResponseDto>> getBoardList(BoardRequestDto requestDto) {
         try{
             // 단순 응답
-            return responseService.ok(boardService.getBoardList());
+            return responseHandler.ok(boardService.getBoardList());
 
             // 조회 object 상태에 따라 성공, 실패 판단하여 응답
             //return responseService.getResponseMessageAsRetrieveResult(boardService.getBoardList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
         }catch (Exception e){
             e.printStackTrace();
-            return responseService.exception(e.getMessage());
+            return responseHandler.exception(e.getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ public class BoardController {
             // return responseService.ok(boardService.saveBoard(boardDto));
 
             // service 에서 리턴받은 CUD 결과에 따라 성공, 실패 판단하여 응답
-            return responseService.getResponseMessageAsCUD(boardService.saveBoard(boardDto));
+            return responseHandler.getResponseMessageAsCUD(boardService.saveBoard(boardDto));
         }catch (Exception e){
             e.printStackTrace();
             //예외처리 case1
@@ -74,23 +74,23 @@ public class BoardController {
     @ApiOperation(value = "게시물 수정", notes = "특정 게시물의 내용을 변경합니다")
     @PatchMapping("")
     public ResponseEntity<CommonResponse<Void>> updateBoard(@ApiParam(value = "게시판 domain", required = true) @RequestBody BoardDto boardDto) {
-        return responseService.getResponseMessageAsCUD(boardService.updateBoard(boardDto));
+        return responseHandler.getResponseMessageAsCUD(boardService.updateBoard(boardDto));
     }
 
     @ApiOperation(value = "게시물 상세", notes = "특정 게시물을 조회합니다")
     @GetMapping("/{boardNo}")
     public ResponseEntity<CommonResponse<BoardDto>> getBoardDetail(@ApiParam(value = "게시글 번호", required = true) @PathVariable(value = "boardNo") String boardNo) {
         try{
-            return responseService.getResponseMessageAsRetrieveResult(boardService.getBoardDetail(boardNo), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+            return responseHandler.getResponseMessageAsRetrieveResult(boardService.getBoardDetail(boardNo), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
         }catch (Exception e){
             e.printStackTrace();
-            return responseService.exception(e.getMessage());
+            return responseHandler.exception(e.getMessage());
         }
     }
 
     @ApiOperation(value = "게시물 삭제", notes = "특정 게시물을 삭제합니다")
     @DeleteMapping("/{boardNo}")
     public ResponseEntity<CommonResponse<Void>> deleteBoard(@ApiParam(value = "게시글 번호", required = true) @PathVariable(value = "boardNo") String boardNo) {
-        return responseService.getResponseMessageAsCUD(boardService.deleteBoard(boardNo));
+        return responseHandler.getResponseMessageAsCUD(boardService.deleteBoard(boardNo));
     }
 }

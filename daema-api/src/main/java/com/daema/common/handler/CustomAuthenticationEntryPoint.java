@@ -1,6 +1,6 @@
 package com.daema.common.handler;
 
-import com.daema.api.response.io.CommonResponse;
+import com.daema.response.io.CommonResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

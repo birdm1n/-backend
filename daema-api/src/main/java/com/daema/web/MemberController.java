@@ -1,6 +1,5 @@
 package com.daema.web;
 
-import com.daema.api.response.io.CommonResponse;
 import com.daema.common.util.CookieUtil;
 import com.daema.common.util.JwtUtil;
 import com.daema.common.util.RedisUtil;
@@ -10,6 +9,7 @@ import com.daema.dto.request.ChangePassword2Request;
 import com.daema.dto.request.LoginUserRequest;
 import com.daema.dto.request.VerifyEmailRequest;
 import com.daema.service.AuthService;
+import com.daema.response.io.CommonResponse;
 import lombok.extern.java.Log;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;

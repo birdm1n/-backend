@@ -2,19 +2,19 @@ package com.daema.response.io;
 
 import com.daema.response.enums.ResponseCodeEnum;
 
-public class FailResponseMessage extends CommonResponseMessage {
+public class FailResponse extends CommonResponse {
 
     private static final String RESULT_CODE = ResponseCodeEnum.FAIL.getResultCode();
 
-    public FailResponseMessage(){
+    public FailResponse(){
         super(RESULT_CODE);
     }
 
-    public FailResponseMessage(String resultMsg){
+    public FailResponse(String resultMsg){
         super(RESULT_CODE, resultMsg, null);
     }
 
-    public FailResponseMessage(String resultCode, String resultMsg){
+    public FailResponse(String resultCode, String resultMsg){
         super(resultCode, resultMsg, null);
     }
 }
