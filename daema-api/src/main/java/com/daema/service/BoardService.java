@@ -3,7 +3,7 @@ package com.daema.service;
 import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.domain.Board;
 import com.daema.dto.BoardDto;
-import com.daema.dto.BoardResponseDto;
+import com.daema.dto.response.BoardResponseDto;
 import com.daema.repository.BoardRepository;
 import org.springframework.stereotype.Service;
 

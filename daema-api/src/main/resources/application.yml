@@ -5,6 +5,10 @@ logging:
       hibernate:
         type: trace
 
+spring:
+  jwt:
+    secret: ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFjZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=
+
 --- #local 환경
 
 server:
@@ -42,6 +46,13 @@ spring:
     schema: classpath:./db/h2/schema.sql
     data: classpath:./db/h2/data.sql
     continue-on-error: true #table, data exists exception ignore
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+
+
 
 --- #test 환경
 
