@@ -103,10 +103,10 @@ public class ResponseHandlerImpl implements ResponseHandler {
      * failCode 유무에 따라 리턴 구분 처리
      */
     private <T> ResponseEntity<CommonResponse<T>> checkFailCode(String failCode, String failMsg){
-        if(!StringUtils.isEmpty(failCode)){
+        if(StringUtils.hasText(failCode)){
             return fail(failCode, failMsg);
         }else{
-            return StringUtils.isEmpty(failMsg) ? fail() : fail(failMsg);
+            return StringUtils.hasText(failMsg) ? fail(failMsg) : fail();
         }
     }
 

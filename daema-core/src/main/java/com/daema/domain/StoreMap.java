@@ -34,4 +34,8 @@ public class StoreMap {
         this.parentStoreId = parentStoreId;
         this.useYn = useYn;
     }
+
+    public void updateUseYn(StoreMap storeMap, String useYn){
+        storeMap.setUseYn(useYn);
+    }
 }

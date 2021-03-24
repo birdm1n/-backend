@@ -1,9 +1,9 @@
 package com.daema.service;
 
-import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.domain.Store;
 import com.daema.domain.StoreMap;
 import com.daema.domain.User2;
+import com.daema.domain.pk.StoreMapPK;
 import com.daema.dto.SaleStoreMgmtDto;
 import com.daema.dto.SaleStoreMgmtRequestDto;
 import com.daema.dto.SaleStoreUserWrapperDto;
@@ -12,13 +12,18 @@ import com.daema.dto.common.ResponseDto;
 import com.daema.repository.StoreMapRepository;
 import com.daema.repository.StoreRepository;
 import com.daema.repository.User2Repository;
+import com.daema.response.enums.ServiceReturnMsgEnum;
+import com.daema.response.exception.DataNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SaleStoreMgmtService {
@@ -38,6 +43,7 @@ public class SaleStoreMgmtService {
 	public ResponseDto<SaleStoreMgmtDto> getStoreList(SaleStoreMgmtRequestDto requestDto) {
 
 		PageRequest pageable = PageRequest.of(requestDto.getPageNo(), requestDto.getPerPageCnt());
+
 		Page<Store> dataList = storeRepository.getSearchPage(pageable);
 
 		return new ResponseDto(SaleStoreMgmtDto.class, dataList);
@@ -51,31 +57,18 @@ public class SaleStoreMgmtService {
 	}
 
 	@Transactional
-	public boolean insertStoreAndUserAndStoreMap(SaleStoreUserWrapperDto wrapperDto) throws Exception {
+	public void insertStoreAndUserAndStoreMap(SaleStoreUserWrapperDto wrapperDto) {
 
-		boolean success = false;
+		long resultStoreId = insertStore(wrapperDto.getSaleStore());
 
-		try {
+		UserMgmtDto userDto = wrapperDto.getUser();
+		userDto.setStoreId(resultStoreId);
 
-			long resultStoreId = insertStore(wrapperDto.getSaleStore());
+		insertUser(userDto);
 
-			UserMgmtDto userDto = wrapperDto.getUser();
-			userDto.setStoreId(resultStoreId);
-
-			insertUser(userDto);
-
-			if(wrapperDto.getParentStoreId() > 0){
-			    insertStoreMap(resultStoreId, wrapperDto.getParentStoreId());
-			}
-
-			success = true;
-
-		}catch (Exception e){
-			e.printStackTrace();
-			throw new Exception(e);
+		if(wrapperDto.getParentStoreId() > 0){
+			insertStoreMap(wrapperDto);
 		}
-
-		return success;
 	}
 
 	public long insertStore(SaleStoreMgmtDto saleStoreMgmtDto) {
@@ -89,7 +82,7 @@ public class SaleStoreMgmtService {
                         .returnZipCode(saleStoreMgmtDto.getReturnZipCode())
                         .returnAddr(saleStoreMgmtDto.getReturnAddr())
                         .returnAddrDetail(saleStoreMgmtDto.getReturnAddrDetail())
-                        .useYn("Y")
+                        .useYn(saleStoreMgmtDto.getUseYn())
                         .regiDateTime(LocalDateTime.now())
                     .build()
         ).getStoreId();
@@ -105,38 +98,34 @@ public class SaleStoreMgmtService {
                         .userPhone(userMgmtDto.getUserPhone())
                         .storeId(userMgmtDto.getStoreId())
                         .orgnztId(userMgmtDto.getOrgnztId())
-                        .userStatus("Y")
+                        .userStatus(userMgmtDto.getUserStatus())
                         .lastUpdDateTime(LocalDateTime.now())
                     .build()
         );
 	}
 
-	public String insertStoreMap(long resultStoreId, long parentStoreId) {
-        StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(resultStoreId, parentStoreId);
+	public void insertStoreMap(SaleStoreUserWrapperDto wrapperDto) {
+        StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(wrapperDto.getUser().getStoreId(), wrapperDto.getParentStoreId());
 
-        if(!Optional.ofNullable(storeMap).isPresent()) {
+        if(storeMap == null) {
 			storeMapRepository.save(
 					StoreMap.builder()
-							.storeId(resultStoreId)
-							.parentStoreId(parentStoreId)
-							.useYn("Y")
+							.storeId(wrapperDto.getUser().getStoreId())
+							.parentStoreId(wrapperDto.getParentStoreId())
+							.useYn(wrapperDto.getSaleStore().getUseYn())
 							.build()
 			);
-
-			return ServiceReturnMsgEnum.SUCCESS.name();
-		}else{
-        	return ServiceReturnMsgEnum.IS_NOT_PRESENT.name();
 		}
 	}
 
 	@Transactional
-	public String updateStoreInfo(SaleStoreUserWrapperDto wrapperDto) {
+	public void updateStoreInfo(SaleStoreUserWrapperDto wrapperDto) {
 
 		Store store = storeRepository.findStoreInfo(wrapperDto.getParentStoreId()
 				, wrapperDto.getSaleStore().getStoreId());
 
-		if(Optional.ofNullable(store).isPresent()) {
-
+		if(store != null) {
+			//TODO ifnull return 함수 추가
 			store.setStoreId(wrapperDto.getSaleStore().getStoreId());
 			store.setStoreName(wrapperDto.getSaleStore().getSaleStoreName());
 			store.setTelecom(wrapperDto.getSaleStore().getTelecom());
@@ -145,21 +134,44 @@ public class SaleStoreMgmtService {
 			store.setReturnZipCode(wrapperDto.getSaleStore().getReturnZipCode());
 			store.setReturnAddr(wrapperDto.getSaleStore().getReturnAddr());
 			store.setReturnAddrDetail(wrapperDto.getSaleStore().getReturnAddrDetail());
-			store.setUseYn("Y");
 
-			return ServiceReturnMsgEnum.SUCCESS.name();
-
+			if(StringUtils.hasText(wrapperDto.getSaleStore().getUseYn())) {
+				store.setUseYn(wrapperDto.getSaleStore().getUseYn());
+			}
 		}else{
-			return ServiceReturnMsgEnum.IS_NOT_PRESENT.name();
+			throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
 		}
 	}
 
-	public String deleteStore(String id) {
-		return "";
+	@Transactional
+	public void deleteStore(ModelMap reqModelMap) {
+
+		List<Number> delStoreIds = (ArrayList<Number>) reqModelMap.get("delStoreId");
+		long parentStoreId = Long.parseLong(String.valueOf(reqModelMap.get("parentStoreId")));
+
+		if(delStoreIds != null
+			&& delStoreIds.size() > 0){
+
+			delStoreIds.forEach(storeId -> storeMapRepository.deleteById(new StoreMapPK(storeId.longValue(), parentStoreId)));
+		}else{
+			throw new IllegalArgumentException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+		}
 	}
 
-	public String updateStoreUse(SaleStoreMgmtDto saleStoreMgmtDto) {
-		return "";
+	@Transactional
+	public void updateStoreUse(ModelMap reqModelMap) {
+
+		long storeId = Long.parseLong(String.valueOf(reqModelMap.getAttribute("storeId")));
+		long parentStoreId = Long.parseLong(String.valueOf(reqModelMap.getAttribute("parentStoreId")));
+		String useYn = String.valueOf(reqModelMap.getAttribute("useYn"));
+
+		StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(storeId, parentStoreId);
+
+		if(storeMap != null) {
+			storeMap.updateUseYn(storeMap, useYn);
+		}else{
+			throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+		}
 	}
 }
 

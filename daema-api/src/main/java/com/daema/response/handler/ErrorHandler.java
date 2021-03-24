@@ -1,6 +1,7 @@
 package com.daema.response.handler;
 
 import com.daema.response.exception.CustomException;
+import com.daema.response.exception.DataNotFoundException;
 import com.daema.response.exception.ProcessErrorException;
 import com.daema.response.exception.SearchErrorException;
 import org.slf4j.Logger;
@@ -50,7 +51,11 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     }
 
     // CustomException
-    @ExceptionHandler({SearchErrorException.class, ProcessErrorException.class})
+    @ExceptionHandler({
+            SearchErrorException.class
+            , ProcessErrorException.class
+            , DataNotFoundException.class
+    })
     @ResponseBody
     public ResponseEntity<Object> handlerCustomException(Exception ex, WebRequest request) {
 

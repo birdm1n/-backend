@@ -7,6 +7,8 @@ import java.io.Serializable;
 @Data
 public class StoreMapPK implements Serializable {
 
+	private static final long serialVersionUID = -5593363763196227024L;
+
 	private long storeId;
 	private long parentStoreId;
 

@@ -5,9 +5,7 @@ package com.daema.response.exception;
  */
 public final class RaiseException {
 
-    public static RaiseException numberFormatException() {
+    public static void numberFormatException() {
         Integer.parseInt("asdf");
-
-        return null;
     }
 }

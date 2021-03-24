@@ -80,6 +80,14 @@ spring:
     data: classpath:./db/mysql/data.sql
     initialization-mode: always
     continue-on-error: true #table, data exists exception ignore
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+
+
+
 
 --- #prod 환경
 
