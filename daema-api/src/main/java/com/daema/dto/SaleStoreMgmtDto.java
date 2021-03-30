@@ -1,15 +1,13 @@
 package com.daema.dto;
 
 import com.daema.domain.Store;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class SaleStoreMgmtDto {
@@ -24,10 +22,6 @@ public class SaleStoreMgmtDto {
 	private String returnAddrDetail;
 	private String useYn;
 	private LocalDateTime regiDateTime;
-
-	public SaleStoreMgmtDto(){
-
-	}
 
 	public static SaleStoreMgmtDto from (Store store) {
 		return SaleStoreMgmtDto.builder()

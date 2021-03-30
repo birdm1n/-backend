@@ -38,4 +38,21 @@ public class SearchParamDto extends PagingDto {
 	@ApiModelProperty(value = "조회 종료일자")
 	private String srhEndDate;
 
+	@ApiModelProperty(value = "상품명")
+	private String goodsName;
+
+	@ApiModelProperty(value = "모델명")
+	private String modelName;
+
+	@ApiModelProperty(value = "제조사 ID", example = "1")
+	private int maker;
+
+	@ApiModelProperty(value = "통신망 ID", example = "1")
+	private int network;
+
+	@ApiModelProperty(value = "요금제명")
+	private String chargeName;
+
+	@ApiModelProperty(value = "카테고리명")
+	private String category;
 }

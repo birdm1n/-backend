@@ -83,8 +83,8 @@ public class OpenStore {
         openStore.setUseYn(useYn);
     }
 
-    public void updateDelYn(OpenStore openStore){
-        openStore.setDelYn("Y");
+    public void updateDelYn(OpenStore openStore, String delYn){
+        openStore.setDelYn(delYn);
     }
 
 }

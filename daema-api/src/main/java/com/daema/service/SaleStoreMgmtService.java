@@ -14,6 +14,7 @@ import com.daema.repository.StoreRepository;
 import com.daema.repository.User2Repository;
 import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
+import com.daema.response.exception.ProcessErrorException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -51,7 +52,7 @@ public class SaleStoreMgmtService {
 
 	public SaleStoreMgmtDto getStoreDetail(long storeId) {
 
-		Store store = storeRepository.findById(storeId).orElseGet(() -> null);
+		Store store = storeRepository.findById(storeId).orElse(null);
 
 		return store != null ? SaleStoreMgmtDto.from(store) : null;
 	}
@@ -154,7 +155,7 @@ public class SaleStoreMgmtService {
 
 			delStoreIds.forEach(storeId -> storeMapRepository.deleteById(new StoreMapPK(storeId.longValue(), parentStoreId)));
 		}else{
-			throw new IllegalArgumentException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+			throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
 		}
 	}
 

@@ -61,7 +61,7 @@ public class BoardService {
 	}
 
 	public BoardDto getBoardDetail(String boardNo) {
-		Board board = boardRepository.findById(Long.parseLong(boardNo)).orElseGet(() -> null);
+		Board board = boardRepository.findById(Long.parseLong(boardNo)).orElse(null);
 
 		return board != null ? BoardDto.from(board) : null;
 	}

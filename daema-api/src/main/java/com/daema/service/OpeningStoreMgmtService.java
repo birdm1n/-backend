@@ -1,5 +1,6 @@
 package com.daema.service;
 
+import com.daema.common.enums.StatusEnum;
 import com.daema.domain.OpenStore;
 import com.daema.domain.OpenStoreSaleStoreMap;
 import com.daema.domain.QStore;
@@ -14,6 +15,7 @@ import com.daema.repository.OpenStoreSaleStoreMapRepository;
 import com.daema.repository.StoreRepository;
 import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
+import com.daema.response.exception.ProcessErrorException;
 import com.daema.response.exception.UnAuthorizedException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,12 +53,13 @@ public class OpeningStoreMgmtService {
     }
 
     public OpeningStoreMgmtDto getOpenStoreDetail(long openStoreId, long storeId) {
-        OpenStore openStore = openStoreRepository.findByOpenStoreIdAndStoreIdAndDelYn(openStoreId, storeId, "N").orElseGet(() -> null);
+        OpenStore openStore = openStoreRepository.findByOpenStoreIdAndStoreIdAndDelYn(openStoreId, storeId, "N").orElse(null);
 
         return openStore != null ? OpeningStoreMgmtDto.from(openStore) : null;
     }
 
     public void insertOpenStore(OpeningStoreMgmtDto openingStoreMgmtDto) {
+        //TODO ifnull return 함수 추가
         openStoreRepository.save(
                 OpenStore.builder()
                         .openStoreId(openingStoreMgmtDto.getOpenStoreId())
@@ -117,13 +120,13 @@ public class OpeningStoreMgmtService {
                 && delOpenStoreIds.size() > 0) {
 
             for (Number openStoreId : delOpenStoreIds) {
-                OpenStore openStore = openStoreRepository.findByOpenStoreIdAndStoreIdAndDelYn(openStoreId.longValue(), storeId, "N").orElseGet(null);
+                OpenStore openStore = openStoreRepository.findByOpenStoreIdAndStoreIdAndDelYn(openStoreId.longValue(), storeId, "N").orElse(null);
                 if (openStore != null) {
-                    openStore.updateDelYn(openStore);
+                    openStore.updateDelYn(openStore, StatusEnum.FLAG_Y.getStatusMsg());
                 }
             }
         } else {
-            throw new IllegalArgumentException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+            throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
         }
     }
 
@@ -139,7 +142,7 @@ public class OpeningStoreMgmtService {
         //내가 소유한 개통점은 open_store 의 use_yn 변경
         //관리점에서 맵핑해준 개통점은 open_store_sale_store_map 테이블의 사용여부를 변경한다
         if(storeId == authStoreId){
-            OpenStore openStore = openStoreRepository.findByOpenStoreIdAndStoreIdAndDelYn(openStoreId, storeId, "N").orElseGet(() -> null);
+            OpenStore openStore = openStoreRepository.findByOpenStoreIdAndStoreIdAndDelYn(openStoreId, storeId, "N").orElse(null);
 
             if (openStore != null) {
                 openStore.updateUseYn(openStore, useYn);
@@ -147,7 +150,7 @@ public class OpeningStoreMgmtService {
                 throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
             }
         }else{
-            OpenStoreSaleStoreMap openStoreSaleStoreMap = openStoreSaleStoreMapRepository.findByOpenStoreIdAndSaleStoreId(openStoreId, storeId).orElseGet(() -> null);
+            OpenStoreSaleStoreMap openStoreSaleStoreMap = openStoreSaleStoreMapRepository.findByOpenStoreIdAndSaleStoreId(openStoreId, storeId).orElse(null);
 
             if (openStoreSaleStoreMap != null) {
                 openStoreSaleStoreMap.updateUseYn(openStoreSaleStoreMap, useYn);
@@ -171,7 +174,7 @@ public class OpeningStoreMgmtService {
         //맵핑 데이터 없는 sales store에 사용
         List<String[]> emptyOpenStoreList = new ArrayList<>();
         for (OpenStore openStore : openStoreList) {
-            emptyOpenStoreList.add(new String[]{ String.valueOf(openStore.getOpenStoreId()), "N" });
+            emptyOpenStoreList.add(new String[]{ String.valueOf(openStore.getOpenStoreId()), StatusEnum.FLAG_N.getStatusMsg() });
         }
 
         //response 데이터 세팅
@@ -191,7 +194,7 @@ public class OpeningStoreMgmtService {
                 for (OpenStore openStore : openStoreList) {
                     filterOpenStoreInfos.add(
                             new String[]{String.valueOf(openStore.getOpenStoreId())
-                                    , mapList.contains(new OpenStoreSaleStoreMap(openStore.getOpenStoreId(), store.getStoreId())) ? "Y" : "N"}
+                                    , mapList.contains(new OpenStoreSaleStoreMap(openStore.getOpenStoreId(), store.getStoreId())) ? StatusEnum.FLAG_Y.getStatusMsg() : StatusEnum.FLAG_N.getStatusMsg() }
                     );
                 }
             } else {
@@ -212,12 +215,12 @@ public class OpeningStoreMgmtService {
 
             for(ModelMap reqMap : reqModelMap){
                 try {
-                    if ("Y".equals(String.valueOf(reqMap.get("mapYn")))) {
+                    if (StatusEnum.FLAG_Y.getStatusMsg().equals(String.valueOf(reqMap.get("mapYn")))) {
                         openStoreSaleStoreMapRepository.save(
                                 new OpenStoreSaleStoreMap(
                                         Long.parseLong(String.valueOf(reqMap.get("openStoreId")))
                                         ,Long.parseLong(String.valueOf(reqMap.get("saleStoreId")))
-                                        ,"Y"
+                                        ,StatusEnum.FLAG_Y.getStatusMsg()
                                 )
                         );
                     } else {
@@ -233,7 +236,87 @@ public class OpeningStoreMgmtService {
                 }
             }
         } else {
-            throw new IllegalArgumentException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+            throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+        }
+    }
+
+    public OpeningStoreSaleStoreResponseDto getUserMapInfo(long storeId) {
+
+        //개통점 전체 목록
+        List<OpenStore> openStoreList = openStoreRepository.getOpenStoreList(storeId);
+
+        //사용자 전체 목록
+        List<Store> saleStoreList = storeRepository.findBySaleStore(storeId, QStore.store.storeName.asc());
+
+        //개통점, 사용자 맵핑 목록
+        List<OpenStoreSaleStoreMap> mapList = openStoreSaleStoreMapRepository.getMappingList(storeId);
+
+        //맵핑 데이터 없는 user에 사용
+        List<String[]> emptyOpenStoreList = new ArrayList<>();
+        for (OpenStore openStore : openStoreList) {
+            emptyOpenStoreList.add(new String[]{ String.valueOf(openStore.getOpenStoreId()), StatusEnum.FLAG_N.getStatusMsg() });
+        }
+
+        //response 데이터 세팅
+        OpeningStoreSaleStoreResponseDto responseDto = new OpeningStoreSaleStoreResponseDto();
+
+        responseDto.openStoreList = openStoreList.stream()
+                .map(openStore -> OpeningStoreMgmtDto.from(openStore))
+                .collect(Collectors.toList());
+
+        List<String[]> filterOpenStoreInfos;
+
+        for (Store store : saleStoreList) {
+
+            filterOpenStoreInfos = new ArrayList<>();
+
+            if (mapList.stream().anyMatch(map -> map.getSaleStoreId() == store.getStoreId())) {
+                for (OpenStore openStore : openStoreList) {
+                    filterOpenStoreInfos.add(
+                            new String[]{String.valueOf(openStore.getOpenStoreId())
+                                    , mapList.contains(new OpenStoreSaleStoreMap(openStore.getOpenStoreId(), store.getStoreId())) ? StatusEnum.FLAG_Y.getStatusMsg() : StatusEnum.FLAG_N.getStatusMsg() }
+                    );
+                }
+            } else {
+                filterOpenStoreInfos = emptyOpenStoreList;
+            }
+
+            responseDto.saleStoreList.add(new OpeningStoreSaleStoreResponseDto.OpenStoreSaleStoreMap(store, filterOpenStoreInfos));
+        }
+
+        return responseDto;
+    }
+
+    @Transactional
+    public void setUserMapInfo (List<ModelMap> reqModelMap){
+
+        if (reqModelMap != null
+                && reqModelMap.size() > 0) {
+
+            for(ModelMap reqMap : reqModelMap){
+                try {
+                    if (StatusEnum.FLAG_Y.getStatusMsg().equals(String.valueOf(reqMap.get("mapYn")))) {
+                        openStoreSaleStoreMapRepository.save(
+                                new OpenStoreSaleStoreMap(
+                                        Long.parseLong(String.valueOf(reqMap.get("openStoreId")))
+                                        ,Long.parseLong(String.valueOf(reqMap.get("userId")))
+                                        ,StatusEnum.FLAG_Y.getStatusMsg()
+                                )
+                        );
+                    } else {
+                        openStoreSaleStoreMapRepository.deleteById(
+                                new OpenStoreSaleStoreMapPK(
+                                        Long.parseLong(String.valueOf(reqMap.get("openStoreId")))
+                                        ,Long.parseLong(String.valueOf(reqMap.get("userId")))
+                                )
+                        );
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
         }
     }
 

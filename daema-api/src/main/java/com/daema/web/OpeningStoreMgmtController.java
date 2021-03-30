@@ -111,6 +111,26 @@ public class OpeningStoreMgmtController {
 
         return responseHandler.ok();
     }
+
+    @ApiOperation(value = "개통점과 사용자 맵핑 조회", notes = "개통점과 사용자의 맵핑 데이터를 목록으로 조회합니다")
+    @GetMapping("/getUserMapInfo")
+    public ResponseEntity<CommonResponse<OpeningStoreSaleStoreResponseDto>> getUserMapInfo(@ApiParam(value = "관리점 ID", required = true, example = "1") @RequestParam long storeId){
+        return responseHandler.getResponseMessageAsRetrieveResult(openingStoreMgmtService.getUserMapInfo(storeId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
+
+    @ApiOperation(value = "개통점과 사용자 맵핑 정보 반영", notes = "개통점과 사용자의 맵핑 정보를 추가/삭제합니다")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "개통점 ID", required = true, example = "1", name = "openStoreId", paramType = "query", allowMultiple = true),
+            @ApiImplicitParam(value = "사용자 ID", required = true, example = "1", name = "userId", paramType = "query", allowMultiple = true),
+            @ApiImplicitParam(value = "맵핑 상태", required = true, example = "N", name = "mapYn", paramType = "query", allowMultiple = true)
+    })
+    @PostMapping("/setUserMapInfo")
+    public ResponseEntity<CommonResponse<Void>> setUserMapInfo(@ApiIgnore @RequestBody List<ModelMap> reqModel) {
+
+        openingStoreMgmtService.setUserMapInfo(reqModel);
+
+        return responseHandler.ok();
+    }
 }
 
 

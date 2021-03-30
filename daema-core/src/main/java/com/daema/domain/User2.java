@@ -45,7 +45,7 @@ public class User2 {
     private long orgnztId;
 
     /**
-     * 1-신규(승인전), 2-정상(승인완료), 9-삭제
+     * 1-신규(미승인), 6-정상(승인), 9-삭제
      */
     @NotBlank
     @Column(length = 1, nullable = false, name = "user_status", columnDefinition ="char")

@@ -45,4 +45,31 @@ public class ResponseDto<T> extends PagingDto {
             }
         }
     }
+
+    public ResponseDto (Class<?> clazz, List<T> dataList) {
+
+        if(dataList != null) {
+
+            try {
+
+                Object obj = clazz.newInstance();
+
+                this.setResultList(
+                        (List<T>)
+                                dataList.stream()
+                                        .map(entity -> {
+                                                    try {
+                                                        return clazz.getMethod("from", entity.getClass()).invoke(obj, entity);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                        return null;
+                                                    }
+                                                }
+                                        ).collect(Collectors.toList())
+                );
+            } catch (Exception ignore_e) {
+                ignore_e.printStackTrace();
+            }
+        }
+    }
 }
