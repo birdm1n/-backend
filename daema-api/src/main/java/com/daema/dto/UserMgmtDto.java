@@ -1,9 +1,7 @@
 package com.daema.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.daema.domain.User2;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserMgmtDto {
 
 	private long userId;
@@ -27,4 +26,17 @@ public class UserMgmtDto {
 	private String userStatus;
 	private LocalDateTime lastUpdDateTime;
 
+	public static UserMgmtDto from (User2 user2) {
+		return UserMgmtDto.builder()
+				.userId(user2.getUserId())
+				.email(user2.getEmail())
+				/*.userPw(user2.getUserPw())*/
+				.userName(user2.getUserName())
+				.userPhone(user2.getUserPhone())
+				.storeId(user2.getStoreId())
+				.orgnztId(user2.getOrgnztId())
+				.userStatus(user2.getUserStatus())
+				.lastUpdDateTime(user2.getLastUpdDateTime())
+			.build();
+	}
 }

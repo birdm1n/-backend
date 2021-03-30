@@ -1,18 +1,15 @@
 package com.daema.service;
 
 import com.daema.common.enums.StatusEnum;
-import com.daema.domain.OpenStore;
-import com.daema.domain.OpenStoreSaleStoreMap;
-import com.daema.domain.QStore;
-import com.daema.domain.Store;
+import com.daema.domain.*;
 import com.daema.domain.pk.OpenStoreSaleStoreMapPK;
+import com.daema.domain.pk.OpenStoreUserMapPK;
 import com.daema.dto.OpeningStoreMgmtDto;
 import com.daema.dto.OpeningStoreMgmtRequestDto;
 import com.daema.dto.OpeningStoreSaleStoreResponseDto;
+import com.daema.dto.OpeningStoreUserResponseDto;
 import com.daema.dto.common.ResponseDto;
-import com.daema.repository.OpenStoreRepository;
-import com.daema.repository.OpenStoreSaleStoreMapRepository;
-import com.daema.repository.StoreRepository;
+import com.daema.repository.*;
 import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
 import com.daema.response.exception.ProcessErrorException;
@@ -35,12 +32,17 @@ public class OpeningStoreMgmtService {
     private final OpenStoreRepository openStoreRepository;
     private final StoreRepository storeRepository;
     private final OpenStoreSaleStoreMapRepository openStoreSaleStoreMapRepository;
+    private final User2Repository user2Repository;
+    private final OpenStoreUserMapRepository openStoreUserMapRepository;
 
-    public OpeningStoreMgmtService(OpenStoreRepository openStoreRepository, StoreRepository storeRepository
-            , OpenStoreSaleStoreMapRepository openStoreSaleStoreMapRepository) {
+    public OpeningStoreMgmtService(OpenStoreRepository openStoreRepository
+            , StoreRepository storeRepository , OpenStoreSaleStoreMapRepository openStoreSaleStoreMapRepository
+            ,User2Repository user2Repository , OpenStoreUserMapRepository openStoreUserMapRepository) {
         this.openStoreRepository = openStoreRepository;
         this.storeRepository = storeRepository;
         this.openStoreSaleStoreMapRepository = openStoreSaleStoreMapRepository;
+        this.user2Repository = user2Repository;
+        this.openStoreUserMapRepository = openStoreUserMapRepository;
     }
 
     public ResponseDto<OpeningStoreMgmtDto> getOpenStoreList(OpeningStoreMgmtRequestDto requestDto) {
@@ -240,16 +242,16 @@ public class OpeningStoreMgmtService {
         }
     }
 
-    public OpeningStoreSaleStoreResponseDto getUserMapInfo(long storeId) {
+    public OpeningStoreUserResponseDto getUserMapInfo(long storeId) {
 
         //개통점 전체 목록
         List<OpenStore> openStoreList = openStoreRepository.getOpenStoreList(storeId);
 
         //사용자 전체 목록
-        List<Store> saleStoreList = storeRepository.findBySaleStore(storeId, QStore.store.storeName.asc());
+        List<User2> userList = user2Repository.findByUser(storeId, QUser2.user2.userName.asc());
 
         //개통점, 사용자 맵핑 목록
-        List<OpenStoreSaleStoreMap> mapList = openStoreSaleStoreMapRepository.getMappingList(storeId);
+        List<OpenStoreUserMap> mapList = openStoreUserMapRepository.getMappingList(storeId);
 
         //맵핑 데이터 없는 user에 사용
         List<String[]> emptyOpenStoreList = new ArrayList<>();
@@ -258,7 +260,7 @@ public class OpeningStoreMgmtService {
         }
 
         //response 데이터 세팅
-        OpeningStoreSaleStoreResponseDto responseDto = new OpeningStoreSaleStoreResponseDto();
+        OpeningStoreUserResponseDto responseDto = new OpeningStoreUserResponseDto();
 
         responseDto.openStoreList = openStoreList.stream()
                 .map(openStore -> OpeningStoreMgmtDto.from(openStore))
@@ -266,22 +268,22 @@ public class OpeningStoreMgmtService {
 
         List<String[]> filterOpenStoreInfos;
 
-        for (Store store : saleStoreList) {
+        for (User2 user : userList) {
 
             filterOpenStoreInfos = new ArrayList<>();
 
-            if (mapList.stream().anyMatch(map -> map.getSaleStoreId() == store.getStoreId())) {
+            if (mapList.stream().anyMatch(map -> map.getUserId() == user.getUserId())) {
                 for (OpenStore openStore : openStoreList) {
                     filterOpenStoreInfos.add(
                             new String[]{String.valueOf(openStore.getOpenStoreId())
-                                    , mapList.contains(new OpenStoreSaleStoreMap(openStore.getOpenStoreId(), store.getStoreId())) ? StatusEnum.FLAG_Y.getStatusMsg() : StatusEnum.FLAG_N.getStatusMsg() }
+                                    , mapList.contains(new OpenStoreUserMap(openStore.getOpenStoreId(), user.getUserId())) ? StatusEnum.FLAG_Y.getStatusMsg() : StatusEnum.FLAG_N.getStatusMsg() }
                     );
                 }
             } else {
                 filterOpenStoreInfos = emptyOpenStoreList;
             }
 
-            responseDto.saleStoreList.add(new OpeningStoreSaleStoreResponseDto.OpenStoreSaleStoreMap(store, filterOpenStoreInfos));
+            responseDto.userList.add(new OpeningStoreUserResponseDto.OpenStoreUserMap(user, filterOpenStoreInfos));
         }
 
         return responseDto;
@@ -296,16 +298,16 @@ public class OpeningStoreMgmtService {
             for(ModelMap reqMap : reqModelMap){
                 try {
                     if (StatusEnum.FLAG_Y.getStatusMsg().equals(String.valueOf(reqMap.get("mapYn")))) {
-                        openStoreSaleStoreMapRepository.save(
-                                new OpenStoreSaleStoreMap(
+                        openStoreUserMapRepository.save(
+                                new OpenStoreUserMap(
                                         Long.parseLong(String.valueOf(reqMap.get("openStoreId")))
                                         ,Long.parseLong(String.valueOf(reqMap.get("userId")))
                                         ,StatusEnum.FLAG_Y.getStatusMsg()
                                 )
                         );
                     } else {
-                        openStoreSaleStoreMapRepository.deleteById(
-                                new OpenStoreSaleStoreMapPK(
+                        openStoreUserMapRepository.deleteById(
+                                new OpenStoreUserMapPK(
                                         Long.parseLong(String.valueOf(reqMap.get("openStoreId")))
                                         ,Long.parseLong(String.valueOf(reqMap.get("userId")))
                                 )

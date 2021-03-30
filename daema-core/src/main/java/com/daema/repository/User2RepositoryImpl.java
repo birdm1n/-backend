@@ -1,9 +1,8 @@
 package com.daema.repository;
 
-import com.daema.domain.Board;
-import com.daema.domain.QBoard;
-import com.daema.domain.User2;
+import com.daema.domain.*;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -76,5 +75,21 @@ public class User2RepositoryImpl extends QuerydslRepositorySupport implements Cu
         long total = query.fetchCount();
 
         return new PageImpl<>(resultList, pageable, total);
+    }
+
+    @Override
+    public List<User2> findByUser(long storeId, OrderSpecifier orderSpecifier) {
+        QUser2 user2 = QUser2.user2;
+
+        JPQLQuery<User2> query = from(user2);
+
+        query.where(
+                user2.storeId.eq(storeId)
+                .and(user2.userStatus.eq("6"))
+        );
+
+        query.orderBy(orderSpecifier);
+
+        return query.fetch();
     }
 }

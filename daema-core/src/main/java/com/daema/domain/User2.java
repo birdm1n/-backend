@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of="userId")
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name="user2")
 public class User2 {
@@ -48,7 +49,7 @@ public class User2 {
      * 1-신규(미승인), 6-정상(승인), 9-삭제
      */
     @NotBlank
-    @Column(length = 1, nullable = false, name = "user_status", columnDefinition ="char")
+    @Column(nullable = false, name = "user_status", columnDefinition ="char(1)")
     private String userStatus;
 
     @Column(name = "last_upd_datetime")

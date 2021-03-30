@@ -3,6 +3,7 @@ package com.daema.web;
 import com.daema.dto.OpeningStoreMgmtDto;
 import com.daema.dto.OpeningStoreMgmtRequestDto;
 import com.daema.dto.OpeningStoreSaleStoreResponseDto;
+import com.daema.dto.OpeningStoreUserResponseDto;
 import com.daema.dto.common.ResponseDto;
 import com.daema.response.enums.ResponseCodeEnum;
 import com.daema.response.handler.ResponseHandler;
@@ -114,7 +115,7 @@ public class OpeningStoreMgmtController {
 
     @ApiOperation(value = "개통점과 사용자 맵핑 조회", notes = "개통점과 사용자의 맵핑 데이터를 목록으로 조회합니다")
     @GetMapping("/getUserMapInfo")
-    public ResponseEntity<CommonResponse<OpeningStoreSaleStoreResponseDto>> getUserMapInfo(@ApiParam(value = "관리점 ID", required = true, example = "1") @RequestParam long storeId){
+    public ResponseEntity<CommonResponse<OpeningStoreUserResponseDto>> getUserMapInfo(@ApiParam(value = "관리점 ID", required = true, example = "1") @RequestParam long storeId){
         return responseHandler.getResponseMessageAsRetrieveResult(openingStoreMgmtService.getUserMapInfo(storeId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 

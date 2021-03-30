@@ -11,13 +11,10 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of="storeId")
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name="store")
 public class Store {
-
-    public Store() {
-
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
