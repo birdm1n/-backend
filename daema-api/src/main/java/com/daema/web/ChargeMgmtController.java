@@ -36,7 +36,7 @@ public class ChargeMgmtController {
     }
 
     @ApiOperation(value = "요금 등록", notes = "신규 요금을 등록합니다")
-    @PostMapping("/insertStore")
+    @PostMapping("/insertData")
     public ResponseEntity<CommonResponse<Void>> insertData(@ApiParam(value = "요금 정보", required = true) @RequestBody ChargeMgmtDto chargeMgmtDto) {
         chargeMgmtService.insertData(chargeMgmtDto);
         return responseHandler.ok();

@@ -55,7 +55,6 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
 
         query.from(charge)
                 .where(builder)
-                .groupBy(charge.chargeId)
                 .orderBy(charge.regiDateTime.desc());
 
         query.offset(pageable.getOffset())

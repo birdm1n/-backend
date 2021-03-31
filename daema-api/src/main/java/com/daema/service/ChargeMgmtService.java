@@ -88,7 +88,7 @@ public class ChargeMgmtService {
                         //TODO security 설정에 따라 storeId 가져오는 방식 변경 필요
                         //.reqStoreId(authenticationUtil.getStoreId())
                         .reqStoreId(1)
-                        .reqStatus(StatusEnum.GOODS_REG_REQ.getStatusCode())
+                        .reqStatus(StatusEnum.REG_REQ.getStatusCode())
                         .regiDateTime(LocalDateTime.now())
                     .build()
             );
@@ -186,7 +186,7 @@ public class ChargeMgmtService {
         if(chargeRegReq != null) {
             chargeRegReq.updateReqStatus(chargeRegReq, chargeRegReqDto.getReqStatus());
 
-            if(chargeRegReqDto.getReqStatus() == StatusEnum.GOODS_REG_REQ_APPROVAL.getStatusCode()) {
+            if(chargeRegReqDto.getReqStatus() == StatusEnum.REG_REQ_APPROVAL.getStatusCode()) {
                 //insertData 사용 안함. 요청 승인 정책이 시스템관리자에서 확장 또는 변경될 수 있음
                 chargeRepository.save(
                         Charge.builder()
@@ -202,7 +202,7 @@ public class ChargeMgmtService {
                                 .delYn(StatusEnum.FLAG_N.getStatusMsg())
                                 .build()
                 );
-            }else if(chargeRegReqDto.getReqStatus() == StatusEnum.GOODS_REG_REQ_REJECT.getStatusCode()){
+            }else if(chargeRegReqDto.getReqStatus() == StatusEnum.REG_REQ_REJECT.getStatusCode()){
                 ChargeRegReqReject chargeRegReqReject = new ChargeRegReqReject();
                 chargeRegReqReject.setChargeRegReqId(chargeRegReq.getChargeRegReqId());
                 chargeRegReqReject.setRejectComment(chargeRegReqDto.getRegReqRejectDto().getRejectComment());

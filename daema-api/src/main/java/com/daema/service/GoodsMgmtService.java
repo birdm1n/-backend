@@ -112,7 +112,7 @@ public class GoodsMgmtService {
                         //TODO security 설정에 따라 storeId 가져오는 방식 변경 필요
                         //.reqStoreId(authenticationUtil.getStoreId())
                         .reqStoreId(1)
-                        .reqStatus(StatusEnum.GOODS_REG_REQ.getStatusCode())
+                        .reqStatus(StatusEnum.REG_REQ.getStatusCode())
                         .regiDateTime(LocalDateTime.now())
                     .build()
             );
@@ -231,7 +231,7 @@ public class GoodsMgmtService {
         if(goodsRegReq != null) {
             goodsRegReq.updateReqStatus(goodsRegReq, goodsRegReqDto.getReqStatus());
 
-            if(goodsRegReqDto.getReqStatus() == StatusEnum.GOODS_REG_REQ_APPROVAL.getStatusCode()) {
+            if(goodsRegReqDto.getReqStatus() == StatusEnum.REG_REQ_APPROVAL.getStatusCode()) {
                 //insertData 사용 안함. 요청 승인 정책이 시스템관리자에서 확장 또는 변경될 수 있음
                 goodsRepository.save(
                         Goods.builder()
@@ -248,7 +248,7 @@ public class GoodsMgmtService {
                                 .delYn(StatusEnum.FLAG_N.getStatusMsg())
                                 .build()
                 );
-            }else if(goodsRegReqDto.getReqStatus() == StatusEnum.GOODS_REG_REQ_REJECT.getStatusCode()){
+            }else if(goodsRegReqDto.getReqStatus() == StatusEnum.REG_REQ_REJECT.getStatusCode()){
                 GoodsRegReqReject goodsRegReqReject = new GoodsRegReqReject();
                 goodsRegReqReject.setGoodsRegReqId(goodsRegReq.getGoodsRegReqId());
                 goodsRegReqReject.setRejectComment(goodsRegReqDto.getRegReqRejectDto().getRejectComment());

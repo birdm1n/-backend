@@ -35,7 +35,7 @@ public class GoodsMgmtController {
     }
 
     @ApiOperation(value = "상품 등록", notes = "신규 상품을 등록합니다")
-    @PostMapping("/insertStore")
+    @PostMapping("/insertData")
     public ResponseEntity<CommonResponse<Void>> insertData(@ApiParam(value = "상품 정보", required = true) @RequestBody GoodsMgmtDto goodsMgmtDto) {
         goodsMgmtService.insertData(goodsMgmtDto);
         return responseHandler.ok();

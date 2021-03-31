@@ -55,4 +55,10 @@ public class SearchParamDto extends PagingDto {
 
 	@ApiModelProperty(value = "카테고리명")
 	private String category;
+
+	@ApiModelProperty(value = "부가서비스명")
+	private String addSvcName;
+
+	@ApiModelProperty(value = "부가서비스 요금", example = "1")
+	private int addSvcCharge;
 }

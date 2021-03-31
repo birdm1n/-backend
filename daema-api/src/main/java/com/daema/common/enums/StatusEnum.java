@@ -9,9 +9,10 @@ public enum StatusEnum {
     USER_APPROVAL(6, "승인완료"),
     USER_DEL(9, "삭제"),
 
-    GOODS_REG_REQ(1, "등록요청"),
-    GOODS_REG_REQ_APPROVAL(6, "승인"),
-    GOODS_REG_REQ_REJECT(9, "반려")
+    //상품, 옵션, 부가서비스
+    REG_REQ(1, "등록요청"),
+    REG_REQ_APPROVAL(6, "승인"),
+    REG_REQ_REJECT(9, "반려"),
 
     ;
 
