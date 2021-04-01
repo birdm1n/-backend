@@ -40,6 +40,7 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
                 ,addServiceRegReq.addSvcRegReqId
                 ,addServiceRegReq.addSvcName
                 ,addServiceRegReq.addSvcCharge
+                ,addServiceRegReq.addSvcMemo
                 ,addServiceRegReq.telecom
                 ,addServiceRegReq.reqStatus
                 ,addServiceRegReq.reqStoreId

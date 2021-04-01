@@ -39,6 +39,7 @@ public class AddServiceRepositoryImpl extends QuerydslRepositorySupport implemen
                 ,addService.addSvcCharge
                 ,addService.telecom
                 ,addService.originKey
+                ,addService.addSvcMemo
                 ,addService.useYn
                 ,addService.delYn
                 ,addService.regiDateTime

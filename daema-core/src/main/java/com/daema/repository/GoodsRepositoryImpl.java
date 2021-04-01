@@ -86,6 +86,7 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 ,goods.goodsName
                 ,goods.modelName
                 ,goods.maker
+                ,goods.originKey
                 ,goods.useYn
                 ,goods.matchingYn
                 ,goods.regiDateTime

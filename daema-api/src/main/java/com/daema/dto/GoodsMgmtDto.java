@@ -30,6 +30,9 @@ public class GoodsMgmtDto {
 	private LocalDateTime regiDateTime;
 	private List<GoodsOptionDto> optionList;
 
+	//TODO 관리자 구분 불가하여 임시 사용. 신규 등록과 요청 구분용
+	private String reqYn;
+
 	public static GoodsMgmtDto from (Goods goods) {
 		return GoodsMgmtDto.builder()
 				.goodsId(goods.getGoodsId())

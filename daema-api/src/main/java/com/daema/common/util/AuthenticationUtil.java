@@ -21,18 +21,23 @@ public class AuthenticationUtil {
         return authentication.getAuthorities().contains(new SimpleGrantedAuthority(userRole));
     }
 
-    public long getStoreId() {
+    public long getId(String type) {
 
-        long storeId = 0;
+        long returnId = 0;
 
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User2 user = (User2) authentication.getPrincipal();
-            storeId = user.getStoreId();
+
+            if("storeId".equals(type)){
+                returnId = user.getStoreId();
+            }else if("userId".equals(type)){
+                returnId = user.getUserId();
+            }
         }catch (Exception ignore){
             ignore.printStackTrace();
         }
 
-        return storeId;
+        return returnId;
     }
 }

@@ -74,7 +74,7 @@ public class SaleStoreMgmtController {
 
     @ApiOperation(value = "영업점 사용여부 수정", notes = "특정 영업점의 사용 여부를 변경합니다")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "영업점 ID", required = true, example = "1", name = "delStoreId"),
+            @ApiImplicitParam(value = "영업점 ID", required = true, example = "1", name = "storeId"),
             @ApiImplicitParam(value = "관리점 ID", required = true, example = "1", name = "parentStoreId"),
             @ApiImplicitParam(value = "사용여부", required = true, name = "useYn")
     })

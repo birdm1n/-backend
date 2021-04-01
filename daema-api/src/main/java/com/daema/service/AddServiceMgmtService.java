@@ -64,13 +64,15 @@ public class AddServiceMgmtService {
     public void insertData(AddServiceMgmtDto addServiceMgmtDto) {
         //TODO 하드코딩. 관리자 권한 확인 필요. 지금은 무조건 true 처리 해둠
         //TODO ifnull return 함수 추가
-        if (authenticationUtil.isAdmin()) {
+        //if (authenticationUtil.isAdmin()) {
+        if ("N".equals(addServiceMgmtDto.getReqYn())) {
             addServiceRepository.save(
                     AddService.builder()
                             .addSvcName(addServiceMgmtDto.getAddSvcName())
                             .addSvcCharge(addServiceMgmtDto.getAddSvcCharge())
                             .telecom(addServiceMgmtDto.getTelecom())
                             .originKey(addServiceMgmtDto.getOriginKey())
+                            .addSvcMemo(addServiceMgmtDto.getAddSvcMemo())
                             .useYn(addServiceMgmtDto.getUseYn())
                             .delYn(addServiceMgmtDto.getDelYn())
                             .regiDateTime(LocalDateTime.now())
@@ -81,9 +83,10 @@ public class AddServiceMgmtService {
                 AddServiceRegReq.builder()
                         .addSvcName(addServiceMgmtDto.getAddSvcName())
                         .addSvcCharge(addServiceMgmtDto.getAddSvcCharge())
+                        .addSvcMemo(addServiceMgmtDto.getAddSvcMemo())
                         .telecom(addServiceMgmtDto.getTelecom())
                         //TODO security 설정에 따라 storeId 가져오는 방식 변경 필요
-                        //.reqStoreId(authenticationUtil.getStoreId())
+                        //.reqStoreId(authenticationUtil.getId("storeId"))
                         .reqStoreId(1)
                         .reqStatus(StatusEnum.REG_REQ.getStatusCode())
                         .regiDateTime(LocalDateTime.now())
@@ -103,6 +106,7 @@ public class AddServiceMgmtService {
             addService.setAddSvcId(addServiceMgmtDto.getAddSvcId());
             addService.setAddSvcName(addServiceMgmtDto.getAddSvcName());
             addService.setAddSvcCharge(addServiceMgmtDto.getAddSvcCharge());
+            addService.setAddSvcMemo(addServiceMgmtDto.getAddSvcMemo());
             addService.setTelecom(addServiceMgmtDto.getTelecom());
 
             if (StringUtils.hasText(addServiceMgmtDto.getOriginKey())) {
@@ -187,6 +191,7 @@ public class AddServiceMgmtService {
                                 .addSvcCharge(addServiceRegReq.getAddSvcCharge())
                                 .telecom(addServiceRegReq.getTelecom())
                                 .originKey("R".concat(String.valueOf(addServiceRegReq.getAddSvcRegReqId())))
+                                .addSvcMemo(addServiceRegReq.getAddSvcMemo())
                                 .regiDateTime(LocalDateTime.now())
                                 .useYn(StatusEnum.FLAG_N.getStatusMsg())
                                 .delYn(StatusEnum.FLAG_N.getStatusMsg())

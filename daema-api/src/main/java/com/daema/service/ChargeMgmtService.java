@@ -62,7 +62,8 @@ public class ChargeMgmtService {
     public void insertData(ChargeMgmtDto chargeMgmtDto) {
         //TODO 하드코딩. 관리자 권한 확인 필요. 지금은 무조건 true 처리 해둠
         //TODO ifnull return 함수 추가
-        if (authenticationUtil.isAdmin()) {
+        //if (authenticationUtil.isAdmin()) {
+        if ("N".equals(chargeMgmtDto.getReqYn())) {
             chargeRepository.save(
                     Charge.builder()
                             .chargeName(chargeMgmtDto.getChargeName())
@@ -86,7 +87,7 @@ public class ChargeMgmtService {
                         .telecom(chargeMgmtDto.getTelecom())
                         .network(chargeMgmtDto.getNetwork())
                         //TODO security 설정에 따라 storeId 가져오는 방식 변경 필요
-                        //.reqStoreId(authenticationUtil.getStoreId())
+                        //.reqStoreId(authenticationUtil.getId("storeId"))
                         .reqStoreId(1)
                         .reqStatus(StatusEnum.REG_REQ.getStatusCode())
                         .regiDateTime(LocalDateTime.now())

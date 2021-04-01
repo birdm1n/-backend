@@ -41,6 +41,9 @@ public class SearchParamDto extends PagingDto {
 	@ApiModelProperty(value = "상품명")
 	private String goodsName;
 
+	@ApiModelProperty(value = "상품 ID", example = "1")
+	private long goodsId;
+
 	@ApiModelProperty(value = "모델명")
 	private String modelName;
 
@@ -52,6 +55,9 @@ public class SearchParamDto extends PagingDto {
 
 	@ApiModelProperty(value = "요금제명")
 	private String chargeName;
+
+	@ApiModelProperty(value = "요금제 ID", example = "1")
+	private long chargeId;
 
 	@ApiModelProperty(value = "카테고리명")
 	private String category;

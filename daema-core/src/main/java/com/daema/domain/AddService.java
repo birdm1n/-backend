@@ -40,12 +40,13 @@ public class AddService extends AddServiceBase {
 
     @Builder
     public AddService(long addSvcId, String addSvcName, int addSvcCharge, int telecom
-            , String originKey, LocalDateTime regiDateTime, String useYn, String delYn){
+            , String originKey, LocalDateTime regiDateTime, String addSvcMemo, String useYn, String delYn){
         this.addSvcId = addSvcId;
         this.addSvcName = addSvcName;
         this.addSvcCharge = addSvcCharge;
         this.telecom = telecom;
         this.originKey = originKey;
+        this.addSvcMemo = addSvcMemo;
         this.useYn = useYn;
         this.delYn = delYn;
         this.regiDateTime = regiDateTime;

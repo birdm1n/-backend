@@ -26,6 +26,9 @@ public abstract class AddServiceBase {
     @Column(name = "add_svc_charge", nullable = false)
     protected int addSvcCharge;
 
+    @Column(name = "add_svc_memo")
+    protected String addSvcMemo;
+
     @Column(name = "regi_datetime")
     protected LocalDateTime regiDateTime;
 }

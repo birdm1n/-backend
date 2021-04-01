@@ -80,6 +80,7 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
                 ,charge.chargeName
                 ,charge.chargeAmt
                 ,charge.category
+                ,charge.originKey
                 ,charge.useYn
                 ,charge.matchingYn
                 ,charge.regiDateTime

@@ -24,6 +24,9 @@ public class ChargeMgmtDto {
 	private String delYn;
 	private LocalDateTime regiDateTime;
 
+	//TODO 관리자 구분 불가하여 임시 사용. 신규 등록과 요청 구분용
+	private String reqYn;
+
 	public static ChargeMgmtDto from (Charge charge) {
 		return ChargeMgmtDto.builder()
 				.chargeId(charge.getChargeId())
