@@ -33,8 +33,7 @@ public class Store {
     @Column(nullable = false, name = "biz_no", columnDefinition = "char(12)")
     private String bizNo;
 
-    @NotBlank
-    @Column(length = 15, nullable = false, name = "charger_phone")
+    @Column(length = 15, name = "charger_phone")
     private String chargerPhone;
 
     @Column(length = 7, nullable = false, name = "return_zip_code")

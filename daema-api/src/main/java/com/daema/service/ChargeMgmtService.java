@@ -2,11 +2,15 @@ package com.daema.service;
 
 import com.daema.common.enums.StatusEnum;
 import com.daema.common.util.AuthenticationUtil;
+import com.daema.common.util.CommonUtil;
 import com.daema.domain.Charge;
 import com.daema.domain.ChargeRegReq;
 import com.daema.domain.ChargeRegReqReject;
 import com.daema.domain.attr.NetworkAttribute;
-import com.daema.dto.*;
+import com.daema.dto.ChargeMgmtDto;
+import com.daema.dto.ChargeMgmtRequestDto;
+import com.daema.dto.ChargeRegReqDto;
+import com.daema.dto.ChargeRegReqRequestDto;
 import com.daema.dto.common.ResponseDto;
 import com.daema.repository.ChargeRegReqRejectRepository;
 import com.daema.repository.ChargeRegReqRepository;
@@ -22,7 +26,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -132,14 +139,14 @@ public class ChargeMgmtService {
 
         List<Number> chargeIds = (ArrayList<Number>) reqModelMap.get("chargeId");
 
-        if (isNotEmptyList(chargeIds)) {
+        if (CommonUtil.isNotEmptyList(chargeIds)) {
 
             List<Charge> chargeList = chargeRepository.findAllById(
                     chargeIds.stream()
                             .map(Number::longValue).collect(Collectors.toList())
             );
 
-            if(isNotEmptyList(chargeList)) {
+            if(CommonUtil.isNotEmptyList(chargeList)) {
                 Optional.ofNullable(chargeList).orElseGet(Collections::emptyList).forEach(charge -> {
                     charge.updateDelYn(charge, StatusEnum.FLAG_Y.getStatusMsg());
                 });
@@ -233,14 +240,14 @@ public class ChargeMgmtService {
         List<Number>  groupChargeIds = (ArrayList<Number>) reqModelMap.get("groupChargeId");
         Integer useChargeId = (Integer) reqModelMap.get("useChargeId");
 
-        if (isNotEmptyList(groupChargeIds)) {
+        if (CommonUtil.isNotEmptyList(groupChargeIds)) {
 
             List<Charge> chargeList = chargeRepository.findAllById(
                     groupChargeIds.stream()
                             .map(Number::longValue).collect(Collectors.toList())
             );
 
-            if(isNotEmptyList(chargeList)) {
+            if(CommonUtil.isNotEmptyList(chargeList)) {
                 Optional.ofNullable(chargeList).orElseGet(Collections::emptyList).forEach(charge -> {
 
                     charge.updateMatchYn(charge, StatusEnum.FLAG_Y.getStatusMsg());
@@ -257,10 +264,6 @@ public class ChargeMgmtService {
         } else {
             throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
         }
-    }
-
-    private <E> boolean isNotEmptyList(Collection<E> itemList){
-        return itemList != null && itemList.size() > 0;
     }
 }
 

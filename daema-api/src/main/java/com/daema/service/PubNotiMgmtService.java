@@ -128,10 +128,6 @@ public class PubNotiMgmtService {
 
         return new ResponseDto(PubNotiRawDataMgmtDto.class, dataList);
     }
-
-    private <E> boolean isNotEmptyList(Collection<E> itemList){
-        return itemList != null && itemList.size() > 0;
-    }
 }
 
 

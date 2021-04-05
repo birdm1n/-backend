@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class SocialData {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String socialId;

@@ -8,5 +8,5 @@ import lombok.Setter;
 public class SaleStoreUserWrapperDto {
 	private long parentStoreId;
 	private SaleStoreMgmtDto saleStore;
-	private UserMgmtDto user;
+	private OrganizationMemberDto member;
 }

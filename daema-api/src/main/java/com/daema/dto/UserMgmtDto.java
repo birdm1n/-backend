@@ -18,7 +18,7 @@ public class UserMgmtDto {
 	private String userName;
 	private String userPhone;
 	private long storeId;
-	private long orgnztId;
+	private long orgId;
 
 	/**
 	 * 1-신규(승인전), 2-정상(승인완료), 9-삭제
@@ -34,7 +34,7 @@ public class UserMgmtDto {
 				.userName(user2.getUserName())
 				.userPhone(user2.getUserPhone())
 				.storeId(user2.getStoreId())
-				.orgnztId(user2.getOrgnztId())
+				.orgId(user2.getOrgId())
 				.userStatus(user2.getUserStatus())
 				.lastUpdDateTime(user2.getLastUpdDateTime())
 			.build();

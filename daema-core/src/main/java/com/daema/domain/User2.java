@@ -42,8 +42,8 @@ public class User2 {
     private long storeId;
 
     @NotNull
-    @Column(nullable = false, name = "orgnzt_id")
-    private long orgnztId;
+    @Column(nullable = false, name = "org_id")
+    private long orgId;
 
     /**
      * 1-신규(미승인), 6-정상(승인), 9-삭제
@@ -57,14 +57,14 @@ public class User2 {
 
     @Builder
     public User2 (long userId, String email, String userPw, String userName, String userPhone,
-                  long storeId, long orgnztId, String userStatus, LocalDateTime lastUpdDateTime){
+                  long storeId, long orgId, String userStatus, LocalDateTime lastUpdDateTime){
         this.userId = userId;
         this.email = email;
         this.userPw = userPw;
         this.userName = userName;
         this.userPhone = userPhone;
         this.storeId = storeId;
-        this.orgnztId = orgnztId;
+        this.orgId = orgId;
         this.userStatus = userStatus;
         this.lastUpdDateTime = lastUpdDateTime;
     }

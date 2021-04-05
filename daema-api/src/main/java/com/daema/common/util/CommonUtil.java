@@ -1,6 +1,7 @@
 package com.daema.common.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,5 +33,9 @@ public class CommonUtil {
         }
 
         return dtoList;
+    }
+
+    public static <E> boolean isNotEmptyList(Collection<E> itemList){
+        return itemList != null && !itemList.isEmpty();
     }
 }

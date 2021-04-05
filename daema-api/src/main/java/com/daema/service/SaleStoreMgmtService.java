@@ -1,13 +1,11 @@
 package com.daema.service;
 
+import com.daema.common.enums.StatusEnum;
 import com.daema.domain.Store;
 import com.daema.domain.StoreMap;
 import com.daema.domain.User2;
 import com.daema.domain.pk.StoreMapPK;
-import com.daema.dto.SaleStoreMgmtDto;
-import com.daema.dto.SaleStoreMgmtRequestDto;
-import com.daema.dto.SaleStoreUserWrapperDto;
-import com.daema.dto.UserMgmtDto;
+import com.daema.dto.*;
 import com.daema.dto.common.ResponseDto;
 import com.daema.repository.StoreMapRepository;
 import com.daema.repository.StoreRepository;
@@ -35,10 +33,13 @@ public class SaleStoreMgmtService {
 
 	private final StoreMapRepository storeMapRepository;
 
-	public SaleStoreMgmtService(StoreRepository storeRepository, User2Repository user2Repository, StoreMapRepository storeMapRepository) {
+	private final OrganizationMgmtService organizationMgmtService;
+
+	public SaleStoreMgmtService(StoreRepository storeRepository, User2Repository user2Repository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService) {
 		this.storeRepository = storeRepository;
 		this.user2Repository = user2Repository;
 		this.storeMapRepository = storeMapRepository;
+		this.organizationMgmtService = organizationMgmtService;
 	}
 
 	public ResponseDto<SaleStoreMgmtDto> getStoreList(SaleStoreMgmtRequestDto requestDto) {
@@ -62,10 +63,17 @@ public class SaleStoreMgmtService {
 
 		long resultStoreId = insertStore(wrapperDto.getSaleStore());
 
-		UserMgmtDto userDto = wrapperDto.getUser();
-		userDto.setStoreId(resultStoreId);
+		long resultOrgId = organizationMgmtService.insertOrgnzt(OrganizationMgmtDto.builder()
+				.orgName("기본그룹")
+				.parentOrgId(0)
+				.storeId(resultStoreId).build());
 
-		insertUser(userDto);
+		OrganizationMemberDto memberDto = wrapperDto.getMember();
+		memberDto.setStoreId(resultStoreId);
+		memberDto.setOrgId(resultOrgId);
+		memberDto.setUserStatus(String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode()));
+
+		organizationMgmtService.insertUser(memberDto);
 
 		if(wrapperDto.getParentStoreId() > 0){
 			insertStoreMap(wrapperDto);
@@ -98,7 +106,7 @@ public class SaleStoreMgmtService {
                         .userName(userMgmtDto.getUserName())
                         .userPhone(userMgmtDto.getUserPhone())
                         .storeId(userMgmtDto.getStoreId())
-                        .orgnztId(userMgmtDto.getOrgnztId())
+                        .orgId(userMgmtDto.getOrgId())
                         .userStatus(userMgmtDto.getUserStatus())
                         .lastUpdDateTime(LocalDateTime.now())
                     .build()
@@ -106,12 +114,12 @@ public class SaleStoreMgmtService {
 	}
 
 	public void insertStoreMap(SaleStoreUserWrapperDto wrapperDto) {
-        StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(wrapperDto.getUser().getStoreId(), wrapperDto.getParentStoreId());
+        StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(wrapperDto.getSaleStore().getStoreId(), wrapperDto.getParentStoreId());
 
         if(storeMap == null) {
 			storeMapRepository.save(
 					StoreMap.builder()
-							.storeId(wrapperDto.getUser().getStoreId())
+							.storeId(wrapperDto.getSaleStore().getStoreId())
 							.parentStoreId(wrapperDto.getParentStoreId())
 							.useYn(wrapperDto.getSaleStore().getUseYn())
 							.build()

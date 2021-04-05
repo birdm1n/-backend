@@ -2,6 +2,7 @@ package com.daema.service;
 
 import com.daema.common.enums.StatusEnum;
 import com.daema.common.util.AuthenticationUtil;
+import com.daema.common.util.CommonUtil;
 import com.daema.domain.Goods;
 import com.daema.domain.GoodsOption;
 import com.daema.domain.GoodsRegReq;
@@ -157,14 +158,14 @@ public class GoodsMgmtService {
 
         List<Number> goodsIds = (ArrayList<Number>) reqModelMap.get("goodsId");
 
-        if (isNotEmptyList(goodsIds)) {
+        if (CommonUtil.isNotEmptyList(goodsIds)) {
 
             List<Goods> goodsList = goodsRepository.findAllById(
                     goodsIds.stream()
                             .map(Number::longValue).collect(Collectors.toList())
             );
 
-            if(isNotEmptyList(goodsList)) {
+            if(CommonUtil.isNotEmptyList(goodsList)) {
                 Optional.ofNullable(goodsList).orElseGet(Collections::emptyList).forEach(goods -> {
                     goods.updateDelYn(goods, StatusEnum.FLAG_Y.getStatusMsg());
                 });
@@ -279,14 +280,14 @@ public class GoodsMgmtService {
         List<Number>  groupGoodsIds = (ArrayList<Number>) reqModelMap.get("groupGoodsId");
         Integer useGoodsId = (Integer) reqModelMap.get("useGoodsId");
 
-        if (isNotEmptyList(groupGoodsIds)) {
+        if (CommonUtil.isNotEmptyList(groupGoodsIds)) {
 
             List<Goods> goodsList = goodsRepository.findAllById(
                     groupGoodsIds.stream()
                             .map(Number::longValue).collect(Collectors.toList())
             );
 
-            if(isNotEmptyList(goodsList)) {
+            if(CommonUtil.isNotEmptyList(goodsList)) {
                 Optional.ofNullable(goodsList).orElseGet(Collections::emptyList).forEach(goods -> {
 
                     goods.updateMatchYn(goods, StatusEnum.FLAG_Y.getStatusMsg());
@@ -303,10 +304,6 @@ public class GoodsMgmtService {
         } else {
             throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
         }
-    }
-
-    private <E> boolean isNotEmptyList(Collection<E> itemList){
-        return itemList != null && itemList.size() > 0;
     }
 }
 

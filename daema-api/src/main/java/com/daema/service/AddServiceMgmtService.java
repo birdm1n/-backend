@@ -2,14 +2,15 @@ package com.daema.service;
 
 import com.daema.common.enums.StatusEnum;
 import com.daema.common.util.AuthenticationUtil;
+import com.daema.common.util.CommonUtil;
 import com.daema.domain.AddService;
 import com.daema.domain.AddServiceRegReq;
 import com.daema.domain.AddServiceRegReqReject;
-import com.daema.dto.common.ResponseDto;
 import com.daema.dto.AddServiceMgmtDto;
 import com.daema.dto.AddServiceMgmtRequestDto;
 import com.daema.dto.AddServiceRegReqDto;
 import com.daema.dto.AddServiceRegReqRequestDto;
+import com.daema.dto.common.ResponseDto;
 import com.daema.repository.AddServiceRegReqRejectRepository;
 import com.daema.repository.AddServiceRegReqRepository;
 import com.daema.repository.AddServiceRepository;
@@ -24,7 +25,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -128,14 +132,14 @@ public class AddServiceMgmtService {
 
         List<Number> addSvcIds = (ArrayList<Number>) reqModelMap.get("addSvcId");
 
-        if (isNotEmptyList(addSvcIds)) {
+        if (CommonUtil.isNotEmptyList(addSvcIds)) {
 
             List<AddService> addServiceList = addServiceRepository.findAllById(
                     addSvcIds.stream()
                             .map(Number::longValue).collect(Collectors.toList())
             );
 
-            if(isNotEmptyList(addServiceList)) {
+            if(CommonUtil.isNotEmptyList(addServiceList)) {
                 Optional.ofNullable(addServiceList).orElseGet(Collections::emptyList).forEach(addService -> {
                     addService.updateDelYn(addService, StatusEnum.FLAG_Y.getStatusMsg());
                 });
@@ -212,10 +216,6 @@ public class AddServiceMgmtService {
         }else{
             throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
         }
-    }
-
-    private <E> boolean isNotEmptyList(Collection<E> itemList){
-        return itemList != null && itemList.size() > 0;
     }
 }
 
