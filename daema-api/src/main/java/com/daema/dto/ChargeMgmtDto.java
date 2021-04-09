@@ -26,7 +26,7 @@ public class ChargeMgmtDto {
 	private String voiceAmt;
 	private String dataAmt;
 	private String smsAmt;
-	private int discountAmt;
+	private Integer discountAmt;
 
 	//TODO 관리자 구분 불가하여 임시 사용. 신규 등록과 요청 구분용
 	private String reqYn;

@@ -21,22 +21,25 @@ public class PubNotiRawData extends PubNotiBase {
     @Column(name = "pub_noti_raw_data_id")
     private long pubNotiRawDataId;
 
-    @Column(name = "goods_name", length = 30)
+    @Column(name = "goods_name")
     private String goodsName;
 
-    @Column(name = "model_name", length = 20)
+    @Column(name = "model_name")
     private String modelName;
 
-    @Column(name = "maker_name", length = 20)
+    @Column(name = "maker_name")
     private String makerName;
 
-    @Column(name = "charge_name", length = 30)
+    @Column(name = "charge_name")
     private String chargeName;
 
-    @Column(name = "telecom_name", length = 20)
+    @Column(name = "charge_code")
+    private String chargeCode;
+
+    @Column(name = "telecom_name")
     private String telecomName;
 
-    @Column(name = "network_name", length = 20)
+    @Column(name = "network_name")
     private String networkName;
 
     @Column(name = "release_amt")
@@ -62,7 +65,7 @@ public class PubNotiRawData extends PubNotiBase {
     private Long deadLineUserId;
 
     @Builder
-    public PubNotiRawData(long pubNotiRawDataId, String goodsName, String modelName, String makerName, String chargeName
+    public PubNotiRawData(long pubNotiRawDataId, String goodsName, String modelName, String makerName, String chargeName, String chargeCode
     ,String telecomName, String networkName, int releaseAmt, int supportAmt, LocalDate releaseDate, LocalDateTime regiDateTime
     ,LocalDateTime deadLineDateTime, String deadLineYn, Long deadLineUserId){
         this.pubNotiRawDataId = pubNotiRawDataId;
@@ -70,6 +73,7 @@ public class PubNotiRawData extends PubNotiBase {
         this.modelName = modelName;
         this.makerName = makerName;
         this.chargeName = chargeName;
+        this.chargeCode = chargeCode;
         this.telecomName = telecomName;
         this.networkName = networkName;
         this.releaseAmt = releaseAmt;

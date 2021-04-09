@@ -47,7 +47,7 @@ public class Charge extends ChargeBase{
     @Builder
     public Charge(long chargeId, String chargeName, int chargeAmt, String category, int telecom, int network
             , String originKey, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn
-    , String voiceAmt, String dataAmt, String smsAmt, int discountAmt){
+    , String voiceAmt, String dataAmt, String smsAmt, Integer discountAmt){
         this.chargeId = chargeId;
         this.chargeName = chargeName;
         this.chargeAmt = chargeAmt;

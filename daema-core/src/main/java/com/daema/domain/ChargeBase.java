@@ -45,7 +45,7 @@ public abstract class ChargeBase {
     protected String smsAmt;
 
     @Column(name = "discount_amt")
-    protected int discountAmt;
+    protected Integer discountAmt;
 
     @Column(name = "regi_datetime")
     protected LocalDateTime regiDateTime;
