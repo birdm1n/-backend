@@ -13,7 +13,6 @@ import com.daema.repository.*;
 import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
 import com.daema.response.exception.ProcessErrorException;
-import com.daema.response.exception.UnAuthorizedException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -54,12 +53,6 @@ public class OpeningStoreMgmtService {
         return new ResponseDto(OpeningStoreMgmtDto.class, dataList);
     }
 
-    public OpeningStoreMgmtDto getOpenStoreDetail(long openStoreId, long storeId) {
-        OpenStore openStore = openStoreRepository.findByOpenStoreIdAndStoreIdAndDelYn(openStoreId, storeId, "N").orElse(null);
-
-        return openStore != null ? OpeningStoreMgmtDto.from(openStore) : null;
-    }
-
     public void insertOpenStore(OpeningStoreMgmtDto openingStoreMgmtDto) {
         //TODO ifnull return 함수 추가
         openStoreRepository.save(
@@ -86,8 +79,6 @@ public class OpeningStoreMgmtService {
         OpenStore openStore = openStoreRepository.findOpenStoreInfo(openingStoreMgmtDto.getOpenStoreId(), openingStoreMgmtDto.getStoreId());
 
         if (openStore != null) {
-
-            checkEqualStoreId(openingStoreMgmtDto.getStoreId(), openStore.getStoreId());
 
             //TODO ifnull return 함수 추가
             openStore.setOpenStoreId(openingStoreMgmtDto.getOpenStoreId());
@@ -319,18 +310,6 @@ public class OpeningStoreMgmtService {
             }
         } else {
             throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
-        }
-    }
-
-    /**
-     * DB 와 request 의 관리점 ID가 동일한지 비교
-     * @param source_store_id
-     * @param target_store_id
-     */
-    private static void checkEqualStoreId(long source_store_id, long target_store_id){
-
-        if(source_store_id != target_store_id){
-            throw new UnAuthorizedException(ServiceReturnMsgEnum.UNAUTHORIZED.name());
         }
     }
 }

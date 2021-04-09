@@ -21,6 +21,10 @@ public class ChargeRegReqDto {
 	private int network;
 	private LocalDateTime regiDateTime;
 	private int reqStatus;
+	private String voiceAmt;
+	private String dataAmt;
+	private String smsAmt;
+	private int discountAmt;
 	private ChargeRegReqRejectDto regReqRejectDto;
 
 	public static ChargeRegReqDto from (ChargeRegReq chargeRegReq) {
@@ -34,6 +38,10 @@ public class ChargeRegReqDto {
 				.network(chargeRegReq.getNetworkAttribute().getNetwork())
 				.regiDateTime(chargeRegReq.getRegiDateTime())
 				.reqStatus(chargeRegReq.getReqStatus())
+				.voiceAmt(chargeRegReq.getVoiceAmt())
+				.dataAmt(chargeRegReq.getDataAmt())
+				.smsAmt(chargeRegReq.getSmsAmt())
+				.discountAmt(chargeRegReq.getDiscountAmt())
 				.regReqRejectDto(ChargeRegReqRejectDto.from(chargeRegReq.getChargeRegReqReject()))
 				.build();
 	}

@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(Include.NON_NULL)
 public class OrganizationMgmtDto {
 
 	private long orgId;
@@ -29,7 +30,6 @@ public class OrganizationMgmtDto {
 	private long id;
 	private String name;
 
-	@JsonInclude(Include.NON_NULL)
 	private List<OrganizationMgmtDto> children;
 
 	public static OrganizationMgmtDto from (Organization organization) {

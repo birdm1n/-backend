@@ -11,13 +11,10 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of="chargeRegReqId")
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name="charge_reg_req")
 public class ChargeRegReq extends ChargeBase {
-
-    public ChargeRegReq() {
-
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

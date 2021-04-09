@@ -23,6 +23,10 @@ public class ChargeMgmtDto {
 	private String matchingYn;
 	private String delYn;
 	private LocalDateTime regiDateTime;
+	private String voiceAmt;
+	private String dataAmt;
+	private String smsAmt;
+	private int discountAmt;
 
 	//TODO 관리자 구분 불가하여 임시 사용. 신규 등록과 요청 구분용
 	private String reqYn;
@@ -40,6 +44,10 @@ public class ChargeMgmtDto {
 				.useYn(charge.getUseYn())
 				.matchingYn(charge.getMatchingYn())
 				.delYn(charge.getDelYn())
+				.voiceAmt(charge.getVoiceAmt())
+				.dataAmt(charge.getDataAmt())
+				.smsAmt(charge.getSmsAmt())
+				.discountAmt(charge.getDiscountAmt())
 				.build();
 	}
 }

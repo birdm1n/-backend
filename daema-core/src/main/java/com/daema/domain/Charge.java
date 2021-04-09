@@ -12,13 +12,10 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of="chargeId")
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name="charge")
 public class Charge extends ChargeBase{
-
-    public Charge() {
-
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +46,8 @@ public class Charge extends ChargeBase{
 
     @Builder
     public Charge(long chargeId, String chargeName, int chargeAmt, String category, int telecom, int network
-            , String originKey, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn){
+            , String originKey, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn
+    , String voiceAmt, String dataAmt, String smsAmt, int discountAmt){
         this.chargeId = chargeId;
         this.chargeName = chargeName;
         this.chargeAmt = chargeAmt;
@@ -60,6 +58,10 @@ public class Charge extends ChargeBase{
         this.matchingYn = matchingYn;
         this.delYn = delYn;
         this.regiDateTime = regiDateTime;
+        this.voiceAmt = voiceAmt;
+        this.dataAmt = dataAmt;
+        this.smsAmt = smsAmt;
+        this.discountAmt = discountAmt;
     }
 
     public void updateUseYn(Charge charge, String useYn){

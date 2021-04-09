@@ -1,5 +1,6 @@
 package com.daema.web;
 
+import com.daema.common.Constants;
 import com.daema.dto.ChargeMgmtDto;
 import com.daema.dto.ChargeMgmtRequestDto;
 import com.daema.dto.ChargeRegReqDto;
@@ -29,20 +30,20 @@ public class ChargeMgmtController {
         this.responseHandler = responseHandler;
     }
 
-    @ApiOperation(value = "요금 목록 조회", notes = "요금 목록을 조회합니다")
+    @ApiOperation(value = "요금 목록 조회", notes = "요금 목록을 조회합니다", nickname = Constants.API_CHARGE + "||1")
     @GetMapping("/getList")
     public ResponseEntity<CommonResponse<ResponseDto<ChargeMgmtDto>>> getList(ChargeMgmtRequestDto requestDto) {
         return responseHandler.getResponseMessageAsRetrieveResult(chargeMgmtService.getList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-    @ApiOperation(value = "요금 등록", notes = "신규 요금을 등록합니다")
+    @ApiOperation(value = "요금 등록", notes = "신규 요금을 등록합니다", nickname = Constants.API_CHARGE + "||2")
     @PostMapping("/insertData")
     public ResponseEntity<CommonResponse<Void>> insertData(@ApiParam(value = "요금 정보", required = true) @RequestBody ChargeMgmtDto chargeMgmtDto) {
         chargeMgmtService.insertData(chargeMgmtDto);
         return responseHandler.ok();
     }
 
-    @ApiOperation(value = "요금 수정", notes = "특정 요금의 내용을 변경합니다")
+    @ApiOperation(value = "요금 수정", notes = "요금의 내용을 변경합니다", nickname = Constants.API_CHARGE + "||3")
     @PostMapping("/updateData")
     public ResponseEntity<CommonResponse<Void>> updateData(@ApiParam(value = "요금 정보", required = true) @RequestBody ChargeMgmtDto chargeMgmtDto) {
         chargeMgmtService.updateData(chargeMgmtDto);
@@ -50,7 +51,7 @@ public class ChargeMgmtController {
         return responseHandler.ok();
     }
 
-    @ApiOperation(value = "요금 삭제", notes = "특정 요금을 삭제합니다")
+    @ApiOperation(value = "요금 삭제", notes = "요금을 삭제합니다", nickname = Constants.API_CHARGE + "||4")
     @ApiImplicitParam(value = "요금 ID", required = true, example = "1", name = "chargeId", paramType = "query", allowMultiple = true)
     @PostMapping("/deleteData")
     public ResponseEntity<CommonResponse<Void>> deleteData(@ApiIgnore @RequestBody ModelMap reqModel) {
@@ -60,7 +61,7 @@ public class ChargeMgmtController {
         return responseHandler.ok();
     }
 
-    @ApiOperation(value = "요금 사용여부 수정", notes = "특정 요금의 사용 여부를 변경합니다")
+    @ApiOperation(value = "요금 사용여부 수정", notes = "요금의 사용 여부를 변경합니다", nickname = Constants.API_CHARGE + "||5")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "요금 ID", required = true, example = "1", name = "chargeId"),
             @ApiImplicitParam(value = "사용여부", required = true, name = "useYn")
@@ -72,26 +73,26 @@ public class ChargeMgmtController {
         return responseHandler.ok();
     }
 
-    @ApiOperation(value = "요금 등록 요청 조회", notes = "요금 등록 요청 목록을 조회합니다")
+    @ApiOperation(value = "요금 등록 요청 조회", notes = "요금 등록 요청 목록을 조회합니다", nickname = Constants.API_CHARGE + "||6")
     @GetMapping("/getRegReqList")
     public ResponseEntity<CommonResponse<ResponseDto<ChargeRegReqDto>>> getRegReqList(ChargeRegReqRequestDto requestDto) {
         return responseHandler.getResponseMessageAsRetrieveResult(chargeMgmtService.getRegReqList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-    @ApiOperation(value = "요금 등록 요청 승인 및 반려", notes = "요금 등록 요청건에 대해 처리합니다")
+    @ApiOperation(value = "요금 등록 요청 승인 및 반려", notes = "요금 등록 요청건에 대해 처리합니다", nickname = Constants.API_CHARGE + "||7")
     @PostMapping("/updateReqStatus")
     public ResponseEntity<CommonResponse<Void>> updateReqStatus(@ApiParam(value = "요금 등록 요청 건 처리", required = true) @RequestBody ChargeRegReqDto chargeRegReqDto) {
         chargeMgmtService.updateReqStatus(chargeRegReqDto);
         return responseHandler.ok();
     }
 
-    @ApiOperation(value = "매칭 대상 목록 조회", notes = "매칭 대상 목록을 조회합니다")
+    @ApiOperation(value = "매칭 대상 목록 조회", notes = "매칭 대상 목록을 조회합니다", nickname = Constants.API_CHARGE + "||8")
     @GetMapping("/getMatchList")
     public ResponseEntity<CommonResponse<ResponseDto<ChargeMgmtDto>>> getMatchList() {
         return responseHandler.getResponseMessageAsRetrieveResult(chargeMgmtService.getMatchList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-    @ApiOperation(value = "매칭 완료 처리", notes = "선택한 항목들을 매칭 완료 처리합니다")
+    @ApiOperation(value = "매칭 완료 처리", notes = "선택한 항목들을 매칭 완료 처리합니다", nickname = Constants.API_CHARGE + "||9")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "요금 ID", required = true, example = "1", name = "groupChargeId", paramType = "query", allowMultiple = true)
             , @ApiImplicitParam(value = "대표 요금 ID", required = true, example = "1", name = "useChargeId")

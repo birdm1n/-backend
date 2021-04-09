@@ -1,5 +1,6 @@
 package com.daema.web;
 
+import com.daema.common.Constants;
 import com.daema.dto.PubNotiMgmtDto;
 import com.daema.dto.PubNotiMgmtResponseDto;
 import com.daema.dto.common.ResponseDto;
@@ -27,21 +28,21 @@ public class PubNotiMgmtController {
         this.responseHandler = responseHandler;
     }
 
-    @ApiOperation(value = "공시지원금 목록 조회", notes = "공시지원금 목록을 조회합니다")
+    @ApiOperation(value = "공시지원금 목록 조회", notes = "공시지원금 목록을 조회합니다", nickname = Constants.API_PUB_NOTI + "||1")
     @GetMapping("/getList")
     public ResponseEntity<CommonResponse<PubNotiMgmtResponseDto>> getList(@ApiParam(value = "통신사 ID", required = true, example = "1") @RequestParam int telecom
             , @ApiParam(value = "통신망 ID", required = true, example = "1") @RequestParam int network) {
         return responseHandler.getResponseMessageAsRetrieveResult(pubNotiMgmtService.getList(telecom, network), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-    @ApiOperation(value = "공시지원금 등록", notes = "신규 공시지원금을 등록합니다")
+    @ApiOperation(value = "공시지원금 등록", notes = "신규 공시지원금을 등록합니다", nickname = Constants.API_PUB_NOTI + "||2")
     @PostMapping("/insertData")
     public ResponseEntity<CommonResponse<Void>> insertData(@ApiParam(value = "공시지원금 정보", required = true) @RequestBody PubNotiMgmtDto pubNotiMgmtDto) {
         pubNotiMgmtService.insertData(pubNotiMgmtDto);
         return responseHandler.ok();
     }
 
-    @ApiOperation(value = "특정 상품,요금의 공시지원금 히스토리 조회", notes = "특정 상품,요금의 공시지원금 히스토리를 조회합니다")
+    @ApiOperation(value = "공시지원금 히스토리 조회", notes = "상품,요금의 공시지원금 히스토리를 조회합니다", nickname = Constants.API_PUB_NOTI + "||3")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "상품 ID", required = true, example = "1", name = "goodsId")
             ,@ApiImplicitParam(value = "요금 ID", required = true, example = "1", name = "chargeId")
@@ -52,7 +53,7 @@ public class PubNotiMgmtController {
         return responseHandler.getResponseMessageAsRetrieveResult(pubNotiMgmtService.getHistoryList(chargeId, goodsId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-    @ApiOperation(value = "공시지원금 삭제", notes = "특정 공시지원금을 삭제합니다")
+    @ApiOperation(value = "공시지원금 삭제", notes = "공시지원금을 삭제합니다", nickname = Constants.API_PUB_NOTI + "||4")
     @ApiImplicitParam(value = "공시지원금 ID", required = true, example = "1", name = "pubNotiId")
     @PostMapping("/deleteData")
     public ResponseEntity<CommonResponse<Void>> deleteData(@ApiIgnore @RequestBody ModelMap modelMap) {
@@ -62,7 +63,7 @@ public class PubNotiMgmtController {
         return responseHandler.ok();
     }
 
-    @ApiOperation(value = "공시지원금 원천 데이터 목록 조회", notes = "공시지원금 원천 데이터 목록을 조회합니다")
+    @ApiOperation(value = "공시지원금 원천 데이터 목록 조회", notes = "공시지원금 원천 데이터 목록을 조회합니다", nickname = Constants.API_PUB_NOTI + "||5")
     @GetMapping("/getRawDataList")
     public ResponseEntity<CommonResponse<PubNotiMgmtResponseDto>> getRawDataList() {
         return responseHandler.getResponseMessageAsRetrieveResult(pubNotiMgmtService.getRawDataList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());

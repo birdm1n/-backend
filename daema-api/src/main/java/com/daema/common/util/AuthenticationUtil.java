@@ -31,7 +31,7 @@ public class AuthenticationUtil {
 
             if("storeId".equals(type)){
                 returnId = user.getStoreId();
-            }else if("userId".equals(type)){
+            }else if("memberSeq".equals(type)){
                 returnId = user.getUserId();
             }
         }catch (Exception ignore){

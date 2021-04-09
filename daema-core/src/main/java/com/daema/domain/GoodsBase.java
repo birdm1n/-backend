@@ -20,7 +20,7 @@ public abstract class GoodsBase {
     protected String goodsName;
 
     @NotBlank
-    @Column(name = "model_name", length = 20, nullable = false)
+    @Column(name = "model_name", length = 50, nullable = false)
     protected String modelName;
 
     @Column(name = "maker")

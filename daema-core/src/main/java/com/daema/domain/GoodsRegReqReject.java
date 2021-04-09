@@ -13,13 +13,10 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of="goodsRegReqRejectId")
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name="goods_reg_req_reject")
 public class GoodsRegReqReject {
-
-    public GoodsRegReqReject() {
-
-    }
 
     @Id
     @NotNull

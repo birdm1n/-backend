@@ -13,13 +13,10 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(of="goodsId")
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name="goods")
 public class Goods extends GoodsBase{
-
-    public Goods() {
-
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

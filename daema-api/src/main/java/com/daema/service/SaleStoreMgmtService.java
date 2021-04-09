@@ -3,7 +3,6 @@ package com.daema.service;
 import com.daema.common.enums.StatusEnum;
 import com.daema.domain.Store;
 import com.daema.domain.StoreMap;
-import com.daema.domain.User2;
 import com.daema.domain.pk.StoreMapPK;
 import com.daema.dto.*;
 import com.daema.dto.common.ResponseDto;
@@ -51,13 +50,6 @@ public class SaleStoreMgmtService {
 		return new ResponseDto(SaleStoreMgmtDto.class, dataList);
 	}
 
-	public SaleStoreMgmtDto getStoreDetail(long storeId) {
-
-		Store store = storeRepository.findById(storeId).orElse(null);
-
-		return store != null ? SaleStoreMgmtDto.from(store) : null;
-	}
-
 	@Transactional
 	public void insertStoreAndUserAndStoreMap(SaleStoreUserWrapperDto wrapperDto) {
 
@@ -97,29 +89,13 @@ public class SaleStoreMgmtService {
         ).getStoreId();
 	}
 
-	public void insertUser(UserMgmtDto userMgmtDto) {
-		user2Repository.save(
-                User2.builder()
-						.userId(userMgmtDto.getUserId())
-                        .email(userMgmtDto.getEmail())
-                        .userPw(userMgmtDto.getUserPw())
-                        .userName(userMgmtDto.getUserName())
-                        .userPhone(userMgmtDto.getUserPhone())
-                        .storeId(userMgmtDto.getStoreId())
-                        .orgId(userMgmtDto.getOrgId())
-                        .userStatus(userMgmtDto.getUserStatus())
-                        .lastUpdDateTime(LocalDateTime.now())
-                    .build()
-        );
-	}
-
 	public void insertStoreMap(SaleStoreUserWrapperDto wrapperDto) {
-        StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(wrapperDto.getSaleStore().getStoreId(), wrapperDto.getParentStoreId());
+        StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(wrapperDto.getMember().getStoreId(), wrapperDto.getParentStoreId());
 
         if(storeMap == null) {
 			storeMapRepository.save(
 					StoreMap.builder()
-							.storeId(wrapperDto.getSaleStore().getStoreId())
+							.storeId(wrapperDto.getMember().getStoreId())
 							.parentStoreId(wrapperDto.getParentStoreId())
 							.useYn(wrapperDto.getSaleStore().getUseYn())
 							.build()

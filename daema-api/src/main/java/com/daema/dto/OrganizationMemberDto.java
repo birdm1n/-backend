@@ -27,4 +27,5 @@ public class OrganizationMemberDto {
 	private long storeId;
 	private long orgId;
 	private String userStatus;
+	private Integer[] roleIds;
 }

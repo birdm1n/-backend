@@ -8,13 +8,10 @@ import javax.persistence.*;
 @Setter
 @EqualsAndHashCode(of="goodsOptionId")
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name="goods_option")
 public class GoodsOption {
-
-    public GoodsOption() {
-
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

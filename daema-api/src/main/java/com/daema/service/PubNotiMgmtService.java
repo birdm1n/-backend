@@ -107,7 +107,7 @@ public class PubNotiMgmtService {
 
             if(pubNoti != null) {
                 //TODO security 설정에 따라 userId 가져오는 방식 변경 필요
-                //pubNoti.updateDelInfo(pubNoti, authenticationUtil.getId("userId"), StatusEnum.FLAG_Y.getStatusMsg());
+                //pubNoti.updateDelInfo(pubNoti, authenticationUtil.getId("memberSeq"), StatusEnum.FLAG_Y.getStatusMsg());
                 pubNoti.updateDelInfo(pubNoti, 1, StatusEnum.FLAG_Y.getStatusMsg());
             } else {
                 throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());

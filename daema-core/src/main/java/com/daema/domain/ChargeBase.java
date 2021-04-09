@@ -17,8 +17,12 @@ import java.time.LocalDateTime;
 public abstract class ChargeBase {
 
     @NotBlank
-    @Column(name = "charge_name", length = 30, nullable = false)
+    @Column(name = "charge_name", nullable = false)
     protected String chargeName;
+
+    @NotBlank
+    @Column(name = "charge_code", length = 20, nullable = false)
+    protected String chargeCode;
 
     @NotBlank
     @Column(name = "category", length = 100, nullable = false)
@@ -30,6 +34,18 @@ public abstract class ChargeBase {
 
     @Embedded
     protected NetworkAttribute networkAttribute;
+
+    @Column(name = "voice_amt")
+    protected String voiceAmt;
+
+    @Column(name = "data_amt")
+    protected String dataAmt;
+
+    @Column(name = "sms_amt")
+    protected String smsAmt;
+
+    @Column(name = "discount_amt")
+    protected int discountAmt;
 
     @Column(name = "regi_datetime")
     protected LocalDateTime regiDateTime;

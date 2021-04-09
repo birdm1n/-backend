@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Getter
@@ -48,9 +49,51 @@ public class ResponseDto<T> extends PagingDto {
     }
 
     public ResponseDto (Class<?> clazz, List<T> dataList) {
-
         if(dataList != null) {
             this.setResultList(CommonUtil.entityToDto(clazz, dataList, "from"));
         }
     }
+
+    /**
+     * new ResponseDto(dataList, entity -> (Dto.from((Entity) entity)));
+     * @param dataList
+     * @param fn
+     */
+    public ResponseDto (Function<T, T> fn, Page<T> dataList){
+        if(dataList != null) {
+            this.setResultList(dataList.stream().map(fn).collect(Collectors.toList()));
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,8 +1,12 @@
 package com.daema.repository;
 
+import com.daema.domain.MemberRole;
 import com.daema.domain.Organization;
+import com.daema.domain.QMember;
+import com.daema.domain.QMemberRole;
 import com.daema.domain.dto.OrgnztListDto;
 import com.daema.domain.dto.OrgnztMemberListDto;
+import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import javax.persistence.EntityManager;
@@ -21,13 +25,13 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
     private EntityManager em;
 
     @Override
-    public HashMap<String, List> getOrgnztAndMemberList() {
+    public HashMap<String, List> getOrgnztAndMemberList(long StoreId) {
 
         HashMap<String, List> retMap = new HashMap<>();
 
-        //TODO 하드코딩
-        retMap.put("orgnztList", searchOrgnztList(1L));
-        retMap.put("memberList", searchOrgnztMemberList(1L));
+        retMap.put("orgnztList", searchOrgnztList(StoreId));
+        retMap.put("memberList", searchOrgnztMemberList(StoreId));
+        retMap.put("memberRoleList", searchOrgnztMemberRoleList(StoreId));
 
         return retMap;
     }
@@ -160,6 +164,23 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
                 .setParameter("store_id", store_id);
 
         return query.getResultList();
+    }
+
+    private List<MemberRole> searchOrgnztMemberRoleList(long store_id){
+
+        QMemberRole memberRole = QMemberRole.memberRole;
+        QMember member = QMember.member;
+
+        JPQLQuery<MemberRole> query = getQuerydsl().createQuery();
+        query.from(memberRole)
+                .innerJoin(member)
+                .on(
+                        member.storeId.eq(store_id)
+                        .and(member.userStatus.ne("9"))
+                        .and(member.seq.eq(memberRole.seq))
+                );
+
+        return query.fetch();
     }
 }
 

@@ -6,13 +6,14 @@ import com.daema.common.util.AuthenticationUtil;
 import com.daema.common.util.CommonUtil;
 import com.daema.common.util.SaltUtil;
 import com.daema.domain.Member;
+import com.daema.domain.MemberRole;
 import com.daema.domain.Organization;
+import com.daema.domain.RoleMgmt;
 import com.daema.domain.dto.OrgnztListDto;
-import com.daema.dto.OrganizationMemberDto;
-import com.daema.dto.OrganizationMgmtDto;
-import com.daema.dto.OrganizationMgmtRequestDto;
-import com.daema.dto.OrganizationMgmtResponseDto;
+import com.daema.domain.dto.OrgnztMemberListDto;
+import com.daema.dto.*;
 import com.daema.repository.MemberRepository;
+import com.daema.repository.MemberRoleRepository;
 import com.daema.repository.OrganizationRepository;
 import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
@@ -27,6 +28,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.daema.dto.OrganizationMgmtResponseDto.OrgnztMemberAndRoleDto;
+
 @Service
 public class OrganizationMgmtService {
 
@@ -34,23 +37,34 @@ public class OrganizationMgmtService {
 
     private final MemberRepository memberRepository;
 
+    private final MemberRoleRepository memberRoleRepository;
+
     private final AuthService authService;
+
+    private final RoleFuncMgmtService roleFuncMgmtService;
 
     private final AuthenticationUtil authenticationUtil;
 
     private final SaltUtil saltUtil;
 
-    public OrganizationMgmtService(OrganizationRepository organizationRepository, MemberRepository memberRepository, AuthService authService, AuthenticationUtil authenticationUtil, SaltUtil saltUtil) {
+    public OrganizationMgmtService(OrganizationRepository organizationRepository, MemberRepository memberRepository, MemberRoleRepository memberRoleRepository
+            ,AuthService authService, RoleFuncMgmtService roleFuncMgmtService, AuthenticationUtil authenticationUtil, SaltUtil saltUtil) {
         this.organizationRepository = organizationRepository;
         this.memberRepository = memberRepository;
+        this.memberRoleRepository = memberRoleRepository;
         this.authService = authService;
+        this.roleFuncMgmtService = roleFuncMgmtService;
         this.authenticationUtil = authenticationUtil;
         this.saltUtil = saltUtil;
     }
 
     public OrganizationMgmtResponseDto getOrgnztList(OrganizationMgmtRequestDto requestDto) {
 
-        HashMap<String, List> orgnztMemberListMap = organizationRepository.getOrgnztAndMemberList();
+        //TODO ID 받아와야 함
+        //long storeId = authenticationUtil.getId("storeId");
+        long storeId = 1L;
+
+        HashMap<String, List> orgnztMemberListMap = organizationRepository.getOrgnztAndMemberList(storeId);
 
         OrganizationMgmtResponseDto responseDto = new OrganizationMgmtResponseDto();
 
@@ -77,7 +91,33 @@ public class OrganizationMgmtService {
         }
 
         responseDto.setOrgnztList(orgnztList);
-        responseDto.setMemberList(orgnztMemberListMap.get("memberList"));
+
+        List<OrgnztMemberAndRoleDto> mList = new ArrayList<>();
+
+        if(CommonUtil.isNotEmptyList(orgnztMemberListMap.get("memberList"))){
+
+            orgnztMemberListMap.get("memberList").forEach(
+                member -> {
+                    mList.add(new OrgnztMemberAndRoleDto((OrgnztMemberListDto) member
+                                    ,((List<MemberRole>) orgnztMemberListMap.get("memberRoleList"))
+                                    .stream()
+                                    .filter(roles -> roles.getSeq() == ((OrgnztMemberListDto) member).getSeq())
+                                    .map(MemberRole::getRoleId)
+                                    .collect(Collectors.toList()))
+                    );
+                }
+            );
+        }
+
+        responseDto.setMemberList(mList);
+
+        List<RoleMgmt> roleList = roleFuncMgmtService.getRoleList(storeId);
+
+        List<FuncRoleMgmtDto.RoleMgmtDto> roleDtoList = roleList.stream()
+                .map(FuncRoleMgmtDto.RoleMgmtDto::from)
+                .collect(Collectors.toList());
+
+        responseDto.setStoreRoleList(roleDtoList);
 
         return responseDto;
     }
@@ -163,7 +203,31 @@ public class OrganizationMgmtService {
                 .userStatus(orgnztMemberDto.getUserStatus())
             .build());
 
-        return memberRepository.findByUsername(orgnztMemberDto.getUsername()).getSeq();
+        long seq = memberRepository.findByUsername(orgnztMemberDto.getUsername()).getSeq();
+
+        orgnztMemberDto.setSeq(seq);
+
+        ctrlMemberRole(orgnztMemberDto);
+
+        return seq;
+    }
+
+    @Transactional
+    public void ctrlMemberRole(OrganizationMemberDto orgnztMemberDto){
+
+        if(CommonUtil.isNotEmptyList(Arrays.asList(orgnztMemberDto.getRoleIds()))){
+            long memberSeq = orgnztMemberDto.getSeq();
+
+            memberRoleRepository.deleteBySeq(memberSeq);
+
+            List<MemberRole> memberRoles = new ArrayList<>();
+
+            for(int roleId : orgnztMemberDto.getRoleIds()){
+                memberRoles.add(new MemberRole(memberSeq, roleId));
+            }
+
+            memberRoleRepository.saveAll(memberRoles);
+        }
     }
 
     @Transactional
@@ -179,10 +243,13 @@ public class OrganizationMgmtService {
             member.setPhone(orgnztMemberDto.getPhone());
             member.setUserStatus(orgnztMemberDto.getUserStatus());
 
-            if("Y".equals(orgnztMemberDto.getChgPassword())){
+            if(StatusEnum.FLAG_Y.getStatusMsg().equals(orgnztMemberDto.getChgPassword())){
                 authService.changePassword(member, orgnztMemberDto.getPassword());
                 authService.requestChangePassword(member);
             }
+
+            ctrlMemberRole(orgnztMemberDto);
+
         }else{
             throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
         }
@@ -218,10 +285,13 @@ public class OrganizationMgmtService {
 
         List<Number> delUserIds = (ArrayList<Number>) reqModelMap.get("delUserId");
 
-        if(delUserIds != null
-                && delUserIds.size() > 0){
-
-            delUserIds.forEach(seq -> memberRepository.deleteById(seq.longValue()));
+        if(CommonUtil.isNotEmptyList(delUserIds)){
+            delUserIds.forEach(
+                    seq -> {
+                        memberRepository.deleteById(seq.longValue());
+                        memberRoleRepository.deleteBySeq(seq.longValue());
+                    }
+            );
         }else{
             throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
         }
