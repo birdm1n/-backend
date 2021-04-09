@@ -6,6 +6,18 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+/**
+ * 1. Process
+ * - PubNotiRawData. deadLineYn = 'N' 조회
+ * - model_name 그룹핑 및 Goods 테이블 조회해서 신규 상품은 Goods 테이블에 인서트
+ * - Charge, Goods, CodeDetail(모델명, 제조사, 통신사) 매칭 건만 PubNotiCodeMapData 테이블 인서트
+ * - PubNoti 테이블에 공시금액 및 코드 데이터 저장
+ * - PubNoti에 정상 저장된 건에 대해 PubNotiRawData, PubNotiCodeMapData 마감 처리
+ *
+ * 2. Rule
+ * - 미리 코드화 되지 않은 데이터는 마감처리 불가
+ * - PubNotiCodeMapData 테이블에 금일 마감요청 들어온 건에 대해서만 처리 됨
+ */
 public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport implements CustomPubNotiRawDataRepository {
 
     public PubNotiRawDataRepositoryImpl() {
@@ -22,10 +34,10 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
         insertNewGoods();
 
         //상품_요금_코드화 및 공시 정보 임시 저장
-        insertCodeMapData(memberSeq);
-
-        //공시 테이블 인서트 및 원천 데이터 테이블과 코드 맵핑 테이블 마감 처리
-        insertPubInfoUpdateRawData(memberSeq);
+        if(insertCodeMapData(memberSeq) > 0){
+            //공시 테이블 인서트 및 원천 데이터 테이블과 코드 맵핑 테이블 마감 처리
+            insertPubInfoUpdateRawData(memberSeq);
+        }
     }
 
     private void insertNewGoods(){
@@ -54,7 +66,7 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
                 .executeUpdate();
     }
 
-    private void insertCodeMapData(long memberSeq){
+    private int insertCodeMapData(long memberSeq){
 
         StringBuilder sb = new StringBuilder();
         sb.append("insert ignore into pub_noti_code_map_data (regi_datetime, charge_id, deadline_date, deadline_user_id, deadline_yn, goods_id, pub_noti_raw_data_id, release_amt, release_date, support_amt) " +
@@ -81,7 +93,7 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
                 "  inner join code_detail as cd3 " +
                 "     on a.network_name = cd3.code_desc ");
 
-        em.createNativeQuery(sb.toString())
+        return em.createNativeQuery(sb.toString())
                 .setParameter("memberSeq", memberSeq)
                 .executeUpdate();
     }
