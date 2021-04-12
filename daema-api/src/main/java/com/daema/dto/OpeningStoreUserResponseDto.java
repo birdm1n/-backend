@@ -1,6 +1,6 @@
 package com.daema.dto;
 
-import com.daema.domain.User2;
+import com.daema.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,11 +19,11 @@ public class OpeningStoreUserResponseDto {
 	public List<OpenStoreUserMap> userList = new ArrayList<>();
 
 	public static class OpenStoreUserMap{
-		public UserMgmtDto user;
+		public MemberMgmtDto user;
 		public List<String[]> openStoreMap;
 
-		public OpenStoreUserMap(User2 user2, List<String[]> filterOpenStoreInfo) {
-			user = UserMgmtDto.from(user2);
+		public OpenStoreUserMap(Member member, List<String[]> filterOpenStoreInfo) {
+			user = MemberMgmtDto.from(member);
 			openStoreMap = filterOpenStoreInfo;
 		}
 	}

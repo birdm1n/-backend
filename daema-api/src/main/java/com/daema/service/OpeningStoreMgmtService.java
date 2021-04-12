@@ -31,16 +31,16 @@ public class OpeningStoreMgmtService {
     private final OpenStoreRepository openStoreRepository;
     private final StoreRepository storeRepository;
     private final OpenStoreSaleStoreMapRepository openStoreSaleStoreMapRepository;
-    private final User2Repository user2Repository;
+    private final MemberRepository memberRepository;
     private final OpenStoreUserMapRepository openStoreUserMapRepository;
 
     public OpeningStoreMgmtService(OpenStoreRepository openStoreRepository
-            , StoreRepository storeRepository , OpenStoreSaleStoreMapRepository openStoreSaleStoreMapRepository
-            ,User2Repository user2Repository , OpenStoreUserMapRepository openStoreUserMapRepository) {
+            , StoreRepository storeRepository ,OpenStoreSaleStoreMapRepository openStoreSaleStoreMapRepository
+            ,MemberRepository memberRepository ,OpenStoreUserMapRepository openStoreUserMapRepository) {
         this.openStoreRepository = openStoreRepository;
         this.storeRepository = storeRepository;
         this.openStoreSaleStoreMapRepository = openStoreSaleStoreMapRepository;
-        this.user2Repository = user2Repository;
+        this.memberRepository = memberRepository;
         this.openStoreUserMapRepository = openStoreUserMapRepository;
     }
 
@@ -239,7 +239,7 @@ public class OpeningStoreMgmtService {
         List<OpenStore> openStoreList = openStoreRepository.getOpenStoreList(storeId);
 
         //사용자 전체 목록
-        List<User2> userList = user2Repository.findByUser(storeId, QUser2.user2.userName.asc());
+        List<Member> memberList = memberRepository.findByMember(storeId, QMember.member.name.asc());
 
         //개통점, 사용자 맵핑 목록
         List<OpenStoreUserMap> mapList = openStoreUserMapRepository.getMappingList(storeId);
@@ -259,22 +259,22 @@ public class OpeningStoreMgmtService {
 
         List<String[]> filterOpenStoreInfos;
 
-        for (User2 user : userList) {
+        for (Member member : memberList) {
 
             filterOpenStoreInfos = new ArrayList<>();
 
-            if (mapList.stream().anyMatch(map -> map.getUserId() == user.getUserId())) {
+            if (mapList.stream().anyMatch(map -> map.getUserId() == member.getSeq())) {
                 for (OpenStore openStore : openStoreList) {
                     filterOpenStoreInfos.add(
                             new String[]{String.valueOf(openStore.getOpenStoreId())
-                                    , mapList.contains(new OpenStoreUserMap(openStore.getOpenStoreId(), user.getUserId())) ? StatusEnum.FLAG_Y.getStatusMsg() : StatusEnum.FLAG_N.getStatusMsg() }
+                                    , mapList.contains(new OpenStoreUserMap(openStore.getOpenStoreId(), member.getSeq())) ? StatusEnum.FLAG_Y.getStatusMsg() : StatusEnum.FLAG_N.getStatusMsg() }
                     );
                 }
             } else {
                 filterOpenStoreInfos = emptyOpenStoreList;
             }
 
-            responseDto.userList.add(new OpeningStoreUserResponseDto.OpenStoreUserMap(user, filterOpenStoreInfos));
+            responseDto.userList.add(new OpeningStoreUserResponseDto.OpenStoreUserMap(member, filterOpenStoreInfos));
         }
 
         return responseDto;

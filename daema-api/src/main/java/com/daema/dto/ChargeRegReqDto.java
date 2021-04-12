@@ -24,7 +24,7 @@ public class ChargeRegReqDto {
 	private String voiceAmt;
 	private String dataAmt;
 	private String smsAmt;
-	private int discountAmt;
+	private Integer discountAmt;
 	private ChargeRegReqRejectDto regReqRejectDto;
 
 	public static ChargeRegReqDto from (ChargeRegReq chargeRegReq) {

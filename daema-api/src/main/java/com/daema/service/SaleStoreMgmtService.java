@@ -8,7 +8,6 @@ import com.daema.dto.*;
 import com.daema.dto.common.ResponseDto;
 import com.daema.repository.StoreMapRepository;
 import com.daema.repository.StoreRepository;
-import com.daema.repository.User2Repository;
 import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
 import com.daema.response.exception.ProcessErrorException;
@@ -28,15 +27,12 @@ public class SaleStoreMgmtService {
 
 	private final StoreRepository storeRepository;
 
-	private final User2Repository user2Repository;
-
 	private final StoreMapRepository storeMapRepository;
 
 	private final OrganizationMgmtService organizationMgmtService;
 
-	public SaleStoreMgmtService(StoreRepository storeRepository, User2Repository user2Repository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService) {
+	public SaleStoreMgmtService(StoreRepository storeRepository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService) {
 		this.storeRepository = storeRepository;
-		this.user2Repository = user2Repository;
 		this.storeMapRepository = storeMapRepository;
 		this.organizationMgmtService = organizationMgmtService;
 	}

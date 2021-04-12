@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UserMgmtResponseDto extends PagingDto {
+public class MemberMgmtResponseDto extends PagingDto {
 
-    private List<UserMgmtDto> userList;
+    private List<MemberMgmtDto> userList;
 }

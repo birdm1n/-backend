@@ -6,6 +6,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserMgmtRequestDto extends SearchParamDto {
+public class MemberMgmtRequestDto extends SearchParamDto {
 
 }
