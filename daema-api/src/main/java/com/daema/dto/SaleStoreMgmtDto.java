@@ -39,4 +39,12 @@ public class SaleStoreMgmtDto {
 				.regiDateTime(store.getRegiDateTime())
 				.build();
 	}
+
+	public static SaleStoreMgmtDto ofInitData (Store store) {
+		return SaleStoreMgmtDto.builder()
+				.storeId(store.getStoreId())
+				.saleStoreName(store.getStoreName())
+				.bizNo(store.getBizNo())
+			.build();
+	}
 }

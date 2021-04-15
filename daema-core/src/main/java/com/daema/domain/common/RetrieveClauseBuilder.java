@@ -13,7 +13,7 @@ public class RetrieveClauseBuilder<T> implements Serializable {
     private static final long serialVersionUID = 4255525101821105338L;
 
     public static PageRequest setOffsetLimit(JPQLQuery<?> query, SearchParamDto requestDto){
-        PageRequest pageable = PageRequest.of(requestDto.getPageNo(), requestDto.getPerPageCnt());
+        PageRequest pageable = PageRequest.of(requestDto.getPageNo() - 1, requestDto.getPerPageCnt());
 
         query.offset(pageable.getOffset())
                 .limit(pageable.getPageSize());

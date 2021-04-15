@@ -37,7 +37,7 @@ public class AddServiceRegReq extends AddServiceBase {
 
     @Builder
     public AddServiceRegReq(long addSvcRegReqId, long reqStoreId, String addSvcName, int addSvcCharge, int telecom
-            , String originKey, LocalDateTime regiDateTime, String addSvcMemo, int reqStatus) {
+            , String originKey, LocalDateTime regiDateTime, String addSvcMemo, int reqStatus, String telecomName) {
         this.addSvcRegReqId = addSvcRegReqId;
         this.addSvcName = addSvcName;
         this.addSvcCharge = addSvcCharge;
@@ -46,6 +46,7 @@ public class AddServiceRegReq extends AddServiceBase {
         this.reqStatus = reqStatus;
         this.addSvcMemo = addSvcMemo;
         this.regiDateTime = regiDateTime;
+        this.telecomName = telecomName;
     }
 
     public void updateReqStatus(AddServiceRegReq addServiceRegReq, int reqStatus){

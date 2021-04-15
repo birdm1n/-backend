@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -31,4 +32,7 @@ public abstract class AddServiceBase {
 
     @Column(name = "regi_datetime")
     protected LocalDateTime regiDateTime;
+
+    @Transient
+    protected String telecomName;
 }

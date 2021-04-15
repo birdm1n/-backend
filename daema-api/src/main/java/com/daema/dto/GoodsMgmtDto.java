@@ -50,7 +50,7 @@ public class GoodsMgmtDto {
 				.optionList(Optional.ofNullable(goods.getOptionList())
 						.orElseGet(Collections::emptyList)
 						.stream()
-						.map(goodsOption -> GoodsOptionDto.from(goodsOption))
+						.map(GoodsOptionDto::from)
 						.collect(Collectors.toList()))
 				.makerName(goods.getMakerName())
 				.telecomName(goods.getTelecomName())

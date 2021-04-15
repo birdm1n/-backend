@@ -40,7 +40,8 @@ public class AddService extends AddServiceBase {
 
     @Builder
     public AddService(long addSvcId, String addSvcName, int addSvcCharge, int telecom
-            , String originKey, LocalDateTime regiDateTime, String addSvcMemo, String useYn, String delYn){
+            , String originKey, LocalDateTime regiDateTime, String addSvcMemo, String useYn, String delYn
+    ,String telecomName){
         this.addSvcId = addSvcId;
         this.addSvcName = addSvcName;
         this.addSvcCharge = addSvcCharge;
@@ -50,6 +51,7 @@ public class AddService extends AddServiceBase {
         this.useYn = useYn;
         this.delYn = delYn;
         this.regiDateTime = regiDateTime;
+        this.telecomName = telecomName;
     }
 
     public void updateUseYn(AddService addSvc, String useYn){

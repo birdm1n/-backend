@@ -22,6 +22,7 @@ public class AddServiceMgmtDto {
 	private String useYn;
 	private String delYn;
 	private LocalDateTime regiDateTime;
+	private String telecomName;
 
 	public static AddServiceMgmtDto from (AddService addService) {
 		return AddServiceMgmtDto.builder()
@@ -34,6 +35,7 @@ public class AddServiceMgmtDto {
 				.regiDateTime(addService.getRegiDateTime())
 				.useYn(addService.getUseYn())
 				.delYn(addService.getDelYn())
-				.build();
+				.telecomName(addService.getTelecomName())
+			.build();
 	}
 }

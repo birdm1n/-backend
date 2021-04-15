@@ -2,12 +2,21 @@ package com.daema.service;
 
 import com.daema.common.enums.StatusEnum;
 import com.daema.common.util.AuthenticationUtil;
+import com.daema.domain.CodeDetail;
 import com.daema.domain.FuncMgmt;
+import com.daema.domain.Store;
+import com.daema.dto.CodeDetailDto;
+import com.daema.dto.RetrieveInitDataResponseDto;
+import com.daema.dto.SaleStoreMgmtDto;
+import com.daema.repository.CodeDetailRepository;
 import com.daema.repository.FuncMgmtRepository;
 import com.daema.repository.PubNotiRawDataRepository;
+import com.daema.repository.StoreRepository;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -19,70 +28,77 @@ import java.util.stream.Collectors;
 @Service
 public class DataHandleService {
 
-    private final PubNotiMgmtService pubNotiMgmtService;
-
     private final FuncMgmtRepository funcMgmtRepository;
-
     private final PubNotiRawDataRepository pubNotiRawDataRepository;
+    private final StoreRepository storeRepository;
+    private final CodeDetailRepository codeDetailRepository;
 
     private final RequestMappingHandlerMapping handlerMapping;
-
     private final AuthenticationUtil authenticationUtil;
 
-    public DataHandleService(PubNotiMgmtService pubNotiMgmtService, FuncMgmtRepository funcMgmtRepository, PubNotiRawDataRepository pubNotiRawDataRepository
+    public DataHandleService(FuncMgmtRepository funcMgmtRepository, PubNotiRawDataRepository pubNotiRawDataRepository
+                             ,StoreRepository storeRepository, CodeDetailRepository codeDetailRepository
             ,RequestMappingHandlerMapping handlerMapping, AuthenticationUtil authenticationUtil) {
-        this.pubNotiMgmtService = pubNotiMgmtService;
         this.funcMgmtRepository = funcMgmtRepository;
         this.pubNotiRawDataRepository = pubNotiRawDataRepository;
+        this.storeRepository = storeRepository;
+        this.codeDetailRepository = codeDetailRepository;
+
         this.handlerMapping = handlerMapping;
         this.authenticationUtil = authenticationUtil;
     }
 
     @Transactional
     public void extractApiFunc() {
-        Map<RequestMappingInfo, HandlerMethod> mappings = handlerMapping.getHandlerMethods();
-        Set<RequestMappingInfo> keys = mappings.keySet();
-        Iterator<RequestMappingInfo> iterator = keys.iterator();
 
-        List<FuncMgmt> javaList = new ArrayList<FuncMgmt>();
-        String[] nickname;
-        HashMap<String, FuncMgmt> map = new HashMap<>();
+        if(authenticationUtil.isAdmin()) {
 
-        while (iterator.hasNext()) {
-            RequestMappingInfo key = iterator.next();
-            HandlerMethod method = mappings.get(key);
+            Map<RequestMappingInfo, HandlerMethod> mappings = handlerMapping.getHandlerMethods();
+            Set<RequestMappingInfo> keys = mappings.keySet();
+            Iterator<RequestMappingInfo> iterator = keys.iterator();
 
-            if (method.hasMethodAnnotation(ApiOperation.class)) {
-                ApiOperation annotation = method.getMethodAnnotation(ApiOperation.class);
+            List<FuncMgmt> javaList = new ArrayList<FuncMgmt>();
+            String[] nickname;
+            HashMap<String, FuncMgmt> map = new HashMap<>();
 
-                if (StringUtils.hasText(annotation.nickname())) {
-                    nickname = annotation.nickname().split("\\|\\|");
+            while (iterator.hasNext()) {
+                RequestMappingInfo key = iterator.next();
+                HandlerMethod method = mappings.get(key);
 
-                    FuncMgmt funcMgmt = FuncMgmt.builder()
-                            .funcId(nickname[0].concat("_".concat(method.getMethod().getName())))
-                            .groupId(Integer.parseInt(nickname[0]))
-                            .groupName(nickname[1])
-                            .title(annotation.value())
-                            .role(nickname[2])
-                            .urlPath(key.getPatternsCondition().getPatterns().iterator().next())
-                            .orderNum(Integer.parseInt(nickname[3]))
-                        .build();
+                if (method.hasMethodAnnotation(ApiOperation.class)) {
+                    ApiOperation annotation = method.getMethodAnnotation(ApiOperation.class);
 
-                    javaList.add(funcMgmt);
+                    if (StringUtils.hasText(annotation.nickname())) {
+                        nickname = annotation.nickname().split("\\|\\|");
 
-                    map.put(nickname[0].concat("_".concat(method.getMethod().getName())), funcMgmt);
+                        FuncMgmt funcMgmt = FuncMgmt.builder()
+                                .funcId(nickname[0].concat("_".concat(method.getMethod().getName())))
+                                .groupId(Integer.parseInt(nickname[0]))
+                                .groupName(nickname[1])
+                                .title(annotation.value())
+                                .role(nickname[2])
+                                .urlPath(key.getPatternsCondition().getPatterns().iterator().next())
+                                .orderNum(Integer.parseInt(nickname[3]))
+                                .build();
+
+                        javaList.add(funcMgmt);
+
+                        map.put(nickname[0].concat("_".concat(method.getMethod().getName())), funcMgmt);
+                    }
                 }
             }
+
+            List<FuncMgmt> dbList = funcMgmtRepository.findAll();
+
+            List<FuncMgmt> deleteList = dbList.stream()
+                    .filter(db -> !map.containsKey(db.getFuncId()))
+                    .collect(Collectors.toList());
+
+            funcMgmtRepository.saveAll(javaList);
+            funcMgmtRepository.deleteAll(deleteList);
+        }else{
+            throw new AuthorizationServiceException("UnAuthorization User");
         }
-
-        List<FuncMgmt> dbList = funcMgmtRepository.findAll();
-
-        List<FuncMgmt> deleteList = dbList.stream()
-                .filter(db -> !map.containsKey(db.getFuncId()))
-                .collect(Collectors.toList());
-
-        funcMgmtRepository.saveAll(javaList);
-        funcMgmtRepository.deleteAll(deleteList);
     }
 
     @Transactional
@@ -93,7 +109,35 @@ public class DataHandleService {
             long memberSeq = authenticationUtil.getMemberSeq();
 
             pubNotiRawDataRepository.migrationSmartChoiceData(memberSeq);
+        }else{
+            throw new AuthorizationServiceException("UnAuthorization User");
         }
+    }
+
+    public RetrieveInitDataResponseDto retrieveInitData(ModelMap reqModel){
+
+        RetrieveInitDataResponseDto responseDto = new RetrieveInitDataResponseDto();
+
+        if(reqModel.containsKey("storeList")){
+            List<Store> storeList = storeRepository.findByUseYnOrderByStoreName(StatusEnum.FLAG_Y.getStatusMsg());
+            responseDto.setStoreList(storeList.stream().map(SaleStoreMgmtDto::ofInitData).collect(Collectors.toList()));
+        }
+
+        if(reqModel.containsKey("code")){
+            List<CodeDetail> codeDetailList = codeDetailRepository.findAllByCodeIdInAndUseYnOrderByCodeIdAscOrderNumAsc(
+                    (List<String>) reqModel.get("code"), StatusEnum.FLAG_Y.getStatusMsg()
+            );
+
+
+            List<CodeDetailDto> codeDetailDtos = codeDetailList.stream().map(CodeDetailDto::ofInitData).collect(Collectors.toList());
+
+            Map<String, List<CodeDetailDto>> detailMap = codeDetailDtos.stream()
+                    .collect(Collectors.groupingBy(CodeDetailDto::getCodeId));
+
+            responseDto.setCodeList(detailMap);
+        }
+
+        return responseDto;
     }
 }
 

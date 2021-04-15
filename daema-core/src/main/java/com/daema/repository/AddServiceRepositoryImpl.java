@@ -51,7 +51,7 @@ public class AddServiceRepositoryImpl extends QuerydslRepositorySupport implemen
                 ,addService.delYn
                 ,addService.regiDateTime
                 ,telecom.codeNm.as("telecomName")
-                )
+            )
         );
 
         query.from(addService)

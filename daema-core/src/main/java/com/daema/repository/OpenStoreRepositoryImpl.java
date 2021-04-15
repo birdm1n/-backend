@@ -32,7 +32,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
     public Page<OpenStoreListDto> getSearchPage(SearchParamDto requestDto) {
 
         long storeId = requestDto.getParentStoreId();
-        PageRequest pageable = PageRequest.of(requestDto.getPageNo(), requestDto.getPerPageCnt());
+        PageRequest pageable = PageRequest.of(requestDto.getPageNo() - 1, requestDto.getPerPageCnt());
 
         List<OpenStoreListDto> resultList = searchOpenStoreList(storeId, requestDto, pageable);
 

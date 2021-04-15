@@ -1,9 +1,13 @@
 package com.daema.web;
 
+import com.daema.dto.RetrieveInitDataResponseDto;
+import com.daema.response.enums.ResponseCodeEnum;
+import com.daema.response.handler.ResponseHandler;
+import com.daema.response.io.CommonResponse;
 import com.daema.service.DataHandleService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/dataHandle")
@@ -11,8 +15,11 @@ public class DataHandleController {
 
     private final DataHandleService dataHandleService;
 
-    public DataHandleController(DataHandleService dataHandleService) {
+    private final ResponseHandler responseHandler;
+
+    public DataHandleController(DataHandleService dataHandleService, ResponseHandler responseHandler) {
         this.dataHandleService = dataHandleService;
+        this.responseHandler = responseHandler;
     }
 
     /**
@@ -29,6 +36,14 @@ public class DataHandleController {
     @GetMapping("/migrationSmartChoiceData")
     public void migrationSmartChoiceData() {
         dataHandleService.migrationSmartChoiceData();
+    }
+
+    /**
+     * 코드 데이터 및 관리 데이터 응답
+     */
+    @PostMapping("/retrieveInitData")
+    public ResponseEntity<CommonResponse<RetrieveInitDataResponseDto>> retrieveInitData(@RequestBody ModelMap reqModel) {
+        return responseHandler.getResponseMessageAsRetrieveResult(dataHandleService.retrieveInitData(reqModel), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 }
 

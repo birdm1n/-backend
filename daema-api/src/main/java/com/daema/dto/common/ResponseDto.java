@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Getter
 @Setter
@@ -21,10 +22,8 @@ public class ResponseDto<T> extends PagingDto {
     public ResponseDto (Class<?> clazz, Page<T> dataList) {
 
         if(dataList != null) {
-            this.setPageNo(dataList.getPageable().getPageNumber() + 1);
-            this.setPerPageCnt(dataList.getPageable().getPageSize());
-            this.setTotalCnt(dataList.getTotalElements());
-            this.setNumberOfElements(dataList.getNumberOfElements());
+
+            setResponsePaginationInfo(dataList);
 
             try {
 
@@ -52,10 +51,8 @@ public class ResponseDto<T> extends PagingDto {
     public ResponseDto (Class<?> clazz, Page<T> dataList, String method) {
 
         if(dataList != null) {
-            this.setPageNo(dataList.getPageable().getPageNumber() + 1);
-            this.setPerPageCnt(dataList.getPageable().getPageSize());
-            this.setTotalCnt(dataList.getTotalElements());
-            this.setNumberOfElements(dataList.getNumberOfElements());
+
+            setResponsePaginationInfo(dataList);
 
             try {
 
@@ -93,13 +90,25 @@ public class ResponseDto<T> extends PagingDto {
      */
     public ResponseDto (Function<T, T> fn, Page<T> dataList){
         if(dataList != null) {
-            this.setPageNo(dataList.getPageable().getPageNumber() + 1);
-            this.setPerPageCnt(dataList.getPageable().getPageSize());
-            this.setTotalCnt(dataList.getTotalElements());
-            this.setNumberOfElements(dataList.getNumberOfElements());
+
+            setResponsePaginationInfo(dataList);
 
             this.setResultList(dataList.stream().map(fn).collect(Collectors.toList()));
         }
+    }
+
+    private void setResponsePaginationInfo(Page<T> dataList){
+        setPageNo(dataList.getNumber() + 1);
+        setPerPageCnt(dataList.getPageable().getPageSize());
+        setTotalCnt(dataList.getTotalElements());
+        setNumberOfElements(dataList.getNumberOfElements());
+
+        setPageStartNo(((getPageNo() - 1) / getPageRange() ) * getPageRange() + 1);
+        setPageEndNo(dataList.getTotalPages() == 0 ? 1 :
+                Math.min((getPageStartNo() + (getPageRange() - 1)), dataList.getTotalPages()));
+
+        setPageNumList(IntStream.rangeClosed(getPageStartNo(), getPageEndNo()).boxed().collect(Collectors.toList()));
+        setPageLastNo(dataList.getTotalPages());
     }
 }
 
