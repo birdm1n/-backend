@@ -1,5 +1,8 @@
 package com.daema.common.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,5 +40,13 @@ public class CommonUtil {
 
     public static <E> boolean isNotEmptyList(Collection<E> itemList){
         return itemList != null && !itemList.isEmpty();
+    }
+
+    public static String convertObjectToJson(Object object) throws JsonProcessingException {
+        if (object == null) {
+            return null;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(object);
     }
 }

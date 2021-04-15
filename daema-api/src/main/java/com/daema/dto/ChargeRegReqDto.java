@@ -26,6 +26,9 @@ public class ChargeRegReqDto {
 	private String smsAmt;
 	private Integer discountAmt;
 	private ChargeRegReqRejectDto regReqRejectDto;
+	private String makerName;
+	private String networkName;
+	private String telecomName;
 
 	public static ChargeRegReqDto from (ChargeRegReq chargeRegReq) {
 		return ChargeRegReqDto.builder()
@@ -43,7 +46,10 @@ public class ChargeRegReqDto {
 				.smsAmt(chargeRegReq.getSmsAmt())
 				.discountAmt(chargeRegReq.getDiscountAmt())
 				.regReqRejectDto(ChargeRegReqRejectDto.from(chargeRegReq.getChargeRegReqReject()))
-				.build();
+				.makerName(chargeRegReq.getMakerName())
+				.telecomName(chargeRegReq.getTelecomName())
+				.networkName(chargeRegReq.getNetworkName())
+			.build();
 	}
 }
 

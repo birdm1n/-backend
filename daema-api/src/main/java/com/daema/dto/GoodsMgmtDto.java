@@ -29,9 +29,9 @@ public class GoodsMgmtDto {
 	private String delYn;
 	private LocalDateTime regiDateTime;
 	private List<GoodsOptionDto> optionList;
-
-	//TODO 관리자 구분 불가하여 임시 사용. 신규 등록과 요청 구분용
-	private String reqYn;
+	private String makerName;
+	private String networkName;
+	private String telecomName;
 
 	public static GoodsMgmtDto from (Goods goods) {
 		return GoodsMgmtDto.builder()
@@ -52,6 +52,9 @@ public class GoodsMgmtDto {
 						.stream()
 						.map(goodsOption -> GoodsOptionDto.from(goodsOption))
 						.collect(Collectors.toList()))
-				.build();
+				.makerName(goods.getMakerName())
+				.telecomName(goods.getTelecomName())
+				.networkName(goods.getNetworkName())
+			.build();
 	}
 }

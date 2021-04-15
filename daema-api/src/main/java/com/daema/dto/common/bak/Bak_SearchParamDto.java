@@ -1,4 +1,4 @@
-package com.daema.dto.common;
+package com.daema.dto.common.bak;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -6,10 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SearchParamDto extends PagingDto {
+public class Bak_SearchParamDto extends Bak_PagingDto {
 
 	@ApiModelProperty(value = "관리점 ID", example = "1")
-	private int parentStoreId;
+	private long parentStoreId;
 
 	@ApiModelProperty(value = "영업점명")
 	private String saleStoreName;

@@ -23,6 +23,9 @@ public class GoodsRegReqDto {
 	private LocalDateTime regiDateTime;
 	private int reqStatus;
 	private GoodsRegReqRejectDto regReqRejectDto;
+	private String makerName;
+	private String networkName;
+	private String telecomName;
 
 	public static GoodsRegReqDto from (GoodsRegReq goodsRegReq) {
 		return GoodsRegReqDto.builder()
@@ -37,7 +40,10 @@ public class GoodsRegReqDto {
 				.regiDateTime(goodsRegReq.getRegiDateTime())
 				.reqStatus(goodsRegReq.getReqStatus())
 				.regReqRejectDto(GoodsRegReqRejectDto.from(goodsRegReq.getGoodsRegReqReject()))
-				.build();
+				.makerName(goodsRegReq.getMakerName())
+				.telecomName(goodsRegReq.getTelecomName())
+				.networkName(goodsRegReq.getNetworkName())
+			.build();
 	}
 }
 

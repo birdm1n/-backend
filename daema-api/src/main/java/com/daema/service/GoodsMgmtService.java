@@ -18,7 +18,6 @@ import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
 import com.daema.response.exception.ProcessErrorException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -49,13 +48,8 @@ public class GoodsMgmtService {
 
     public ResponseDto<GoodsMgmtDto> getList(GoodsMgmtRequestDto requestDto) {
 
-        PageRequest pageable = PageRequest.of(requestDto.getPageNo(), requestDto.getPerPageCnt());
-
         //관리자 외 사용자는 useYn = Y 정보만 출력
-        //TODO 무조건 관리자로 처리중
-        //Page<Goods> goodsList = goodsRepository.getSearchPage(pageable, authenticationUtil.isAdmin());
-
-        Page<Goods> goodsList = goodsRepository.getSearchPage(pageable, !authenticationUtil.isAdmin());
+        Page<Goods> goodsList = goodsRepository.getSearchPage(requestDto, authenticationUtil.isAdmin());
 
         List<Number> ids = goodsList.getContent()
                 .stream()
@@ -83,10 +77,8 @@ public class GoodsMgmtService {
      * 일반 사용자 : goods_reg_req 테이블
      */
     public void insertData(GoodsMgmtDto goodsMgmtDto) {
-        //TODO 하드코딩. 관리자 권한 확인 필요. 지금은 무조건 true 처리 해둠
         //TODO ifnull return 함수 추가
-        //if (authenticationUtil.isAdmin()) {
-        if ("N".equals(goodsMgmtDto.getReqYn())) {
+        if (authenticationUtil.isAdmin()) {
             goodsRepository.save(
                     Goods.builder()
                             .goodsName(goodsMgmtDto.getGoodsName())
@@ -111,9 +103,7 @@ public class GoodsMgmtService {
                         .telecom(goodsMgmtDto.getTelecom())
                         .network(goodsMgmtDto.getNetwork())
                         .capacity(goodsMgmtDto.getCapacity())
-                        //TODO security 설정에 따라 storeId 가져오는 방식 변경 필요
-                        //.reqStoreId(authenticationUtil.getId("storeId"))
-                        .reqStoreId(1)
+                        .reqStoreId(authenticationUtil.getStoreId())
                         .reqStatus(StatusEnum.REG_REQ.getStatusCode())
                         .regiDateTime(LocalDateTime.now())
                     .build()
@@ -214,13 +204,10 @@ public class GoodsMgmtService {
 
     public ResponseDto<GoodsRegReqDto> getRegReqList(GoodsRegReqRequestDto requestDto) {
 
-        PageRequest pageable = PageRequest.of(requestDto.getPageNo(), requestDto.getPerPageCnt());
+        requestDto.setStoreId(authenticationUtil.getStoreId());
 
         //관리자 외 사용자는 해당 req_store_id 정보만 출력
-        //TODO 무조건 관리자로 처리중
-        //Page<GoodsRegReq> goodsList = goodsRegReqRepository.getSearchPage(pageable, authenticationUtil.isAdmin());
-
-        Page<GoodsRegReq> goodsList = goodsRegReqRepository.getSearchPage(pageable, !authenticationUtil.isAdmin());
+        Page<GoodsRegReq> goodsList = goodsRegReqRepository.getSearchPage(requestDto, authenticationUtil.isAdmin());
 
         return new ResponseDto(GoodsRegReqDto.class, goodsList);
     }
@@ -255,8 +242,7 @@ public class GoodsMgmtService {
                 goodsRegReqReject.setGoodsRegReqId(goodsRegReq.getGoodsRegReqId());
                 goodsRegReqReject.setRejectComment(goodsRegReqDto.getRegReqRejectDto().getRejectComment());
                 goodsRegReqReject.setRejectDateTime(LocalDateTime.now());
-                //TODO security 설정에 따라 userId 가져오는 방식 변경 필요
-                goodsRegReqReject.setRejectUserId(1L);
+                goodsRegReqReject.setRejectUserId(authenticationUtil.getMemberSeq());
 
                 goodsRegReqRejectRepository.save(goodsRegReqReject);
             }else{

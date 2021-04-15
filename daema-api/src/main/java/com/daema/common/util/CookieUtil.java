@@ -1,9 +1,11 @@
 package com.daema.common.util;
 
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class CookieUtil {
@@ -13,6 +15,7 @@ public class CookieUtil {
         token.setHttpOnly(true);
         token.setMaxAge((int)JwtUtil.TOKEN_VALIDATION_SECOND);
         token.setPath("/");
+
         return token;
     }
 
@@ -24,6 +27,34 @@ public class CookieUtil {
                 return cookie;
         }
         return null;
+    }
+
+    //secure, sameSite 처리용으로 변경
+    public void addHeaderCookie(HttpServletResponse res, String cookieName, String value){
+        res.addHeader("Set-Cookie", makeResponseCookie(cookieName, value));
+    }
+
+    private String makeResponseCookie(String cookieName, String value){
+
+        int maxAge = value == null ? 0 : (int)JwtUtil.TOKEN_VALIDATION_SECOND;
+
+        String profile = System.getProperty("spring.profiles.active");
+
+        if(!"prod".equals(profile)) {
+            return ResponseCookie.from(cookieName, value)
+                    .httpOnly(true)
+                    .path("/")
+                    .maxAge(maxAge)
+                    .build().toString();
+        }else{
+            return ResponseCookie.from(cookieName, value)
+                    .httpOnly(true)
+                    .sameSite("None")
+                    .secure(true)
+                    .maxAge(maxAge)
+                    .path("/")
+                    .build().toString();
+        }
     }
 
 }

@@ -123,7 +123,8 @@ public class AuthService {
         if(member == null) throw new NotFoundException("멤버가 조회되지 않음.");
         String key = REDIS_CHANGE_PASSWORD_PREFIX + UUID.randomUUID();
         redisUtil.setDataExpire(key,member.getUsername(),60 * 30L);
-        emailUtil.sendMail(member.getEmail(),"사용자 비밀번호 안내 메일",CHANGE_PASSWORD_LINK + key);
+        //TODO 메일 발송 확인
+        //emailUtil.sendMail(member.getEmail(),"사용자 비밀번호 안내 메일",CHANGE_PASSWORD_LINK + key);
     }
 
 

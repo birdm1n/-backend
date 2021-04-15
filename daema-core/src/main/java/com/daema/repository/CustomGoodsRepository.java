@@ -1,13 +1,13 @@
 package com.daema.repository;
 
 import com.daema.domain.Goods;
+import com.daema.domain.dto.common.SearchParamDto;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface CustomGoodsRepository {
 	
-	Page<Goods> getSearchPage(Pageable pageable, boolean isAdmin);
+	Page<Goods> getSearchPage(SearchParamDto requestDto, boolean isAdmin);
 	List<Goods> getMatchList();
 }

@@ -6,8 +6,10 @@ import com.daema.domain.QMember;
 import com.daema.domain.QMemberRole;
 import com.daema.domain.dto.OrgnztListDto;
 import com.daema.domain.dto.OrgnztMemberListDto;
+import com.daema.domain.dto.common.SearchParamDto;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,18 +27,18 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
     private EntityManager em;
 
     @Override
-    public HashMap<String, List> getOrgnztAndMemberList(long StoreId) {
+    public HashMap<String, List> getOrgnztAndMemberList(SearchParamDto requestDto) {
 
         HashMap<String, List> retMap = new HashMap<>();
 
-        retMap.put("orgnztList", searchOrgnztList(StoreId));
-        retMap.put("memberList", searchOrgnztMemberList(StoreId));
-        retMap.put("memberRoleList", searchOrgnztMemberRoleList(StoreId));
+        retMap.put("orgnztList", searchOrgnztList(requestDto));
+        retMap.put("memberList", searchOrgnztMemberList(requestDto));
+        retMap.put("memberRoleList", searchOrgnztMemberRoleList(requestDto));
 
         return retMap;
     }
 
-    private List<OrgnztListDto> searchOrgnztList(long store_id){
+    private List<OrgnztListDto> searchOrgnztList(SearchParamDto requestDto){
 
         StringBuilder sb = new StringBuilder();
         sb.append("select 1 as depth " +
@@ -90,12 +92,12 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
 
 
         Query query = em.createNativeQuery(sb.toString(), "OrgnztList")
-                .setParameter("store_id", store_id);
+                .setParameter("store_id", requestDto.getStoreId());
 
         return query.getResultList();
     }
     
-    private List<OrgnztMemberListDto> searchOrgnztMemberList(long store_id){
+    private List<OrgnztMemberListDto> searchOrgnztMemberList(SearchParamDto requestDto){
 
         StringBuilder sb = new StringBuilder();
         sb.append("select members.seq " +
@@ -156,17 +158,28 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
                 "  ) as team_data " +
                 "  on members.store_id = :store_id " +
                 "      and members.user_status != 9 " +
-                "      and members.org_id = team_data.org_id " +
-                " order by hierarchy, members.username + '' ");
+                "      and members.org_id = team_data.org_id ");
+
+        if(StringUtils.hasText(requestDto.getEmail())){
+            sb.append(" and members.email like '%" + requestDto.getEmail() + "%'");
+        }
+        if(StringUtils.hasText(requestDto.getName())){
+            sb.append(" and members.name like '%" + requestDto.getName() + "%'");
+        }
+        if(StringUtils.hasText(requestDto.getPhone())){
+            sb.append(" and members.phone like '%" + requestDto.getPhone() + "%'");
+        }
+
+        sb.append(" order by hierarchy, members.username + '' ");
 
 
         Query query = em.createNativeQuery(sb.toString(), "OrgnztMemberList")
-                .setParameter("store_id", store_id);
+                .setParameter("store_id", requestDto.getStoreId());
 
         return query.getResultList();
     }
 
-    private List<MemberRole> searchOrgnztMemberRoleList(long store_id){
+    private List<MemberRole> searchOrgnztMemberRoleList(SearchParamDto requestDto){
 
         QMemberRole memberRole = QMemberRole.memberRole;
         QMember member = QMember.member;
@@ -175,7 +188,7 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
         query.from(memberRole)
                 .innerJoin(member)
                 .on(
-                        member.storeId.eq(store_id)
+                        member.storeId.eq(requestDto.getStoreId())
                         .and(member.userStatus.ne("9"))
                         .and(member.seq.eq(memberRole.seq))
                 );

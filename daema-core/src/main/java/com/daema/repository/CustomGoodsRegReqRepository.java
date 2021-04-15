@@ -1,10 +1,10 @@
 package com.daema.repository;
 
 import com.daema.domain.GoodsRegReq;
+import com.daema.domain.dto.common.SearchParamDto;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public interface CustomGoodsRegReqRepository {
 	
-	Page<GoodsRegReq> getSearchPage(Pageable pageable, boolean isAdmin);
+	Page<GoodsRegReq> getSearchPage(SearchParamDto requestDto, boolean isAdmin);
 }

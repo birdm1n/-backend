@@ -1,6 +1,7 @@
 package com.daema.dto.common;
 
 import com.daema.common.util.CommonUtil;
+import com.daema.domain.dto.common.PagingDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -48,6 +49,37 @@ public class ResponseDto<T> extends PagingDto {
         }
     }
 
+    public ResponseDto (Class<?> clazz, Page<T> dataList, String method) {
+
+        if(dataList != null) {
+            this.setPageNo(dataList.getPageable().getPageNumber() + 1);
+            this.setPerPageCnt(dataList.getPageable().getPageSize());
+            this.setTotalCnt(dataList.getTotalElements());
+            this.setNumberOfElements(dataList.getNumberOfElements());
+
+            try {
+
+                Object obj = clazz.newInstance();
+
+                this.setResultList(
+                        (List<T>)
+                                dataList.getContent().stream()
+                                        .map(entity -> {
+                                                    try {
+                                                        return clazz.getMethod(method, entity.getClass()).invoke(obj, entity);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                        return null;
+                                                    }
+                                                }
+                                        ).collect(Collectors.toList())
+                );
+            } catch (Exception ignore_e) {
+                ignore_e.printStackTrace();
+            }
+        }
+    }
+
     public ResponseDto (Class<?> clazz, List<T> dataList) {
         if(dataList != null) {
             this.setResultList(CommonUtil.entityToDto(clazz, dataList, "from"));
@@ -61,6 +93,11 @@ public class ResponseDto<T> extends PagingDto {
      */
     public ResponseDto (Function<T, T> fn, Page<T> dataList){
         if(dataList != null) {
+            this.setPageNo(dataList.getPageable().getPageNumber() + 1);
+            this.setPerPageCnt(dataList.getPageable().getPageSize());
+            this.setTotalCnt(dataList.getTotalElements());
+            this.setNumberOfElements(dataList.getNumberOfElements());
+
             this.setResultList(dataList.stream().map(fn).collect(Collectors.toList()));
         }
     }

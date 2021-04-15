@@ -15,6 +15,7 @@ public class SaleStoreMgmtDto {
 	private long storeId;
 	private String saleStoreName;
 	private int telecom;
+	private String telecomName;
 	private String bizNo;
 	private String chargerPhone;
 	private String returnZipCode;
@@ -28,6 +29,7 @@ public class SaleStoreMgmtDto {
 				.storeId(store.getStoreId())
 				.saleStoreName(store.getStoreName())
 				.telecom(store.getTelecom())
+				.telecomName(store.getTelecomName())
 				.bizNo(store.getBizNo())
 				.chargerPhone(store.getChargerPhone())
 				.returnZipCode(store.getReturnZipCode())

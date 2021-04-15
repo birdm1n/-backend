@@ -87,16 +87,10 @@ public class DataHandleService {
 
     @Transactional
     public void migrationSmartChoiceData(){
-        /*
         if(authenticationUtil.isAdmin()
             && pubNotiRawDataRepository.existsByDeadLineYn(StatusEnum.FLAG_N.getStatusMsg())) {
-        */
-        //TODO
-        if(pubNotiRawDataRepository.existsByDeadLineYn(StatusEnum.FLAG_N.getStatusMsg())) {
 
-            //TODO
-            //long memberSeq = authenticationUtil.getId("memberSeq");
-            long memberSeq = 1L;
+            long memberSeq = authenticationUtil.getMemberSeq();
 
             pubNotiRawDataRepository.migrationSmartChoiceData(memberSeq);
         }

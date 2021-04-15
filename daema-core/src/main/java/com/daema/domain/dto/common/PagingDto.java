@@ -1,23 +1,17 @@
-package com.daema.dto.common;
-
-import io.swagger.annotations.ApiModelProperty;
+package com.daema.domain.dto.common;
 
 public class PagingDto {
 
-	@ApiModelProperty(value = "게시물 총 개수", example = "0")
 	private long totalCnt;
 
-	@ApiModelProperty(value = "현재 리스트 개수", hidden = true, example = "0")
 	private int numberOfElements;
 
-	@ApiModelProperty(value = "페이지 번호", example = "0")
 	private int pageNo;
 
-	@ApiModelProperty(value = "페이지당 노출 갯수", example = "10")
 	private int perPageCnt;
 
 	public PagingDto () {
-		this.perPageCnt = 10;
+		this.perPageCnt = 20;
 	}
 
 	// getter, setter

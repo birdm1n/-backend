@@ -23,9 +23,6 @@ public class AddServiceMgmtDto {
 	private String delYn;
 	private LocalDateTime regiDateTime;
 
-	//TODO 관리자 구분 불가하여 임시 사용. 신규 등록과 요청 구분용
-	private String reqYn;
-
 	public static AddServiceMgmtDto from (AddService addService) {
 		return AddServiceMgmtDto.builder()
 				.addSvcId(addService.getAddSvcId())

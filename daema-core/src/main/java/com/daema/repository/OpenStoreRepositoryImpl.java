@@ -2,15 +2,21 @@ package com.daema.repository;
 
 import com.daema.domain.OpenStore;
 import com.daema.domain.QOpenStore;
+import com.daema.domain.common.RetrieveClauseBuilder;
+import com.daema.domain.dto.OpenStoreListDto;
+import com.daema.domain.dto.common.SearchParamDto;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Arrays;
 import java.util.List;
 
 public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implements CustomOpenStoreRepository {
@@ -23,20 +29,31 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
     private EntityManager em;
 
     @Override
-    public Page<OpenStore> getSearchPage(Pageable pageable) {
+    public Page<OpenStoreListDto> getSearchPage(SearchParamDto requestDto) {
 
-        //TODO 하드코딩
-        long storeId = 1L;
-        List<OpenStore> resultList = searchOpenStoreList(storeId, pageable);
+        long storeId = requestDto.getParentStoreId();
+        PageRequest pageable = PageRequest.of(requestDto.getPageNo(), requestDto.getPerPageCnt());
+
+        List<OpenStoreListDto> resultList = searchOpenStoreList(storeId, requestDto, pageable);
 
         StringBuilder sb = new StringBuilder();
         sb.append("select count(*) as totalCnt" +
-                " from (" +
-                        "select os.* " +
-                        "  from open_store as os " +
+                " from (");
+
+
+        sb.append(      "select os.* " +
+                        "  from open_store as os" +
+                        " inner join code_detail as cd " +
+                "            on store_id = :storeId " +
+                "               and os.telecom = cd.code_seq " +
+                "               and code_id = 'TELECOM' " +
+                "               and cd.use_yn = 'Y' " +
                         " where del_yn = 'N' " +
-                        "   and store_id = :storeId " +
-                        " " +
+                        "   and store_id = :storeId ");
+
+        whereClause(sb, requestDto);
+
+        sb.append(      " " +
                         "union " +
                         " " +
                         "select os.* " +
@@ -46,7 +63,14 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                         "       and osssm.sale_store_id = :storeId " +
                         "       and os.del_yn = 'N' " +
                         "       and os.use_yn = 'Y' " +
-                ") as data");
+                        " inner join code_detail as cd " +
+                        "    on os.telecom = cd.code_seq " +
+                        "       and code_id = 'TELECOM' " +
+                        "       and cd.use_yn = 'Y' ");
+
+        whereClause(sb, requestDto);
+
+        sb.append(" ) as data");
 
         Object totalCnt = em.createNativeQuery(sb.toString())
                 .setParameter("storeId", storeId)
@@ -56,41 +80,121 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
     }
 
     @Override
-    public List<OpenStore> getOpenStoreList(long storeId) {
-        return searchOpenStoreList(storeId, null);
+    public List<OpenStoreListDto> getOpenStoreList(long storeId) {
+        return searchOpenStoreList(storeId, null, null);
     }
 
-    private List<OpenStore> searchOpenStoreList(long storeId, Pageable pageable){
+    private List<OpenStoreListDto> searchOpenStoreList(long storeId, SearchParamDto requestDto, Pageable pageable){
 
         StringBuilder sb = new StringBuilder();
-        sb.append("select os.* " +
-                "  from open_store as os " +
-                " where store_id = :storeId " +
-                "   and del_yn = 'N' ");
 
-                if(pageable == null){
-                    sb.append(" and use_yn = 'Y' ");
-                }
+        if(pageable == null){
+            sb.append("select os.open_store_id " +
+                    "       , os.biz_no " +
+                    "       , os.charger_phone " +
+                    "       , os.open_store_name " +
+                    "       , os.regi_datetime " +
+                    "       , os.return_addr " +
+                    "       , os.return_addr_detail " +
+                    "       , os.return_zip_code " +
+                    "       , os.store_id " +
+                    "       , os.telecom " +
+                    "       , os.use_yn " +
+                    "       , os.del_yn " +
+                    "       , cd.code_nm as telecomName " +
+                    "  from open_store as os " +
+                    " inner join code_detail as cd " +
+                    "            on store_id = :storeId " +
+                    "               and os.telecom = cd.code_seq " +
+                    "               and code_id = 'TELECOM' " +
+                    "               and cd.use_yn = 'Y' " +
+                    " where store_id = :storeId " +
+                    "   and del_yn = 'N' " +
+                    "   and os.use_yn = 'Y' " +
+                    "union " +
+                    " " +
+                    "select os.open_store_id " +
+                    "       , os.biz_no " +
+                    "       , os.charger_phone " +
+                    "       , os.open_store_name " +
+                    "       , os.regi_datetime " +
+                    "       , os.return_addr " +
+                    "       , os.return_addr_detail " +
+                    "       , os.return_zip_code " +
+                    "       , os.store_id " +
+                    "       , os.telecom " +
+                    "       , os.use_yn " +
+                    "       , os.del_yn " +
+                    "       , cd.code_nm as telecomName " +
+                    "  from open_store as os " +
+                    " inner join open_store_sale_store_map osssm " +
+                    "    on osssm.sale_store_id = :storeId " +
+                    "       and os.open_store_id = osssm.open_store_id " +
+                    "       and os.del_yn = 'N' " +
+                    "       and os.use_yn = 'Y' " +
+                    "       and osssm.use_yn = 'Y' " +
+                    " inner join code_detail as cd " +
+                    "    on os.telecom = cd.code_seq " +
+                    "       and code_id = 'TELECOM' " +
+                    "       and cd.use_yn = 'Y' " +
+                    " order by open_store_name ");
+        }else{
+            sb.append("select os.open_store_id " +
+                    "       , os.biz_no " +
+                    "       , os.charger_phone " +
+                    "       , os.open_store_name " +
+                    "       , os.regi_datetime " +
+                    "       , os.return_addr " +
+                    "       , os.return_addr_detail " +
+                    "       , os.return_zip_code " +
+                    "       , os.store_id " +
+                    "       , os.telecom " +
+                    "       , os.use_yn " +
+                    "       , os.del_yn " +
+                    "       , cd.code_nm as telecomName " +
+                    "  from open_store as os " +
+                    " inner join code_detail as cd " +
+                    "            on store_id = :storeId " +
+                    "               and os.telecom = cd.code_seq " +
+                    "               and code_id = 'TELECOM' " +
+                    "               and cd.use_yn = 'Y' " +
+                    " where store_id = :storeId " +
+                    "   and del_yn = 'N' ");
 
-        sb.append(" " +
-                "union " +
-                " " +
-                "select os.* " +
-                "  from open_store as os " +
-                " inner join open_store_sale_store_map osssm " +
-                "    on osssm.sale_store_id = :storeId " +
-                "       and os.open_store_id = osssm.open_store_id " +
-                "       and os.del_yn = 'N' " +
-                "       and os.use_yn = 'Y' ");
+            whereClause(sb, requestDto);
 
-                if(pageable == null){
-                    sb.append(" and osssm.use_yn = 'Y' ");
-                    sb.append(" order by open_store_name ");
-                }else{
-                    sb.append(" order by open_store_id desc ");
-                }
+            sb.append(" union " +
+                    " " +
+                    "select os.open_store_id " +
+                    "       , os.biz_no " +
+                    "       , os.charger_phone " +
+                    "       , os.open_store_name " +
+                    "       , os.regi_datetime " +
+                    "       , os.return_addr " +
+                    "       , os.return_addr_detail " +
+                    "       , os.return_zip_code " +
+                    "       , os.store_id " +
+                    "       , os.telecom " +
+                    "       , os.use_yn " +
+                    "       , os.del_yn " +
+                    "       , cd.code_nm as telecomName " +
+                    "  from open_store as os " +
+                    " inner join open_store_sale_store_map osssm " +
+                    "    on osssm.sale_store_id = :storeId " +
+                    "       and os.open_store_id = osssm.open_store_id " +
+                    "       and os.del_yn = 'N' " +
+                    "       and os.use_yn = 'Y' " +
+                    " inner join code_detail as cd " +
+                    "    on os.telecom = cd.code_seq " +
+                    "       and code_id = 'TELECOM' " +
+                    "       and cd.use_yn = 'Y' ");
 
-        Query query = em.createNativeQuery(sb.toString(), OpenStore.class)
+            whereClause(sb, requestDto);
+
+            sb.append(" order by open_store_id desc ");
+        }
+
+        Query query = em.createNativeQuery(sb.toString(), "OpenStoreList")
                 .setParameter("storeId", storeId);
 
         if(pageable != null){
@@ -99,6 +203,36 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
         }
 
         return query.getResultList();
+    }
+
+    private void whereClause(StringBuilder sb, SearchParamDto requestDto){
+
+        if(StringUtils.hasText(requestDto.getOpenStoreName())){
+            sb.append(" and os.open_store_name like '%" + requestDto.getOpenStoreName() + "%'");
+        }
+        if(StringUtils.hasText(requestDto.getBizNo())){
+            sb.append(" and os.biz_no like '%" + requestDto.getBizNo() + "%'");
+        }
+        if(StringUtils.hasText(requestDto.getReturnAddr())){
+            sb.append(" and (os.return_addr like '%" + requestDto.getReturnAddr() + "%' " +
+                    "        or os.return_addr_detail like '%" + requestDto.getReturnAddr() + "%') ");
+        }
+        if(requestDto.getTelecom() != null
+                && !Arrays.stream(requestDto.getTelecom()).anyMatch(telecom -> telecom == 0)){
+            sb.append(" and os.telecom in (" + Arrays.toString(requestDto.getTelecom()).replace("[", "").replace("]", "") + ")");
+        }
+        if(StringUtils.hasText(requestDto.getChargerPhone())){
+            sb.append(" and os.charger_phone like '%" + requestDto.getChargerPhone() + "%'");
+        }
+        if(StringUtils.hasText(requestDto.getUseYn())
+                && !"all".equals(requestDto.getUseYn())){
+            sb.append(" and os.use_yn = '" + requestDto.getUseYn() + "'");
+        }
+        if(StringUtils.hasText(requestDto.getSrhStartDate())
+                && StringUtils.hasText(requestDto.getSrhEndDate())){
+            sb.append(" and (os.regi_datetime between '" + RetrieveClauseBuilder.stringToLocalDateTime(requestDto.getSrhStartDate().concat(" 00:00:00")) + "'" +
+                    "        and '" + RetrieveClauseBuilder.stringToLocalDateTime(requestDto.getSrhEndDate().concat(" 23:59:59")) + "')  ");
+        }
     }
 
     @Override
@@ -110,9 +244,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
         query.where(openStore.openStoreId.eq(openStoreId)
                 .and(openStore.storeId.eq(storeId)));
 
-        OpenStore result = query.fetchOne();
-
-        return result;
+        return query.fetchOne();
     }
 }
 

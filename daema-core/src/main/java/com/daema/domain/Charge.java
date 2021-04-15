@@ -46,14 +46,15 @@ public class Charge extends ChargeBase{
 
     @Builder
     public Charge(long chargeId, String chargeName, int chargeAmt, String category, int telecom, int network
-            , String originKey, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn
-    , String voiceAmt, String dataAmt, String smsAmt, Integer discountAmt){
+            , String originKey, String chargeCode, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn
+    , String voiceAmt, String dataAmt, String smsAmt, Integer discountAmt, String makerName, String networkName, String telecomName){
         this.chargeId = chargeId;
         this.chargeName = chargeName;
         this.chargeAmt = chargeAmt;
         this.category = category;
         this.networkAttribute = new NetworkAttribute(telecom, network);
         this.originKey = originKey;
+        this.chargeCode = chargeCode;
         this.useYn = useYn;
         this.matchingYn = matchingYn;
         this.delYn = delYn;
@@ -62,6 +63,9 @@ public class Charge extends ChargeBase{
         this.dataAmt = dataAmt;
         this.smsAmt = smsAmt;
         this.discountAmt = discountAmt;
+        this.makerName = makerName;
+        this.networkName = networkName;
+        this.telecomName = telecomName;
     }
 
     public void updateUseYn(Charge charge, String useYn){

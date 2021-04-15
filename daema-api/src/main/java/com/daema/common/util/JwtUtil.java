@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -17,9 +19,10 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    public final static long TOKEN_VALIDATION_SECOND = 1000L * 10;
-    public final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 24 * 2;
+    public final static long TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 8;
+    public final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 24;
 
+    final static public String AUTHORIZATION = "Authorization";
     final static public String ACCESS_TOKEN_NAME = "accessToken";
     final static public String REFRESH_TOKEN_NAME = "refreshToken";
 
@@ -77,4 +80,12 @@ public class JwtUtil {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
+    public String getAccessTokenFromHeader(HttpServletRequest request, String headerName){
+        String authorization = request.getHeader(headerName);
+        return authorization != null ? authorization.replace("Bearer ", "") : null;
+    }
+
+    public void setAccessTokenToHeader(HttpServletResponse response, String accessToken){
+        response.addHeader("Authorization", "Bearer " + accessToken);
+    }
 }

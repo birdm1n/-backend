@@ -37,15 +37,21 @@ public class ChargeRegReq extends ChargeBase {
     private ChargeRegReqReject chargeRegReqReject;
 
     @Builder
-    public ChargeRegReq(long chargeRegReqId, long reqStoreId, String chargeName, int chargeAmt, String category, int telecom, int network, LocalDateTime regiDateTime, int reqStatus){
+    public ChargeRegReq(long chargeRegReqId, long reqStoreId, String chargeName, int chargeAmt, String category
+            , int telecom, int network, String chargeCode, LocalDateTime regiDateTime, int reqStatus
+            , String makerName, String networkName, String telecomName){
         this.chargeRegReqId = chargeRegReqId;
         this.reqStoreId = reqStoreId;
         this.chargeName = chargeName;
         this.chargeAmt = chargeAmt;
         this.category = category;
         this.networkAttribute = new NetworkAttribute(telecom, network);
+        this.chargeCode = chargeCode;
         this.reqStatus = reqStatus;
         this.regiDateTime = regiDateTime;
+        this.makerName = makerName;
+        this.networkName = networkName;
+        this.telecomName = telecomName;
     }
 
     public void updateReqStatus(ChargeRegReq chargeRegReq, int reqStatus){

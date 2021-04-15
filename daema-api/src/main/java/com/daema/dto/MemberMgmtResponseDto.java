@@ -1,6 +1,6 @@
 package com.daema.dto;
 
-import com.daema.dto.common.PagingDto;
+import com.daema.domain.dto.common.PagingDto;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,8 +1,8 @@
 package com.daema.response.io;
 
+import com.daema.common.util.CommonUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ import java.time.LocalTime;
 public class CommonResponse<T> {
 
     @ApiModelProperty(value = "응답 상태 코드", example = "200")
-    private final int status = HttpStatus.OK.value();
+    private int status = HttpStatus.OK.value();
 
     @ApiModelProperty(value = "프로세스 처리 결과 코드", example = "0000")
     private String resultCode;
@@ -49,20 +49,22 @@ public class CommonResponse<T> {
         this.responseDateTime = LocalDate.now() + " " + LocalTime.now();
     }
 
+    public CommonResponse(int status, String resultCode, String resultMsg, T resultObj){
+        this.status = status;
+        this.resultCode = resultCode;
+        this.resultMsg = resultMsg;
+        this.data = resultObj;
+        this.responseDateTime = LocalDate.now() + " " + LocalTime.now();
+    }
+
     @Override
     public String toString() {
         String jsonString = null;
         try {
-            jsonString = makeJson(this);
+            jsonString = CommonUtil.convertObjectToJson(this);
         } catch (Exception e) {
             jsonString = null;
         }
-        return jsonString;
-    }
-
-    private String makeJson(Object obj) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(obj);
         return jsonString;
     }
 }

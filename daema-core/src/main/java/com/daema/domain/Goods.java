@@ -50,7 +50,7 @@ public class Goods extends GoodsBase{
 
     @Builder
     public Goods(long goodsId, String goodsName, String modelName, int maker, int telecom, int network, String capacity
-            , String originKey, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn){
+            , String originKey, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn, String makerName, String networkName, String telecomName){
         this.goodsId = goodsId;
         this.goodsName = goodsName;
         this.modelName = modelName;
@@ -62,6 +62,9 @@ public class Goods extends GoodsBase{
         this.matchingYn = matchingYn;
         this.delYn = delYn;
         this.regiDateTime = regiDateTime;
+        this.makerName = makerName;
+        this.networkName = networkName;
+        this.telecomName = telecomName;
     }
 
     public void updateUseYn(Goods goods, String useYn){

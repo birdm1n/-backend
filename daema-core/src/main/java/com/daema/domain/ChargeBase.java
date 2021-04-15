@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -49,4 +50,13 @@ public abstract class ChargeBase {
 
     @Column(name = "regi_datetime")
     protected LocalDateTime regiDateTime;
+
+    @Transient
+    protected String makerName;
+
+    @Transient
+    protected String networkName;
+
+    @Transient
+    protected String telecomName;
 }

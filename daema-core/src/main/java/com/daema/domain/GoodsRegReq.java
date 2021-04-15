@@ -37,7 +37,9 @@ public class GoodsRegReq extends GoodsBase{
     private GoodsRegReqReject goodsRegReqReject;
 
     @Builder
-    public GoodsRegReq(long goodsRegReqId, long reqStoreId, String goodsName, String modelName, int maker, int telecom, int network, String capacity, LocalDateTime regiDateTime, int reqStatus){
+    public GoodsRegReq(long goodsRegReqId, long reqStoreId, String goodsName, String modelName
+            , int maker, int telecom, int network, String capacity, LocalDateTime regiDateTime, int reqStatus
+            , String makerName, String networkName, String telecomName){
         this.goodsRegReqId = goodsRegReqId;
         this.reqStoreId = reqStoreId;
         this.goodsName = goodsName;
@@ -47,6 +49,9 @@ public class GoodsRegReq extends GoodsBase{
         this.capacity = capacity;
         this.reqStatus = reqStatus;
         this.regiDateTime = regiDateTime;
+        this.makerName = makerName;
+        this.networkName = networkName;
+        this.telecomName = telecomName;
     }
 
     public void updateReqStatus(GoodsRegReq goodsRegReq, int reqStatus){

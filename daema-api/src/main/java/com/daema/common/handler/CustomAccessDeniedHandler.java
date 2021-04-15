@@ -1,10 +1,11 @@
 package com.daema.common.handler;
 
+import com.daema.common.util.CommonUtil;
 import com.daema.domain.enums.UserRole;
 import com.daema.dto.SecurityMember;
 import com.daema.response.io.CommonResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 
 @Log
@@ -25,11 +25,8 @@ import java.util.Collection;
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
-        ObjectMapper objectMapper = new ObjectMapper();
 
-        httpServletResponse.setStatus(200);
-        httpServletResponse.setContentType("application/json;charset=utf-8");
-        CommonResponse response = new CommonResponse("error","접근가능한 권한을 가지고 있지 않습니다.",null);
+        CommonResponse response = new CommonResponse(HttpStatus.UNAUTHORIZED.value(), "error","접근가능한 권한을 가지고 있지 않습니다.",null);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityMember member = (SecurityMember)authentication.getPrincipal();
@@ -39,10 +36,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
             response.setResultMsg("사용자 인증메일을 받지 않았습니다.");
         }
 
-        PrintWriter out = httpServletResponse.getWriter();
-        String jsonResponse = objectMapper.writeValueAsString(response);
-        out.print(jsonResponse);
-
+        httpServletResponse.setContentType("application/json;charset=utf-8");
+        httpServletResponse.getWriter().write(CommonUtil.convertObjectToJson(response));
     }
 
     private boolean hasRole(Collection<GrantedAuthority> authorites, String role){

@@ -1,7 +1,9 @@
 package com.daema.service;
 
 import com.daema.common.enums.StatusEnum;
+import com.daema.common.util.AuthenticationUtil;
 import com.daema.domain.*;
+import com.daema.domain.dto.OpenStoreListDto;
 import com.daema.domain.pk.OpenStoreSaleStoreMapPK;
 import com.daema.domain.pk.OpenStoreUserMapPK;
 import com.daema.dto.OpeningStoreMgmtDto;
@@ -14,7 +16,6 @@ import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
 import com.daema.response.exception.ProcessErrorException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -33,24 +34,27 @@ public class OpeningStoreMgmtService {
     private final OpenStoreSaleStoreMapRepository openStoreSaleStoreMapRepository;
     private final MemberRepository memberRepository;
     private final OpenStoreUserMapRepository openStoreUserMapRepository;
+    private final AuthenticationUtil authenticationUtil;
 
     public OpeningStoreMgmtService(OpenStoreRepository openStoreRepository
             , StoreRepository storeRepository ,OpenStoreSaleStoreMapRepository openStoreSaleStoreMapRepository
-            ,MemberRepository memberRepository ,OpenStoreUserMapRepository openStoreUserMapRepository) {
+            ,MemberRepository memberRepository ,OpenStoreUserMapRepository openStoreUserMapRepository
+    ,AuthenticationUtil authenticationUtil) {
         this.openStoreRepository = openStoreRepository;
         this.storeRepository = storeRepository;
         this.openStoreSaleStoreMapRepository = openStoreSaleStoreMapRepository;
         this.memberRepository = memberRepository;
         this.openStoreUserMapRepository = openStoreUserMapRepository;
+        this.authenticationUtil = authenticationUtil;
     }
 
     public ResponseDto<OpeningStoreMgmtDto> getOpenStoreList(OpeningStoreMgmtRequestDto requestDto) {
 
-        PageRequest pageable = PageRequest.of(requestDto.getPageNo(), requestDto.getPerPageCnt());
+        requestDto.setParentStoreId(authenticationUtil.getTargetStoreId(requestDto.getParentStoreId()));
 
-        Page<OpenStore> dataList = openStoreRepository.getSearchPage(pageable);
+        Page<OpenStoreListDto> dataList = openStoreRepository.getSearchPage(requestDto);
 
-        return new ResponseDto(OpeningStoreMgmtDto.class, dataList);
+        return new ResponseDto(OpeningStoreMgmtDto.class, dataList, "dtoToDto");
     }
 
     public void insertOpenStore(OpeningStoreMgmtDto openingStoreMgmtDto) {
@@ -58,7 +62,7 @@ public class OpeningStoreMgmtService {
         openStoreRepository.save(
                 OpenStore.builder()
                         .openStoreId(openingStoreMgmtDto.getOpenStoreId())
-                        .storeId(openingStoreMgmtDto.getStoreId())
+                        .storeId(authenticationUtil.getTargetStoreId(openingStoreMgmtDto.getStoreId()))
                         .openStoreName(openingStoreMgmtDto.getOpenStoreName())
                         .telecom(openingStoreMgmtDto.getTelecom())
                         .bizNo(openingStoreMgmtDto.getBizNo())
@@ -66,15 +70,17 @@ public class OpeningStoreMgmtService {
                         .returnZipCode(openingStoreMgmtDto.getReturnZipCode())
                         .returnAddr(openingStoreMgmtDto.getReturnAddr())
                         .returnAddrDetail(openingStoreMgmtDto.getReturnAddrDetail())
-                        .useYn(openingStoreMgmtDto.getUseYn())
-                        .delYn(openingStoreMgmtDto.getDelYn())
+                        .useYn(StatusEnum.FLAG_N.getStatusMsg())
+                        .delYn(StatusEnum.FLAG_N.getStatusMsg())
                         .regiDateTime(LocalDateTime.now())
-                        .build()
+                    .build()
         );
     }
 
     @Transactional
     public void updateOpenStoreInfo(OpeningStoreMgmtDto openingStoreMgmtDto) {
+
+        openingStoreMgmtDto.setStoreId(authenticationUtil.getTargetStoreId(openingStoreMgmtDto.getStoreId()));
 
         OpenStore openStore = openStoreRepository.findOpenStoreInfo(openingStoreMgmtDto.getOpenStoreId(), openingStoreMgmtDto.getStoreId());
 
@@ -107,7 +113,7 @@ public class OpeningStoreMgmtService {
     public void deleteOpenStore(ModelMap reqModelMap) {
 
         List<Number> delOpenStoreIds = (ArrayList<Number>) reqModelMap.get("delOpenStoreId");
-        long storeId = Long.parseLong(String.valueOf(reqModelMap.get("storeId")));
+        long storeId = authenticationUtil.getTargetStoreId(Long.parseLong(String.valueOf(reqModelMap.get("storeId"))));
 
         if (delOpenStoreIds != null
                 && delOpenStoreIds.size() > 0) {
@@ -128,7 +134,7 @@ public class OpeningStoreMgmtService {
 
         long openStoreId = Long.parseLong(String.valueOf(reqModelMap.getAttribute("openStoreId")));
         long storeId = Long.parseLong(String.valueOf(reqModelMap.getAttribute("storeId")));
-        long authStoreId = Long.parseLong(String.valueOf(reqModelMap.getAttribute("authStoreId")));
+        long authStoreId = authenticationUtil.getTargetStoreId(Long.parseLong(String.valueOf(reqModelMap.getAttribute("authStoreId"))));
         String useYn = String.valueOf(reqModelMap.getAttribute("useYn"));
 
         //authStoreId 개통점을 생성한 storeId
@@ -155,18 +161,20 @@ public class OpeningStoreMgmtService {
 
     public OpeningStoreSaleStoreResponseDto getSaleStoreMapInfo(long storeId) {
 
+        long targetStoreId = authenticationUtil.getTargetStoreId(storeId);
+
         //개통점 전체 목록
-        List<OpenStore> openStoreList = openStoreRepository.getOpenStoreList(storeId);
+        List<OpenStoreListDto> openStoreList = openStoreRepository.getOpenStoreList(targetStoreId);
 
         //영업점 전체 목록
-        List<Store> saleStoreList = storeRepository.findBySaleStore(storeId, QStore.store.storeName.asc());
+        List<Store> saleStoreList = storeRepository.findBySaleStore(targetStoreId, QStore.store.storeName.asc());
 
         //개통점, 영업점 맵핑 목록
-        List<OpenStoreSaleStoreMap> mapList = openStoreSaleStoreMapRepository.getMappingList(storeId);
+        List<OpenStoreSaleStoreMap> mapList = openStoreSaleStoreMapRepository.getMappingList(targetStoreId);
 
         //맵핑 데이터 없는 sales store에 사용
         List<String[]> emptyOpenStoreList = new ArrayList<>();
-        for (OpenStore openStore : openStoreList) {
+        for (OpenStoreListDto openStore : openStoreList) {
             emptyOpenStoreList.add(new String[]{ String.valueOf(openStore.getOpenStoreId()), StatusEnum.FLAG_N.getStatusMsg() });
         }
 
@@ -174,7 +182,7 @@ public class OpeningStoreMgmtService {
         OpeningStoreSaleStoreResponseDto responseDto = new OpeningStoreSaleStoreResponseDto();
 
         responseDto.openStoreList = openStoreList.stream()
-                .map(openStore -> OpeningStoreMgmtDto.from(openStore))
+                .map(OpeningStoreMgmtDto::dtoToDto)
                 .collect(Collectors.toList());
 
         List<String[]> filterOpenStoreInfos;
@@ -184,7 +192,7 @@ public class OpeningStoreMgmtService {
             filterOpenStoreInfos = new ArrayList<>();
 
             if (mapList.stream().anyMatch(map -> map.getSaleStoreId() == store.getStoreId())) {
-                for (OpenStore openStore : openStoreList) {
+                for (OpenStoreListDto openStore : openStoreList) {
                     filterOpenStoreInfos.add(
                             new String[]{String.valueOf(openStore.getOpenStoreId())
                                     , mapList.contains(new OpenStoreSaleStoreMap(openStore.getOpenStoreId(), store.getStoreId())) ? StatusEnum.FLAG_Y.getStatusMsg() : StatusEnum.FLAG_N.getStatusMsg() }
@@ -235,18 +243,20 @@ public class OpeningStoreMgmtService {
 
     public OpeningStoreUserResponseDto getUserMapInfo(long storeId) {
 
+        long targetStoreId = authenticationUtil.getTargetStoreId(storeId);
+
         //개통점 전체 목록
-        List<OpenStore> openStoreList = openStoreRepository.getOpenStoreList(storeId);
+        List<OpenStoreListDto> openStoreList = openStoreRepository.getOpenStoreList(targetStoreId);
 
         //사용자 전체 목록
-        List<Member> memberList = memberRepository.findByMember(storeId, QMember.member.name.asc());
+        List<Member> memberList = memberRepository.findByMember(targetStoreId, QMember.member.name.asc());
 
         //개통점, 사용자 맵핑 목록
-        List<OpenStoreUserMap> mapList = openStoreUserMapRepository.getMappingList(storeId);
+        List<OpenStoreUserMap> mapList = openStoreUserMapRepository.getMappingList(targetStoreId);
 
         //맵핑 데이터 없는 user에 사용
         List<String[]> emptyOpenStoreList = new ArrayList<>();
-        for (OpenStore openStore : openStoreList) {
+        for (OpenStoreListDto openStore : openStoreList) {
             emptyOpenStoreList.add(new String[]{ String.valueOf(openStore.getOpenStoreId()), StatusEnum.FLAG_N.getStatusMsg() });
         }
 
@@ -254,7 +264,7 @@ public class OpeningStoreMgmtService {
         OpeningStoreUserResponseDto responseDto = new OpeningStoreUserResponseDto();
 
         responseDto.openStoreList = openStoreList.stream()
-                .map(openStore -> OpeningStoreMgmtDto.from(openStore))
+                .map(OpeningStoreMgmtDto::dtoToDto)
                 .collect(Collectors.toList());
 
         List<String[]> filterOpenStoreInfos;
@@ -264,7 +274,7 @@ public class OpeningStoreMgmtService {
             filterOpenStoreInfos = new ArrayList<>();
 
             if (mapList.stream().anyMatch(map -> map.getUserId() == member.getSeq())) {
-                for (OpenStore openStore : openStoreList) {
+                for (OpenStoreListDto openStore : openStoreList) {
                     filterOpenStoreInfos.add(
                             new String[]{String.valueOf(openStore.getOpenStoreId())
                                     , mapList.contains(new OpenStoreUserMap(openStore.getOpenStoreId(), member.getSeq())) ? StatusEnum.FLAG_Y.getStatusMsg() : StatusEnum.FLAG_N.getStatusMsg() }

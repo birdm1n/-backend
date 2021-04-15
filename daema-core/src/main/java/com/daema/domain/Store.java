@@ -29,6 +29,9 @@ public class Store {
     @Column(name = "telecom")
     private int telecom;
 
+    @Transient
+    private String telecomName;
+
     @NotBlank
     @Column(nullable = false, name = "biz_no", columnDefinition = "char(12)")
     private String bizNo;
@@ -52,11 +55,12 @@ public class Store {
     private LocalDateTime regiDateTime;
 
     @Builder
-    public Store (long storeId, String storeName, int telecom, String bizNo, String chargerPhone, String returnZipCode,
+    public Store (long storeId, String storeName, int telecom, String telecomName, String bizNo, String chargerPhone, String returnZipCode,
             String returnAddr, String returnAddrDetail, String useYn, LocalDateTime regiDateTime){
         this.storeId = storeId;
         this.storeName = storeName;
         this.telecom = telecom;
+        this.telecomName = telecomName;
         this.bizNo = bizNo;
         this.chargerPhone = chargerPhone;
         this.returnZipCode = returnZipCode;

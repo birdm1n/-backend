@@ -1,20 +1,27 @@
 package com.daema.repository;
 
 import com.daema.domain.Goods;
-import com.daema.domain.QGoods;
-import com.daema.domain.QGoodsOption;
+import com.daema.domain.QCodeDetail;
 import com.daema.domain.attr.NetworkAttribute;
+import com.daema.domain.common.RetrieveClauseBuilder;
+import com.daema.domain.dto.common.SearchParamDto;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
+
+import static com.daema.domain.QGoods.goods;
+import static com.daema.domain.QGoodsOption.goodsOption;
 
 public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements CustomGoodsRepository {
 
@@ -23,10 +30,7 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
     }
 
     @Override
-    public Page<Goods> getSearchPage(Pageable pageable, boolean isAdmin) {
-
-        QGoods goods = QGoods.goods;
-        QGoodsOption goodsOption = QGoodsOption.goodsOption;
+    public Page<Goods> getSearchPage(SearchParamDto requestDto, boolean isAdmin) {
 
         JPQLQuery<Goods> query = getQuerydsl().createQuery();
 
@@ -36,6 +40,10 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
         if(!isAdmin){
             builder.and(goods.useYn.eq("Y"));
         }
+
+        QCodeDetail telecom = new QCodeDetail("telecom");
+        QCodeDetail network = new QCodeDetail("network");
+        QCodeDetail maker = new QCodeDetail("maker");
 
         query.select(Projections.fields(
                 Goods.class
@@ -49,6 +57,9 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 ,goods.matchingYn
                 ,goods.delYn
                 ,goods.regiDateTime
+                ,maker.codeNm.as("makerName")
+                ,telecom.codeNm.as("telecomName")
+                ,network.codeNm.as("networkName")
                 ,Projections.fields(NetworkAttribute.class
                         ,goods.networkAttribute.telecom
                         ,goods.networkAttribute.network
@@ -57,14 +68,37 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
         );
 
         query.from(goods)
+                .innerJoin(maker)
+                .on(goods.maker.eq(maker.codeSeq)
+                        .and(maker.codeId.eq("MAKER"))
+                        .and(maker.useYn.eq("Y"))
+                )
+                .innerJoin(telecom)
+                .on(goods.networkAttribute.telecom.eq(telecom.codeSeq)
+                        .and(telecom.codeId.eq("TELECOM"))
+                        .and(telecom.useYn.eq("Y"))
+                )
+                .innerJoin(network)
+                .on(goods.networkAttribute.network.eq(network.codeSeq)
+                        .and(network.codeId.eq("NETWORK"))
+                        .and(network.useYn.eq("Y"))
+                )
                 .leftJoin(goodsOption)
                 .on(goods.goodsId.eq(goodsOption.goodsId))
-                .where(builder)
+                .where(
+                        builder
+                        ,containsGoodsName(requestDto.getGoodsName())
+                        ,containsModelName(requestDto.getModelName())
+                        ,eqMaker(requestDto.getMaker())
+                        ,eqNetwork(requestDto.getNetwork())
+                        ,eqTelecom(requestDto.getTelecom())
+                        ,eqUseYn(requestDto.getUseYn())
+                        ,betweenStartDateEndDate(requestDto.getSrhStartDate(), requestDto.getSrhEndDate())
+                )
                 .groupBy(goods.goodsId)
                 .orderBy(goods.regiDateTime.desc());
 
-        query.offset(pageable.getOffset())
-        .limit(pageable.getPageSize());
+        PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
 
         List<Goods> resultList = query.fetch();
 
@@ -75,8 +109,6 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
 
     @Override
     public List<Goods> getMatchList() {
-
-        QGoods goods = QGoods.goods;
 
         JPQLQuery<Goods> query = from(goods);
 
@@ -117,5 +149,57 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
         );
 
         return query.fetch();
+    }
+
+    private BooleanExpression containsGoodsName(String name) {
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+        return goods.goodsName.contains(name);
+    }
+
+    private BooleanExpression containsModelName(String name) {
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+        return goods.modelName.contains(name);
+    }
+
+    private BooleanExpression eqMaker(int name) {
+        if (name <= 0) {
+            return null;
+        }
+        return goods.maker.eq(name);
+    }
+
+    private BooleanExpression eqNetwork(int name) {
+        if (name <= 0) {
+            return null;
+        }
+        return goods.networkAttribute.network.eq(name);
+    }
+
+    private BooleanExpression eqTelecom(Integer[] name) {
+        if (name == null
+                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)) {
+            return null;
+        }
+        return goods.networkAttribute.telecom.in(name);
+    }
+
+    private BooleanExpression eqUseYn(String name) {
+        if (StringUtils.isEmpty(name) || "all".equals(name)) {
+            return null;
+        }
+        return goods.useYn.eq(name);
+    }
+
+    private BooleanExpression betweenStartDateEndDate(String startDate, String endDate) {
+        if (StringUtils.isEmpty(startDate)
+                || StringUtils.isEmpty(endDate)) {
+            return null;
+        }
+        return goods.regiDateTime.between(RetrieveClauseBuilder.stringToLocalDateTime(startDate.concat(" 00:00:00"))
+                , RetrieveClauseBuilder.stringToLocalDateTime(endDate.concat(" 23:59:59")));
     }
 }

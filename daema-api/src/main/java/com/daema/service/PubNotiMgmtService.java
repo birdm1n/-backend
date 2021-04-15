@@ -74,8 +74,7 @@ public class PubNotiMgmtService {
                         .chargeId(pubNotiMgmtDto.getChargeId())
                         .goodsId(pubNotiMgmtDto.getGoodsId())
                         .originKey("A")
-                        //TODO 하드코딩
-                        .regiUserId(1)
+                        .regiUserId(authenticationUtil.getMemberSeq())
                         .regiDateTime(LocalDateTime.now())
                         .delYn(StatusEnum.FLAG_N.getStatusMsg())
                         .build()
@@ -97,18 +96,14 @@ public class PubNotiMgmtService {
     @Transactional
     public void deleteData(ModelMap modelMap) {
 
-        //TODO 관리자인 경우만 삭제 가능. 현재 로그인 없어서 관리자 아닐때 삭제 하도록 처리함
-        //if (authenticationUtil.isAdmin()) {
-        if (!authenticationUtil.isAdmin()
-            && modelMap.get("pubNotiId") != null) {
+        if (authenticationUtil.isAdmin()
+                && modelMap.get("pubNotiId") != null) {
 
             Number pubNotiId = Long.parseLong(modelMap.get("pubNotiId") + "");
             PubNoti pubNoti = pubNotiRepository.findById(pubNotiId).orElse(null);
 
             if(pubNoti != null) {
-                //TODO security 설정에 따라 userId 가져오는 방식 변경 필요
-                //pubNoti.updateDelInfo(pubNoti, authenticationUtil.getId("memberSeq"), StatusEnum.FLAG_Y.getStatusMsg());
-                pubNoti.updateDelInfo(pubNoti, 1, StatusEnum.FLAG_Y.getStatusMsg());
+                pubNoti.updateDelInfo(pubNoti, authenticationUtil.getMemberSeq(), StatusEnum.FLAG_Y.getStatusMsg());
             } else {
                 throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
             }

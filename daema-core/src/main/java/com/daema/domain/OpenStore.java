@@ -1,11 +1,34 @@
 package com.daema.domain;
 
+import com.daema.domain.dto.OpenStoreListDto;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+
+@SqlResultSetMapping(
+        name="OpenStoreList",
+        classes = @ConstructorResult(
+                targetClass = OpenStoreListDto.class,
+                columns = {
+                        @ColumnResult(name="open_store_id", type = Integer.class),
+                        @ColumnResult(name="biz_no", type = String.class),
+                        @ColumnResult(name="charger_phone", type = String.class),
+                        @ColumnResult(name="open_store_name", type = String.class),
+                        @ColumnResult(name="regi_datetime", type = LocalDateTime.class),
+                        @ColumnResult(name="return_addr", type = String.class),
+                        @ColumnResult(name="return_addr_detail", type = String.class),
+                        @ColumnResult(name="return_zip_code", type = String.class),
+                        @ColumnResult(name="store_id", type = Long.class),
+                        @ColumnResult(name="telecom", type = Integer.class),
+                        @ColumnResult(name="use_yn", type = String.class),
+                        @ColumnResult(name="del_yn", type = String.class),
+                        @ColumnResult(name="telecomName", type = String.class)
+                })
+)
+
 
 @Getter
 @Setter
@@ -32,6 +55,9 @@ public class OpenStore {
     @NotNull
     @Column(name = "telecom")
     private int telecom;
+
+    @Transient
+    private String telecomName;
 
     @NotBlank
     @Column(nullable = false, name = "biz_no", columnDefinition = "char(12)")
@@ -60,12 +86,13 @@ public class OpenStore {
     private LocalDateTime regiDateTime;
 
     @Builder
-    public OpenStore(long openStoreId, long storeId, String openStoreName, int telecom, String bizNo, String chargerPhone
+    public OpenStore(long openStoreId, long storeId, String openStoreName, int telecom, String telecomName, String bizNo, String chargerPhone
             , String returnZipCode, String returnAddr, String returnAddrDetail, String useYn, String delYn, LocalDateTime regiDateTime){
         this.openStoreId = openStoreId;
         this.storeId = storeId;
         this.openStoreName = openStoreName;
         this.telecom = telecom;
+        this.telecomName = telecomName;
         this.bizNo = bizNo;
         this.chargerPhone = chargerPhone;
         this.returnZipCode = returnZipCode;

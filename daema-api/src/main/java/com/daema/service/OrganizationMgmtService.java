@@ -60,11 +60,9 @@ public class OrganizationMgmtService {
 
     public OrganizationMgmtResponseDto getOrgnztList(OrganizationMgmtRequestDto requestDto) {
 
-        //TODO ID 받아와야 함
-        //long storeId = authenticationUtil.getId("storeId");
-        long storeId = 1L;
+        requestDto.setStoreId(authenticationUtil.getTargetStoreId(requestDto.getStoreId()));
 
-        HashMap<String, List> orgnztMemberListMap = organizationRepository.getOrgnztAndMemberList(storeId);
+        HashMap<String, List> orgnztMemberListMap = organizationRepository.getOrgnztAndMemberList(requestDto);
 
         OrganizationMgmtResponseDto responseDto = new OrganizationMgmtResponseDto();
 
@@ -111,7 +109,7 @@ public class OrganizationMgmtService {
 
         responseDto.setMemberList(mList);
 
-        List<RoleMgmt> roleList = roleFuncMgmtService.getRoleList(storeId);
+        List<RoleMgmt> roleList = roleFuncMgmtService.getRoleList(requestDto.getParentStoreId());
 
         List<FuncRoleMgmtDto.RoleMgmtDto> roleDtoList = roleList.stream()
                 .map(FuncRoleMgmtDto.RoleMgmtDto::from)
@@ -137,7 +135,7 @@ public class OrganizationMgmtService {
                 Organization.builder()
                         .orgName(organizationMgmtDto.getOrgName())
                         .parentOrgId(organizationMgmtDto.getParentOrgId())
-                        .storeId(organizationMgmtDto.getStoreId())
+                        .storeId(authenticationUtil.getTargetStoreId(organizationMgmtDto.getStoreId()))
                         .delYn(StatusEnum.FLAG_N.getStatusMsg())
                         .build()
         ).getOrgId();
@@ -147,8 +145,10 @@ public class OrganizationMgmtService {
     public void updateOrgnzt(OrganizationMgmtDto organizationMgmtDto, boolean deleteAct) {
 
         Organization orgnzt = organizationRepository.findById(organizationMgmtDto.getOrgId()).orElse(null);
+        long storeId = authenticationUtil.getTargetStoreId(organizationMgmtDto.getStoreId());
 
-        if(orgnzt != null) {
+        if(orgnzt != null
+            && orgnzt.getStoreId() == storeId) {
             //TODO ifnull return 함수 추가
             if(StringUtils.hasText(organizationMgmtDto.getOrgName())) {
                 orgnzt.setOrgName(organizationMgmtDto.getOrgName());
@@ -167,8 +167,10 @@ public class OrganizationMgmtService {
     public void deleteOrgnzt(OrganizationMgmtDto organizationMgmtDto) {
 
         Organization orgnzt = organizationRepository.findById(organizationMgmtDto.getOrgId()).orElse(null);
+        long storeId = authenticationUtil.getTargetStoreId(organizationMgmtDto.getStoreId());
 
-        if(orgnzt != null) {
+        if(orgnzt != null
+                && orgnzt.getStoreId() == storeId) {
             orgnzt.setDelYn(StatusEnum.FLAG_Y.getStatusMsg());
 
             List<Member> membersList = memberRepository.findByOrgId(orgnzt.getOrgId());
@@ -198,7 +200,7 @@ public class OrganizationMgmtService {
                 .phone(orgnztMemberDto.getPhone())
                 .regiDatetime(LocalDateTime.now())
                 .updDatetime(null)
-                .storeId(orgnztMemberDto.getStoreId())
+                .storeId(authenticationUtil.getTargetStoreId(orgnztMemberDto.getStoreId()))
                 .orgId(orgnztMemberDto.getOrgId())
                 .userStatus(orgnztMemberDto.getUserStatus())
             .build());
@@ -215,7 +217,8 @@ public class OrganizationMgmtService {
     @Transactional
     public void ctrlMemberRole(OrganizationMemberDto orgnztMemberDto){
 
-        if(CommonUtil.isNotEmptyList(Arrays.asList(orgnztMemberDto.getRoleIds()))){
+        if(orgnztMemberDto.getRoleIds() != null
+                && CommonUtil.isNotEmptyList(Arrays.asList(orgnztMemberDto.getRoleIds()))){
             long memberSeq = orgnztMemberDto.getSeq();
 
             memberRoleRepository.deleteBySeq(memberSeq);
@@ -234,8 +237,10 @@ public class OrganizationMgmtService {
     public void updateUser(OrganizationMemberDto orgnztMemberDto) throws NotFoundException {
 
         Member member = memberRepository.findById(orgnztMemberDto.getSeq()).orElse(null);
+        long storeId = authenticationUtil.getTargetStoreId(orgnztMemberDto.getStoreId());
 
-        if(member != null) {
+        if(member != null
+            && member.getStoreId() == storeId) {
             //TODO ifnull return 함수 추가
             member.setUpdDatetime(LocalDateTime.now());
             member.setName(orgnztMemberDto.getName());

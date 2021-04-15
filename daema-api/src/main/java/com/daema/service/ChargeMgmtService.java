@@ -19,7 +19,6 @@ import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
 import com.daema.response.exception.ProcessErrorException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -51,13 +50,8 @@ public class ChargeMgmtService {
 
     public ResponseDto<ChargeMgmtDto> getList(ChargeMgmtRequestDto requestDto) {
 
-        PageRequest pageable = PageRequest.of(requestDto.getPageNo(), requestDto.getPerPageCnt());
-
         //관리자 외 사용자는 useYn = Y 정보만 출력
-        //TODO 무조건 관리자로 처리중
-        //Page<Charge> chargeList = chargeRepository.getSearchPage(pageable, authenticationUtil.isAdmin());
-
-        Page<Charge> chargeList = chargeRepository.getSearchPage(pageable, !authenticationUtil.isAdmin());
+        Page<Charge> chargeList = chargeRepository.getSearchPage(requestDto, authenticationUtil.isAdmin());
 
         return new ResponseDto(ChargeMgmtDto.class, chargeList);
     }
@@ -67,10 +61,8 @@ public class ChargeMgmtService {
      * 일반 사용자 : charge_reg_req 테이블
      */
     public void insertData(ChargeMgmtDto chargeMgmtDto) {
-        //TODO 하드코딩. 관리자 권한 확인 필요. 지금은 무조건 true 처리 해둠
         //TODO ifnull return 함수 추가
-        //if (authenticationUtil.isAdmin()) {
-        if ("N".equals(chargeMgmtDto.getReqYn())) {
+        if (authenticationUtil.isAdmin()) {
             chargeRepository.save(
                     Charge.builder()
                             .chargeName(chargeMgmtDto.getChargeName())
@@ -79,6 +71,7 @@ public class ChargeMgmtService {
                             .telecom(chargeMgmtDto.getTelecom())
                             .network(chargeMgmtDto.getNetwork())
                             .originKey(chargeMgmtDto.getOriginKey())
+                            .chargeCode(chargeMgmtDto.getChargeCode())
                             .useYn(chargeMgmtDto.getUseYn())
                             .matchingYn(chargeMgmtDto.getMatchingYn())
                             .delYn(chargeMgmtDto.getDelYn())
@@ -93,9 +86,8 @@ public class ChargeMgmtService {
                         .category(chargeMgmtDto.getCategory())
                         .telecom(chargeMgmtDto.getTelecom())
                         .network(chargeMgmtDto.getNetwork())
-                        //TODO security 설정에 따라 storeId 가져오는 방식 변경 필요
-                        //.reqStoreId(authenticationUtil.getId("storeId"))
-                        .reqStoreId(1)
+                        .chargeCode(chargeMgmtDto.getChargeCode())
+                        .reqStoreId(authenticationUtil.getStoreId())
                         .reqStatus(StatusEnum.REG_REQ.getStatusCode())
                         .regiDateTime(LocalDateTime.now())
                     .build()
@@ -116,6 +108,7 @@ public class ChargeMgmtService {
             charge.setChargeAmt(chargeMgmtDto.getChargeAmt());
             charge.setCategory(chargeMgmtDto.getCategory());
             charge.setNetworkAttribute(new NetworkAttribute(chargeMgmtDto.getTelecom(), chargeMgmtDto.getNetwork()));
+            charge.setChargeCode(chargeMgmtDto.getChargeCode());
 
             if (StringUtils.hasText(chargeMgmtDto.getOriginKey())) {
                 charge.setOriginKey(chargeMgmtDto.getOriginKey());
@@ -175,13 +168,10 @@ public class ChargeMgmtService {
 
     public ResponseDto<ChargeRegReqDto> getRegReqList(ChargeRegReqRequestDto requestDto) {
 
-        PageRequest pageable = PageRequest.of(requestDto.getPageNo(), requestDto.getPerPageCnt());
+        requestDto.setStoreId(authenticationUtil.getStoreId());
 
         //관리자 외 사용자는 해당 req_store_id 정보만 출력
-        //TODO 무조건 관리자로 처리중
-        //Page<ChargeRegReq> chargeList = chargeRegReqRepository.getSearchPage(pageable, authenticationUtil.isAdmin());
-
-        Page<ChargeRegReq> chargeList = chargeRegReqRepository.getSearchPage(pageable, !authenticationUtil.isAdmin());
+        Page<ChargeRegReq> chargeList = chargeRegReqRepository.getSearchPage(requestDto, authenticationUtil.isAdmin());
 
         return new ResponseDto(ChargeRegReqDto.class, chargeList);
     }
@@ -204,6 +194,7 @@ public class ChargeMgmtService {
                                 .telecom(chargeRegReq.getNetworkAttribute().getTelecom())
                                 .network(chargeRegReq.getNetworkAttribute().getNetwork())
                                 .originKey("R".concat(String.valueOf(chargeRegReq.getChargeRegReqId())))
+                                .chargeCode(chargeRegReq.getChargeCode())
                                 .regiDateTime(LocalDateTime.now())
                                 .useYn(StatusEnum.FLAG_N.getStatusMsg())
                                 .matchingYn(StatusEnum.FLAG_N.getStatusMsg())
@@ -215,8 +206,7 @@ public class ChargeMgmtService {
                 chargeRegReqReject.setChargeRegReqId(chargeRegReq.getChargeRegReqId());
                 chargeRegReqReject.setRejectComment(chargeRegReqDto.getRegReqRejectDto().getRejectComment());
                 chargeRegReqReject.setRejectDateTime(LocalDateTime.now());
-                //TODO security 설정에 따라 userId 가져오는 방식 변경 필요
-                chargeRegReqReject.setRejectUserId(1L);
+                chargeRegReqReject.setRejectUserId(authenticationUtil.getMemberSeq());
 
                 chargeRegReqRejectRepository.save(chargeRegReqReject);
             }else{

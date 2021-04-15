@@ -49,7 +49,7 @@ public class RoleFuncMgmtService {
                         .roleName(roleMgmtDto.getRoleName())
                         .necessaryYn(roleMgmtDto.getNecessaryYn())
                         .delYn(StatusEnum.FLAG_N.getStatusMsg())
-                        .storeId(roleMgmtDto.getStoreId())
+                        .storeId(authenticationUtil.getTargetStoreId(roleMgmtDto.getStoreId()))
                         .regiDateTime(LocalDateTime.now())
                     .build()
         );
@@ -59,8 +59,10 @@ public class RoleFuncMgmtService {
     public void updateRole(FuncRoleMgmtDto.RoleMgmtDto roleMgmtDto) {
 
         RoleMgmt roleMgmt = roleMgmtRepository.findById(roleMgmtDto.getRoleId()).orElse(null);
+        long storeId = authenticationUtil.getTargetStoreId(roleMgmtDto.getStoreId());
 
-        if (roleMgmt != null) {
+        if (roleMgmt != null
+            && roleMgmt.getStoreId() == storeId) {
 
             roleMgmt.setRoleName(roleMgmtDto.getRoleName());
 
@@ -84,7 +86,10 @@ public class RoleFuncMgmtService {
             Integer roleId = Integer.parseInt(reqModelMap.get("delRoleId") + "");
             RoleMgmt roleMgmt = roleMgmtRepository.findById(roleId).orElse(null);
 
-            if(roleMgmt != null) {
+            long storeId = authenticationUtil.getTargetStoreId(Long.parseLong(String.valueOf(reqModelMap.getAttribute("storeId"))));
+
+            if (roleMgmt != null
+                    && roleMgmt.getStoreId() == storeId) {
                 roleMgmt.updateDelYn(roleMgmt, StatusEnum.FLAG_Y.getStatusMsg());
             } else {
                 throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
@@ -96,6 +101,8 @@ public class RoleFuncMgmtService {
 
     public FuncRoleResponseDto getFuncRoleMapInfo(long storeId) {
 
+        long targetStoreId = authenticationUtil.getTargetStoreId(storeId);
+
         List<Order> orders = new ArrayList<>();
         orders.add(Order.asc("groupId"));
         orders.add(Order.asc("orderNum"));
@@ -104,10 +111,10 @@ public class RoleFuncMgmtService {
         List<FuncMgmt> funcList = funcMgmtRepository.findAll(Sort.by(orders));
 
         //역할 전체 목록
-        List<RoleMgmt> roleList = getRoleList(storeId);
+        List<RoleMgmt> roleList = getRoleList(targetStoreId);
 
         //기능, 역할 맵핑 목록
-        List<FuncRoleMap> mapList = funcRoleMapRepository.getMappingList(storeId);
+        List<FuncRoleMap> mapList = funcRoleMapRepository.getMappingList(targetStoreId);
 
         //맵핑 데이터 없는 func 에 사용
         List<String[]> emptyRoleList = new ArrayList<>();

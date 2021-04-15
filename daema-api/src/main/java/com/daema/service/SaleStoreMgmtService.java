@@ -1,6 +1,8 @@
 package com.daema.service;
 
+import com.daema.common.Constants;
 import com.daema.common.enums.StatusEnum;
+import com.daema.common.util.AuthenticationUtil;
 import com.daema.domain.Store;
 import com.daema.domain.StoreMap;
 import com.daema.domain.pk.StoreMapPK;
@@ -12,7 +14,6 @@ import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
 import com.daema.response.exception.ProcessErrorException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -21,7 +22,6 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 @Service
 public class SaleStoreMgmtService {
 
@@ -31,28 +31,32 @@ public class SaleStoreMgmtService {
 
 	private final OrganizationMgmtService organizationMgmtService;
 
-	public SaleStoreMgmtService(StoreRepository storeRepository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService) {
+	private final AuthenticationUtil authenticationUtil;
+
+	public SaleStoreMgmtService(StoreRepository storeRepository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService, AuthenticationUtil authenticationUtil) {
 		this.storeRepository = storeRepository;
 		this.storeMapRepository = storeMapRepository;
 		this.organizationMgmtService = organizationMgmtService;
+		this.authenticationUtil = authenticationUtil;
 	}
 
 	public ResponseDto<SaleStoreMgmtDto> getStoreList(SaleStoreMgmtRequestDto requestDto) {
 
-		PageRequest pageable = PageRequest.of(requestDto.getPageNo(), requestDto.getPerPageCnt());
+		requestDto.setParentStoreId(authenticationUtil.getTargetStoreId(requestDto.getParentStoreId()));
 
-		Page<Store> dataList = storeRepository.getSearchPage(pageable);
+		Page<Store> dataList = storeRepository.getSearchPage(requestDto);
 
 		return new ResponseDto(SaleStoreMgmtDto.class, dataList);
 	}
 
+	//TODO 회원가입 로직으로 변경해야 함
 	@Transactional
 	public void insertStoreAndUserAndStoreMap(SaleStoreUserWrapperDto wrapperDto) {
 
 		long resultStoreId = insertStore(wrapperDto.getSaleStore());
 
 		long resultOrgId = organizationMgmtService.insertOrgnzt(OrganizationMgmtDto.builder()
-				.orgName("기본그룹")
+				.orgName(Constants.ORGANIZATION_DEFAULT_GROUP_NAME)
 				.parentOrgId(0)
 				.storeId(resultStoreId).build());
 
@@ -102,6 +106,8 @@ public class SaleStoreMgmtService {
 	@Transactional
 	public void updateStoreInfo(SaleStoreUserWrapperDto wrapperDto) {
 
+		wrapperDto.setParentStoreId(authenticationUtil.getTargetStoreId(wrapperDto.getParentStoreId()));
+
 		Store store = storeRepository.findStoreInfo(wrapperDto.getParentStoreId()
 				, wrapperDto.getSaleStore().getStoreId());
 
@@ -128,7 +134,7 @@ public class SaleStoreMgmtService {
 	public void deleteStore(ModelMap reqModelMap) {
 
 		List<Number> delStoreIds = (ArrayList<Number>) reqModelMap.get("delStoreId");
-		long parentStoreId = Long.parseLong(String.valueOf(reqModelMap.get("parentStoreId")));
+		long parentStoreId = authenticationUtil.getTargetStoreId(Long.parseLong(String.valueOf(reqModelMap.get("parentStoreId"))));
 
 		if(delStoreIds != null
 			&& delStoreIds.size() > 0){
@@ -143,7 +149,7 @@ public class SaleStoreMgmtService {
 	public void updateStoreUse(ModelMap reqModelMap) {
 
 		long storeId = Long.parseLong(String.valueOf(reqModelMap.getAttribute("storeId")));
-		long parentStoreId = Long.parseLong(String.valueOf(reqModelMap.getAttribute("parentStoreId")));
+		long parentStoreId = authenticationUtil.getTargetStoreId(Long.parseLong(String.valueOf(reqModelMap.getAttribute("parentStoreId"))));
 		String useYn = String.valueOf(reqModelMap.getAttribute("useYn"));
 
 		StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(storeId, parentStoreId);

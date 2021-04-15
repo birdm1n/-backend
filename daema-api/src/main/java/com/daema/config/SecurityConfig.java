@@ -11,6 +11,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -30,25 +37,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .httpBasic()
-                .authenticationEntryPoint(customAuthenticationEntryPoint)
-                .and()
-                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler)
-                .and()
+        http.httpBasic().disable()
                 .authorizeRequests()
-                /*.antMatchers("/user/signup").permitAll()
-                .antMatchers("/user/login").permitAll()
-                .antMatchers("/user/verify/**").permitAll()
-                .antMatchers("/oauth/**").permitAll()
-                .antMatchers("/test/user").hasRole("USER")
-                .antMatchers("/test/admin").hasRole("ADMIN")
-                .anyRequest().authenticated();*/
-                .anyRequest().permitAll();
-
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                    .antMatchers("/user/signup").permitAll()
+                    .antMatchers("/user/login").permitAll()
+                    .antMatchers("/user/invalidate").permitAll()
+                    .antMatchers("/user/verify/**").permitAll()
+                    .antMatchers("/oauth/**").permitAll()
+                    .anyRequest().authenticated()
+                    //.anyRequest().permitAll()
+            .and()
+                .csrf().disable()
+                .cors().configurationSource(corsConfigurationSource())
+            .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+                .exceptionHandling()
+                    .authenticationEntryPoint(customAuthenticationEntryPoint)
+                    .accessDeniedHandler(customAccessDeniedHandler)
+            .and()
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override // ignore check swagger resource
@@ -63,4 +71,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        String profile = System.getProperty("spring.profiles.active");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT"));
+
+        if(profile != null &&
+                !"prod".equals(profile)) {
+
+            configuration.addAllowedOrigin("*");
+            configuration.addAllowedHeader("*");
+
+        }else{
+            List<String> allowedOrigins = new ArrayList<>();
+            allowedOrigins.add("http://192.168.0.68:8080");
+            allowedOrigins.add("http://192.168.0.14:8080");
+
+            configuration.addAllowedOrigin("*");
+            //configuration.setAllowedOrigins(allowedOrigins);
+
+            configuration.addAllowedHeader("*");
+            //configuration.setAllowedHeaders(Arrays.asList("X-Requested-With","Origin","Content-Type","Accept","Authorization"));
+
+            //configuration.addExposedHeader("Authorization");
+            //configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Authorization, x-xsrf-token, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"));
+        }
+
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
 }

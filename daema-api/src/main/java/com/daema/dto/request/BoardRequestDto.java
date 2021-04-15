@@ -1,6 +1,6 @@
 package com.daema.dto.request;
 
-import com.daema.dto.common.SearchParamDto;
+import com.daema.domain.dto.common.SearchParamDto;
 import lombok.Getter;
 import lombok.Setter;
 

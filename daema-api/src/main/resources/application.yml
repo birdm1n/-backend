@@ -61,6 +61,14 @@ server:
 
 spring:
   profiles: test
+  redis:
+    host: localhost
+    port: 6157
+    lettuce:
+      pool:
+        min-idle: 2
+        max-idle: 10
+        max-active: 10
   jpa:
     generate-ddl: true
     show-sql: true

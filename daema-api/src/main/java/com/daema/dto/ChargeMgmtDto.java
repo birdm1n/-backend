@@ -19,6 +19,7 @@ public class ChargeMgmtDto {
 	private int telecom;
 	private int network;
 	private String originKey;
+	private String chargeCode;
 	private String useYn;
 	private String matchingYn;
 	private String delYn;
@@ -27,9 +28,9 @@ public class ChargeMgmtDto {
 	private String dataAmt;
 	private String smsAmt;
 	private Integer discountAmt;
-
-	//TODO 관리자 구분 불가하여 임시 사용. 신규 등록과 요청 구분용
-	private String reqYn;
+	private String makerName;
+	private String networkName;
+	private String telecomName;
 
 	public static ChargeMgmtDto from (Charge charge) {
 		return ChargeMgmtDto.builder()
@@ -40,6 +41,7 @@ public class ChargeMgmtDto {
 				.telecom(charge.getNetworkAttribute().getTelecom())
 				.network(charge.getNetworkAttribute().getNetwork())
 				.originKey(charge.getOriginKey())
+				.chargeCode(charge.getChargeCode())
 				.regiDateTime(charge.getRegiDateTime())
 				.useYn(charge.getUseYn())
 				.matchingYn(charge.getMatchingYn())
@@ -48,6 +50,9 @@ public class ChargeMgmtDto {
 				.dataAmt(charge.getDataAmt())
 				.smsAmt(charge.getSmsAmt())
 				.discountAmt(charge.getDiscountAmt())
-				.build();
+				.makerName(charge.getMakerName())
+				.telecomName(charge.getTelecomName())
+				.networkName(charge.getNetworkName())
+			.build();
 	}
 }

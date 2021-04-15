@@ -17,7 +17,7 @@ import java.util.List;
 
 @Api(value = "역할 및 기능 관리 API", tags = "역할 및 기능 관리 API")
 @RestController
-@RequestMapping("/v1/api/RoleFuncManManagement/RoleFuncMgmt")
+@RequestMapping("/v1/api/RoleFuncManagement/RoleFuncMgmt")
 public class RoleFuncMgmtController {
 
     private final RoleFuncMgmtService roleFuncMgmtService;
@@ -46,7 +46,8 @@ public class RoleFuncMgmtController {
 
     @ApiOperation(value = "역할 삭제", notes = "역할을 삭제합니다", nickname = Constants.API_ROLE_FUNC + "||3")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "역할 ID", required = true, example = "1", name = "delRoleId")
+            @ApiImplicitParam(value = "역할 ID", required = true, example = "1", name = "delRoleId"),
+            @ApiImplicitParam(value = "관리점 ID", required = true, example = "1", name = "storeId")
     })
     @PostMapping("/deleteRole")
     public ResponseEntity<CommonResponse<Void>> deleteRole(@ApiIgnore @RequestBody ModelMap reqModel) {
