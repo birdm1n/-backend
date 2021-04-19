@@ -26,6 +26,7 @@ public class OpeningStoreMgmtDto {
 	private String useYn;
 	private String delYn;
 	private LocalDateTime regiDateTime;
+	private long reqStoreId;
 
 	public static OpeningStoreMgmtDto from (OpenStore openStore) {
 		return OpeningStoreMgmtDto.builder()
@@ -60,6 +61,7 @@ public class OpeningStoreMgmtDto {
 				.useYn(openStoreListDto.getUseYn())
 				.delYn(openStoreListDto.getDelYn())
 				.regiDateTime(openStoreListDto.getRegiDateTime())
+				.reqStoreId(openStoreListDto.getReqStoreId())
 				.build();
 	}
 }

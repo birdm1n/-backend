@@ -6,6 +6,7 @@ import com.daema.common.util.CommonUtil;
 import com.daema.domain.FuncMgmt;
 import com.daema.domain.FuncRoleMap;
 import com.daema.domain.RoleMgmt;
+import com.daema.domain.enums.UserRole;
 import com.daema.dto.FuncRoleMgmtDto;
 import com.daema.dto.FuncRoleResponseDto;
 import com.daema.repository.FuncMgmtRepository;
@@ -14,9 +15,9 @@ import com.daema.repository.RoleMgmtRepository;
 import com.daema.response.enums.ServiceReturnMsgEnum;
 import com.daema.response.exception.DataNotFoundException;
 import com.daema.response.exception.ProcessErrorException;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -107,8 +108,17 @@ public class RoleFuncMgmtService {
         orders.add(Order.asc("groupId"));
         orders.add(Order.asc("orderNum"));
 
+        String role = UserRole.ROLE_USER.name();
+
+        for(UserRole userRole : UserRole.values()){
+            if(authenticationUtil.hasRole(userRole.name())){
+                role = userRole.name();
+                break;
+            }
+        }
+
         //기능 전체 목록
-        List<FuncMgmt> funcList = funcMgmtRepository.findAll(Sort.by(orders));
+        List<FuncMgmt> funcList = funcMgmtRepository.findAllByRoleContainingOrderByGroupIdAscRoleAscOrderNumAsc(role);
 
         //역할 전체 목록
         List<RoleMgmt> roleList = getRoleList(targetStoreId);
@@ -161,7 +171,7 @@ public class RoleFuncMgmtService {
         return roleMgmtRepository.getRoleList(storeId);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void setFuncRoleMapInfo (List<ModelMap> reqModelMap){
 
         if (CommonUtil.isNotEmptyList(reqModelMap)) {

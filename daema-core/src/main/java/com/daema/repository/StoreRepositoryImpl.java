@@ -39,6 +39,8 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 , store.telecom
                 , store.bizNo
                 , store.chargerPhone
+                , store.chargerName
+                , store.chargerEmail
                 , store.returnZipCode
                 , store.returnAddr
                 , store.returnAddrDetail

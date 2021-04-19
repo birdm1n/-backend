@@ -25,7 +25,8 @@ import java.time.LocalDateTime;
                         @ColumnResult(name="telecom", type = Integer.class),
                         @ColumnResult(name="use_yn", type = String.class),
                         @ColumnResult(name="del_yn", type = String.class),
-                        @ColumnResult(name="telecomName", type = String.class)
+                        @ColumnResult(name="telecomName", type = String.class),
+                        @ColumnResult(name="req_store_id", type = Long.class)
                 })
 )
 

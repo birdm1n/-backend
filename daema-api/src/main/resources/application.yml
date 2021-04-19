@@ -63,7 +63,7 @@ spring:
   profiles: test
   redis:
     host: localhost
-    port: 6157
+    port: 6379
     lettuce:
       pool:
         min-idle: 2

@@ -26,6 +26,7 @@ public class GoodsRegReqDto {
 	private String makerName;
 	private String networkName;
 	private String telecomName;
+	private String reqStoreName;
 
 	public static GoodsRegReqDto from (GoodsRegReq goodsRegReq) {
 		return GoodsRegReqDto.builder()
@@ -43,6 +44,7 @@ public class GoodsRegReqDto {
 				.makerName(goodsRegReq.getMakerName())
 				.telecomName(goodsRegReq.getTelecomName())
 				.networkName(goodsRegReq.getNetworkName())
+				.reqStoreName(goodsRegReq.getReqStoreName())
 			.build();
 	}
 }

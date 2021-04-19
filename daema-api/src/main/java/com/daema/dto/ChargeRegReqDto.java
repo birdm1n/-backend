@@ -29,6 +29,7 @@ public class ChargeRegReqDto {
 	private String makerName;
 	private String networkName;
 	private String telecomName;
+	private String reqStoreName;
 
 	public static ChargeRegReqDto from (ChargeRegReq chargeRegReq) {
 		return ChargeRegReqDto.builder()
@@ -49,6 +50,7 @@ public class ChargeRegReqDto {
 				.makerName(chargeRegReq.getMakerName())
 				.telecomName(chargeRegReq.getTelecomName())
 				.networkName(chargeRegReq.getNetworkName())
+				.reqStoreName(chargeRegReq.getReqStoreName())
 			.build();
 	}
 }

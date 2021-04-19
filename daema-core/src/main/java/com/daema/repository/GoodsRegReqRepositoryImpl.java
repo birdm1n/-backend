@@ -3,6 +3,7 @@ package com.daema.repository;
 import com.daema.domain.GoodsRegReq;
 import com.daema.domain.GoodsRegReqReject;
 import com.daema.domain.QCodeDetail;
+import com.daema.domain.QStore;
 import com.daema.domain.attr.NetworkAttribute;
 import com.daema.domain.common.RetrieveClauseBuilder;
 import com.daema.domain.dto.common.SearchParamDto;
@@ -42,6 +43,7 @@ public class GoodsRegReqRepositoryImpl extends QuerydslRepositorySupport impleme
         QCodeDetail telecom = new QCodeDetail("telecom");
         QCodeDetail network = new QCodeDetail("network");
         QCodeDetail maker = new QCodeDetail("maker");
+        QStore store = QStore.store;
 
         query.select(Projections.fields(
                 GoodsRegReq.class
@@ -56,6 +58,7 @@ public class GoodsRegReqRepositoryImpl extends QuerydslRepositorySupport impleme
                 ,maker.codeNm.as("makerName")
                 ,telecom.codeNm.as("telecomName")
                 ,network.codeNm.as("networkName")
+                ,store.storeName.as("reqStoreName")
                 ,Projections.fields(NetworkAttribute.class
                         ,goodsRegReq.networkAttribute.telecom
                         ,goodsRegReq.networkAttribute.network
@@ -85,6 +88,8 @@ public class GoodsRegReqRepositoryImpl extends QuerydslRepositorySupport impleme
                         .and(network.codeId.eq("NETWORK"))
                         .and(network.useYn.eq("Y"))
                 )
+                .innerJoin(store)
+                .on(goodsRegReq.reqStoreId.eq(store.storeId))
                 .leftJoin(goodsRegReqReject)
                 .on(goodsRegReq.goodsRegReqId.eq(goodsRegReqReject.goodsRegReqId))
                 .where(

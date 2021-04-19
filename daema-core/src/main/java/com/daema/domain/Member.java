@@ -101,7 +101,7 @@ public class Member {
 
     @Builder
     public Member(long seq, String username, String password, String name, String email, String address, String phone
-            , LocalDateTime regiDatetime, LocalDateTime updDatetime, long storeId, long orgId, String userStatus){
+            , LocalDateTime regiDatetime, LocalDateTime updDatetime, long storeId, long orgId, String userStatus, UserRole role){
 
         this.seq = seq;
         this.username = username;
@@ -115,6 +115,7 @@ public class Member {
         this.storeId = storeId;
         this.orgId = orgId;
         this.userStatus = userStatus;
+        this.role = role;
     }
 
     @Override

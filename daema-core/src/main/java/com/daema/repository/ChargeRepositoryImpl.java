@@ -98,6 +98,8 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
     public List<Charge> getMatchList() {
 
         QCharge charge = QCharge.charge;
+        QCodeDetail telecom = new QCodeDetail("telecom");
+        QCodeDetail network = new QCodeDetail("network");
 
         JPQLQuery<Charge> query = from(charge);
 
@@ -111,12 +113,25 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
                 ,charge.useYn
                 ,charge.matchingYn
                 ,charge.regiDateTime
+                ,telecom.codeNm.as("telecomName")
+                ,network.codeNm.as("networkName")
                 ,Projections.fields(NetworkAttribute.class
                         ,charge.networkAttribute.telecom
                         ,charge.networkAttribute.network
                     ).as("networkAttribute")
                 )
         );
+
+        query.innerJoin(telecom)
+                .on(charge.networkAttribute.telecom.eq(telecom.codeSeq)
+                        .and(telecom.codeId.eq("TELECOM"))
+                        .and(telecom.useYn.eq("Y"))
+                )
+                .innerJoin(network)
+                .on(charge.networkAttribute.network.eq(network.codeSeq)
+                        .and(network.codeId.eq("NETWORK"))
+                        .and(network.useYn.eq("Y"))
+                );
 
         BooleanBuilder where = new BooleanBuilder();
         where.and(charge.matchingYn.eq("N")

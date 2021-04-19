@@ -3,6 +3,7 @@ package com.daema.repository;
 import com.daema.domain.AddServiceRegReq;
 import com.daema.domain.AddServiceRegReqReject;
 import com.daema.domain.QCodeDetail;
+import com.daema.domain.QStore;
 import com.daema.domain.common.RetrieveClauseBuilder;
 import com.daema.domain.dto.common.SearchParamDto;
 import com.querydsl.core.BooleanBuilder;
@@ -39,6 +40,7 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
         }
 
         QCodeDetail telecom = new QCodeDetail("telecom");
+        QStore store = QStore.store;
 
         query.select(Projections.fields(
                 AddServiceRegReq.class
@@ -51,6 +53,7 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
                 ,addServiceRegReq.reqStoreId
                 ,addServiceRegReq.regiDateTime
                 ,telecom.codeNm.as("telecomName")
+                ,store.storeName.as("reqStoreName")
                 ,Projections.fields(AddServiceRegReqReject.class
                         ,addServiceRegReqReject.addSvcRegReqId
                         ,addServiceRegReqReject.rejectComment
@@ -66,6 +69,8 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
                         .and(telecom.codeId.eq("TELECOM"))
                         .and(telecom.useYn.eq("Y"))
                 )
+                .innerJoin(store)
+                .on(addServiceRegReq.reqStoreId.eq(store.storeId))
                 .leftJoin(addServiceRegReqReject)
                 .on(addServiceRegReq.addSvcRegReqId.eq(addServiceRegReqReject.addSvcRegReqId))
                 .where(

@@ -21,6 +21,7 @@ public class AddServiceRegReqDto {
 	private int reqStatus;
 	private AddServiceRegReqRejectDto regReqRejectDto;
 	private String telecomName;
+	private String reqStoreName;
 
 	public static AddServiceRegReqDto from (AddServiceRegReq addServiceRegReq) {
 		return AddServiceRegReqDto.builder()
@@ -33,6 +34,7 @@ public class AddServiceRegReqDto {
 				.reqStatus(addServiceRegReq.getReqStatus())
 				.regReqRejectDto(AddServiceRegReqRejectDto.from(addServiceRegReq.getAddServiceRegReqReject()))
 				.telecomName(addServiceRegReq.getTelecomName())
+				.reqStoreName(addServiceRegReq.getReqStoreName())
 			.build();
 	}
 }

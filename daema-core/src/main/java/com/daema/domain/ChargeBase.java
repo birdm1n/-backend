@@ -25,8 +25,7 @@ public abstract class ChargeBase {
     @Column(name = "charge_code", length = 20, nullable = false)
     protected String chargeCode;
 
-    @NotBlank
-    @Column(name = "category", length = 100, nullable = false)
+    @Column(name = "category", length = 100)
     protected String category;
 
     @NotNull

@@ -10,7 +10,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Log
-@Profile("local")
+@Profile({"local", "test"})
 @Configuration
 public class RedisConfig {
 

@@ -102,6 +102,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.use_yn " +
                     "       , os.del_yn " +
                     "       , cd.code_nm as telecomName " +
+                    "       , :storeId as req_store_id " +
                     "  from open_store as os " +
                     " inner join code_detail as cd " +
                     "            on store_id = :storeId " +
@@ -126,6 +127,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.use_yn " +
                     "       , os.del_yn " +
                     "       , cd.code_nm as telecomName " +
+                    "       , :storeId as req_store_id " +
                     "  from open_store as os " +
                     " inner join open_store_sale_store_map osssm " +
                     "    on osssm.sale_store_id = :storeId " +
@@ -152,6 +154,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.use_yn " +
                     "       , os.del_yn " +
                     "       , cd.code_nm as telecomName " +
+                    "       , :storeId as req_store_id " +
                     "  from open_store as os " +
                     " inner join code_detail as cd " +
                     "            on store_id = :storeId " +
@@ -178,6 +181,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.use_yn " +
                     "       , os.del_yn " +
                     "       , cd.code_nm as telecomName " +
+                    "       , :storeId as req_store_id " +
                     "  from open_store as os " +
                     " inner join open_store_sale_store_map osssm " +
                     "    on osssm.sale_store_id = :storeId " +

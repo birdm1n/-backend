@@ -18,6 +18,8 @@ public class SaleStoreMgmtDto {
 	private String telecomName;
 	private String bizNo;
 	private String chargerPhone;
+	private String chargerName;
+	private String chargerEmail;
 	private String returnZipCode;
 	private String returnAddr;
 	private String returnAddrDetail;
@@ -32,12 +34,14 @@ public class SaleStoreMgmtDto {
 				.telecomName(store.getTelecomName())
 				.bizNo(store.getBizNo())
 				.chargerPhone(store.getChargerPhone())
+				.chargerName(store.getChargerName())
+				.chargerEmail(store.getChargerEmail())
 				.returnZipCode(store.getReturnZipCode())
 				.returnAddr(store.getReturnAddr())
 				.returnAddrDetail(store.getReturnAddrDetail())
 				.useYn(store.getUseYn())
 				.regiDateTime(store.getRegiDateTime())
-				.build();
+			.build();
 	}
 
 	public static SaleStoreMgmtDto ofInitData (Store store) {

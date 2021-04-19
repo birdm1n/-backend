@@ -35,9 +35,13 @@ public class AddServiceRegReq extends AddServiceBase {
     @Transient
     private AddServiceRegReqReject addServiceRegReqReject;
 
+    @Transient
+    private String reqStoreName;
+
     @Builder
     public AddServiceRegReq(long addSvcRegReqId, long reqStoreId, String addSvcName, int addSvcCharge, int telecom
-            , String originKey, LocalDateTime regiDateTime, String addSvcMemo, int reqStatus, String telecomName) {
+            ,LocalDateTime regiDateTime, String addSvcMemo, int reqStatus, String telecomName
+            ,String reqStoreName) {
         this.addSvcRegReqId = addSvcRegReqId;
         this.addSvcName = addSvcName;
         this.addSvcCharge = addSvcCharge;
@@ -47,6 +51,7 @@ public class AddServiceRegReq extends AddServiceBase {
         this.addSvcMemo = addSvcMemo;
         this.regiDateTime = regiDateTime;
         this.telecomName = telecomName;
+        this.reqStoreName = reqStoreName;
     }
 
     public void updateReqStatus(AddServiceRegReq addServiceRegReq, int reqStatus){

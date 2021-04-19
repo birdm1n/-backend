@@ -3,6 +3,7 @@ package com.daema.repository;
 import com.daema.domain.ChargeRegReq;
 import com.daema.domain.ChargeRegReqReject;
 import com.daema.domain.QCodeDetail;
+import com.daema.domain.QStore;
 import com.daema.domain.attr.NetworkAttribute;
 import com.daema.domain.common.RetrieveClauseBuilder;
 import com.daema.domain.dto.common.SearchParamDto;
@@ -41,6 +42,7 @@ public class ChargeRegReqRepositoryImpl extends QuerydslRepositorySupport implem
 
         QCodeDetail telecom = new QCodeDetail("telecom");
         QCodeDetail network = new QCodeDetail("network");
+        QStore store = QStore.store;
 
         query.select(Projections.fields(
                 ChargeRegReq.class
@@ -53,6 +55,7 @@ public class ChargeRegReqRepositoryImpl extends QuerydslRepositorySupport implem
                 ,chargeRegReq.regiDateTime
                 ,telecom.codeNm.as("telecomName")
                 ,network.codeNm.as("networkName")
+                ,store.storeName.as("reqStoreName")
                 ,Projections.fields(NetworkAttribute.class
                         ,chargeRegReq.networkAttribute.telecom
                         ,chargeRegReq.networkAttribute.network
@@ -77,6 +80,8 @@ public class ChargeRegReqRepositoryImpl extends QuerydslRepositorySupport implem
                         .and(network.codeId.eq("NETWORK"))
                         .and(network.useYn.eq("Y"))
                 )
+                .innerJoin(store)
+                .on(chargeRegReq.reqStoreId.eq(store.storeId))
                 .leftJoin(chargeRegReqReject)
                 .on(chargeRegReq.chargeRegReqId.eq(chargeRegReqReject.chargeRegReqId))
                 .where(

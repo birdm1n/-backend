@@ -20,6 +20,7 @@ import com.daema.response.exception.DataNotFoundException;
 import com.daema.response.exception.ProcessErrorException;
 import javassist.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -128,7 +129,7 @@ public class OrganizationMgmtService {
         parent.getChildren().add(OrganizationMgmtDto.dtoToDto(child));
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public long insertOrgnzt(OrganizationMgmtDto organizationMgmtDto) {
         //TODO ifnull return 함수 추가
         return organizationRepository.save(
@@ -189,7 +190,7 @@ public class OrganizationMgmtService {
         }
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public long insertUser(OrganizationMemberDto orgnztMemberDto) {
         authService.signUpUser(Member.builder()
                 .username(orgnztMemberDto.getUsername())
@@ -199,6 +200,7 @@ public class OrganizationMgmtService {
                 .address(orgnztMemberDto.getAddress())
                 .phone(orgnztMemberDto.getPhone())
                 .regiDatetime(LocalDateTime.now())
+                .role(orgnztMemberDto.getRole())
                 .updDatetime(null)
                 .storeId(authenticationUtil.getTargetStoreId(orgnztMemberDto.getStoreId()))
                 .orgId(orgnztMemberDto.getOrgId())
@@ -214,7 +216,7 @@ public class OrganizationMgmtService {
         return seq;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void ctrlMemberRole(OrganizationMemberDto orgnztMemberDto){
 
         if(orgnztMemberDto.getRoleIds() != null

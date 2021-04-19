@@ -13,8 +13,9 @@ import com.daema.repository.SocialDataRepository;
 import javassist.NotFoundException;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Log
@@ -40,7 +41,7 @@ public class AuthService {
         this.socialDataRepository = socialDataRepository;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void signUpUser(Member member) {
         String password = member.getPassword();
         String salt = saltUtil.genSalt();

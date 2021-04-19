@@ -25,7 +25,7 @@ public class DataHandleController {
     /**
      * ApiOperation 의 nickname 속성을 조회해서 func_mgmt 테이블 데이터 관리
      */
-    @GetMapping("/extractApiFunc")
+    @PostMapping("/extractApiFunc")
     public void extractApiFunc() {
         dataHandleService.extractApiFunc();
     }
@@ -33,7 +33,7 @@ public class DataHandleController {
     /**
      * 공시지원금 스마트 초이스 데이터를 조회하여 goods 테이블 데이터 관리
      */
-    @GetMapping("/migrationSmartChoiceData")
+    @PostMapping("/migrationSmartChoiceData")
     public void migrationSmartChoiceData() {
         dataHandleService.migrationSmartChoiceData();
     }
@@ -44,6 +44,14 @@ public class DataHandleController {
     @PostMapping("/retrieveInitData")
     public ResponseEntity<CommonResponse<RetrieveInitDataResponseDto>> retrieveInitData(@RequestBody ModelMap reqModel) {
         return responseHandler.getResponseMessageAsRetrieveResult(dataHandleService.retrieveInitData(reqModel), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
+
+    /**
+     * 데이터 확인용
+     */
+    @PostMapping("/existsData")
+    public ResponseEntity<CommonResponse<Object>> existsData(@RequestBody ModelMap reqModel) {
+        return responseHandler.getResponseMessageAsRetrieveResult(dataHandleService.existsData(reqModel), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 }
 

@@ -36,10 +36,14 @@ public class GoodsRegReq extends GoodsBase{
     @Transient
     private GoodsRegReqReject goodsRegReqReject;
 
+    @Transient
+    private String reqStoreName;
+
     @Builder
     public GoodsRegReq(long goodsRegReqId, long reqStoreId, String goodsName, String modelName
             , int maker, int telecom, int network, String capacity, LocalDateTime regiDateTime, int reqStatus
-            , String makerName, String networkName, String telecomName){
+            , String makerName, String networkName, String telecomName
+            ,String reqStoreName){
         this.goodsRegReqId = goodsRegReqId;
         this.reqStoreId = reqStoreId;
         this.goodsName = goodsName;
@@ -52,6 +56,7 @@ public class GoodsRegReq extends GoodsBase{
         this.makerName = makerName;
         this.networkName = networkName;
         this.telecomName = telecomName;
+        this.reqStoreName = reqStoreName;
     }
 
     public void updateReqStatus(GoodsRegReq goodsRegReq, int reqStatus){

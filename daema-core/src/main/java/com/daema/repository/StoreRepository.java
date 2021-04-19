@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface StoreRepository extends JpaRepository<Store, Long> , CustomStoreRepository{
     List<Store> findByUseYnOrderByStoreName(String useYn);
+    Store findByStoreName(String storeName);
+    Store findByBizNoAndUseYn(String bizNo, String useYn);
 }

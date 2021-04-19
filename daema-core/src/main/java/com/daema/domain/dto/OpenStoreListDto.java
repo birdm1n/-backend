@@ -37,4 +37,6 @@ public class OpenStoreListDto {
 
     private String telecomName;
 
+    private long reqStoreId;
+
 }

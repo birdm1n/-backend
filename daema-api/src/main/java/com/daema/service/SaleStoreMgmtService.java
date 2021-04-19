@@ -3,11 +3,16 @@ package com.daema.service;
 import com.daema.common.Constants;
 import com.daema.common.enums.StatusEnum;
 import com.daema.common.util.AuthenticationUtil;
+import com.daema.common.util.CommonUtil;
+import com.daema.domain.FuncMgmt;
+import com.daema.domain.RoleMgmt;
 import com.daema.domain.Store;
 import com.daema.domain.StoreMap;
+import com.daema.domain.enums.UserRole;
 import com.daema.domain.pk.StoreMapPK;
 import com.daema.dto.*;
 import com.daema.dto.common.ResponseDto;
+import com.daema.repository.FuncMgmtRepository;
 import com.daema.repository.StoreMapRepository;
 import com.daema.repository.StoreRepository;
 import com.daema.response.enums.ServiceReturnMsgEnum;
@@ -22,6 +27,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class SaleStoreMgmtService {
 
@@ -31,12 +37,19 @@ public class SaleStoreMgmtService {
 
 	private final OrganizationMgmtService organizationMgmtService;
 
+	private final RoleFuncMgmtService roleFuncMgmtService;
+
+	private final FuncMgmtRepository funcMgmtRepository;
+
 	private final AuthenticationUtil authenticationUtil;
 
-	public SaleStoreMgmtService(StoreRepository storeRepository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService, AuthenticationUtil authenticationUtil) {
+	public SaleStoreMgmtService(StoreRepository storeRepository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService
+								,RoleFuncMgmtService roleFuncMgmtService, FuncMgmtRepository funcMgmtRepository ,AuthenticationUtil authenticationUtil) {
 		this.storeRepository = storeRepository;
 		this.storeMapRepository = storeMapRepository;
 		this.organizationMgmtService = organizationMgmtService;
+		this.roleFuncMgmtService = roleFuncMgmtService;
+		this.funcMgmtRepository = funcMgmtRepository;
 		this.authenticationUtil = authenticationUtil;
 	}
 
@@ -49,9 +62,20 @@ public class SaleStoreMgmtService {
 		return new ResponseDto(SaleStoreMgmtDto.class, dataList);
 	}
 
-	//TODO 회원가입 로직으로 변경해야 함
+	/**
+	 * 회원가입시 사용
+	 * 1. 신규 영업점 등록
+	 * 2. 기본 그룹 생성
+	 * 3. 사용자 (ROLE_MANAGER) 등록
+	 * 4. ROLE_MANAGER 에 해당하는 사용자 기능 부여
+	 * 5. 관리점 링크 통해 가입한 영업점은 상위 관리점 정보 등록(store_map)
+	 * @param wrapperDto
+	 * @return
+	 */
 	@Transactional
 	public void insertStoreAndUserAndStoreMap(SaleStoreUserWrapperDto wrapperDto) {
+
+		wrapperDto.getSaleStore().setUseYn(StatusEnum.FLAG_Y.getStatusMsg());
 
 		long resultStoreId = insertStore(wrapperDto.getSaleStore());
 
@@ -64,14 +88,48 @@ public class SaleStoreMgmtService {
 		memberDto.setStoreId(resultStoreId);
 		memberDto.setOrgId(resultOrgId);
 		memberDto.setUserStatus(String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode()));
+		memberDto.setRole(UserRole.ROLE_MANAGER);
 
+		//resultStoreId 로 등록된 role 은 없으나 형식적으로 던짐
+		List<RoleMgmt> roleMgmtList = roleFuncMgmtService.getRoleList(resultStoreId);
+
+		if(CommonUtil.isNotEmptyList(roleMgmtList)) {
+			memberDto.setRoleIds(roleMgmtList.stream().map(RoleMgmt::getRoleId).toArray(Integer[]::new));
+		}
+
+		//사용자 추가 및 롤 등록
 		organizationMgmtService.insertUser(memberDto);
+
+		//롤과 기능 맵핑 등록
+		List<FuncMgmt> funcList = funcMgmtRepository.findAllByRoleContainingOrderByGroupIdAscRoleAscOrderNumAsc(UserRole.ROLE_MANAGER.name());
+
+		List<ModelMap> roleFuncList = new ArrayList<>();
+
+		funcList.forEach(
+				funcMgmt -> {
+					roleMgmtList.forEach(
+							roleMgmt -> {
+								ModelMap modelMap = new ModelMap();
+								modelMap.put("funcId", funcMgmt.getFuncId());
+								modelMap.put("roleId", roleMgmt.getRoleId());
+								modelMap.put("mapYn", StatusEnum.FLAG_Y.getStatusMsg());
+
+								roleFuncList.add(modelMap);
+							}
+					);
+				}
+		);
+
+		if(CommonUtil.isNotEmptyList(roleFuncList)) {
+			roleFuncMgmtService.setFuncRoleMapInfo(roleFuncList);
+		}
 
 		if(wrapperDto.getParentStoreId() > 0){
 			insertStoreMap(wrapperDto);
 		}
 	}
 
+	@Transactional
 	public long insertStore(SaleStoreMgmtDto saleStoreMgmtDto) {
 		return storeRepository.save(
                 Store.builder()
@@ -80,6 +138,8 @@ public class SaleStoreMgmtService {
                         .telecom(saleStoreMgmtDto.getTelecom())
                         .bizNo(saleStoreMgmtDto.getBizNo())
                         .chargerPhone(saleStoreMgmtDto.getChargerPhone())
+                        .chargerName(saleStoreMgmtDto.getChargerName())
+                        .chargerEmail(saleStoreMgmtDto.getChargerEmail())
                         .returnZipCode(saleStoreMgmtDto.getReturnZipCode())
                         .returnAddr(saleStoreMgmtDto.getReturnAddr())
                         .returnAddrDetail(saleStoreMgmtDto.getReturnAddrDetail())
@@ -89,6 +149,7 @@ public class SaleStoreMgmtService {
         ).getStoreId();
 	}
 
+	@Transactional
 	public void insertStoreMap(SaleStoreUserWrapperDto wrapperDto) {
         StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(wrapperDto.getMember().getStoreId(), wrapperDto.getParentStoreId());
 
@@ -97,7 +158,7 @@ public class SaleStoreMgmtService {
 					StoreMap.builder()
 							.storeId(wrapperDto.getMember().getStoreId())
 							.parentStoreId(wrapperDto.getParentStoreId())
-							.useYn(wrapperDto.getSaleStore().getUseYn())
+							.useYn(StatusEnum.FLAG_Y.getStatusMsg())
 							.build()
 			);
 		}
@@ -118,6 +179,8 @@ public class SaleStoreMgmtService {
 			store.setTelecom(wrapperDto.getSaleStore().getTelecom());
 			store.setBizNo(wrapperDto.getSaleStore().getBizNo());
 			store.setChargerPhone(wrapperDto.getSaleStore().getChargerPhone());
+			store.setChargerName(wrapperDto.getSaleStore().getChargerName());
+			store.setChargerEmail(wrapperDto.getSaleStore().getChargerEmail());
 			store.setReturnZipCode(wrapperDto.getSaleStore().getReturnZipCode());
 			store.setReturnAddr(wrapperDto.getSaleStore().getReturnAddr());
 			store.setReturnAddrDetail(wrapperDto.getSaleStore().getReturnAddrDetail());

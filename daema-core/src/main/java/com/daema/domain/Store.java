@@ -22,7 +22,7 @@ public class Store {
     private long storeId;
 
     @NotBlank
-    @Column(length = 50, nullable = false, name = "store_name")
+    @Column(length = 50, nullable = false, unique = true, name = "store_name")
     private String storeName;
 
     @NotNull
@@ -33,8 +33,14 @@ public class Store {
     private String telecomName;
 
     @NotBlank
-    @Column(nullable = false, name = "biz_no", columnDefinition = "char(12)")
+    @Column(nullable = false, name = "biz_no", unique = true, columnDefinition = "char(12)")
     private String bizNo;
+
+    @Column(name = "charger_name")
+    private String chargerName;
+
+    @Column(name = "charger_email")
+    private String chargerEmail;
 
     @Column(length = 15, name = "charger_phone")
     private String chargerPhone;
@@ -55,14 +61,17 @@ public class Store {
     private LocalDateTime regiDateTime;
 
     @Builder
-    public Store (long storeId, String storeName, int telecom, String telecomName, String bizNo, String chargerPhone, String returnZipCode,
-            String returnAddr, String returnAddrDetail, String useYn, LocalDateTime regiDateTime){
+    public Store (long storeId, String storeName, int telecom, String telecomName, String bizNo, String chargerPhone
+            ,String chargerName, String chargerEmail, String returnZipCode
+            ,String returnAddr, String returnAddrDetail, String useYn, LocalDateTime regiDateTime){
         this.storeId = storeId;
         this.storeName = storeName;
         this.telecom = telecom;
         this.telecomName = telecomName;
         this.bizNo = bizNo;
         this.chargerPhone = chargerPhone;
+        this.chargerName = chargerName;
+        this.chargerEmail = chargerEmail;
         this.returnZipCode = returnZipCode;
         this.returnAddr = returnAddr;
         this.returnAddrDetail = returnAddrDetail;

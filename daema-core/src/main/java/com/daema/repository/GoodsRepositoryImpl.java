@@ -110,6 +110,10 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
     @Override
     public List<Goods> getMatchList() {
 
+        QCodeDetail telecom = new QCodeDetail("telecom");
+        QCodeDetail network = new QCodeDetail("network");
+        QCodeDetail maker = new QCodeDetail("maker");
+
         JPQLQuery<Goods> query = from(goods);
 
         query.select(Projections.fields(
@@ -122,12 +126,31 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 ,goods.useYn
                 ,goods.matchingYn
                 ,goods.regiDateTime
+                ,maker.codeNm.as("makerName")
+                ,telecom.codeNm.as("telecomName")
+                ,network.codeNm.as("networkName")
                 ,Projections.fields(NetworkAttribute.class
                         ,goods.networkAttribute.telecom
                         ,goods.networkAttribute.network
                     ).as("networkAttribute")
                 )
         );
+
+        query.innerJoin(maker)
+                .on(goods.maker.eq(maker.codeSeq)
+                        .and(maker.codeId.eq("MAKER"))
+                        .and(maker.useYn.eq("Y"))
+                )
+                .innerJoin(telecom)
+                .on(goods.networkAttribute.telecom.eq(telecom.codeSeq)
+                        .and(telecom.codeId.eq("TELECOM"))
+                        .and(telecom.useYn.eq("Y"))
+                )
+                .innerJoin(network)
+                .on(goods.networkAttribute.network.eq(network.codeSeq)
+                        .and(network.codeId.eq("NETWORK"))
+                        .and(network.useYn.eq("Y"))
+                );
 
         BooleanBuilder where = new BooleanBuilder();
         where.and(goods.matchingYn.eq("N")

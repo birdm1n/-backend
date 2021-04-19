@@ -36,10 +36,14 @@ public class ChargeRegReq extends ChargeBase {
     @Transient
     private ChargeRegReqReject chargeRegReqReject;
 
+    @Transient
+    private String reqStoreName;
+
     @Builder
     public ChargeRegReq(long chargeRegReqId, long reqStoreId, String chargeName, int chargeAmt, String category
             , int telecom, int network, String chargeCode, LocalDateTime regiDateTime, int reqStatus
-            , String makerName, String networkName, String telecomName){
+            , String makerName, String networkName, String telecomName
+            ,String reqStoreName){
         this.chargeRegReqId = chargeRegReqId;
         this.reqStoreId = reqStoreId;
         this.chargeName = chargeName;
@@ -52,6 +56,7 @@ public class ChargeRegReq extends ChargeBase {
         this.makerName = makerName;
         this.networkName = networkName;
         this.telecomName = telecomName;
+        this.reqStoreName = reqStoreName;
     }
 
     public void updateReqStatus(ChargeRegReq chargeRegReq, int reqStatus){
