@@ -4,13 +4,13 @@ import com.daema.common.Constants;
 import com.daema.common.enums.StatusEnum;
 import com.daema.common.util.AuthenticationUtil;
 import com.daema.common.util.CommonUtil;
-import com.daema.common.util.SaltUtil;
 import com.daema.domain.Member;
 import com.daema.domain.MemberRole;
 import com.daema.domain.Organization;
 import com.daema.domain.RoleMgmt;
 import com.daema.domain.dto.OrgnztListDto;
 import com.daema.domain.dto.OrgnztMemberListDto;
+import com.daema.domain.enums.UserRole;
 import com.daema.dto.*;
 import com.daema.repository.MemberRepository;
 import com.daema.repository.MemberRoleRepository;
@@ -46,17 +46,14 @@ public class OrganizationMgmtService {
 
     private final AuthenticationUtil authenticationUtil;
 
-    private final SaltUtil saltUtil;
-
     public OrganizationMgmtService(OrganizationRepository organizationRepository, MemberRepository memberRepository, MemberRoleRepository memberRoleRepository
-            ,AuthService authService, RoleFuncMgmtService roleFuncMgmtService, AuthenticationUtil authenticationUtil, SaltUtil saltUtil) {
+            ,AuthService authService, RoleFuncMgmtService roleFuncMgmtService, AuthenticationUtil authenticationUtil) {
         this.organizationRepository = organizationRepository;
         this.memberRepository = memberRepository;
         this.memberRoleRepository = memberRoleRepository;
         this.authService = authService;
         this.roleFuncMgmtService = roleFuncMgmtService;
         this.authenticationUtil = authenticationUtil;
-        this.saltUtil = saltUtil;
     }
 
     public OrganizationMgmtResponseDto getOrgnztList(OrganizationMgmtRequestDto requestDto) {
@@ -110,7 +107,7 @@ public class OrganizationMgmtService {
 
         responseDto.setMemberList(mList);
 
-        List<RoleMgmt> roleList = roleFuncMgmtService.getRoleList(requestDto.getParentStoreId());
+        List<RoleMgmt> roleList = roleFuncMgmtService.getRoleList(requestDto.getStoreId());
 
         List<FuncRoleMgmtDto.RoleMgmtDto> roleDtoList = roleList.stream()
                 .map(FuncRoleMgmtDto.RoleMgmtDto::from)
@@ -192,6 +189,14 @@ public class OrganizationMgmtService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public long insertUser(OrganizationMemberDto orgnztMemberDto) {
+
+        if(String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode())
+                .equals(orgnztMemberDto.getUserStatus())){
+            if(UserRole.ROLE_NOT_PERMITTED == orgnztMemberDto.getRole()){
+                orgnztMemberDto.setRole(UserRole.ROLE_USER);
+            }
+        }
+
         authService.signUpUser(Member.builder()
                 .username(orgnztMemberDto.getUsername())
                 .password(orgnztMemberDto.getPassword())
@@ -248,6 +253,14 @@ public class OrganizationMgmtService {
             member.setName(orgnztMemberDto.getName());
             member.setEmail(orgnztMemberDto.getEmail());
             member.setPhone(orgnztMemberDto.getPhone());
+
+            if(String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode())
+                    .equals(orgnztMemberDto.getUserStatus())){
+                orgnztMemberDto.setRole(UserRole.ROLE_USER);
+            }else{
+                orgnztMemberDto.setRole(UserRole.ROLE_NOT_PERMITTED);
+            }
+
             member.setUserStatus(orgnztMemberDto.getUserStatus());
 
             if(StatusEnum.FLAG_Y.getStatusMsg().equals(orgnztMemberDto.getChgPassword())){
@@ -276,6 +289,8 @@ public class OrganizationMgmtService {
 
             if(CommonUtil.isNotEmptyList(membersList)) {
                 Optional.ofNullable(membersList).orElseGet(Collections::emptyList).forEach(member -> {
+
+                    member.setRole(UserRole.ROLE_USER);
                     member.updateUserStatus(member, String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode()));
                 });
             }else{

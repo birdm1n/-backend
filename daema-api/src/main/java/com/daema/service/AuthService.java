@@ -1,5 +1,6 @@
 package com.daema.service;
 
+import com.daema.common.enums.StatusEnum;
 import com.daema.common.util.EmailUtil;
 import com.daema.common.util.RedisUtil;
 import com.daema.common.util.SaltUtil;
@@ -69,7 +70,7 @@ public class AuthService {
     }
 
     public Member loginUser(String id, String password) throws Exception{
-        Member member = memberRepository.findByUsername(id);
+        Member member = memberRepository.findByUsernameAndUserStatus(id, String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode()));
         if(member == null) throw new Exception ("멤버가 조회되지 않음");
         String salt = member.getSalt().getSalt();
         password = saltUtil.encodePassword(salt,password);

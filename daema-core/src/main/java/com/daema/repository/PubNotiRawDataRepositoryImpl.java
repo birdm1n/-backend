@@ -125,10 +125,12 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
         //원천 데이터 마감처리
         sb.append("update pub_noti_raw_data p, (select replace(origin_key, 'S', '') as o_key " +
                 "                              from pub_noti " +
-                "                             where exists(select concat('S', pub_noti_raw_data_id) " +
-                "                              from pub_noti_code_map_data " +
-                "                             where deadline_yn = 'N' " +
-                "                               and deadline_date = date_format(now(), '%Y-%m-%d'))) map " +
+                "                             where origin_key in (select concat('S', pub_noti_raw_data_id) " +
+                "                                                    from pub_noti_code_map_data " +
+                "                                                   where deadline_yn = 'N' " +
+                "                                                     and deadline_date = date_format(now(), '%Y-%m-%d')" +
+                "                                                 )" +
+                "                              ) map " +
                 "   set p.deadline_yn = 'Y' " +
                 "       ,p.deadline_datetime = now() " +
                 "       ,p.deadline_user_id = :memberSeq " +
@@ -144,10 +146,13 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
         sb.append("update pub_noti_code_map_data p, (select o_key " +
                 "                                      from (select replace(origin_key, 'S', '') as o_key " +
                 "                                              from pub_noti " +
-                "                                             where exists(select concat('S', pub_noti_raw_data_id) " +
-                "                                                            from pub_noti_code_map_data " +
-                "                                                           where deadline_yn = 'N' " +
-                "                                                             and deadline_date = date_format(now(), '%Y-%m-%d'))) as map) as map " +
+                "                                             where origin_key in (select concat('S', pub_noti_raw_data_id) " +
+                "                                                                    from pub_noti_code_map_data " +
+                "                                                                   where deadline_yn = 'N' " +
+                "                                                                     and deadline_date = date_format(now(), '%Y-%m-%d')" +
+                "                                                                  )" +
+                "                                            ) as map" +
+                "                                    ) as map " +
                 "     set p.deadline_yn = 'Y' " +
                 "   where p.pub_noti_raw_data_id = map.o_key ");
 

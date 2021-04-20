@@ -133,8 +133,8 @@ public class OpeningStoreMgmtService {
     public void updateOpenStoreUse(ModelMap reqModelMap) {
 
         long openStoreId = Long.parseLong(String.valueOf(reqModelMap.getAttribute("openStoreId")));
-        long storeId = Long.parseLong(String.valueOf(reqModelMap.getAttribute("storeId")));
-        long authStoreId = authenticationUtil.getTargetStoreId(Long.parseLong(String.valueOf(reqModelMap.getAttribute("authStoreId"))));
+        long storeId = authenticationUtil.getTargetStoreId(Long.parseLong(String.valueOf(reqModelMap.getAttribute("storeId"))));
+        long authStoreId = Long.parseLong(String.valueOf(reqModelMap.getAttribute("authStoreId")));
         String useYn = String.valueOf(reqModelMap.getAttribute("useYn"));
 
         //authStoreId 개통점을 생성한 storeId

@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
                 columns = {
                         @ColumnResult(name="goods_id", type = Long.class),
                         @ColumnResult(name="charge_id", type = Long.class),
-                        @ColumnResult(name="release_amt", type = Integer.class),
                         @ColumnResult(name="support_amt", type = Integer.class),
+                        @ColumnResult(name="release_amt", type = Integer.class),
                         @ColumnResult(name="release_date", type = LocalDate.class)
                 })
 )

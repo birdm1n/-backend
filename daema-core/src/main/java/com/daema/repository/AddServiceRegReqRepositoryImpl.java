@@ -74,7 +74,8 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
                 .leftJoin(addServiceRegReqReject)
                 .on(addServiceRegReq.addSvcRegReqId.eq(addServiceRegReqReject.addSvcRegReqId))
                 .where(
-                        containsAddSvcName(requestDto.getAddSvcName())
+                        builder
+                        ,containsAddSvcName(requestDto.getAddSvcName())
                         ,eqTelecom(requestDto.getTelecom())
                         ,eqStatus(requestDto.getReqStatus())
                         ,betweenStartDateEndDate(requestDto.getSrhStartDate(), requestDto.getSrhEndDate())

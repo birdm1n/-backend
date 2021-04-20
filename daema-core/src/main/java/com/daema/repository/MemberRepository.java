@@ -8,6 +8,7 @@ import java.util.List;
 public interface MemberRepository extends JpaRepository<Member, Long>, CustomMemberRepository {
 
     Member findByUsername(String username);
+    Member findByUsernameAndUserStatus(String username, String userStatus);
     List<Member> findByOrgId(long orgId);
 }
 
