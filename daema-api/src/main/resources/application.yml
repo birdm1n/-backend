@@ -28,6 +28,7 @@ spring:
     console:
       enabled: true
   jpa:
+
     generate-ddl: true
     show-sql: true
     hibernate:
@@ -36,6 +37,10 @@ spring:
       hibernate:
         use_sql_comments: true
         format_sql: true
+        envers:
+          audit_table_suffix: _history # 히스토리 테이블 suffix 네임 커스텀                      (기본값 : _AUD)
+          revision_field_name: rev_id  # _histiry 생성시 rev_info테이블의 외래키 컬럼명 커스텀    (기본값 : REV)
+          revision_type_field_name: rev_type  #  rev_type 컬럼명 커스텀                        (기본값 : REVTYPE)
     database-platform: org.hibernate.dialect.H2Dialect
   datasource:
     driver-class-name: org.h2.Driver

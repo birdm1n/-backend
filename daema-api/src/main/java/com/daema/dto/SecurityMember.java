@@ -9,12 +9,21 @@ public class SecurityMember extends User {
 
     private long storeId;
     private long memberSeq;
+    private Member member;
 
     public SecurityMember(Member member){
         super(member.getUsername(),"{noop}"+ member.getPassword(), AuthorityUtils.createAuthorityList(member.getRole().toString()));
-
         setMemberSeq(member.getSeq());
         setStoreId(member.getStoreId());
+        setMember(member);
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public long getStoreId() {
@@ -32,4 +41,6 @@ public class SecurityMember extends User {
     public void setMemberSeq(long memberSeq) {
         this.memberSeq = memberSeq;
     }
+
+
 }

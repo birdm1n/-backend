@@ -5,6 +5,7 @@ plugins {
 dependencies {
     compile group : 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
     compile 'com.h2database:h2'
+    compile 'org.springframework.data:spring-data-envers' /*20210420 envers 추가 */
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.hibernate.validator:hibernate-validator'
     implementation 'com.querydsl:querydsl-jpa'
