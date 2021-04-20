@@ -86,7 +86,8 @@ public class AddServiceRepositoryImpl extends QuerydslRepositorySupport implemen
 
     private BooleanExpression eqTelecom(Integer[] name) {
         if (name == null
-                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)) {
+                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)
+                || (name != null && name.length <= 0)) {
             return null;
         }
         return addService.telecom.in(name);

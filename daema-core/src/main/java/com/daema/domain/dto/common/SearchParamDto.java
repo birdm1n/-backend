@@ -27,6 +27,8 @@ public class SearchParamDto extends PagingDto {
 
 	private String useYn;
 
+	private String matchingYn;
+
 	private String srhStartDate;
 
 	private String srhEndDate;

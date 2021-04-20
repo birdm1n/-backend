@@ -54,6 +54,7 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements Cu
         query.innerJoin(storeMap)
                 .on(store.storeId.eq(storeMap.storeId)
                         .and(storeMap.parentStoreId.eq(requestDto.getParentStoreId()))
+                        .and(store.useYn.eq("Y"))
                 );
 
         query.innerJoin(codeDetail)
@@ -111,7 +112,8 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements Cu
 
     private BooleanExpression inTelecom(Integer[] name) {
         if (name == null
-                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)) {
+                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)
+                || (name != null && name.length <= 0)) {
             return null;
         }
         return store.telecom.in(name);

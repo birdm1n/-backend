@@ -143,7 +143,8 @@ public class GoodsRegReqRepositoryImpl extends QuerydslRepositorySupport impleme
 
     private BooleanExpression eqTelecom(Integer[] name) {
         if (name == null
-                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)) {
+                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)
+                || (name != null && name.length <= 0)) {
             return null;
         }
         return goodsRegReq.networkAttribute.telecom.in(name);

@@ -81,6 +81,7 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
                         ,eqNetwork(requestDto.getNetwork())
                         ,eqTelecom(requestDto.getTelecom())
                         ,eqUseYn(requestDto.getUseYn())
+                        ,eqMatchingYn(requestDto.getMatchingYn())
                         ,betweenStartDateEndDate(requestDto.getSrhStartDate(), requestDto.getSrhEndDate())
                 )
                 .orderBy(charge.regiDateTime.desc());
@@ -170,7 +171,8 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
 
     private BooleanExpression eqTelecom(Integer[] name) {
         if (name == null
-                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)) {
+                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)
+                || (name != null && name.length <= 0)) {
             return null;
         }
         return charge.networkAttribute.telecom.in(name);
@@ -190,5 +192,12 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
         }
         return charge.regiDateTime.between(RetrieveClauseBuilder.stringToLocalDateTime(startDate.concat(" 00:00:00"))
                 , RetrieveClauseBuilder.stringToLocalDateTime(endDate.concat(" 23:59:59")));
+    }
+
+    private BooleanExpression eqMatchingYn(String name) {
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+        return charge.matchingYn.eq(name);
     }
 }

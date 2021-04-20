@@ -93,6 +93,7 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         ,eqNetwork(requestDto.getNetwork())
                         ,eqTelecom(requestDto.getTelecom())
                         ,eqUseYn(requestDto.getUseYn())
+                        ,eqMatchingYn(requestDto.getMatchingYn())
                         ,betweenStartDateEndDate(requestDto.getSrhStartDate(), requestDto.getSrhEndDate())
                 )
                 .groupBy(goods.goodsId)
@@ -204,7 +205,8 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
 
     private BooleanExpression eqTelecom(Integer[] name) {
         if (name == null
-                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)) {
+                || Arrays.stream(name).anyMatch(telecom -> telecom == 0)
+                || (name != null && name.length <= 0)) {
             return null;
         }
         return goods.networkAttribute.telecom.in(name);
@@ -224,5 +226,12 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
         }
         return goods.regiDateTime.between(RetrieveClauseBuilder.stringToLocalDateTime(startDate.concat(" 00:00:00"))
                 , RetrieveClauseBuilder.stringToLocalDateTime(endDate.concat(" 23:59:59")));
+    }
+
+    private BooleanExpression eqMatchingYn(String name) {
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+        return goods.matchingYn.eq(name);
     }
 }
