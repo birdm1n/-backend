@@ -20,19 +20,7 @@ public class ComMgmtRequestDto extends SearchParamDto {
 
 	private String bizNo;
 
-	private String chargerPhone;
-
-	private String returnAddr;
-
-	private String returnAddrDetail;
-
-	private String useYn;
-
 	private String matchingYn;
-
-	private String srhStartDate;
-
-	private String srhEndDate;
 
 	private String goodsName;
 
