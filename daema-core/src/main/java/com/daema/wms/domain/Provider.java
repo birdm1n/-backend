@@ -45,6 +45,9 @@ public class Provider {
     @Column(nullable = false, name = "use_yn", columnDefinition ="char(1)")
     private String useYn;
 
+    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1)")
+    private String delYn = "N";
+
     @Column(name = "regi_user_id")
     private long regiUserId;
 
@@ -57,14 +60,17 @@ public class Provider {
     @Column(name = "upd_datetime")
     private LocalDateTime updDateTime;
 
+    @Transient
+    private String name;
+
     public Provider(long provId){
         this.provId = provId;
     }
 
     @Builder
     public Provider(long provId, String provName, String chargerPhone, String chargerName, String chargerEmail
-            , String returnZipCode, String returnAddr, String returnAddrDetail, String useYn, long regiUserId, LocalDateTime regiDateTime
-    ,Long updUserId, LocalDateTime updDateTime){
+            , String returnZipCode, String returnAddr, String returnAddrDetail, String delYn, String useYn, long regiUserId, LocalDateTime regiDateTime
+    ,Long updUserId, LocalDateTime updDateTime, String name){
         this.provId = provId;
         this.provName = provName;
         this.chargerPhone = chargerPhone;
@@ -73,11 +79,19 @@ public class Provider {
         this.returnZipCode = returnZipCode;
         this.returnAddr = returnAddr;
         this.returnAddrDetail = returnAddrDetail;
+        this.delYn = delYn;
         this.useYn = useYn;
         this.regiUserId = regiUserId;
         this.regiDateTime = regiDateTime;
         this.updUserId = updUserId;
         this.updDateTime = updDateTime;
+        this.name = name;
+    }
+
+    public void updateDelYn(Provider provider, String delYn, long updUserId){
+        provider.setDelYn(delYn);
+        provider.setUpdUserId(updUserId);
+        provider.setUpdDateTime(LocalDateTime.now());
     }
 
     public void updateUseYn(Provider provider, String useYn, long updUserId){

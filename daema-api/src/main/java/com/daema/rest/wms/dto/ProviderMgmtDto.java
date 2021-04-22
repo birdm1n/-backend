@@ -21,10 +21,11 @@ public class ProviderMgmtDto {
 	private String returnAddr;
 	private String returnAddrDetail;
 	private String useYn;
-	private long regiUserId;
 	private LocalDateTime regiDateTime;
 	private Long updUserId;
 	private LocalDateTime updDateTime;
+	private long regiUserId;
+	private String name;
 
 	public static ProviderMgmtDto from (Provider provider) {
 		return ProviderMgmtDto.builder()
@@ -41,6 +42,7 @@ public class ProviderMgmtDto {
 				.regiDateTime(provider.getRegiDateTime())
 				.updUserId(provider.getUpdUserId())
 				.updDateTime(provider.getUpdDateTime())
+				.name(provider.getName())
 			.build();
 	}
 }

@@ -6,6 +6,7 @@ import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
+import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.wms.dto.ProviderMgmtDto;
 import com.daema.wms.domain.Provider;
 import com.daema.wms.domain.dto.request.ProviderRequestDto;
@@ -17,7 +18,9 @@ import org.springframework.ui.ModelMap;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,8 +57,9 @@ public class ProviderMgmtService {
 						.useYn(StatusEnum.FLAG_Y.getStatusMsg())
 						.regiUserId(authenticationUtil.getMemberSeq())
                         .regiDateTime(LocalDateTime.now())
-						.updUserId(null)
-						.updDateTime(null)
+						.delYn(StatusEnum.FLAG_N.getStatusMsg())
+						.updUserId(authenticationUtil.getMemberSeq())
+						.updDateTime(LocalDateTime.now())
                     .build()
         );
 	}
@@ -87,14 +91,21 @@ public class ProviderMgmtService {
 
 		List<Number> delProvIds = (ArrayList<Number>) reqModelMap.get("delProvId");
 
-		if(delProvIds != null
-			&& delProvIds.size() > 0){
+		if (CommonUtil.isNotEmptyList(delProvIds)) {
 
-			providerRepository.deleteAll(delProvIds.stream()
-					.map(id -> new Provider(id.longValue()))
-					.collect(Collectors.toList())
+			List<Provider> providerList = providerRepository.findAllById(
+					delProvIds.stream()
+							.map(Number::longValue).collect(Collectors.toList())
 			);
-		}else{
+
+			if(CommonUtil.isNotEmptyList(providerList)) {
+				Optional.ofNullable(providerList).orElseGet(Collections::emptyList).forEach(provider -> {
+					provider.updateDelYn(provider, StatusEnum.FLAG_Y.getStatusMsg(), authenticationUtil.getMemberSeq());
+				});
+			}else{
+				throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+			}
+		} else {
 			throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
 		}
 	}

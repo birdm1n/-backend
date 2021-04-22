@@ -4,6 +4,7 @@ import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.wms.domain.Provider;
 import com.daema.wms.domain.dto.request.ProviderRequestDto;
 import com.daema.wms.repository.custom.CustomProviderRepository;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.daema.base.domain.QMember.member;
 import static com.daema.wms.domain.QProvider.provider;
+
 
 public class ProviderRepositoryImpl extends QuerydslRepositorySupport implements CustomProviderRepository {
 
@@ -27,10 +30,31 @@ public class ProviderRepositoryImpl extends QuerydslRepositorySupport implements
 
         JPQLQuery<Provider> query = getQuerydsl().createQuery();
 
+        query.select(Projections.fields(
+                Provider.class
+                , provider.provId
+                , provider.provName
+                , provider.chargerPhone
+                , provider.chargerName
+                , provider.chargerEmail
+                , provider.returnZipCode
+                , provider.returnAddr
+                , provider.returnAddrDetail
+                , provider.regiDateTime
+                , provider.updDateTime
+                , provider.useYn
+                , member.name.as("name")
+        ));
+
         query.from(provider);
 
+        query.innerJoin(member)
+                .on(provider.updUserId.eq(member.seq)
+                );
+
         query.where(
-                containsProvName(requestDto.getProvName())
+                provider.delYn.eq("N")
+                ,containsProvName(requestDto.getProvName())
                 ,containsChargerName(requestDto.getChargerName())
                 ,containsChargerPhone(requestDto.getChargerPhone())
                 ,containsChargerEmail(requestDto.getChargerEmail())
