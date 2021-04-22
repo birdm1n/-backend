@@ -42,6 +42,9 @@ public class Provider {
     @Column(length = 100, nullable = false, name = "return_addr_detail")
     private String returnAddrDetail;
 
+    @Column(nullable = false)
+    private long storeId;
+
     @Column(nullable = false, name = "use_yn", columnDefinition ="char(1)")
     private String useYn;
 
@@ -70,7 +73,7 @@ public class Provider {
     @Builder
     public Provider(long provId, String provName, String chargerPhone, String chargerName, String chargerEmail
             , String returnZipCode, String returnAddr, String returnAddrDetail, String delYn, String useYn, long regiUserId, LocalDateTime regiDateTime
-    ,Long updUserId, LocalDateTime updDateTime, String name){
+    ,Long updUserId, LocalDateTime updDateTime, String name, long storeId){
         this.provId = provId;
         this.provName = provName;
         this.chargerPhone = chargerPhone;
@@ -86,6 +89,7 @@ public class Provider {
         this.updUserId = updUserId;
         this.updDateTime = updDateTime;
         this.name = name;
+        this.storeId = storeId;
     }
 
     public void updateDelYn(Provider provider, String delYn, long updUserId){

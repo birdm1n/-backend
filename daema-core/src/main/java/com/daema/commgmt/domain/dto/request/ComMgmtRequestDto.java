@@ -10,8 +10,6 @@ public class ComMgmtRequestDto extends SearchParamDto {
 
 	private long parentStoreId;
 
-	private long storeId;
-
 	private String saleStoreName;
 
 	private String openStoreName;

@@ -10,6 +10,8 @@ import lombok.Setter;
 @Setter
 public class SearchParamDto extends PagingDto {
 
+    private long storeId;
+
     private String chargerName;
 
     private String chargerPhone;

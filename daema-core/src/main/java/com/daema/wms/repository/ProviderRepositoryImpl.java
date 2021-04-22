@@ -53,7 +53,8 @@ public class ProviderRepositoryImpl extends QuerydslRepositorySupport implements
                 );
 
         query.where(
-                provider.delYn.eq("N")
+                provider.storeId.eq(requestDto.getStoreId())
+                ,provider.delYn.eq("N")
                 ,containsProvName(requestDto.getProvName())
                 ,containsChargerName(requestDto.getChargerName())
                 ,containsChargerPhone(requestDto.getChargerPhone())

@@ -37,6 +37,8 @@ public class ProviderMgmtService {
 
 	public ResponseDto<ProviderMgmtDto> getProviderList(ProviderRequestDto requestDto) {
 
+		requestDto.setStoreId(authenticationUtil.getStoreId());
+		
 		Page<Provider> dataList = providerRepository.getSearchPage(requestDto);
 
 		return new ResponseDto(ProviderMgmtDto.class, dataList);
@@ -60,6 +62,7 @@ public class ProviderMgmtService {
 						.delYn(StatusEnum.FLAG_N.getStatusMsg())
 						.updUserId(authenticationUtil.getMemberSeq())
 						.updDateTime(LocalDateTime.now())
+						.storeId(authenticationUtil.getStoreId())
                     .build()
         );
 	}
