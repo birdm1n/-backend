@@ -15,6 +15,8 @@ public class OpenStoreListDto {
 
     private String bizNo;
 
+    private String chargerName;
+
     private String chargerPhone;
 
     private String openStoreName;

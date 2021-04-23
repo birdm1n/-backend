@@ -42,11 +42,11 @@ public class CodeDetail {
     @Column(name = "regi_user_id")
     private long regiUserId;
 
-    @Column(name = "last_upd_datetime")
-    private LocalDateTime lastUpdDateTime;
+    @Column(name = "upd_datetime")
+    private LocalDateTime updDateTime;
 
-    @Column(name = "last_upd_user_id")
-    private long lastUpdUserId;
+    @Column(name = "upd_user_id")
+    private Long updUserId;
 
 
 }

@@ -171,7 +171,7 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
             sb.append(" and members.phone like '%" + requestDto.getPhone() + "%'");
         }
 
-        sb.append(" order by hierarchy, members.username + '' ");
+        sb.append(" order by hierarchy, members.name ");
 
 
         Query query = em.createNativeQuery(sb.toString(), "OrgnztMemberList")

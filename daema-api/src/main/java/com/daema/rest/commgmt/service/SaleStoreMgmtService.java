@@ -18,10 +18,13 @@ import com.daema.rest.commgmt.dto.request.SaleStoreUserWrapperDto;
 import com.daema.rest.common.Constants;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.enums.StatusEnum;
+import com.daema.rest.common.enums.TypeEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
+import com.daema.rest.wms.dto.StockMgmtDto;
+import com.daema.rest.wms.service.StockMgmtService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,15 +48,18 @@ public class SaleStoreMgmtService {
 
 	private final FuncMgmtRepository funcMgmtRepository;
 
+	private final StockMgmtService stockMgmtService;
+
 	private final AuthenticationUtil authenticationUtil;
 
-	public SaleStoreMgmtService(StoreRepository storeRepository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService
+	public SaleStoreMgmtService(StoreRepository storeRepository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService, StockMgmtService stockMgmtService
 								,RoleFuncMgmtService roleFuncMgmtService, FuncMgmtRepository funcMgmtRepository ,AuthenticationUtil authenticationUtil) {
 		this.storeRepository = storeRepository;
 		this.storeMapRepository = storeMapRepository;
 		this.organizationMgmtService = organizationMgmtService;
 		this.roleFuncMgmtService = roleFuncMgmtService;
 		this.funcMgmtRepository = funcMgmtRepository;
+		this.stockMgmtService = stockMgmtService;
 		this.authenticationUtil = authenticationUtil;
 	}
 
@@ -155,7 +161,7 @@ public class SaleStoreMgmtService {
 
 	@Transactional
 	public void insertStoreMap(SaleStoreUserWrapperDto wrapperDto) {
-        StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(wrapperDto.getMember().getStoreId(), wrapperDto.getParentStoreId());
+        StoreMap storeMap = storeMapRepository.findById(new StoreMapPK(wrapperDto.getMember().getStoreId(), wrapperDto.getParentStoreId())).orElse(null);
 
         if(storeMap == null) {
 			storeMapRepository.save(
@@ -164,6 +170,27 @@ public class SaleStoreMgmtService {
 							.parentStoreId(wrapperDto.getParentStoreId())
 							.useYn(StatusEnum.FLAG_Y.getStatusMsg())
 							.build()
+			);
+
+			Store store = storeRepository.findById(wrapperDto.getMember().getStoreId()).orElse(null);
+
+			//창고 생성
+			stockMgmtService.insertStock(
+					StockMgmtDto.builder()
+							.stockId(0)
+							.stockName(store.getStoreName())
+							.parentStockId(0)
+							.storeId(wrapperDto.getMember().getStoreId())
+							.stockType(TypeEnum.STOCK_TYPE_S.getStatusCode())
+							.regiStoreId(wrapperDto.getParentStoreId())
+							.chargerName(store.getChargerName())
+							.chargerPhone(store.getChargerPhone())
+							.delYn(StatusEnum.FLAG_N.getStatusMsg())
+							.regiUserId(authenticationUtil.getMemberSeq())
+							.regiDateTime(LocalDateTime.now())
+							.updUserId(authenticationUtil.getMemberSeq())
+							.updDateTime(LocalDateTime.now())
+						.build()
 			);
 		}
 	}
@@ -219,7 +246,7 @@ public class SaleStoreMgmtService {
 		long parentStoreId = authenticationUtil.getTargetStoreId(Long.parseLong(String.valueOf(reqModelMap.getAttribute("parentStoreId"))));
 		String useYn = String.valueOf(reqModelMap.getAttribute("useYn"));
 
-		StoreMap storeMap = storeMapRepository.findByStoreIdAndParentStoreId(storeId, parentStoreId);
+		StoreMap storeMap = storeMapRepository.findById(new StoreMapPK(storeId, parentStoreId)).orElse(null);
 
 		if(storeMap != null) {
 			storeMap.updateUseYn(storeMap, useYn);

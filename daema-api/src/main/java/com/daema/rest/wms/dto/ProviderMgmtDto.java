@@ -26,6 +26,7 @@ public class ProviderMgmtDto {
 	private LocalDateTime updDateTime;
 	private long regiUserId;
 	private String name;
+	private long storeId;
 
 	public static ProviderMgmtDto from (Provider provider) {
 		return ProviderMgmtDto.builder()

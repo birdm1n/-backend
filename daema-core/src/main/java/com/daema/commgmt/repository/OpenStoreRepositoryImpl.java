@@ -92,6 +92,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
         if(pageable == null){
             sb.append("select os.open_store_id " +
                     "       , os.biz_no " +
+                    "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.open_store_name " +
                     "       , os.regi_datetime " +
@@ -117,6 +118,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     " " +
                     "select os.open_store_id " +
                     "       , os.biz_no " +
+                    "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.open_store_name " +
                     "       , os.regi_datetime " +
@@ -144,6 +146,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
         }else{
             sb.append("select os.open_store_id " +
                     "       , os.biz_no " +
+                    "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.open_store_name " +
                     "       , os.regi_datetime " +
@@ -171,6 +174,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     " " +
                     "select os.open_store_id " +
                     "       , os.biz_no " +
+                    "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.open_store_name " +
                     "       , os.regi_datetime " +

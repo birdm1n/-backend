@@ -64,6 +64,9 @@ public class OpenStore {
     @Column(nullable = false, name = "biz_no", columnDefinition = "char(12)")
     private String bizNo;
 
+    @Column(name = "charger_name")
+    private String chargerName;
+
     @NotBlank
     @Column(length = 15, nullable = false, name = "charger_phone")
     private String chargerPhone;
@@ -87,7 +90,7 @@ public class OpenStore {
     private LocalDateTime regiDateTime;
 
     @Builder
-    public OpenStore(long openStoreId, long storeId, String openStoreName, int telecom, String telecomName, String bizNo, String chargerPhone
+    public OpenStore(long openStoreId, long storeId, String openStoreName, int telecom, String telecomName, String bizNo, String chargerName, String chargerPhone
             , String returnZipCode, String returnAddr, String returnAddrDetail, String useYn, String delYn, LocalDateTime regiDateTime){
         this.openStoreId = openStoreId;
         this.storeId = storeId;
@@ -96,6 +99,7 @@ public class OpenStore {
         this.telecomName = telecomName;
         this.bizNo = bizNo;
         this.chargerPhone = chargerPhone;
+        this.chargerName = chargerName;
         this.returnZipCode = returnZipCode;
         this.returnAddr = returnAddr;
         this.returnAddrDetail = returnAddrDetail;

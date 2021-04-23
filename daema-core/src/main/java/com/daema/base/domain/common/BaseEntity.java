@@ -31,14 +31,14 @@ public abstract class BaseEntity {
     private Member regiUserId;
 
     @LastModifiedDate  // 마지막 수정한 날
-    @Column(name = "last_upd_datetime")
-    private LocalDateTime lastUpdDateTime;
+    @Column(name = "upd_datetime")
+    private LocalDateTime updDateTime;
 
     @LastModifiedBy // 마지막 수정자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_upd_user_id", referencedColumnName = "seq")
+    @JoinColumn(name = "upd_user_id", referencedColumnName = "seq")
     @Audited(targetAuditMode = NOT_AUDITED) // User 테이블까지 이력을 추적하지 않겠다는 설정 필수
-    private Member lastUpdUserId;
+    private Member updUserId;
 
     @Column(name = "del_yn")
     private boolean delYn;

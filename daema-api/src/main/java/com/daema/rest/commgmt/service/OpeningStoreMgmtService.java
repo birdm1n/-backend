@@ -18,9 +18,12 @@ import com.daema.rest.commgmt.dto.response.OpeningStoreSaleStoreResponseDto;
 import com.daema.rest.commgmt.dto.response.OpeningStoreUserResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.enums.StatusEnum;
+import com.daema.rest.common.enums.TypeEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
+import com.daema.rest.wms.dto.StockMgmtDto;
+import com.daema.rest.wms.service.StockMgmtService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,17 +43,19 @@ public class OpeningStoreMgmtService {
     private final OpenStoreSaleStoreMapRepository openStoreSaleStoreMapRepository;
     private final MemberRepository memberRepository;
     private final OpenStoreUserMapRepository openStoreUserMapRepository;
+    private final StockMgmtService stockMgmtService;
     private final AuthenticationUtil authenticationUtil;
 
     public OpeningStoreMgmtService(OpenStoreRepository openStoreRepository
             , StoreRepository storeRepository ,OpenStoreSaleStoreMapRepository openStoreSaleStoreMapRepository
             ,MemberRepository memberRepository ,OpenStoreUserMapRepository openStoreUserMapRepository
-    ,AuthenticationUtil authenticationUtil) {
+           , StockMgmtService stockMgmtService ,AuthenticationUtil authenticationUtil) {
         this.openStoreRepository = openStoreRepository;
         this.storeRepository = storeRepository;
         this.openStoreSaleStoreMapRepository = openStoreSaleStoreMapRepository;
         this.memberRepository = memberRepository;
         this.openStoreUserMapRepository = openStoreUserMapRepository;
+        this.stockMgmtService = stockMgmtService;
         this.authenticationUtil = authenticationUtil;
     }
 
@@ -63,15 +68,17 @@ public class OpeningStoreMgmtService {
         return new ResponseDto(OpeningStoreMgmtDto.class, dataList, "dtoToDto");
     }
 
+    @Transactional
     public void insertOpenStore(OpeningStoreMgmtDto openingStoreMgmtDto) {
         //TODO ifnull return 함수 추가
-        openStoreRepository.save(
+        long openStoreId = openStoreRepository.save(
                 OpenStore.builder()
                         .openStoreId(openingStoreMgmtDto.getOpenStoreId())
                         .storeId(authenticationUtil.getTargetStoreId(openingStoreMgmtDto.getStoreId()))
                         .openStoreName(openingStoreMgmtDto.getOpenStoreName())
                         .telecom(openingStoreMgmtDto.getTelecom())
                         .bizNo(openingStoreMgmtDto.getBizNo())
+                        .chargerName(openingStoreMgmtDto.getChargerName())
                         .chargerPhone(openingStoreMgmtDto.getChargerPhone())
                         .returnZipCode(openingStoreMgmtDto.getReturnZipCode())
                         .returnAddr(openingStoreMgmtDto.getReturnAddr())
@@ -80,6 +87,26 @@ public class OpeningStoreMgmtService {
                         .delYn(StatusEnum.FLAG_N.getStatusMsg())
                         .regiDateTime(LocalDateTime.now())
                     .build()
+        ).getOpenStoreId();
+
+        //창고 생성
+        stockMgmtService.insertStock(
+                StockMgmtDto.builder()
+                        .stockId(0)
+                        .stockName(openingStoreMgmtDto.getOpenStoreName())
+                        .parentStockId(0)
+                        .storeId(openStoreId)
+                        .stockType(TypeEnum.STOCK_TYPE_O.getStatusCode())
+                        .regiStoreId(authenticationUtil.getTargetStoreId(openingStoreMgmtDto.getStoreId()))
+                        .chargerName(openingStoreMgmtDto.getChargerName())
+                        .chargerPhone(openingStoreMgmtDto.getChargerPhone())
+                        .delYn(StatusEnum.FLAG_N.getStatusMsg())
+                        .regiUserId(authenticationUtil.getMemberSeq())
+                        .regiDateTime(LocalDateTime.now())
+                        .updUserId(authenticationUtil.getMemberSeq())
+                        .updDateTime(LocalDateTime.now())
+                        .build()
+
         );
     }
 
@@ -98,6 +125,7 @@ public class OpeningStoreMgmtService {
             openStore.setOpenStoreName(openingStoreMgmtDto.getOpenStoreName());
             openStore.setTelecom(openingStoreMgmtDto.getTelecom());
             openStore.setBizNo(openingStoreMgmtDto.getBizNo());
+            openStore.setChargerName(openingStoreMgmtDto.getChargerName());
             openStore.setChargerPhone(openingStoreMgmtDto.getChargerPhone());
             openStore.setReturnZipCode(openingStoreMgmtDto.getReturnZipCode());
             openStore.setReturnAddr(openingStoreMgmtDto.getReturnAddr());

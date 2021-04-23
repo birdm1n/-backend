@@ -47,7 +47,7 @@ public class OrganizationMgmtController {
     @ApiOperation(value = "조직 수정", notes = "조직의 내용을 변경합니다", nickname = Constants.API_ORGNZT + "||3")
     @PostMapping("/updateOrgnzt")
     public ResponseEntity<CommonResponse<Void>> updateOrgnzt(@ApiParam(value = "조직 정보", required = true) @RequestBody OrganizationMgmtDto organizationMgmtDto) {
-        organizationMgmtService.updateOrgnzt(organizationMgmtDto, false);
+        organizationMgmtService.updateOrgnzt(organizationMgmtDto);
 
         return responseHandler.ok();
     }

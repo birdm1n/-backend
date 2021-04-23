@@ -20,6 +20,7 @@ public class OpeningStoreMgmtDto {
 	private String telecomName;
 	private String bizNo;
 	private String chargerPhone;
+	private String chargerName;
 	private String returnZipCode;
 	private String returnAddr;
 	private String returnAddrDetail;
@@ -36,6 +37,7 @@ public class OpeningStoreMgmtDto {
 				.telecom(openStore.getTelecom())
 				.telecomName(openStore.getTelecomName())
 				.bizNo(openStore.getBizNo())
+				.chargerName(openStore.getChargerName())
 				.chargerPhone(openStore.getChargerPhone())
 				.returnZipCode(openStore.getReturnZipCode())
 				.returnAddr(openStore.getReturnAddr())
@@ -43,7 +45,7 @@ public class OpeningStoreMgmtDto {
 				.useYn(openStore.getUseYn())
 				.delYn(openStore.getDelYn())
 				.regiDateTime(openStore.getRegiDateTime())
-				.build();
+			.build();
 	}
 
 	public static OpeningStoreMgmtDto dtoToDto (OpenStoreListDto openStoreListDto) {
@@ -54,6 +56,7 @@ public class OpeningStoreMgmtDto {
 				.telecom(openStoreListDto.getTelecom())
 				.telecomName(openStoreListDto.getTelecomName())
 				.bizNo(openStoreListDto.getBizNo())
+				.chargerName(openStoreListDto.getChargerName())
 				.chargerPhone(openStoreListDto.getChargerPhone())
 				.returnZipCode(openStoreListDto.getReturnZipCode())
 				.returnAddr(openStoreListDto.getReturnAddr())
@@ -62,6 +65,6 @@ public class OpeningStoreMgmtDto {
 				.delYn(openStoreListDto.getDelYn())
 				.regiDateTime(openStoreListDto.getRegiDateTime())
 				.reqStoreId(openStoreListDto.getReqStoreId())
-				.build();
+			.build();
 	}
 }

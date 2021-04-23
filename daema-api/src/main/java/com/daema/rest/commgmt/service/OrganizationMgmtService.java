@@ -143,7 +143,7 @@ public class OrganizationMgmtService {
     }
 
     @Transactional
-    public void updateOrgnzt(OrganizationMgmtDto organizationMgmtDto, boolean deleteAct) {
+    public void updateOrgnzt(OrganizationMgmtDto organizationMgmtDto) {
 
         Organization orgnzt = organizationRepository.findById(organizationMgmtDto.getOrgId()).orElse(null);
         long storeId = authenticationUtil.getTargetStoreId(organizationMgmtDto.getStoreId());
@@ -153,11 +153,6 @@ public class OrganizationMgmtService {
             //TODO ifnull return 함수 추가
             if(StringUtils.hasText(organizationMgmtDto.getOrgName())) {
                 orgnzt.setOrgName(organizationMgmtDto.getOrgName());
-            }
-
-            if(deleteAct
-                    && StringUtils.hasText(organizationMgmtDto.getDelYn())) {
-                orgnzt.setDelYn(organizationMgmtDto.getDelYn());
             }
         }else{
             throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
@@ -209,7 +204,7 @@ public class OrganizationMgmtService {
                 .phone(orgnztMemberDto.getPhone())
                 .regiDatetime(LocalDateTime.now())
                 .role(orgnztMemberDto.getRole())
-                .updDatetime(null)
+                .updDatetime(LocalDateTime.now())
                 .storeId(authenticationUtil.getTargetStoreId(orgnztMemberDto.getStoreId()))
                 .orgId(orgnztMemberDto.getOrgId())
                 .userStatus(orgnztMemberDto.getUserStatus())

@@ -34,8 +34,8 @@ public class ProviderMgmtController {
     }
 
     @ApiOperation(value = "공급처 등록", notes = "신규 공급처를 등록합니다")
-    @PostMapping("/insertProviderMap")
-    public ResponseEntity<CommonResponse<Void>> insertProviderMap(@ApiParam(value = "공급처 정보", required = true) @RequestBody ProviderMgmtDto providerMgmtDto) {
+    @PostMapping("/insertProvider")
+    public ResponseEntity<CommonResponse<Void>> insertProvider(@ApiParam(value = "공급처 정보", required = true) @RequestBody ProviderMgmtDto providerMgmtDto) {
         providerMgmtService.insertProvider(providerMgmtDto);
         return responseHandler.ok();
     }

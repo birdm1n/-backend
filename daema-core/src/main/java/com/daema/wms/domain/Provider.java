@@ -21,7 +21,7 @@ public class Provider {
     private long provId;
 
     @NotBlank
-    @Column(length = 50, nullable = false, unique = true, name = "prov_name")
+    @Column(length = 50, nullable = false, name = "prov_name")
     private String provName;
 
     @Column(name = "charger_name")
