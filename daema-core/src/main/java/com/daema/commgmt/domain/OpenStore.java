@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
                 columns = {
                         @ColumnResult(name="open_store_id", type = Integer.class),
                         @ColumnResult(name="biz_no", type = String.class),
+                        @ColumnResult(name="charger_name", type = String.class),
                         @ColumnResult(name="charger_phone", type = String.class),
                         @ColumnResult(name="open_store_name", type = String.class),
                         @ColumnResult(name="regi_datetime", type = LocalDateTime.class),

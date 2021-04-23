@@ -49,7 +49,11 @@ public class StockMgmtService {
 
 		//내부 관리 창고는 현재 로그인 기준으로 storeId 설정
 		if(TypeEnum.STOCK_TYPE_I.getStatusCode().equals(stockMgmtDto.getStockType())){
-			stockMgmtDto.setStockId(authenticationUtil.getStoreId());
+			stockMgmtDto.setStoreId(authenticationUtil.getStoreId());
+		}
+
+		if(stockMgmtDto.getRegiStoreId() == 0){
+			stockMgmtDto.setRegiStoreId(authenticationUtil.getStoreId());
 		}
 
 		stockRepository.save(
@@ -59,7 +63,7 @@ public class StockMgmtService {
 						.parentStockId(stockMgmtDto.getParentStockId())
 						.storeId(stockMgmtDto.getStoreId())
 						.stockType(stockMgmtDto.getStockType())
-						.regiStoreId(authenticationUtil.getStoreId())
+						.regiStoreId(stockMgmtDto.getRegiStoreId())
 						.chargerName(stockMgmtDto.getChargerName())
 						.chargerPhone(stockMgmtDto.getChargerPhone())
 						.delYn(StatusEnum.FLAG_N.getStatusMsg())
