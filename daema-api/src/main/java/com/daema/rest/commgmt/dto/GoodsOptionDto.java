@@ -1,5 +1,6 @@
 package com.daema.rest.commgmt.dto;
 
+import com.daema.commgmt.domain.Goods;
 import com.daema.commgmt.domain.GoodsOption;
 import lombok.*;
 
@@ -18,7 +19,7 @@ public class GoodsOptionDto {
 
 	public static GoodsOptionDto from (GoodsOption goodsOption) {
 		return GoodsOptionDto.builder()
-				.goodsId(goodsOption.getGoodsId())
+				.goodsId(goodsOption.getGoods().getGoodsId())
 				.goodsOptionId(goodsOption.getGoodsOptionId())
 				.colorName(goodsOption.getColorName())
 				.distributor(goodsOption.getDistributor())
@@ -28,7 +29,7 @@ public class GoodsOptionDto {
 
 	public static GoodsOption toEntity (GoodsOptionDto goodsOptionDto) {
 		return GoodsOption.builder()
-				.goodsId(goodsOptionDto.getGoodsId())
+				.goods(Goods.builder().goodsId(goodsOptionDto.getGoodsId()).build())
 				.goodsOptionId(goodsOptionDto.getGoodsOptionId())
 				.colorName(goodsOptionDto.getColorName())
 				.distributor(goodsOptionDto.getDistributor())

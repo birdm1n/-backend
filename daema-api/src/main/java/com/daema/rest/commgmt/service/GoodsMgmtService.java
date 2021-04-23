@@ -60,7 +60,8 @@ public class GoodsMgmtService {
                 .collect(Collectors.toList());
 
         //goodsList 의 ids 로 옵션 추출
-        List<GoodsOption> optionList = goodsOptionRepository.findByGoodsIdIn(ids);
+        //List<GoodsOption> optionList = goodsOptionRepository.findByGoodsIdIn(ids);
+/*
 
         Map<Long, List<GoodsOption>> optionMap = optionList.stream()
                 .collect(Collectors.groupingBy(GoodsOption::getGoodsId));
@@ -71,6 +72,7 @@ public class GoodsMgmtService {
                     goods.setOptionList(optionMap.getOrDefault(goods.getGoodsId(), null));
                 }
         );
+*/
 
         return new ResponseDto(GoodsMgmtDto.class, goodsList);
     }
@@ -192,7 +194,7 @@ public class GoodsMgmtService {
                 && goodsOptionDtos.size() > 0) {
 
             Number goodsId = goodsOptionDtos.get(0).getGoodsId();
-            goodsOptionRepository.deleteByGoodsId(goodsId);
+            //goodsOptionRepository.deleteByGoodsId(goodsId);
 
             List<GoodsOption> insertOptionList = goodsOptionDtos.stream()
                     .map(GoodsOptionDto::toEntity)

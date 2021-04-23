@@ -1,6 +1,7 @@
 package com.daema.commgmt.domain;
 
 import com.daema.commgmt.domain.attr.NetworkAttribute;
+import com.daema.wms.domain.Device;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -45,8 +46,9 @@ public class Goods extends GoodsBase{
     @ColumnDefault("\"N\"")
     private String delYn;
 
-    @Transient
+    @OneToMany(mappedBy = "goods")
     private List<GoodsOption> optionList;
+
 
     @Builder
     public Goods(long goodsId, String goodsName, String modelName, int maker, int telecom, int network, String capacity

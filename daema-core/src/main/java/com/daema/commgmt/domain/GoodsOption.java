@@ -27,16 +27,17 @@ public class GoodsOption {
     @Column(name = "common_barcode", length = 20)
     private String commonBarcode;
 
-    @Column(name = "goods_id")
-    private long goodsId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goods_id")
+    private Goods goods;
 
     @Builder
-    public GoodsOption(long goodsOptionId, String colorName, String distributor, String commonBarcode, long goodsId){
+    public GoodsOption(long goodsOptionId, String colorName, String distributor, String commonBarcode, Goods goods){
         this.goodsOptionId = goodsOptionId;
         this.colorName = colorName;
         this.distributor = distributor;
         this.commonBarcode = commonBarcode;
-        this.goodsId = goodsId;
+        this.goods = goods;
     }
 
 }

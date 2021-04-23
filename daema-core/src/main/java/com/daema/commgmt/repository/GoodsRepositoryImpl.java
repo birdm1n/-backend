@@ -85,7 +85,7 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         .and(network.useYn.eq("Y"))
                 )
                 .leftJoin(goodsOption)
-                .on(goods.goodsId.eq(goodsOption.goodsId))
+                .on(goods.goodsId.eq(goodsOption.goods.goodsId))
                 .where(
                         builder
                         ,containsGoodsName(requestDto.getGoodsName())
