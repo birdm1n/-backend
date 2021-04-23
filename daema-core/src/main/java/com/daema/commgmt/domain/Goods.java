@@ -49,6 +49,8 @@ public class Goods extends GoodsBase{
     @OneToMany(mappedBy = "goods")
     private List<GoodsOption> optionList;
 
+    @OneToMany(mappedBy = "goods")
+    private List<Device> deviceList;
 
     @Builder
     public Goods(long goodsId, String goodsName, String modelName, int maker, int telecom, int network, String capacity
