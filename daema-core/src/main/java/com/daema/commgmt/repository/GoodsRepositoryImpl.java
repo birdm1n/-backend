@@ -1,9 +1,9 @@
 package com.daema.commgmt.repository;
 
-import com.daema.commgmt.domain.Goods;
 import com.daema.base.domain.QCodeDetail;
-import com.daema.commgmt.domain.attr.NetworkAttribute;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.commgmt.domain.Goods;
+import com.daema.commgmt.domain.attr.NetworkAttribute;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
 import com.daema.commgmt.repository.custom.CustomGoodsRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.daema.commgmt.domain.QGoods.goods;
-import static com.daema.commgmt.domain.QGoodsOption.goodsOption;
 
 public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements CustomGoodsRepository {
 
@@ -84,8 +83,6 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         .and(network.codeId.eq("NETWORK"))
                         .and(network.useYn.eq("Y"))
                 )
-                .leftJoin(goodsOption)
-                .on(goods.goodsId.eq(goodsOption.goods.goodsId))
                 .where(
                         builder
                         ,containsGoodsName(requestDto.getGoodsName())
@@ -97,7 +94,6 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         ,eqMatchingYn(requestDto.getMatchingYn())
                         ,betweenStartDateEndDate(requestDto.getSrhStartDate(), requestDto.getSrhEndDate())
                 )
-                .groupBy(goods.goodsId)
                 .orderBy(goods.regiDateTime.desc());
 
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);

@@ -60,19 +60,16 @@ public class GoodsMgmtService {
                 .collect(Collectors.toList());
 
         //goodsList 의 ids 로 옵션 추출
-        //List<GoodsOption> optionList = goodsOptionRepository.findByGoodsIdIn(ids);
-/*
+        List<GoodsOption> optionList = goodsOptionRepository.findByGoodsGoodsIdIn(ids);
 
-        Map<Long, List<GoodsOption>> optionMap = optionList.stream()
-                .collect(Collectors.groupingBy(GoodsOption::getGoodsId));
+        Map<Goods, List<GoodsOption>> optionMap = optionList.stream()
+                .collect(Collectors.groupingBy(GoodsOption::getGoods));
 
         //goodsList add goodsOption
         goodsList.forEach(
-                goods -> {
-                    goods.setOptionList(optionMap.getOrDefault(goods.getGoodsId(), null));
-                }
+                goods -> goods.setOptionList(optionMap.getOrDefault(goods, null))
+
         );
-*/
 
         return new ResponseDto(GoodsMgmtDto.class, goodsList);
     }
@@ -163,6 +160,7 @@ public class GoodsMgmtService {
             if(CommonUtil.isNotEmptyList(goodsList)) {
                 Optional.ofNullable(goodsList).orElseGet(Collections::emptyList).forEach(goods -> {
                     goods.updateDelYn(goods, StatusEnum.FLAG_Y.getStatusMsg());
+                    goodsOptionRepository.deleteByGoodsGoodsId(goods.getGoodsId());
                 });
             }else{
                 throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
@@ -194,7 +192,7 @@ public class GoodsMgmtService {
                 && goodsOptionDtos.size() > 0) {
 
             Number goodsId = goodsOptionDtos.get(0).getGoodsId();
-            //goodsOptionRepository.deleteByGoodsId(goodsId);
+            goodsOptionRepository.deleteByGoodsGoodsId(goodsId);
 
             List<GoodsOption> insertOptionList = goodsOptionDtos.stream()
                     .map(GoodsOptionDto::toEntity)
