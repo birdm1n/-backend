@@ -1,7 +1,6 @@
 package com.daema.rest.wms.dto;
 
 import com.daema.wms.domain.Stock;
-import com.daema.wms.domain.dto.response.StockListDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.*;
@@ -53,21 +52,6 @@ public class StockMgmtDto {
 				.updUserId(stock.getUpdUserId())
 				.updDateTime(stock.getUpdDateTime())
 				.delYn(stock.getDelYn())
-			.build();
-	}
-
-	public static StockMgmtDto dtoToDto (StockListDto stockListDto) {
-		return StockMgmtDto.builder()
-				.depth(stockListDto.getDepth())
-				.id(stockListDto.getStockId())
-				.stockId(stockListDto.getStockId())
-				.parentStockId(stockListDto.getParentStockId())
-				.storeId(stockListDto.getStoreId())
-				.name(stockListDto.getStockName())
-				.stockType(stockListDto.getStockType())
-				.chargerName(stockListDto.getChargerName())
-				.chargerPhone(stockListDto.getChargerPhone())
-				.hierarchy(stockListDto.getHierarchy())
 			.build();
 	}
 }

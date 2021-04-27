@@ -6,7 +6,6 @@ import com.daema.rest.common.enums.TypeEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.StockMgmtDto;
-import com.daema.rest.wms.dto.response.StockMgmtResponseDto;
 import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.StockRequestDto;
 import com.daema.wms.domain.dto.response.StockListDto;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class StockMgmtService {
@@ -31,17 +29,13 @@ public class StockMgmtService {
 		this.authenticationUtil = authenticationUtil;
 	}
 
-	public StockMgmtResponseDto getStockList(StockRequestDto requestDto) {
+	public List<StockListDto> getStockList(StockRequestDto requestDto) {
 
 		requestDto.setStoreId(authenticationUtil.getStoreId());
 
 		List<StockListDto> stockList = stockRepository.getStockList(requestDto);
 
-		StockMgmtResponseDto responseDto = new StockMgmtResponseDto();
-
-		responseDto.setStockList(stockList.stream().map(StockMgmtDto::dtoToDto).collect(Collectors.toList()));
-
-		return responseDto;
+		return stockList;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)
