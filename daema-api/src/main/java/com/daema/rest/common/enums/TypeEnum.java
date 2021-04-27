@@ -7,6 +7,10 @@ public enum TypeEnum {
     STOCK_TYPE_S("S", "SaleStore"),
     STOCK_TYPE_I("I", "Inner"),
 
+    //가입 링크 구분
+    JOIN_STORE("S", "STORE"),
+    JOIN_USER("U", "USER")
+
     ;
 
     private String statusCode;

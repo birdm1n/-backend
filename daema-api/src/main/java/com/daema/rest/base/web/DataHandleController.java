@@ -53,6 +53,14 @@ public class DataHandleController {
     public ResponseEntity<CommonResponse<Object>> existsData(@RequestBody ModelMap reqModel) {
         return responseHandler.getResponseMessageAsRetrieveResult(dataHandleService.existsData(reqModel), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
+
+    /**
+     * 가입 URL 생성
+     */
+    @PostMapping("/generatorJoinPath")
+    public ResponseEntity<CommonResponse<String>> generatorJoinPath(@RequestBody ModelMap reqModel) {
+        return responseHandler.ok(dataHandleService.generatorJoinPath(reqModel));
+    }
 }
 
 

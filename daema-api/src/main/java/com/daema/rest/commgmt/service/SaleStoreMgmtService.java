@@ -23,6 +23,7 @@ import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
+import com.daema.rest.common.util.JwtUtil;
 import com.daema.rest.wms.dto.StockMgmtDto;
 import com.daema.rest.wms.service.StockMgmtService;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +54,10 @@ public class SaleStoreMgmtService {
 
 	private final AuthenticationUtil authenticationUtil;
 
+	private final JwtUtil jwtUtil;
+
 	public SaleStoreMgmtService(StoreRepository storeRepository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService, StockMgmtService stockMgmtService
-								,RoleFuncMgmtService roleFuncMgmtService, FuncMgmtRepository funcMgmtRepository ,AuthenticationUtil authenticationUtil) {
+								,RoleFuncMgmtService roleFuncMgmtService, FuncMgmtRepository funcMgmtRepository ,AuthenticationUtil authenticationUtil, JwtUtil jwtUtil) {
 		this.storeRepository = storeRepository;
 		this.storeMapRepository = storeMapRepository;
 		this.organizationMgmtService = organizationMgmtService;
@@ -61,6 +65,7 @@ public class SaleStoreMgmtService {
 		this.funcMgmtRepository = funcMgmtRepository;
 		this.stockMgmtService = stockMgmtService;
 		this.authenticationUtil = authenticationUtil;
+		this.jwtUtil = jwtUtil;
 	}
 
 	public ResponseDto<SaleStoreMgmtDto> getStoreList(ComMgmtRequestDto requestDto) {
@@ -83,7 +88,7 @@ public class SaleStoreMgmtService {
 	 * @return
 	 */
 	@Transactional
-	public void insertStoreAndUserAndStoreMap(SaleStoreUserWrapperDto wrapperDto) {
+	public void insertStoreAndUserAndStoreMap(SaleStoreUserWrapperDto wrapperDto, HttpServletRequest request) {
 
 		wrapperDto.getSaleStore().setUseYn(StatusEnum.FLAG_Y.getStatusMsg());
 
@@ -108,7 +113,7 @@ public class SaleStoreMgmtService {
 		}
 
 		//사용자 추가 및 롤 등록
-		organizationMgmtService.insertUser(memberDto);
+		organizationMgmtService.insertUser(memberDto, request);
 
 		//롤과 기능 맵핑 등록
 		List<FuncMgmt> funcList = funcMgmtRepository.findAllByRoleContainingOrderByGroupIdAscRoleAscOrderNumAsc(UserRole.ROLE_MANAGER.name());
@@ -134,8 +139,17 @@ public class SaleStoreMgmtService {
 			roleFuncMgmtService.setFuncRoleMapInfo(roleFuncList);
 		}
 
-		if(wrapperDto.getParentStoreId() > 0){
-			insertStoreMap(wrapperDto);
+		//가입 링크를 통한 관리점 / 영업점 맵핑 프로세스
+		String accessToken = jwtUtil.getAccessTokenFromHeader(request, JwtUtil.AUTHORIZATION);
+
+		if(StringUtils.hasText(accessToken)){
+			Long parentStoreId = (Long) jwtUtil.getClaim(accessToken, "sId", Long.class);
+
+			if(parentStoreId != null
+					&& parentStoreId > 0) {
+				wrapperDto.setParentStoreId(parentStoreId);
+				insertStoreMap(wrapperDto);
+			}
 		}
 	}
 
@@ -146,6 +160,7 @@ public class SaleStoreMgmtService {
 						.storeId(saleStoreMgmtDto.getStoreId())
                         .storeName(saleStoreMgmtDto.getSaleStoreName())
                         .telecom(saleStoreMgmtDto.getTelecom())
+						.ceoName(saleStoreMgmtDto.getCeoName())
                         .bizNo(saleStoreMgmtDto.getBizNo())
                         .chargerPhone(saleStoreMgmtDto.getChargerPhone())
                         .chargerName(saleStoreMgmtDto.getChargerName())
@@ -208,6 +223,7 @@ public class SaleStoreMgmtService {
 			store.setStoreId(wrapperDto.getSaleStore().getStoreId());
 			store.setStoreName(wrapperDto.getSaleStore().getSaleStoreName());
 			store.setTelecom(wrapperDto.getSaleStore().getTelecom());
+			store.setCeoName(wrapperDto.getSaleStore().getCeoName());
 			store.setBizNo(wrapperDto.getSaleStore().getBizNo());
 			store.setChargerPhone(wrapperDto.getSaleStore().getChargerPhone());
 			store.setChargerName(wrapperDto.getSaleStore().getChargerName());

@@ -4,12 +4,15 @@ import com.daema.base.domain.Member;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
+import java.util.List;
+
 public class SecurityMember extends User {
     private static final long serialVersionUiD = 1L;
 
     private long storeId;
     private long memberSeq;
     private Member member;
+    private List<String> memberFuncList;
 
     public SecurityMember(Member member){
         super(member.getUsername(),"{noop}"+ member.getPassword(), AuthorityUtils.createAuthorityList(member.getRole().toString()));
@@ -42,5 +45,11 @@ public class SecurityMember extends User {
         this.memberSeq = memberSeq;
     }
 
+    public List<String> getMemberFuncList() {
+        return memberFuncList;
+    }
 
+    public void setMemberFuncList(List<String> memberFuncList) {
+        this.memberFuncList = memberFuncList;
+    }
 }

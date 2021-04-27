@@ -17,6 +17,7 @@ public class SaleStoreMgmtDto {
 	private int telecom;
 	private String telecomName;
 	private String bizNo;
+	private String ceoName;
 	private String chargerPhone;
 	private String chargerName;
 	private String chargerEmail;
@@ -33,6 +34,7 @@ public class SaleStoreMgmtDto {
 				.telecom(store.getTelecom())
 				.telecomName(store.getTelecomName())
 				.bizNo(store.getBizNo())
+				.ceoName(store.getCeoName())
 				.chargerPhone(store.getChargerPhone())
 				.chargerName(store.getChargerName())
 				.chargerEmail(store.getChargerEmail())

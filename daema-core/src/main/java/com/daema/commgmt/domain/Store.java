@@ -36,6 +36,9 @@ public class Store {
     @Column(nullable = false, name = "biz_no", unique = true, columnDefinition = "char(12)")
     private String bizNo;
 
+    @Column(name = "ceo_name")
+    private String ceoName;
+
     @Column(name = "charger_name")
     private String chargerName;
 
@@ -61,7 +64,7 @@ public class Store {
     private LocalDateTime regiDateTime;
 
     @Builder
-    public Store (long storeId, String storeName, int telecom, String telecomName, String bizNo, String chargerPhone
+    public Store (long storeId, String storeName, int telecom, String telecomName, String bizNo, String ceoName, String chargerPhone
             ,String chargerName, String chargerEmail, String returnZipCode
             ,String returnAddr, String returnAddrDetail, String useYn, LocalDateTime regiDateTime){
         this.storeId = storeId;
@@ -69,6 +72,7 @@ public class Store {
         this.telecom = telecom;
         this.telecomName = telecomName;
         this.bizNo = bizNo;
+        this.ceoName = ceoName;
         this.chargerPhone = chargerPhone;
         this.chargerName = chargerName;
         this.chargerEmail = chargerEmail;

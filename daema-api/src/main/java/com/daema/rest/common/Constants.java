@@ -14,4 +14,21 @@ public class Constants {
     public static final String API_ORGNZT = "7||조직 관리||ROLE_USER,ROLE_MANAGER,ROLE_ADMIN";
     public static final String API_USER = "8||사용자 관리||ROLE_USER,ROLE_MANAGER,ROLE_ADMIN";
     public static final String API_ROLE_FUNC = "9||역할 관리||ROLE_USER,ROLE_MANAGER,ROLE_ADMIN";
+
+    public static final String[] SECURITY_PERMIT_ALL = {
+            "/user/signup", "/user/login", "/user/invalidate", "/user/verify/**",
+            "/dataHandle/**", "/oauth/**", "/**/joinStore", "/**/insertUser"
+    };
+
+    public static final String[] SECURITY_EXCLUDE_URLS = {
+            "/user/invalidate"
+    };
+
+    public static final String[] SECURITY_WEB_IGNORE_URLS = {
+            "/v2/api-docs", "/swagger-resources/**",
+            "/swagger-ui.html", "/webjars/**", "/swagger/**"
+    };
+
+    public static final String BIZ_JOIN_URL = "/sign-up/";
+    public static final String USER_JOIN_URL = "/user/sign-up/";
 }

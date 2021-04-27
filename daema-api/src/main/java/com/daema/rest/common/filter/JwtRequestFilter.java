@@ -1,10 +1,13 @@
 package com.daema.rest.common.filter;
 
+import com.daema.base.domain.Member;
+import com.daema.rest.base.dto.SecurityMember;
+import com.daema.rest.base.service.MyUserDetailsService;
+import com.daema.rest.commgmt.service.RoleFuncMgmtService;
+import com.daema.rest.common.Constants;
 import com.daema.rest.common.util.CookieUtil;
 import com.daema.rest.common.util.JwtUtil;
 import com.daema.rest.common.util.RedisUtil;
-import com.daema.base.domain.Member;
-import com.daema.rest.base.service.MyUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.java.Log;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,8 +24,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
 
 @Log
 @Component
@@ -30,14 +33,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final MyUserDetailsService userDetailsService;
 
+    private final RoleFuncMgmtService roleFuncMgmtService;
+
     private final JwtUtil jwtUtil;
 
     private final CookieUtil cookieUtil;
 
     private final RedisUtil redisUtil;
 
-    public JwtRequestFilter(MyUserDetailsService userDetailsService, JwtUtil jwtUtil, CookieUtil cookieUtil, RedisUtil redisUtil) {
+    public JwtRequestFilter(MyUserDetailsService userDetailsService, RoleFuncMgmtService roleFuncMgmtService, JwtUtil jwtUtil, CookieUtil cookieUtil, RedisUtil redisUtil) {
         this.userDetailsService = userDetailsService;
+        this.roleFuncMgmtService = roleFuncMgmtService;
         this.jwtUtil = jwtUtil;
         this.cookieUtil = cookieUtil;
         this.redisUtil = redisUtil;
@@ -62,6 +68,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 if(jwtUtil.validateToken(jwt,userDetails)){
+
+                    List<String> userFuncList = roleFuncMgmtService.getMemberEnableUrlPathList(((SecurityMember) userDetails).getMemberSeq());
+                    ((SecurityMember) userDetails).setMemberFuncList(userFuncList);
+
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
@@ -87,6 +97,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
                     if (refreshUname.equals(jwtUtil.getUsername(refreshJwt))) {
                         UserDetails userDetails = userDetailsService.loadUserByUsername(refreshUname);
+
+                        List<String> userFuncList = roleFuncMgmtService.getMemberEnableUrlPathList(((SecurityMember) userDetails).getMemberSeq());
+                        ((SecurityMember) userDetails).setMemberFuncList(userFuncList);
+
                         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
@@ -113,10 +127,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        Set<String> excludeUrls = new HashSet<>();
-        excludeUrls.add("/user/invalidate");
+
         AntPathMatcher pathMatcher = new AntPathMatcher();
 
-        return excludeUrls.stream().anyMatch(p -> pathMatcher.match(p, request.getRequestURI()));
+        return Arrays.asList(Constants.SECURITY_EXCLUDE_URLS).stream().anyMatch(p -> pathMatcher.match(p, request.getRequestURI()));
     }
 }

@@ -1,9 +1,10 @@
 package com.daema.rest.common.handler;
 
-import com.daema.rest.common.util.CommonUtil;
 import com.daema.base.enums.UserRole;
 import com.daema.rest.base.dto.SecurityMember;
+import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.io.response.CommonResponse;
+import com.daema.rest.common.util.CommonUtil;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,7 +27,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
 
-        CommonResponse response = new CommonResponse(HttpStatus.UNAUTHORIZED.value(), "error","접근가능한 권한을 가지고 있지 않습니다.",null);
+        CommonResponse response = new CommonResponse(HttpStatus.UNAUTHORIZED.value(), ResponseCodeEnum.UNAUTHORIZED.getResultCode(), ResponseCodeEnum.UNAUTHORIZED.getResultMsg(),null);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityMember member = (SecurityMember)authentication.getPrincipal();

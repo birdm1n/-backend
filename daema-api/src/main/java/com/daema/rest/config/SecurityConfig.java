@@ -1,5 +1,6 @@
 package com.daema.rest.config;
 
+import com.daema.rest.common.Constants;
 import com.daema.rest.common.filter.JwtRequestFilter;
 import com.daema.rest.common.handler.CustomAccessDeniedHandler;
 import com.daema.rest.common.handler.CustomAuthenticationEntryPoint;
@@ -39,14 +40,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.httpBasic().disable()
                 .authorizeRequests()
-                    .antMatchers("/user/signup").permitAll()
-                    .antMatchers("/user/login").permitAll()
-                    .antMatchers("/user/invalidate").permitAll()
-                    .antMatchers("/user/verify/**").permitAll()
-                    .antMatchers("/dataHandle/existsData").permitAll()
-                    .antMatchers("/**/joinStore").permitAll()
-                    .antMatchers("/oauth/**").permitAll()
-                    //.antMatchers("/dataHandle/extractApiFunc").permitAll()
+                    .antMatchers(Constants.SECURITY_PERMIT_ALL).permitAll()
+
+                    //.antMatchers("/user/signup").permitAll()
+                    //.antMatchers("/user/login").permitAll()
+                    //.antMatchers("/user/invalidate").permitAll()
+                    //.antMatchers("/user/verify/**").permitAll()
+                    //.antMatchers("/dataHandle/**").permitAll()
+                    //.antMatchers("/oauth/**").permitAll()
+                    //.antMatchers("/**/joinStore").permitAll()
+
                     .anyRequest().authenticated()
                     //.anyRequest().permitAll()
             .and()
@@ -64,8 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override // ignore check swagger resource
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
-                "/swagger-ui.html", "/webjars/**", "/swagger/**");
+        web.ignoring().antMatchers(Constants.SECURITY_WEB_IGNORE_URLS);
     }
 
     @Bean

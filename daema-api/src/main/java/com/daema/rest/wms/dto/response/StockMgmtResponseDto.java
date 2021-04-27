@@ -1,9 +1,12 @@
 package com.daema.rest.wms.dto.response;
 
+import com.daema.rest.wms.dto.StockMgmtDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,4 +14,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StockMgmtResponseDto {
 
+	public List<StockMgmtDto> stockList;
 }

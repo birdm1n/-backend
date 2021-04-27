@@ -15,6 +15,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Api(value = "영업점 관리 API", tags = "영업점 관리 API")
 @RestController
 @RequestMapping("/v1/api/BusinessManManagement/SaleStoreMgmt")
@@ -71,9 +73,9 @@ public class SaleStoreMgmtController {
 
     @ApiOperation(value = "영업점 가입", notes = "신규 영업점이 가입합니다")
     @PostMapping("/joinStore")
-    public ResponseEntity<CommonResponse<Void>> joinStore(@ApiParam(value = "영업점 정보", required = true) @RequestBody SaleStoreUserWrapperDto wrapperDto) {
+    public ResponseEntity<CommonResponse<Void>> joinStore(@ApiParam(value = "영업점 정보", required = true) @RequestBody SaleStoreUserWrapperDto wrapperDto, HttpServletRequest request) {
         try {
-            saleStoreMgmtService.insertStoreAndUserAndStoreMap(wrapperDto);
+            saleStoreMgmtService.insertStoreAndUserAndStoreMap(wrapperDto, request);
             return responseHandler.ok();
         }catch (Exception e){
             return responseHandler.exception("회원가입을 하는 도중 오류가 발생했습니다.");

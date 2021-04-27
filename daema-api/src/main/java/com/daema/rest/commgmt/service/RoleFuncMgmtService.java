@@ -210,6 +210,10 @@ public class RoleFuncMgmtService {
                 )
         );
     }
+
+    public List<String> getMemberEnableUrlPathList(long memberSeq){
+        return funcMgmtRepository.getMemberEnableUrlPathList(memberSeq);
+    }
 }
 
 

@@ -16,6 +16,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Api(value = "조직 관리 API", tags = "조직 관리 API")
 @RestController
 @RequestMapping("/v1/api/OrganizationManagement/OrganizationMgmt")
@@ -62,8 +64,8 @@ public class OrganizationMgmtController {
 
     @ApiOperation(value = "사용자 등록", notes = "신규 사용자를 등록합니다", nickname = Constants.API_USER + "||1")
     @PostMapping("/insertUser")
-    public ResponseEntity<CommonResponse<Void>> insertUser(@ApiParam(value = "사용자 정보", required = true) @RequestBody OrganizationMemberDto organizationMemberDto) {
-        organizationMgmtService.insertUser(organizationMemberDto);
+    public ResponseEntity<CommonResponse<Void>> insertUser(@ApiParam(value = "사용자 정보", required = true) @RequestBody OrganizationMemberDto organizationMemberDto, HttpServletRequest request) {
+        organizationMgmtService.insertUser(organizationMemberDto, request);
         return responseHandler.ok();
     }
 

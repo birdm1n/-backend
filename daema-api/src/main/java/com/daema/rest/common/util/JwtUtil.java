@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 
 @Component
 public class JwtUtil {
@@ -30,6 +32,7 @@ public class JwtUtil {
     private String SECRET_KEY;
 
     private Key getSigningKey(String secretKey) {
+        secretKey = "ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFjZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=";
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -46,6 +49,10 @@ public class JwtUtil {
         return extractAllClaims(token).get("username", String.class);
     }
 
+    public Object getClaim(String token, String claimName, Class o){
+        return extractAllClaims(token).get(claimName, o);
+    }
+
     public Boolean isTokenExpired(String token) {
         final Date expiration = extractAllClaims(token).getExpiration();
         return expiration.before(new Date());
@@ -60,18 +67,31 @@ public class JwtUtil {
     }
 
     public String doGenerateToken(String username, long expireTime) {
-
         Claims claims = Jwts.claims();
         claims.put("username", username);
 
-        String jwt = Jwts.builder()
+        return buildJwt(claims, expireTime);
+    }
+
+    public String doGenerateTokenFromMap(HashMap<Object, Object> claimMap, long expireTime) {
+        Claims claims = Jwts.claims();
+        Iterator<Object> claimsList = claimMap.keySet().iterator();
+
+        while (claimsList.hasNext()){
+            String key = String.valueOf(claimsList.next());
+            claims.put(key, claimMap.get(key));
+        }
+
+        return buildJwt(claims, expireTime);
+    }
+
+    private String buildJwt(Claims claims, long expireTime){
+        return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireTime))
                 .signWith(getSigningKey(SECRET_KEY), SignatureAlgorithm.HS256)
                 .compact();
-
-        return jwt;
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

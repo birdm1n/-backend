@@ -1,26 +1,29 @@
 package com.daema.rest.commgmt.service;
 
-import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
-import com.daema.rest.commgmt.dto.*;
-import com.daema.rest.commgmt.dto.response.OrganizationMgmtResponseDto;
-import com.daema.rest.common.Constants;
-import com.daema.rest.common.enums.StatusEnum;
-import com.daema.rest.common.util.AuthenticationUtil;
-import com.daema.rest.common.util.CommonUtil;
 import com.daema.base.domain.Member;
-import com.daema.commgmt.domain.MemberRole;
-import com.daema.commgmt.domain.Organization;
-import com.daema.commgmt.domain.RoleMgmt;
-import com.daema.commgmt.domain.dto.response.OrgnztListDto;
-import com.daema.commgmt.domain.dto.response.OrgnztMemberListDto;
 import com.daema.base.enums.UserRole;
 import com.daema.base.repository.MemberRepository;
 import com.daema.base.repository.MemberRoleRepository;
+import com.daema.commgmt.domain.MemberRole;
+import com.daema.commgmt.domain.Organization;
+import com.daema.commgmt.domain.RoleMgmt;
+import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
+import com.daema.commgmt.domain.dto.response.OrgnztListDto;
+import com.daema.commgmt.domain.dto.response.OrgnztMemberListDto;
 import com.daema.commgmt.repository.OrganizationRepository;
+import com.daema.rest.base.service.AuthService;
+import com.daema.rest.commgmt.dto.FuncRoleMgmtDto;
+import com.daema.rest.commgmt.dto.OrganizationMemberDto;
+import com.daema.rest.commgmt.dto.OrganizationMgmtDto;
+import com.daema.rest.commgmt.dto.response.OrganizationMgmtResponseDto;
+import com.daema.rest.common.Constants;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
+import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
-import com.daema.rest.base.service.AuthService;
+import com.daema.rest.common.util.AuthenticationUtil;
+import com.daema.rest.common.util.CommonUtil;
+import com.daema.rest.common.util.JwtUtil;
 import javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,14 +53,18 @@ public class OrganizationMgmtService {
 
     private final AuthenticationUtil authenticationUtil;
 
+    private final JwtUtil jwtUtil;
+
     public OrganizationMgmtService(OrganizationRepository organizationRepository, MemberRepository memberRepository, MemberRoleRepository memberRoleRepository
-            ,AuthService authService, RoleFuncMgmtService roleFuncMgmtService, AuthenticationUtil authenticationUtil) {
+            ,AuthService authService, RoleFuncMgmtService roleFuncMgmtService, AuthenticationUtil authenticationUtil
+    ,JwtUtil jwtUtil) {
         this.organizationRepository = organizationRepository;
         this.memberRepository = memberRepository;
         this.memberRoleRepository = memberRoleRepository;
         this.authService = authService;
         this.roleFuncMgmtService = roleFuncMgmtService;
         this.authenticationUtil = authenticationUtil;
+        this.jwtUtil = jwtUtil;
     }
 
     public OrganizationMgmtResponseDto getOrgnztList(ComMgmtRequestDto requestDto) {
@@ -186,12 +194,31 @@ public class OrganizationMgmtService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public long insertUser(OrganizationMemberDto orgnztMemberDto) {
+    public long insertUser(OrganizationMemberDto orgnztMemberDto, HttpServletRequest request) {
 
         if(String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode())
                 .equals(orgnztMemberDto.getUserStatus())){
             if(UserRole.ROLE_NOT_PERMITTED == orgnztMemberDto.getRole()){
                 orgnztMemberDto.setRole(UserRole.ROLE_USER);
+            }
+        }
+
+        //가입 링크를 통한 사용자 등록 프로세스
+        String accessToken = jwtUtil.getAccessTokenFromHeader(request, JwtUtil.AUTHORIZATION);
+
+        if(StringUtils.hasText(accessToken)){
+
+            Long storeId = (Long) jwtUtil.getClaim(accessToken, "sId", Long.class);
+            Long orgId = (Long) jwtUtil.getClaim(accessToken, "gId", Long.class);
+
+            if(storeId != null
+                    && storeId > 0) {
+                orgnztMemberDto.setStoreId(storeId);
+            }
+
+            if(orgId != null
+                    && orgId > 0) {
+                orgnztMemberDto.setOrgId(orgId);
             }
         }
 
@@ -222,15 +249,16 @@ public class OrganizationMgmtService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void ctrlMemberRole(OrganizationMemberDto orgnztMemberDto){
 
-        if(orgnztMemberDto.getRoleIds() != null
-                && CommonUtil.isNotEmptyList(Arrays.asList(orgnztMemberDto.getRoleIds()))){
-            long memberSeq = orgnztMemberDto.getSeq();
+        long memberSeq = orgnztMemberDto.getSeq();
 
-            memberRoleRepository.deleteBySeq(memberSeq);
+        memberRoleRepository.deleteBySeq(memberSeq);
+
+        if(orgnztMemberDto.getRoleIds() != null
+                && CommonUtil.isNotEmptyList(Arrays.asList(orgnztMemberDto.getRoleIds()))) {
 
             List<MemberRole> memberRoles = new ArrayList<>();
 
-            for(int roleId : orgnztMemberDto.getRoleIds()){
+            for (int roleId : orgnztMemberDto.getRoleIds()) {
                 memberRoles.add(new MemberRole(memberSeq, roleId));
             }
 

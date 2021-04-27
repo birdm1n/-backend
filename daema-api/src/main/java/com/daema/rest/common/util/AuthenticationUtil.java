@@ -7,6 +7,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class AuthenticationUtil {
 
@@ -60,5 +63,19 @@ public class AuthenticationUtil {
         }
 
         return returnId;
+    }
+
+    public List<String> getEnableUrlPath(){
+
+        List<String> urlPath = new ArrayList<>();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!(authentication.getPrincipal() instanceof String)) {
+            SecurityMember securityMember = (SecurityMember) authentication.getPrincipal();
+            urlPath = securityMember.getMemberFuncList();
+        }
+
+        return urlPath;
     }
 }
