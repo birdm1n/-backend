@@ -63,6 +63,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             if(jwtToken != null){
                 jwt = jwtToken.getValue();
                 username = jwtUtil.getUsername(jwt);
+            }else{
+                String profile = System.getProperty("spring.profiles.active");
+
+                if(profile != null &&
+                        !"prod".equals(profile)) {
+
+                    //swagger 테스트용. SA-10년
+                    cookieUtil.addHeaderCookie(httpServletResponse, JwtUtil.ACCESS_TOKEN_NAME, "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InNhIiwiaWF0IjoxNjE5NTEwMzIzLCJleHAiOjE5MzQ4NzAzMjN9.IdMZF15jwUJ3DyQjaiVTQQWEW7bpwyTukoxHFD0GT10");
+
+                    Cookie jwtToken2 = cookieUtil.getCookie(httpServletRequest,JwtUtil.ACCESS_TOKEN_NAME);
+                    jwt = jwtToken2.getValue();
+                    username = jwtUtil.getUsername(jwt);
+                }
+
             }
             if(username!=null){
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
