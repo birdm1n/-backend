@@ -46,4 +46,10 @@ public class ProviderMgmtDto {
 				.name(provider.getName())
 			.build();
 	}
+	public static ProviderMgmtDto ofInitData (Provider provider) {
+		return ProviderMgmtDto.builder()
+				.provId(provider.getProvId())
+				.provName(provider.getProvName())
+				.build();
+	}
 }

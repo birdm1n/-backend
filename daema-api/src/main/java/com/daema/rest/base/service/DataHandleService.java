@@ -19,6 +19,9 @@ import com.daema.rest.common.enums.TypeEnum;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.JwtUtil;
 import com.daema.rest.common.util.RedisUtil;
+import com.daema.rest.wms.dto.ProviderMgmtDto;
+import com.daema.wms.domain.Provider;
+import com.daema.wms.repository.ProviderRepository;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,7 @@ public class DataHandleService {
     private final StoreRepository storeRepository;
     private final CodeDetailRepository codeDetailRepository;
     private final MemberRepository memberRepository;
+    private final ProviderRepository providerRepository;
 
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
@@ -52,6 +56,7 @@ public class DataHandleService {
     public DataHandleService(FuncMgmtRepository funcMgmtRepository, PubNotiRawDataRepository pubNotiRawDataRepository
                              ,StoreRepository storeRepository, CodeDetailRepository codeDetailRepository
                              ,MemberRepository memberRepository
+                             ,ProviderRepository providerRepository
                              ,JwtUtil jwtUtil, RedisUtil redisUtil
             ,RequestMappingHandlerMapping handlerMapping, AuthenticationUtil authenticationUtil) {
         this.funcMgmtRepository = funcMgmtRepository;
@@ -64,6 +69,7 @@ public class DataHandleService {
 
         this.handlerMapping = handlerMapping;
         this.authenticationUtil = authenticationUtil;
+        this.providerRepository = providerRepository;
     }
 
     @Transactional
@@ -147,6 +153,9 @@ public class DataHandleService {
                 if (initData.contains("storeList")) {
                     responseDto.setStoreList(retrieveStoreList());
                 }
+                if (initData.contains("provList")) {
+                    responseDto.setProvList(retrieveProvList());
+                }
             }
 
             if (reqModel.containsKey("code")
@@ -165,6 +174,11 @@ public class DataHandleService {
 
         List<Store> storeList = storeRepository.findByUseYnOrderByStoreName(StatusEnum.FLAG_Y.getStatusMsg());
         return storeList.stream().map(SaleStoreMgmtDto::ofInitData).collect(Collectors.toList());
+    }
+    private List<ProviderMgmtDto> retrieveProvList(){
+        long storeId = authenticationUtil.getStoreId();
+        List<Provider> provList = providerRepository.findByStoreIdAndUseYnOrderByProvName(storeId, StatusEnum.FLAG_Y.getStatusMsg());
+        return provList.stream().map(ProviderMgmtDto::ofInitData).collect(Collectors.toList());
     }
 
     private Map<String, List<CodeDetailDto>> retrieveCodeList(ModelMap reqModel){

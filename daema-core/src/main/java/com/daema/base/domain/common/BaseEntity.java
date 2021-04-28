@@ -1,9 +1,12 @@
 package com.daema.base.domain.common;
 
 import com.daema.base.domain.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -19,11 +22,12 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
-
+    @NotAudited
     @CreatedDate // 생성한 날
     @Column(name = "regi_datetime", updatable = false)
     private LocalDateTime regiDateTime;
 
+    @NotAudited
     @CreatedBy  // 최초 생성자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regi_user_id", referencedColumnName = "seq", updatable = false)
@@ -40,7 +44,9 @@ public abstract class BaseEntity {
     @Audited(targetAuditMode = NOT_AUDITED) // User 테이블까지 이력을 추적하지 않겠다는 설정 필수
     private Member updUserId;
 
-    @Column(name = "del_yn")
-    private boolean delYn;
+    @NotAudited
+    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1)")
+    @ColumnDefault("\"N\"")
+    private String delYn;
 
 }
