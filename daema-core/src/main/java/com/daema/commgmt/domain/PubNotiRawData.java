@@ -84,8 +84,7 @@ public class PubNotiRawData extends PubNotiBase {
     @Builder
     public PubNotiRawData(long pubNotiRawDataId, String goodsName, String modelName, String makerName, String chargeName, String chargeCode
     ,String telecomName, String networkName, int releaseAmt, int supportAmt, LocalDate releaseDate, LocalDateTime regiDateTime
-    ,LocalDateTime deadLineDateTime, String deadLineYn, Long deadLineUserId
-    ,LocalDateTime prevReleaseDate ,Integer prevReleaseAmt, Integer diffAmt){
+    ,LocalDateTime deadLineDateTime, String deadLineYn, Long deadLineUserId){
         this.pubNotiRawDataId = pubNotiRawDataId;
         this.goodsName = goodsName;
         this.modelName = modelName;
