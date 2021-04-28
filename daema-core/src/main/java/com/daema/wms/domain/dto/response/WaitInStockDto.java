@@ -62,10 +62,34 @@ public class WaitInStockDto {
     private Long holdStoreId;
     private String stockName;
 
-    //재고구분
+    //재고구분 // 1, "매장재고" / 2, "이동재고" / 3, "판매이동" / 4, "재고이관" / 5, "불량이관"
+    private String stockType;
+
+    //제조사
+    private int maker;
+    private String makerName;
+
+    // 기기명_모델명
+    private long goodsId;
+    private String goodsName;
+    private String modelName;
+
+    // 용량
+    private String capacity;
+
+    // 색상_기기일련번호(바코드)
+    private long goodsOptionId;
+    private String colorName;
+    private String commonBarcode;
+
+    // 입고단가
+    private long pubNotiId;
+    private int releaseAmt;
 
 
-
-    // 1, "매장재고" / 2, "이동재고" / 3, "판매이동" / 4, "재고이관" / 5, "불량이관"
+    //
+    // 입고상태 = 0, "대기"/ 1, "정상"/ 2, "개봉"
     private String inStockStatus;
+
+
 }
