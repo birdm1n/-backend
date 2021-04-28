@@ -1,24 +1,15 @@
 package com.daema.commgmt.repository;
 
 import com.daema.commgmt.domain.PubNotiRawData;
+import com.daema.commgmt.domain.dto.response.PubNotiRawDataListDto;
 import com.daema.commgmt.repository.custom.CustomPubNotiRawDataRepository;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
 
-/**
- * 1. Process
- * - PubNotiRawData. deadLineYn = 'N' 조회
- * - model_name 그룹핑 및 Goods 테이블 조회해서 신규 상품은 Goods 테이블에 인서트
- * - Charge, Goods, CodeDetail(모델명, 제조사, 통신사) 매칭 건만 PubNotiCodeMapData 테이블 인서트
- * - PubNoti 테이블에 공시금액 및 코드 데이터 저장
- * - PubNoti에 정상 저장된 건에 대해 PubNotiRawData, PubNotiCodeMapData 마감 처리
- *
- * 2. Rule
- * - 미리 코드화 되지 않은 데이터는 마감처리 불가
- * - PubNotiCodeMapData 테이블에 금일 마감요청 들어온 건에 대해서만 처리 됨
- */
 public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport implements CustomPubNotiRawDataRepository {
 
     public PubNotiRawDataRepositoryImpl() {
@@ -28,6 +19,18 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * 1. Process
+     * - PubNotiRawData. deadLineYn = 'N' 조회
+     * - model_name 그룹핑 및 Goods 테이블 조회해서 신규 상품은 Goods 테이블에 인서트
+     * - Charge, Goods, CodeDetail(모델명, 제조사, 통신사) 매칭 건만 PubNotiCodeMapData 테이블 인서트
+     * - PubNoti 테이블에 공시금액 및 코드 데이터 저장
+     * - PubNoti에 정상 저장된 건에 대해 PubNotiRawData, PubNotiCodeMapData 마감 처리
+     *
+     * 2. Rule
+     * - 미리 코드화 되지 않은 데이터는 마감처리 불가
+     * - PubNotiCodeMapData 테이블에 금일 마감요청 들어온 건에 대해서만 처리 됨
+     */
     @Override
     public void migrationSmartChoiceData(long memberSeq) {
 
@@ -160,7 +163,103 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
         em.createNativeQuery(sb.toString())
                 .executeUpdate();
     }
+
+    @Override
+    public List<PubNotiRawDataListDto> searchPubNotiRawData() {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select raw.pub_noti_raw_data_id " +
+                "       ,raw.regi_datetime " +
+                "       ,raw.release_amt " +
+                "       ,raw.release_date " +
+                "       ,raw.support_amt " +
+                "       ,raw.charge_name " +
+                "       ,raw.deadline_datetime " +
+                "       ,raw.deadline_user_id " +
+                "       ,raw.deadline_yn " +
+                "       ,raw.goods_name " +
+                "       ,raw.maker_name " +
+                "       ,raw.model_name " +
+                "       ,raw.telecom_name " +
+                "       ,raw.network_name " +
+                "       ,raw.charge_code " +
+                "       ,raw.release_amt - data.prev_release_amt as diff_release_amt " +
+                "       ,raw.support_amt - data.prev_support_amt as diff_support_amt " +
+                "       ,data.prev_release_date as prev_release_date " +
+                "       ,data.prev_release_amt as prev_release_amt " +
+                "  from (select * " +
+                "        from pub_noti_raw_data " +
+                "       where deadline_yn = 'N' " +
+                "  ) as raw " +
+                "  left join (select pub_noti_id, model_name " +
+                "                   , charge_code " +
+                "                   , p.release_date as prev_release_date " +
+                "                   , p.release_amt as prev_release_amt " +
+                "                   , p.support_amt as prev_support_amt " +
+                "              from pub_noti as p " +
+                "             inner join (select max(release_date) as max_release_date " +
+                "                                , a.goods_id " +
+                "                                , a.charge_id " +
+                "                                , model_name " +
+                "                                , charge_code " +
+                "                           from pub_noti as a " +
+                "                          inner join goods as b " +
+                "                             on a.goods_id = b.goods_id " +
+                "                                and b.use_yn = 'Y' " +
+                "                                and b.del_yn = 'N' " +
+                "                          inner join charge c " +
+                "                             on a.charge_id = c.charge_id " +
+                "                                and c.use_yn = 'Y' " +
+                "                                and c.del_yn = 'N' " +
+                "                          group by a.goods_id, a.charge_id " +
+                "                          order by null " +
+                "                        ) as data " +
+                "                on p.charge_id = data.charge_id " +
+                "                   and p.goods_id = data.goods_id " +
+                "                   and p.release_date = data.max_release_date " +
+                "             where p.del_yn = 'N' " +
+                "            ) as data " +
+                "         on raw.model_name = data.model_name " +
+                "            and raw.charge_code = data.charge_code " +
+                " order by raw.telecom_name, raw.network_name, raw.goods_name, raw.charge_name ");
+
+        Query query = em.createNativeQuery(sb.toString(), "PubNotiRawDataList");
+
+        return query.getResultList();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

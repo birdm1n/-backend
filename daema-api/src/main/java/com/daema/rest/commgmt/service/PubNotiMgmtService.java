@@ -1,26 +1,30 @@
 package com.daema.rest.commgmt.service;
 
-import com.daema.rest.commgmt.dto.*;
-import com.daema.rest.commgmt.dto.response.PubNotiMgmtResponseDto;
-import com.daema.rest.common.enums.StatusEnum;
-import com.daema.rest.common.util.AuthenticationUtil;
-import com.daema.rest.common.util.CommonUtil;
 import com.daema.commgmt.domain.PubNoti;
-import com.daema.commgmt.domain.PubNotiRawData;
 import com.daema.commgmt.domain.dto.response.PubNotiMappingDto;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.commgmt.domain.dto.response.PubNotiRawDataListDto;
 import com.daema.commgmt.repository.PubNotiRawDataRepository;
 import com.daema.commgmt.repository.PubNotiRepository;
+import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.commgmt.dto.ChargeMgmtDto;
+import com.daema.rest.commgmt.dto.GoodsMgmtDto;
+import com.daema.rest.commgmt.dto.PubNotiMgmtDto;
+import com.daema.rest.commgmt.dto.response.PubNotiMgmtResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
+import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.exception.UnAuthorizedException;
-import org.springframework.data.domain.Sort;
+import com.daema.rest.common.util.AuthenticationUtil;
+import com.daema.rest.common.util.CommonUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PubNotiMgmtService {
@@ -113,16 +117,11 @@ public class PubNotiMgmtService {
         }
     }
 
-    public ResponseDto<PubNotiRawDataMgmtDto> getRawDataList() {
+    public List<PubNotiRawDataListDto> getRawDataList() {
 
-        Sort sort = Sort.by(Sort.Direction.DESC, "telecomName")
-                .and(Sort.by(Sort.Direction.DESC, "networkName"))
-                .and(Sort.by(Sort.Direction.DESC, "goodsName"))
-                .and(Sort.by(Sort.Direction.DESC, "chargeName"));
+        List<PubNotiRawDataListDto> dataList = pubNotiRawDataRepository.searchPubNotiRawData();
 
-        List<PubNotiRawData> dataList = pubNotiRawDataRepository.findByDeadLineYn("N", sort);
-
-        return new ResponseDto(PubNotiRawDataMgmtDto.class, dataList);
+        return dataList;
     }
 }
 

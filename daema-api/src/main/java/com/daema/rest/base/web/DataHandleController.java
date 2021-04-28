@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/dataHandle")
 public class DataHandleController {
@@ -50,8 +52,8 @@ public class DataHandleController {
      * 데이터 확인용
      */
     @PostMapping("/existsData")
-    public ResponseEntity<CommonResponse<Object>> existsData(@RequestBody ModelMap reqModel) {
-        return responseHandler.getResponseMessageAsRetrieveResult(dataHandleService.existsData(reqModel), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    public ResponseEntity<CommonResponse<Object>> existsData(@RequestBody ModelMap reqModel, HttpServletRequest request) {
+        return responseHandler.getResponseMessageAsRetrieveResult(dataHandleService.existsData(reqModel, request), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     /**

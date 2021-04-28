@@ -1,11 +1,40 @@
 package com.daema.commgmt.domain;
 
+import com.daema.commgmt.domain.dto.response.PubNotiRawDataListDto;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+@SqlResultSetMapping(
+        name="PubNotiRawDataList",
+        classes = @ConstructorResult(
+                targetClass = PubNotiRawDataListDto.class,
+                columns = {
+                        @ColumnResult(name="pub_noti_raw_data_id", type = Long.class),
+                        @ColumnResult(name="regi_datetime", type = LocalDateTime.class),
+                        @ColumnResult(name="release_amt", type = Integer.class),
+                        @ColumnResult(name="release_date", type = LocalDate.class),
+                        @ColumnResult(name="support_amt", type = Integer.class),
+                        @ColumnResult(name="charge_name", type = String.class),
+                        @ColumnResult(name="deadline_datetime", type = LocalDateTime.class),
+                        @ColumnResult(name="deadline_user_id", type = Long.class),
+                        @ColumnResult(name="deadline_yn", type = String.class),
+                        @ColumnResult(name="goods_name", type = String.class),
+                        @ColumnResult(name="maker_name", type = String.class),
+                        @ColumnResult(name="model_name", type = String.class),
+                        @ColumnResult(name="telecom_name", type = String.class),
+                        @ColumnResult(name="network_name", type = String.class),
+                        @ColumnResult(name="charge_code", type = String.class),
+                        @ColumnResult(name="diff_release_amt", type = Integer.class),
+                        @ColumnResult(name="diff_support_amt", type = Integer.class),
+                        @ColumnResult(name="prev_release_date", type = LocalDate.class),
+                        @ColumnResult(name="prev_release_amt", type = Integer.class)
+                })
+)
+
 
 @Getter
 @Setter
@@ -42,18 +71,6 @@ public class PubNotiRawData extends PubNotiBase {
     @Column(name = "network_name")
     private String networkName;
 
-    @Column(name = "release_amt")
-    private int releaseAmt;
-
-    @Column(name = "support_amt")
-    private int supportAmt;
-
-    @Column(name = "release_date")
-    private LocalDate releaseDate;
-
-    @Column(name = "regi_datetime")
-    private LocalDateTime regiDateTime;
-
     @Column(name = "deadline_datetime")
     private LocalDateTime deadLineDateTime;
 
@@ -67,7 +84,8 @@ public class PubNotiRawData extends PubNotiBase {
     @Builder
     public PubNotiRawData(long pubNotiRawDataId, String goodsName, String modelName, String makerName, String chargeName, String chargeCode
     ,String telecomName, String networkName, int releaseAmt, int supportAmt, LocalDate releaseDate, LocalDateTime regiDateTime
-    ,LocalDateTime deadLineDateTime, String deadLineYn, Long deadLineUserId){
+    ,LocalDateTime deadLineDateTime, String deadLineYn, Long deadLineUserId
+    ,LocalDateTime prevReleaseDate ,Integer prevReleaseAmt, Integer diffAmt){
         this.pubNotiRawDataId = pubNotiRawDataId;
         this.goodsName = goodsName;
         this.modelName = modelName;

@@ -28,7 +28,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="pub_noti")
+@Table(name="pub_noti", indexes = @Index(name = "idx_pub_noti_goods_id_charge_id", columnList = "goods_id, charge_id"))
 public class PubNoti extends PubNotiBase {
 
     @Id

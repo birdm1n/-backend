@@ -1,18 +1,21 @@
 package com.daema.rest.commgmt.web;
 
-import com.daema.rest.common.Constants;
+import com.daema.commgmt.domain.dto.response.PubNotiRawDataListDto;
+import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.commgmt.dto.PubNotiMgmtDto;
 import com.daema.rest.commgmt.dto.response.PubNotiMgmtResponseDto;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.commgmt.service.PubNotiMgmtService;
+import com.daema.rest.common.Constants;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.rest.commgmt.service.PubNotiMgmtService;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 @Api(value = "공시지원금 관리 API", tags = "공시지원금 관리 API")
 @RestController
@@ -65,7 +68,7 @@ public class PubNotiMgmtController {
 
     @ApiOperation(value = "공시지원금 원천 데이터 목록 조회", notes = "공시지원금 원천 데이터 목록을 조회합니다", nickname = Constants.API_PUB_NOTI + "||5")
     @GetMapping("/getRawDataList")
-    public ResponseEntity<CommonResponse<PubNotiMgmtResponseDto>> getRawDataList() {
+    public ResponseEntity<CommonResponse<List<PubNotiRawDataListDto>>> getRawDataList() {
         return responseHandler.getResponseMessageAsRetrieveResult(pubNotiMgmtService.getRawDataList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 }

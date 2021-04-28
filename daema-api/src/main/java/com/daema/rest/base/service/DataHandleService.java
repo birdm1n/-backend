@@ -6,8 +6,10 @@ import com.daema.base.enums.UserRole;
 import com.daema.base.repository.CodeDetailRepository;
 import com.daema.base.repository.MemberRepository;
 import com.daema.commgmt.domain.FuncMgmt;
+import com.daema.commgmt.domain.Organization;
 import com.daema.commgmt.domain.Store;
 import com.daema.commgmt.repository.FuncMgmtRepository;
+import com.daema.commgmt.repository.OrganizationRepository;
 import com.daema.commgmt.repository.PubNotiRawDataRepository;
 import com.daema.commgmt.repository.StoreRepository;
 import com.daema.rest.base.dto.CodeDetailDto;
@@ -32,6 +34,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +47,7 @@ public class DataHandleService {
     private final CodeDetailRepository codeDetailRepository;
     private final MemberRepository memberRepository;
     private final ProviderRepository providerRepository;
+    private final OrganizationRepository organizationRepository;
 
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
@@ -58,7 +62,8 @@ public class DataHandleService {
                              ,MemberRepository memberRepository
                              ,ProviderRepository providerRepository
                              ,JwtUtil jwtUtil, RedisUtil redisUtil
-            ,RequestMappingHandlerMapping handlerMapping, AuthenticationUtil authenticationUtil) {
+            ,RequestMappingHandlerMapping handlerMapping, AuthenticationUtil authenticationUtil
+            ,OrganizationRepository organizationRepository) {
         this.funcMgmtRepository = funcMgmtRepository;
         this.pubNotiRawDataRepository = pubNotiRawDataRepository;
         this.storeRepository = storeRepository;
@@ -70,6 +75,7 @@ public class DataHandleService {
         this.handlerMapping = handlerMapping;
         this.authenticationUtil = authenticationUtil;
         this.providerRepository = providerRepository;
+        this.organizationRepository = organizationRepository;
     }
 
     @Transactional
@@ -192,7 +198,7 @@ public class DataHandleService {
                 .collect(Collectors.groupingBy(CodeDetailDto::getCodeId));
     }
 
-    public Object existsData(ModelMap reqModel){
+    public Object existsData(ModelMap reqModel, HttpServletRequest request){
 
         //회원가입시(비로그인) 데이터 조회 가능 함. 하단 조건 생략
         //if(!authenticationUtil.hasRole(UserRole.ROLE_ANONYMOUS.name())) {
@@ -210,6 +216,27 @@ public class DataHandleService {
                     .orElseGet(Store::new).getBizNo();
         }else if(reqModel.get("storeMapBizNo") != null) {
             retVal = storeRepository.findByBizNoAndUseYn((String) reqModel.get("storeMapBizNo"), StatusEnum.FLAG_Y.getStatusMsg());
+        }else if(reqModel.get("userInsToken") != null) {
+            HashMap<String, Object> retMap = new HashMap<>();
+
+            //가입 링크를 통한 사용자 등록 프로세스
+            String accessToken = jwtUtil.getAccessTokenFromHeader(request, JwtUtil.AUTHORIZATION);
+
+            if(StringUtils.hasText(accessToken)){
+
+                Long storeId = (Long) jwtUtil.getClaim(accessToken, "sId", Long.class);
+                Long orgId = (Long) jwtUtil.getClaim(accessToken, "gId", Long.class);
+
+                Store store = storeRepository.findById(storeId).orElseGet(Store::new);
+                Organization organization = organizationRepository.findById(orgId).orElseGet(Organization::new);
+
+                retMap.put("storeName", store.getStoreName());
+                retMap.put("orgName", organization.getOrgName());
+                retMap.put("storeId", storeId);
+                retMap.put("orgId", orgId);
+            }
+
+            retVal = retMap;
         }
 
         return retVal;
@@ -226,13 +253,13 @@ public class DataHandleService {
 
             if (TypeEnum.JOIN_STORE.getStatusMsg().equals(joinType.toUpperCase())) {
 
-                returnUrl = Constants.BIZ_JOIN_URL.concat(jwtUtil.doGenerateTokenFromMap(hashMap, JOIN_URL_TOKEN_VALIDATION_SECOND));
+                returnUrl = Constants.BIZ_JOIN_URL.concat("?at=").concat(jwtUtil.doGenerateTokenFromMap(hashMap, JOIN_URL_TOKEN_VALIDATION_SECOND));
 
             } else if (TypeEnum.JOIN_USER.getStatusMsg().equals(joinType.toUpperCase())) {
 
                 hashMap.put("gId", Long.parseLong(String.valueOf(reqModel.get("orgId"))));
 
-                returnUrl = Constants.USER_JOIN_URL.concat(jwtUtil.doGenerateTokenFromMap(hashMap, JOIN_URL_TOKEN_VALIDATION_SECOND));
+                returnUrl = Constants.USER_JOIN_URL.concat("?at=").concat(jwtUtil.doGenerateTokenFromMap(hashMap, JOIN_URL_TOKEN_VALIDATION_SECOND));
             }
         }else{
             throw new AuthorizationServiceException("UnAuthorization User");
