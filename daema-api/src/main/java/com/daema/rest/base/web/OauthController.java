@@ -1,14 +1,15 @@
 package com.daema.rest.base.web;
 
-import com.daema.rest.common.util.CookieUtil;
-import com.daema.rest.common.util.JwtUtil;
-import com.daema.rest.common.util.RedisUtil;
 import com.daema.base.domain.Member;
 import com.daema.base.enums.UserRole;
 import com.daema.rest.base.dto.request.SocialDataRequest;
-import com.daema.rest.common.enums.ResponseCodeEnum;
-import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.base.service.AuthService;
+import com.daema.rest.common.enums.ResponseCodeEnum;
+import com.daema.rest.common.enums.StatusEnum;
+import com.daema.rest.common.io.response.CommonResponse;
+import com.daema.rest.common.util.CookieUtil;
+import com.daema.rest.common.util.JwtUtil;
+import com.daema.rest.common.util.RedisUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,34 +49,12 @@ public class OauthController {
         CommonResponse response;
         try{
             final Member member = authService.loginSocialUser(socialData.getId(),socialData.getType());
-            final String accessJwt = jwtUtil.generateToken(member);
-            final String refreshJwt = jwtUtil.generateRefreshToken(member);
 
-            redisUtil.setDataExpire(refreshJwt, member.getUsername(), JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
+            return authService.chkLoginMemberStatus(member, res);
 
-            /*
-            Cookie accessToken = cookieUtil.createCookie(JwtUtil.ACCESS_TOKEN_NAME, accessJwt);
-            Cookie refreshToken = cookieUtil.createCookie(JwtUtil.REFRESH_TOKEN_NAME, refreshJwt);
-            res.addCookie(accessToken);
-            res.addCookie(refreshToken);
-            */
-
-            cookieUtil.addHeaderCookie(res, JwtUtil.ACCESS_TOKEN_NAME, accessJwt);
-            cookieUtil.addHeaderCookie(res, JwtUtil.REFRESH_TOKEN_NAME, refreshJwt);
-
-            HashMap<String, String> resMap = new HashMap<>();
-            resMap.put("name", member.getName());
-
-            //시스템 관리자인 경우에만 role key 생성
-            if(UserRole.ROLE_ADMIN.equals(member.getRole())){
-                resMap.put("role", "A");
-            }
-
-            response = new CommonResponse(ResponseCodeEnum.OK.getResultCode(), "로그인에 성공했습니다.", resMap);
         }catch(Exception e){
-            response =  new CommonResponse(ResponseCodeEnum.FAIL.getResultCode(), "로그인에 실패했습니다.", e.getMessage());
+            return new CommonResponse(ResponseCodeEnum.FAIL.getResultCode(), "로그인에 실패했습니다.", e.getMessage());
         }
-        return response;
     }
 
 }

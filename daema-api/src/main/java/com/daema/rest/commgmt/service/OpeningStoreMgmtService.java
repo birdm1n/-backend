@@ -193,12 +193,13 @@ public class OpeningStoreMgmtService {
         }
     }
 
-    public OpeningStoreSaleStoreResponseDto getSaleStoreMapInfo(long storeId) {
+    public OpeningStoreSaleStoreResponseDto getSaleStoreMapInfo(ComMgmtRequestDto requestDto) {
 
-        long targetStoreId = authenticationUtil.getTargetStoreId(storeId);
+        long targetStoreId = authenticationUtil.getTargetStoreId(requestDto.getStoreId());
+        requestDto.setStoreId(targetStoreId);
 
         //개통점 전체 목록
-        List<OpenStoreListDto> openStoreList = openStoreRepository.getOpenStoreList(targetStoreId);
+        List<OpenStoreListDto> openStoreList = openStoreRepository.getOpenStoreList(requestDto);
 
         //영업점 전체 목록
         List<Store> saleStoreList = storeRepository.findBySaleStore(targetStoreId, QStore.store.storeName.asc());
@@ -275,12 +276,13 @@ public class OpeningStoreMgmtService {
         }
     }
 
-    public OpeningStoreUserResponseDto getUserMapInfo(long storeId) {
+    public OpeningStoreUserResponseDto getUserMapInfo(ComMgmtRequestDto requestDto) {
 
-        long targetStoreId = authenticationUtil.getTargetStoreId(storeId);
+        long targetStoreId = authenticationUtil.getTargetStoreId(requestDto.getStoreId());
+        requestDto.setStoreId(targetStoreId);
 
         //개통점 전체 목록
-        List<OpenStoreListDto> openStoreList = openStoreRepository.getOpenStoreList(targetStoreId);
+        List<OpenStoreListDto> openStoreList = openStoreRepository.getOpenStoreList(requestDto);
 
         //사용자 전체 목록
         List<Member> memberList = memberRepository.findByMember(targetStoreId, QMember.member.name.asc());

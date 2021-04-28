@@ -82,9 +82,13 @@ public class OpeningStoreMgmtController {
 
 
     @ApiOperation(value = "개통점과 영업점 맵핑 조회", notes = "개통점과 영업점의 맵핑 데이터를 목록으로 조회합니다", nickname = Constants.API_OPENING_STORE + "||6")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "관리점 ID", required = true, example = "1", name = "storeId"),
+            @ApiImplicitParam(value = "통신사 ID", example = "1", name = "telecom"),
+    })
     @GetMapping("/getSaleStoreMapInfo")
-    public ResponseEntity<CommonResponse<OpeningStoreSaleStoreResponseDto>> getSaleStoreMapInfo(@ApiParam(value = "관리점 ID", required = true, example = "1") @RequestParam long storeId){
-        return responseHandler.getResponseMessageAsRetrieveResult(openingStoreMgmtService.getSaleStoreMapInfo(storeId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    public ResponseEntity<CommonResponse<OpeningStoreSaleStoreResponseDto>> getSaleStoreMapInfo(@ApiIgnore ComMgmtRequestDto requestDto){
+        return responseHandler.getResponseMessageAsRetrieveResult(openingStoreMgmtService.getSaleStoreMapInfo(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
 
@@ -103,9 +107,13 @@ public class OpeningStoreMgmtController {
     }
 
     @ApiOperation(value = "개통점과 사용자 맵핑 조회", notes = "개통점과 사용자의 맵핑 데이터를 목록으로 조회합니다", nickname = Constants.API_OPENING_STORE + "||8")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "관리점 ID", required = true, example = "1", name = "storeId"),
+            @ApiImplicitParam(value = "통신사 ID", example = "1", name = "telecom"),
+    })
     @GetMapping("/getUserMapInfo")
-    public ResponseEntity<CommonResponse<OpeningStoreUserResponseDto>> getUserMapInfo(@ApiParam(value = "관리점 ID", required = true, example = "1") @RequestParam long storeId){
-        return responseHandler.getResponseMessageAsRetrieveResult(openingStoreMgmtService.getUserMapInfo(storeId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    public ResponseEntity<CommonResponse<OpeningStoreUserResponseDto>> getUserMapInfo(@ApiIgnore ComMgmtRequestDto requestDto){
+        return responseHandler.getResponseMessageAsRetrieveResult(openingStoreMgmtService.getUserMapInfo(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "개통점과 사용자 맵핑 정보 반영", notes = "개통점과 사용자의 맵핑 정보를 추가/삭제합니다", nickname = Constants.API_OPENING_STORE + "||9")

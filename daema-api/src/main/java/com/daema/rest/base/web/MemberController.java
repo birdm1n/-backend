@@ -1,24 +1,21 @@
 package com.daema.rest.base.web;
 
-import com.daema.rest.common.util.CookieUtil;
-import com.daema.rest.common.util.JwtUtil;
-import com.daema.rest.common.util.RedisUtil;
 import com.daema.base.domain.Member;
-import com.daema.base.enums.UserRole;
 import com.daema.rest.base.dto.request.ChangePassword1Request;
 import com.daema.rest.base.dto.request.ChangePassword2Request;
 import com.daema.rest.base.dto.request.LoginUserRequest;
 import com.daema.rest.base.dto.request.VerifyEmailRequest;
+import com.daema.rest.base.service.AuthService;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.rest.base.service.AuthService;
+import com.daema.rest.common.util.CookieUtil;
+import com.daema.rest.common.util.JwtUtil;
 import lombok.extern.java.Log;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 
 @Log
 @RestController
@@ -26,17 +23,13 @@ import java.util.HashMap;
 public class MemberController {
 
     final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
     private final AuthService authService;
-    private final RedisUtil redisUtil;
 
-    public MemberController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, AuthService authService, CookieUtil cookieUtil, RedisUtil redisUtil) {
+    public MemberController(AuthenticationManager authenticationManager, AuthService authService, CookieUtil cookieUtil) {
         this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
         this.authService = authService;
         this.cookieUtil = cookieUtil;
-        this.redisUtil = redisUtil;
     }
 
 
@@ -54,30 +47,9 @@ public class MemberController {
     public CommonResponse login(@RequestBody LoginUserRequest user, HttpServletResponse res) {
         try {
             final Member member = authService.loginUser(user.getUsername(), user.getPassword());
-            final String accessJwt = jwtUtil.generateToken(member);
-            final String refreshJwt = jwtUtil.generateRefreshToken(member);
 
-            redisUtil.setDataExpire(refreshJwt, member.getUsername(), JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
+            return authService.chkLoginMemberStatus(member, res);
 
-            /*
-            Cookie accessToken = cookieUtil.createCookie(JwtUtil.ACCESS_TOKEN_NAME, accessJwt);
-            Cookie refreshToken = cookieUtil.createCookie(JwtUtil.REFRESH_TOKEN_NAME, refreshJwt);
-            res.addCookie(accessToken);
-            res.addCookie(refreshToken);
-            */
-
-            cookieUtil.addHeaderCookie(res, JwtUtil.ACCESS_TOKEN_NAME, accessJwt);
-            cookieUtil.addHeaderCookie(res, JwtUtil.REFRESH_TOKEN_NAME, refreshJwt);
-
-            HashMap<String, String> resMap = new HashMap<>();
-            resMap.put("name", member.getName());
-
-            //시스템 관리자인 경우에만 role key 생성
-            if(UserRole.ROLE_ADMIN.equals(member.getRole())){
-                resMap.put("role", "A");
-            }
-
-            return new CommonResponse(ResponseCodeEnum.OK.getResultCode(), "로그인에 성공했습니다.", resMap);
         } catch (Exception e) {
             return new CommonResponse(ResponseCodeEnum.FAIL.getResultCode(), "로그인에 실패했습니다.", e.getMessage());
         }

@@ -1,22 +1,24 @@
 package com.daema.rest.base.service;
 
-import com.daema.rest.common.enums.StatusEnum;
-import com.daema.rest.common.util.EmailUtil;
-import com.daema.rest.common.util.RedisUtil;
-import com.daema.rest.common.util.SaltUtil;
 import com.daema.base.domain.Member;
 import com.daema.base.domain.Salt;
 import com.daema.base.domain.SocialData;
 import com.daema.base.enums.UserRole;
-import com.daema.rest.base.dto.request.SocialDataRequest;
 import com.daema.base.repository.MemberRepository;
 import com.daema.base.repository.SocialDataRepository;
+import com.daema.rest.base.dto.request.SocialDataRequest;
+import com.daema.rest.common.enums.ResponseCodeEnum;
+import com.daema.rest.common.enums.StatusEnum;
+import com.daema.rest.common.io.response.CommonResponse;
+import com.daema.rest.common.util.*;
 import javassist.NotFoundException;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.UUID;
 
 @Log
@@ -28,15 +30,21 @@ public class AuthService {
 
     private final EmailUtil emailUtil;
 
+    private final JwtUtil jwtUtil;
+
+    private final CookieUtil cookieUtil;
+
     private final SaltUtil saltUtil;
 
     private final RedisUtil redisUtil;
 
     private final SocialDataRepository socialDataRepository;
 
-    public AuthService(MemberRepository memberRepository, EmailUtil emailUtil, SaltUtil saltUtil, RedisUtil redisUtil, SocialDataRepository socialDataRepository) {
+    public AuthService(MemberRepository memberRepository, EmailUtil emailUtil, JwtUtil jwtUtil, CookieUtil cookieUtil, SaltUtil saltUtil, RedisUtil redisUtil, SocialDataRepository socialDataRepository) {
         this.memberRepository = memberRepository;
         this.emailUtil = emailUtil;
+        this.jwtUtil = jwtUtil;
+        this.cookieUtil = cookieUtil;
         this.saltUtil = saltUtil;
         this.redisUtil = redisUtil;
         this.socialDataRepository = socialDataRepository;
@@ -70,7 +78,7 @@ public class AuthService {
     }
 
     public Member loginUser(String id, String password) throws Exception{
-        Member member = memberRepository.findByUsernameAndUserStatus(id, String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode()));
+        Member member = memberRepository.findByUsername(id);
         if(member == null) throw new Exception ("멤버가 조회되지 않음");
         String salt = member.getSalt().getSalt();
         password = saltUtil.encodePassword(salt,password);
@@ -129,5 +137,45 @@ public class AuthService {
         //emailUtil.sendMail(member.getEmail(),"사용자 비밀번호 안내 메일",CHANGE_PASSWORD_LINK + key);
     }
 
+    public CommonResponse chkLoginMemberStatus(Member member, HttpServletResponse res) throws Exception {
+
+        if(String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode()).equals(member.getUserStatus())
+                && (UserRole.ROLE_USER == member.getRole()
+                || UserRole.ROLE_MANAGER == member.getRole()
+                || UserRole.ROLE_ADMIN == member.getRole())){
+
+            final String accessJwt = jwtUtil.generateToken(member);
+            final String refreshJwt = jwtUtil.generateRefreshToken(member);
+
+            redisUtil.setDataExpire(refreshJwt, member.getUsername(), JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
+
+                /*
+                Cookie accessToken = cookieUtil.createCookie(JwtUtil.ACCESS_TOKEN_NAME, accessJwt);
+                Cookie refreshToken = cookieUtil.createCookie(JwtUtil.REFRESH_TOKEN_NAME, refreshJwt);
+                res.addCookie(accessToken);
+                res.addCookie(refreshToken);
+                */
+
+            cookieUtil.addHeaderCookie(res, JwtUtil.ACCESS_TOKEN_NAME, accessJwt);
+            cookieUtil.addHeaderCookie(res, JwtUtil.REFRESH_TOKEN_NAME, refreshJwt);
+
+            HashMap<String, String> resMap = new HashMap<>();
+            resMap.put("name", member.getName());
+
+            //시스템 관리자인 경우에만 role key 생성
+            if(UserRole.ROLE_ADMIN.equals(member.getRole())){
+                resMap.put("role", "A");
+            }
+
+            return new CommonResponse(ResponseCodeEnum.OK.getResultCode(), "로그인에 성공했습니다.", resMap);
+
+        }else if(String.valueOf(StatusEnum.USER_REG.getStatusCode()).equals(member.getUserStatus())){
+
+            return new CommonResponse(ResponseCodeEnum.NOT_APPROVAL_USER.getResultCode(), ResponseCodeEnum.NOT_APPROVAL_USER.getResultMsg(), null);
+
+        }else{
+            throw new Exception("");
+        }
+    }
 
 }

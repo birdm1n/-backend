@@ -81,8 +81,8 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
     }
 
     @Override
-    public List<OpenStoreListDto> getOpenStoreList(long storeId) {
-        return searchOpenStoreList(storeId, null, null);
+    public List<OpenStoreListDto> getOpenStoreList(ComMgmtRequestDto requestDto) {
+        return searchOpenStoreList(requestDto.getStoreId(), requestDto, null);
     }
 
     private List<OpenStoreListDto> searchOpenStoreList(long storeId, ComMgmtRequestDto requestDto, Pageable pageable){
@@ -113,7 +113,15 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "               and cd.use_yn = 'Y' " +
                     " where store_id = :storeId " +
                     "   and del_yn = 'N' " +
-                    "   and os.use_yn = 'Y' " +
+                    "   and os.use_yn = 'Y' ");
+
+            if(requestDto.getTelecom() != null
+                    && !Arrays.stream(requestDto.getTelecom()).anyMatch(telecom -> telecom == 0)){
+                sb.append(" and os.telecom in ( :telecom ) ");
+            }
+
+            sb.append(
+                    " " +
                     "union " +
                     " " +
                     "select os.open_store_id " +
@@ -141,8 +149,15 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     " inner join code_detail as cd " +
                     "    on os.telecom = cd.code_seq " +
                     "       and code_id = 'TELECOM' " +
-                    "       and cd.use_yn = 'Y' " +
-                    " order by open_store_name ");
+                    "       and cd.use_yn = 'Y' ");
+
+            if(requestDto.getTelecom() != null
+                    && !Arrays.stream(requestDto.getTelecom()).anyMatch(telecom -> telecom == 0)){
+                sb.append(" where os.telecom in ( :telecom ) ");
+            }
+
+            sb.append(" order by open_store_name ");
+
         }else{
             sb.append("select os.open_store_id " +
                     "       , os.biz_no " +
@@ -209,6 +224,14 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
         if(pageable != null){
             query.setFirstResult(Long.valueOf(pageable.getOffset()).intValue())
                 .setMaxResults(pageable.getPageSize());
+        }else{
+            if(requestDto.getTelecom() != null
+                    && !Arrays.stream(requestDto.getTelecom()).anyMatch(telecom -> telecom == 0)){
+                query.setParameter("telecom"
+                        , Arrays.toString(requestDto.getTelecom())
+                                .replace("[", "")
+                                .replace("]", ""));
+            }
         }
 
         return query.getResultList();

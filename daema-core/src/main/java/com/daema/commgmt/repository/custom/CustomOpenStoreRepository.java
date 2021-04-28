@@ -10,6 +10,6 @@ import java.util.List;
 public interface CustomOpenStoreRepository {
 	
 	Page<OpenStoreListDto> getSearchPage(ComMgmtRequestDto requestDto);
-	List<OpenStoreListDto> getOpenStoreList(long storeId);
+	List<OpenStoreListDto> getOpenStoreList(ComMgmtRequestDto requestDto);
 	OpenStore findOpenStoreInfo(long openStoreId, long storeId);
 }
