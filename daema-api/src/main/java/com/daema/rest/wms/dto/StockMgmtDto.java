@@ -1,11 +1,13 @@
 package com.daema.rest.wms.dto;
 
 import com.daema.wms.domain.Stock;
+import com.daema.wms.domain.dto.response.StockListDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,11 +33,7 @@ public class StockMgmtDto {
 	private int depth;
 	private String hierarchy;
 
-	/**
-	 * 조직도 JS 에 맞춰 바인딩
-	 */
-	private long id;
-	private String name;
+	private List<StockMgmtDto> children;
 
 	public static StockMgmtDto from (Stock stock) {
 		return StockMgmtDto.builder()
@@ -54,4 +52,53 @@ public class StockMgmtDto {
 				.delYn(stock.getDelYn())
 			.build();
 	}
+
+	public static StockMgmtDto dtoToDto (StockListDto stockListDto) {
+		return StockMgmtDto.builder()
+				.depth(stockListDto.getDepth())
+				.stockId(stockListDto.getStockId())
+				.parentStockId(stockListDto.getParentStockId())
+				.storeId(stockListDto.getStoreId())
+				.stockName(stockListDto.getStockName())
+				.stockType(stockListDto.getStockType())
+				.chargerName(stockListDto.getChargerName())
+				.chargerPhone(stockListDto.getChargerPhone())
+				.hierarchy(stockListDto.getHierarchy())
+			.build();
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

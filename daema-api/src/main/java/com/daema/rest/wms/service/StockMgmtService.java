@@ -1,11 +1,14 @@
 package com.daema.rest.wms.service;
 
+import com.daema.commgmt.domain.Store;
+import com.daema.commgmt.repository.StoreRepository;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.enums.TypeEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.StockMgmtDto;
+import com.daema.rest.wms.dto.response.StockMgmtResponseDto;
 import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.StockRequestDto;
 import com.daema.wms.domain.dto.response.StockListDto;
@@ -13,8 +16,11 @@ import com.daema.wms.repository.StockRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -22,20 +28,56 @@ public class StockMgmtService {
 
 	private final StockRepository stockRepository;
 
+	private final StoreRepository storeRepository;
+
 	private final AuthenticationUtil authenticationUtil;
 
-	public StockMgmtService(StockRepository stockRepository, AuthenticationUtil authenticationUtil) {
+	public StockMgmtService(StockRepository stockRepository, StoreRepository storeRepository, AuthenticationUtil authenticationUtil) {
 		this.stockRepository = stockRepository;
+		this.storeRepository = storeRepository;
 		this.authenticationUtil = authenticationUtil;
 	}
 
-	public List<StockListDto> getStockList(StockRequestDto requestDto) {
+	public StockMgmtResponseDto getStockList(StockRequestDto requestDto) {
 
 		requestDto.setStoreId(authenticationUtil.getStoreId());
 
-		List<StockListDto> stockList = stockRepository.getStockList(requestDto);
+		StockMgmtResponseDto stockMgmtResponseDto = new StockMgmtResponseDto();
+		
+		List<StockListDto> dataList = stockRepository.getStockList(requestDto);
+		List<StockMgmtDto> stockList = new ArrayList<>();
 
-		return stockList;
+		for(Iterator<StockListDto> iterator = dataList.iterator(); iterator.hasNext();){
+
+			StockListDto stockDto = iterator.next();
+
+			if(StringUtils.countOccurrencesOf(stockDto.getHierarchy(), "/") == 1){
+
+				stockList.add(stockList.size(), StockMgmtDto.dtoToDto(stockDto));
+
+			}else if(StringUtils.countOccurrencesOf(stockDto.getHierarchy(), "/") == 2){
+
+				addChildrenElementToOrgnzt(stockList.get(stockList.size() - 1), stockDto);
+
+			}else if(StringUtils.countOccurrencesOf(stockDto.getHierarchy(), "/") == 3){
+
+				addChildrenElementToOrgnzt(stockList.get(stockList.size() - 1).getChildren()
+						.get(stockList.get(stockList.size() - 1).getChildren().size() - 1), stockDto);
+			}
+		}
+
+		stockMgmtResponseDto.setStoreName(storeRepository.findById(requestDto.getStoreId()).orElseGet(Store::new).getStoreName());
+		stockMgmtResponseDto.setStockList(stockList);
+
+		return stockMgmtResponseDto;
+	}
+
+	private void addChildrenElementToOrgnzt(StockMgmtDto parent, StockListDto child){
+		if(parent.getChildren() == null){
+			parent.setChildren(new ArrayList<>());
+		}
+
+		parent.getChildren().add(StockMgmtDto.dtoToDto(child));
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)

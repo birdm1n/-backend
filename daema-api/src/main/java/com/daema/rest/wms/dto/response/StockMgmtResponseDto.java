@@ -14,5 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class StockMgmtResponseDto {
 
-	public List<StockMgmtDto> stockList;
+	private String storeName;
+	private List<StockMgmtDto> stockList;
 }
