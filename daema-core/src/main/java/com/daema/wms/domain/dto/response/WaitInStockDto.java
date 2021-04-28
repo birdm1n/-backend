@@ -11,27 +11,30 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.envers.Audited;
 
 import javax.annotation.Nullable;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class WaitInStockDto {
     private Long waitId;
+    private Long dvcId;
+
+
     private LocalDateTime regiDateTime;
     private Member regiUserId;
     private LocalDateTime updDateTime;
     private Member updUserId;
     private String delYn;
     private String inStockType;
-    private String inStockStatus;
+
     private int inStockAmt;
     private String inStockMemo;
     private String productFaultyYn;
@@ -45,10 +48,24 @@ public class WaitInStockDto {
     private Goods goods;
     private Provider provider;
 
-    //재고구분
-    private Long dvcId;
+    // 공급처
+    private Long provId;
+
+    // 통신사
+    private int telecom;
+    private String telecomName;
+
+    // 소유권을 가지는 Store = 관리점
+    private Long ownStoreId;
 
     // 보유처
-    private long stockId;
+    private Long holdStoreId;
     private String stockName;
+
+    //재고구분
+
+
+
+    // 1, "매장재고" / 2, "이동재고" / 3, "판매이동" / 4, "재고이관" / 5, "불량이관"
+    private String inStockStatus;
 }

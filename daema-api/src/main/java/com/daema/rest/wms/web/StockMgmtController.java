@@ -8,6 +8,7 @@ import com.daema.rest.wms.dto.StockMgmtDto;
 import com.daema.rest.wms.dto.response.StockMgmtResponseDto;
 import com.daema.rest.wms.service.StockMgmtService;
 import com.daema.wms.domain.dto.request.StockRequestDto;
+import com.daema.wms.domain.dto.response.SelectStockListDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -57,30 +58,10 @@ public class StockMgmtController {
         return responseHandler.ok();
     }
     */
+    @ApiOperation(value = "보유처 선택 리스트", notes = "보유처의 선택 리스트를 조회합니다")
+    @GetMapping("/selectStockList/{telecom}")
+    public ResponseEntity<CommonResponse<ResponseDto<SelectStockListDto>>> selectStockList(@ApiParam(value = "통신사 번호", required = true) @PathVariable(value = "telecom") Integer telecom ) {
+        return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.selectStockList(telecom), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

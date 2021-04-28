@@ -2,8 +2,11 @@ package com.daema.wms.repository;
 
 import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.StockRequestDto;
+import com.daema.wms.domain.dto.response.SelectStockListDto;
 import com.daema.wms.domain.dto.response.StockListDto;
 import com.daema.wms.repository.custom.CustomStockRepository;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import javax.persistence.EntityManager;
@@ -11,6 +14,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
+import static com.daema.commgmt.domain.QOpenStore.openStore;
+import static com.daema.wms.domain.QStock.stock;
+import static com.daema.commgmt.domain.QStore.store;
 
 public class StockRepositoryImpl extends QuerydslRepositorySupport implements CustomStockRepository {
 
@@ -95,5 +101,33 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 .setParameter("regi_store_id", requestDto.getStoreId());
 
         return query.getResultList();
+    }
+
+    @Override
+    public List<SelectStockListDto> selectStockList(long storeId, Integer telecom) {
+        JPQLQuery<SelectStockListDto> query = getQuerydsl().createQuery();
+
+        query.select(Projections.fields(
+                SelectStockListDto.class
+                , stock.stockId.as("stockId")
+                , stock.stockName.as("stockName")
+                , stock.stockType.as("stockType")
+        ));
+        List<SelectStockListDto> selectStockListDtoList =
+                query.from(stock)
+                .leftJoin(openStore).on(stock.storeId.eq(openStore.openStoreId),
+                        stock.stockType.eq("O"))
+                .leftJoin(store).on(
+                            stock.storeId.eq(store.storeId),
+                            (stock.stockType.eq("I").or(stock.stockType.eq("S")))
+                )
+                .where(
+                        stock.regiStoreId.eq(storeId),
+                        stock.delYn.eq("N"),
+                        stock.parentStockId.eq(0L),
+                        (openStore.telecom.eq(telecom).or(store.telecom.eq(telecom)))
+                )
+                .fetch();
+        return selectStockListDtoList;
     }
 }
