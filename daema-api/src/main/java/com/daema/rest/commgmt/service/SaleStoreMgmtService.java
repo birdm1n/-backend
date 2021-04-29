@@ -168,6 +168,7 @@ public class SaleStoreMgmtService {
 					&& parentStoreId > 0) {
 				wrapperDto.setParentStoreId(parentStoreId);
 				wrapperDto.getMember().setSeq(memberSeq);
+				wrapperDto.getMember().setStoreId(resultStoreId);
 				insertStoreMap(wrapperDto);
 			}
 		}
