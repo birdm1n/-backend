@@ -4,14 +4,9 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.rest.wms.dto.InStockMgmtDto;
-import com.daema.rest.wms.dto.ProviderMgmtDto;
-import com.daema.rest.wms.dto.StockMgmtDto;
-import com.daema.rest.wms.service.DeviceMgmtService;
 import com.daema.rest.wms.service.InStockMgmtService;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
-import com.daema.wms.domain.dto.request.StockRequestDto;
-import com.daema.wms.domain.dto.response.WaitInStockDto;
+import com.daema.wms.domain.dto.response.InStockWaitDto;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +25,15 @@ public class InStockMgmtController {
 
     @ApiOperation(value = "입고 대기 목록 조회", notes = "입고 대기 목록을 조회합니다")
     @GetMapping("/getWaitInStockList")
-    public ResponseEntity<CommonResponse<ResponseDto<WaitInStockDto>>> getWaitInStockList(InStockRequestDto requestDto) {
+    public ResponseEntity<CommonResponse<ResponseDto<InStockWaitDto>>> getWaitInStockList(InStockRequestDto requestDto) {
         return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getWaitInStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
+
+    @ApiOperation(value = "입고 대기 등록", notes = "신규 입고처리를 합니다.")
+    @GetMapping("/insertWaitInStock")
+    public ResponseEntity<CommonResponse<Void>> insertWaitInStock(@ApiParam(value = "입고 정보", required = true) InStockWaitDto requestDto) {
+        inStockMgmtService.insertWaitInStock(requestDto);
+        return responseHandler.ok();
     }
 
 }

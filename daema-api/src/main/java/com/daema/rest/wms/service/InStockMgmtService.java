@@ -1,19 +1,11 @@
 package com.daema.rest.wms.service;
 
-import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.util.AuthenticationUtil;
-import com.daema.rest.wms.dto.InStockMgmtDto;
-import com.daema.rest.wms.dto.ProviderMgmtDto;
-import com.daema.rest.wms.dto.response.InStockMgmtResponseDto;
-import com.daema.rest.wms.dto.response.StockMgmtResponseDto;
+import com.daema.wms.domain.InStockWait;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
-import com.daema.wms.domain.dto.request.StockRequestDto;
-import com.daema.wms.domain.dto.response.StockListDto;
-import com.daema.wms.domain.dto.response.WaitInStockDto;
+import com.daema.wms.domain.dto.response.InStockWaitDto;
 import com.daema.wms.repository.DeviceRepository;
 import com.daema.wms.repository.InStockRepository;
-import com.daema.wms.repository.StockRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,10 +23,17 @@ public class InStockMgmtService {
 		this.authenticationUtil = authenticationUtil;
 	}
 
-	public List<WaitInStockDto> getWaitInStockList(InStockRequestDto requestDto) {
+	public List<InStockWaitDto> getWaitInStockList(InStockRequestDto requestDto) {
 		requestDto.setStoreId(authenticationUtil.getStoreId());
-		List<WaitInStockDto> dataList = inStockRepository.getWaitInStockList(requestDto);
+		List<InStockWaitDto> dataList = inStockRepository.getWaitInStockList(requestDto);
 
 		return dataList;
 	}
+
+    public void insertWaitInStock(InStockWaitDto requestDto) {
+
+//		inStockRepository.save(
+//				InStockWait
+//		);
+    }
 }

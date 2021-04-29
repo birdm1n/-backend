@@ -1,8 +1,7 @@
 package com.daema.rest.wms.dto.response;
 
-import com.daema.rest.wms.dto.StockMgmtDto;
 import com.daema.wms.domain.InStock;
-import com.daema.wms.domain.WaitInStock;
+import com.daema.wms.domain.InStockWait;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class InStockMgmtResponseDto {
 
-	public List<WaitInStock> waitInStockList;
+	public List<InStockWait> inStockWaitList;
 	public List<InStock> inStockList;
 }

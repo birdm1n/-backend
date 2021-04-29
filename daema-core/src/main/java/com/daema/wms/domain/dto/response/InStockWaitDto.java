@@ -7,9 +7,7 @@ import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.Device;
 import com.daema.wms.domain.Provider;
 import com.daema.wms.domain.Stock;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.envers.Audited;
 
@@ -20,33 +18,33 @@ import java.time.LocalDateTime;
 
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
-public class WaitInStockDto {
+public class InStockWaitDto {
     private Long waitId;
-    private Long dvcId;
-
 
     private LocalDateTime regiDateTime;
     private Member regiUserId;
     private LocalDateTime updDateTime;
     private Member updUserId;
-    private String delYn;
-    private String inStockType;
 
-    private int inStockAmt;
-    private String inStockMemo;
-    private String productFaultyYn;
-    private String extrrStatus;
-    private String productMissYn;
-    private String missProduct;
+    // 기기 ID
+    private Long dvcId;
+
+    // 차감비
     private int ddctAmt;
-    private Store ownStore;
-    private Store holdStore;
-    private GoodsOption goodsOption;
-    private Goods goods;
-    private Provider provider;
+
+    // 누락제품
+    private String missProduct;
+
+    // 입고메모
+    private String inStockMemo;
+
+
+    /**
+     * Desc : 기기별 입력정보 및 모델별 입력정보
+     */
 
     // 공급처
     private Long provId;
@@ -62,14 +60,14 @@ public class WaitInStockDto {
     private Long holdStoreId;
     private String stockName;
 
-    //재고구분 // 1, "매장재고" / 2, "이동재고" / 3, "판매이동" / 4, "재고이관" / 5, "불량이관"
+    //재고구분 // 1, "매장재고" / 2, "이동재고"
     private String stockType;
 
     //제조사
     private int maker;
     private String makerName;
 
-    // 기기명_모델명
+    // 상품명_모델명
     private long goodsId;
     private String goodsName;
     private String modelName;
@@ -83,13 +81,22 @@ public class WaitInStockDto {
     private String commonBarcode;
 
     // 입고단가
+    private int inStockAmt;
+
     private long pubNotiId;
     private int releaseAmt;
 
 
-    //
-    // 입고상태 = 0, "대기"/ 1, "정상"/ 2, "개봉"
+    // 입고상태 =  1, "정상"/ 2, "개봉"
     private String inStockStatus;
 
+    // 제품상태 =  N, "-" / Y, "불량"
+    private String productFaultyYn;
+
+    // 구성품 누락여부 = Y / N
+    private String productMissYn;
+
+    // 외장상태 = 1, "상" / 2, "중" / 3, "하" / 4, "파손"
+    private String extrrStatus;
 
 }

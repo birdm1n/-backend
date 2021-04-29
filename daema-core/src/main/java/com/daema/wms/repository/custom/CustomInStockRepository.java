@@ -1,10 +1,10 @@
 package com.daema.wms.repository.custom;
 
 import com.daema.wms.domain.dto.request.InStockRequestDto;
-import com.daema.wms.domain.dto.response.WaitInStockDto;
+import com.daema.wms.domain.dto.response.InStockWaitDto;
 
 import java.util.List;
 
 public interface CustomInStockRepository {
-    List<WaitInStockDto> getWaitInStockList(InStockRequestDto requestDto);
+    List<InStockWaitDto> getWaitInStockList(InStockRequestDto requestDto);
 }

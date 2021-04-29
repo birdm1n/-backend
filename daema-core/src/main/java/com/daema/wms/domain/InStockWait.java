@@ -13,22 +13,17 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="wait_in_stock_id")
+@EqualsAndHashCode(of="wait_id")
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="wait_in_stock")
-public class WaitInStock extends BaseEntity {
+@Table(name="in_stock_wait")
+public class InStockWait extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wait_id")
     private Long waitId;
-
-    @NotBlank
-    @Column(nullable = false, name = "in_stock_type", columnDefinition ="char(1)")
-    @ColumnDefault("1")
-    private String inStockType;
 
     @NotBlank
     @Column(nullable = false, name = "in_stock_status", columnDefinition ="char(1)")

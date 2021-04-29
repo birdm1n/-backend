@@ -22,13 +22,10 @@ public enum StatusEnum {
     STOCK_TYPE_FAULT(5, "불량이관"),
 
     // 입고 - 입고상태
-    IN_STATUS_WAIT(0, "대기"),
     IN_STATUS_NORMAL(1, "정상"),
     IN_STATUS_OPEN(2, "개봉"),
 
-
     // 기기 - 외장상태
-    EXTRR_E(0, "-"),
     EXTRR_H(1, "상"),
     EXTRR_M(2, "중"),
     EXTRR_S(3, "하"),
