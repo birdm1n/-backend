@@ -87,8 +87,8 @@ public class ChargeMgmtController {
 
     @ApiOperation(value = "매칭 대상 목록 조회", notes = "매칭 대상 목록을 조회합니다", nickname = Constants.API_CHARGE + "||8")
     @GetMapping("/getMatchList")
-    public ResponseEntity<CommonResponse<ResponseDto<ChargeMgmtDto>>> getMatchList() {
-        return responseHandler.getResponseMessageAsRetrieveResult(chargeMgmtService.getMatchList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    public ResponseEntity<CommonResponse<ResponseDto<ChargeMgmtDto>>> getMatchList(ComMgmtRequestDto requestDto) {
+        return responseHandler.getResponseMessageAsRetrieveResult(chargeMgmtService.getMatchList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "매칭 완료 처리", notes = "선택한 항목들을 매칭 완료 처리합니다", nickname = Constants.API_CHARGE + "||9")

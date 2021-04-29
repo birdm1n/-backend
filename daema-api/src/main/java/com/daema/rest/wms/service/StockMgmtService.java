@@ -1,5 +1,6 @@
 package com.daema.rest.wms.service;
 
+import com.daema.base.repository.MemberRepository;
 import com.daema.commgmt.domain.Store;
 import com.daema.commgmt.repository.StoreRepository;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
@@ -31,11 +32,15 @@ public class StockMgmtService {
 
 	private final StoreRepository storeRepository;
 
+	private final MemberRepository memberRepository;
+
 	private final AuthenticationUtil authenticationUtil;
 
-	public StockMgmtService(StockRepository stockRepository, StoreRepository storeRepository, AuthenticationUtil authenticationUtil) {
+	public StockMgmtService(StockRepository stockRepository, StoreRepository storeRepository, MemberRepository memberRepository
+			,AuthenticationUtil authenticationUtil) {
 		this.stockRepository = stockRepository;
 		this.storeRepository = storeRepository;
+		this.memberRepository = memberRepository;
 		this.authenticationUtil = authenticationUtil;
 	}
 
@@ -86,11 +91,20 @@ public class StockMgmtService {
 
 		//내부 관리 창고는 현재 로그인 기준으로 storeId 설정
 		if(TypeEnum.STOCK_TYPE_I.getStatusCode().equals(stockMgmtDto.getStockType())){
-			stockMgmtDto.setStoreId(authenticationUtil.getStoreId());
+			//관리점(영업점) 회원 가입시, 내부 창고가 생성되며 로그인 이전 상태이므로 예외처리 추가
+			if(!authenticationUtil.hasRole("ROLE_ANONYMOUS")
+				|| authenticationUtil.getStoreId() > 0) {
+				stockMgmtDto.setStoreId(authenticationUtil.getStoreId());
+			}
 		}
 
 		if(stockMgmtDto.getRegiStoreId() == 0){
 			stockMgmtDto.setRegiStoreId(authenticationUtil.getStoreId());
+		}
+
+		if(stockMgmtDto.getRegiUserId() == 0){
+			stockMgmtDto.setRegiUserId(authenticationUtil.getMemberSeq());
+			stockMgmtDto.setUpdUserId(authenticationUtil.getMemberSeq());
 		}
 
 		stockRepository.save(
@@ -104,11 +118,11 @@ public class StockMgmtService {
 						.chargerName(stockMgmtDto.getChargerName())
 						.chargerPhone(stockMgmtDto.getChargerPhone())
 						.delYn(StatusEnum.FLAG_N.getStatusMsg())
-						.regiUserId(authenticationUtil.getMemberSeq())
+						.regiUserId(stockMgmtDto.getRegiUserId())
 						.regiDateTime(LocalDateTime.now())
-						.updUserId(authenticationUtil.getMemberSeq())
+						.updUserId(stockMgmtDto.getUpdUserId())
 						.updDateTime(LocalDateTime.now())
-						.build()
+					.build()
 		);
 	}
 

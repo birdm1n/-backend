@@ -9,5 +9,5 @@ import java.util.List;
 public interface CustomChargeRepository {
 	
 	Page<Charge> getSearchPage(ComMgmtRequestDto requestDto, boolean isAdmin);
-	List<Charge> getMatchList();
+	List<Charge> getMatchList(ComMgmtRequestDto requestDto);
 }

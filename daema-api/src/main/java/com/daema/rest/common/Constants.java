@@ -29,6 +29,6 @@ public class Constants {
             "/swagger-ui.html", "/webjars/**", "/swagger/**"
     };
 
-    public static final String BIZ_JOIN_URL = "/sign-up";
+    public static final String BIZ_JOIN_URL = "/store/sign-up";
     public static final String USER_JOIN_URL = "/user/sign-up";
 }

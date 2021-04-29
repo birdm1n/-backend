@@ -97,8 +97,8 @@ public class GoodsMgmtController {
 
     @ApiOperation(value = "매칭 대상 목록 조회", notes = "매칭 대상 목록을 조회합니다", nickname = Constants.API_GOODS + "||9")
     @GetMapping("/getMatchList")
-    public ResponseEntity<CommonResponse<ResponseDto<GoodsMgmtDto>>> getMatchList() {
-        return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.getMatchList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    public ResponseEntity<CommonResponse<ResponseDto<GoodsMgmtDto>>> getMatchList(ComMgmtRequestDto requestDto) {
+        return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.getMatchList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "매칭 완료 처리", notes = "선택한 항목들을 매칭 완료 처리합니다", nickname = Constants.API_GOODS + "||10")

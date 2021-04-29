@@ -79,11 +79,11 @@ public class SaleStoreMgmtService {
 
 	/**
 	 * 회원가입시 사용
-	 * 1. 신규 영업점 등록
+	 * 1. 신규 영업점 등록 및 창고 생성
 	 * 2. 기본 그룹 생성
 	 * 3. 사용자 (ROLE_MANAGER) 등록
 	 * 4. ROLE_MANAGER 에 해당하는 사용자 기능 부여
-	 * 5. 관리점 링크 통해 가입한 영업점은 상위 관리점 정보 등록(store_map)
+	 * 5. 관리점 링크 통해 가입한 영업점은 상위 관리점 정보 등록(store_map) 및 창고 생성
 	 * @param wrapperDto
 	 * @return
 	 */
@@ -113,7 +113,7 @@ public class SaleStoreMgmtService {
 		}
 
 		//사용자 추가 및 롤 등록
-		organizationMgmtService.insertUser(memberDto, request);
+		long memberSeq = organizationMgmtService.insertUser(memberDto, request);
 
 		//롤과 기능 맵핑 등록
 		List<FuncMgmt> funcList = funcMgmtRepository.findAllByRoleContainingOrderByGroupIdAscRoleAscOrderNumAsc(UserRole.ROLE_MANAGER.name());
@@ -139,6 +139,25 @@ public class SaleStoreMgmtService {
 			roleFuncMgmtService.setFuncRoleMapInfo(roleFuncList);
 		}
 
+		//내 창고 생성
+		stockMgmtService.insertStock(
+				StockMgmtDto.builder()
+						.stockId(0)
+						.stockName(wrapperDto.getSaleStore().getSaleStoreName())
+						.parentStockId(0)
+						.storeId(resultStoreId)
+						.stockType(TypeEnum.STOCK_TYPE_I.getStatusCode())
+						.regiStoreId(resultStoreId)
+						.chargerName(wrapperDto.getSaleStore().getChargerName())
+						.chargerPhone(wrapperDto.getSaleStore().getChargerPhone())
+						.delYn(StatusEnum.FLAG_N.getStatusMsg())
+						.regiUserId(memberSeq)
+						.regiDateTime(LocalDateTime.now())
+						.updUserId(memberSeq)
+						.updDateTime(LocalDateTime.now())
+					.build()
+		);
+
 		//가입 링크를 통한 관리점 / 영업점 맵핑 프로세스
 		String accessToken = jwtUtil.getAccessTokenFromHeader(request, JwtUtil.AUTHORIZATION);
 
@@ -148,6 +167,7 @@ public class SaleStoreMgmtService {
 			if(parentStoreId != null
 					&& parentStoreId > 0) {
 				wrapperDto.setParentStoreId(parentStoreId);
+				wrapperDto.getMember().setSeq(memberSeq);
 				insertStoreMap(wrapperDto);
 			}
 		}
@@ -176,6 +196,10 @@ public class SaleStoreMgmtService {
 
 	@Transactional
 	public void insertStoreMap(SaleStoreUserWrapperDto wrapperDto) {
+
+		wrapperDto.setParentStoreId(wrapperDto.getParentStoreId() == 0 ?
+						authenticationUtil.getStoreId() : wrapperDto.getParentStoreId());
+
         StoreMap storeMap = storeMapRepository.findById(new StoreMapPK(wrapperDto.getMember().getStoreId(), wrapperDto.getParentStoreId())).orElse(null);
 
         if(storeMap == null) {
@@ -189,7 +213,11 @@ public class SaleStoreMgmtService {
 
 			Store store = storeRepository.findById(wrapperDto.getMember().getStoreId()).orElse(null);
 
-			//창고 생성
+			wrapperDto.getMember()
+					.setSeq(wrapperDto.getMember().getSeq() == 0 ?
+							authenticationUtil.getMemberSeq() : wrapperDto.getMember().getSeq());
+
+			//하위 창고 생성
 			stockMgmtService.insertStock(
 					StockMgmtDto.builder()
 							.stockId(0)
@@ -201,13 +229,18 @@ public class SaleStoreMgmtService {
 							.chargerName(store.getChargerName())
 							.chargerPhone(store.getChargerPhone())
 							.delYn(StatusEnum.FLAG_N.getStatusMsg())
-							.regiUserId(authenticationUtil.getMemberSeq())
+							.regiUserId(wrapperDto.getMember().getSeq())
 							.regiDateTime(LocalDateTime.now())
-							.updUserId(authenticationUtil.getMemberSeq())
+							.updUserId(wrapperDto.getMember().getSeq())
 							.updDateTime(LocalDateTime.now())
 						.build()
 			);
 		}
+	}
+
+	@Transactional
+	public void insertStockInfo(){
+
 	}
 
 	@Transactional

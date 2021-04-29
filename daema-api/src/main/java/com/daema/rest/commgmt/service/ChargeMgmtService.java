@@ -216,9 +216,9 @@ public class ChargeMgmtService {
         }
     }
 
-    public ResponseDto<ChargeMgmtDto> getMatchList() {
+    public ResponseDto<ChargeMgmtDto> getMatchList(ComMgmtRequestDto requestDto) {
 
-        List<Charge> chargeList = chargeRepository.getMatchList();
+        List<Charge> chargeList = chargeRepository.getMatchList(requestDto);
 
         return new ResponseDto(ChargeMgmtDto.class, chargeList);
     }

@@ -105,7 +105,7 @@ public class OpeningStoreMgmtService {
                         .regiDateTime(LocalDateTime.now())
                         .updUserId(authenticationUtil.getMemberSeq())
                         .updDateTime(LocalDateTime.now())
-                        .build()
+                    .build()
 
         );
     }

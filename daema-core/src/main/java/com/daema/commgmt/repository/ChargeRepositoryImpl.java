@@ -97,7 +97,7 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
     }
 
     @Override
-    public List<Charge> getMatchList() {
+    public List<Charge> getMatchList(ComMgmtRequestDto requestDto) {
 
         QCharge charge = QCharge.charge;
         QCodeDetail telecom = new QCodeDetail("telecom");
@@ -144,7 +144,10 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
                 .and(charge.useYn.eq("Y"))
                 .and(charge.delYn.eq("N")));
 
-        query.where(where.or(Expressions.predicate(Ops.WRAPPED, where2)));
+        query.where(
+                eqNetwork(requestDto.getNetwork())
+                ,eqTelecom(requestDto.getTelecom())
+                ,where.or(Expressions.predicate(Ops.WRAPPED, where2)));
 
         query.orderBy(
                 charge.networkAttribute.telecom.asc()

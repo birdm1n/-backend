@@ -9,5 +9,5 @@ import java.util.List;
 public interface CustomGoodsRepository {
 	
 	Page<Goods> getSearchPage(ComMgmtRequestDto requestDto, boolean isAdmin);
-	List<Goods> getMatchList();
+	List<Goods> getMatchList(ComMgmtRequestDto requestDto);
 }

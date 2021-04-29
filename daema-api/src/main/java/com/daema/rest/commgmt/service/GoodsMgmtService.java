@@ -256,9 +256,9 @@ public class GoodsMgmtService {
         }
     }
 
-    public ResponseDto<GoodsMgmtDto> getMatchList() {
+    public ResponseDto<GoodsMgmtDto> getMatchList(ComMgmtRequestDto requestDto) {
 
-        List<Goods> goodsList = goodsRepository.getMatchList();
+        List<Goods> goodsList = goodsRepository.getMatchList(requestDto);
 
         return new ResponseDto(GoodsMgmtDto.class, goodsList);
     }

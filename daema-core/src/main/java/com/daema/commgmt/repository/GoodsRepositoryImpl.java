@@ -106,7 +106,7 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
     }
 
     @Override
-    public List<Goods> getMatchList() {
+    public List<Goods> getMatchList(ComMgmtRequestDto requestDto) {
 
         QCodeDetail telecom = new QCodeDetail("telecom");
         QCodeDetail network = new QCodeDetail("network");
@@ -159,7 +159,11 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 .and(goods.useYn.eq("Y"))
                 .and(goods.delYn.eq("N")));
 
-        query.where(where.or(Expressions.predicate(Ops.WRAPPED, where2)));
+        query.where(
+                eqMaker(requestDto.getMaker())
+                ,eqNetwork(requestDto.getNetwork())
+                ,eqTelecom(requestDto.getTelecom())
+                ,where.or(Expressions.predicate(Ops.WRAPPED, where2)));
 
         query.orderBy(
                 goods.networkAttribute.telecom.asc()
