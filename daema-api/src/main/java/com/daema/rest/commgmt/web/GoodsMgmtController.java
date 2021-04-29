@@ -1,6 +1,7 @@
 package com.daema.rest.commgmt.web;
 
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
+import com.daema.commgmt.domain.dto.response.GoodsMatchRespDto;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.commgmt.dto.GoodsOptionDto;
@@ -112,6 +113,13 @@ public class GoodsMgmtController {
         goodsMgmtService.applyMatchStatus(reqModel);
 
         return responseHandler.ok();
+    }
+
+    @ApiOperation(value = "바코드 매칭 상품 정보 조회", notes = "바코드로 매칭하여 상품정보를 조회합니다.")
+    @GetMapping("/goodsMatchBarcode/{commonBarcode}")
+    public ResponseEntity<CommonResponse<ResponseDto<GoodsMatchRespDto>>> goodsMatchBarcode(@ApiParam(value = "바코드", required = true) @PathVariable(value = "commonBarcode") String commonBarcode) {
+
+        return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.goodsMatchBarcode(commonBarcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 }
 

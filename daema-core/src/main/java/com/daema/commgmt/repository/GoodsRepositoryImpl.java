@@ -5,6 +5,7 @@ import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.commgmt.domain.Goods;
 import com.daema.commgmt.domain.attr.NetworkAttribute;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
+import com.daema.commgmt.domain.dto.response.GoodsMatchRespDto;
 import com.daema.commgmt.repository.custom.CustomGoodsRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Ops;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.daema.commgmt.domain.QGoods.goods;
+import static com.daema.commgmt.domain.QGoodsOption.goodsOption;
 
 public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements CustomGoodsRepository {
 
@@ -37,7 +39,7 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(goods.delYn.eq("N"));
 
-        if(!isAdmin){
+        if (!isAdmin) {
             builder.and(goods.useYn.eq("Y"));
         }
 
@@ -47,23 +49,23 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
 
         query.select(Projections.fields(
                 Goods.class
-                ,goods.goodsId
-                ,goods.goodsName
-                ,goods.modelName
-                ,goods.maker
-                ,goods.capacity
-                ,goods.originKey
-                ,goods.useYn
-                ,goods.matchingYn
-                ,goods.delYn
-                ,goods.regiDateTime
-                ,maker.codeNm.as("makerName")
-                ,telecom.codeNm.as("telecomName")
-                ,network.codeNm.as("networkName")
-                ,Projections.fields(NetworkAttribute.class
-                        ,goods.networkAttribute.telecom
-                        ,goods.networkAttribute.network
-                    ).as("networkAttribute")
+                , goods.goodsId
+                , goods.goodsName
+                , goods.modelName
+                , goods.maker
+                , goods.capacity
+                , goods.originKey
+                , goods.useYn
+                , goods.matchingYn
+                , goods.delYn
+                , goods.regiDateTime
+                , maker.codeNm.as("makerName")
+                , telecom.codeNm.as("telecomName")
+                , network.codeNm.as("networkName")
+                , Projections.fields(NetworkAttribute.class
+                        , goods.networkAttribute.telecom
+                        , goods.networkAttribute.network
+                ).as("networkAttribute")
                 )
         );
 
@@ -85,14 +87,14 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 )
                 .where(
                         builder
-                        ,containsGoodsName(requestDto.getGoodsName())
-                        ,containsModelName(requestDto.getModelName())
-                        ,eqMaker(requestDto.getMaker())
-                        ,eqNetwork(requestDto.getNetwork())
-                        ,eqTelecom(requestDto.getTelecom())
-                        ,eqUseYn(requestDto.getUseYn())
-                        ,eqMatchingYn(requestDto.getMatchingYn())
-                        ,betweenStartDateEndDate(requestDto.getSrhStartDate(), requestDto.getSrhEndDate())
+                        , containsGoodsName(requestDto.getGoodsName())
+                        , containsModelName(requestDto.getModelName())
+                        , eqMaker(requestDto.getMaker())
+                        , eqNetwork(requestDto.getNetwork())
+                        , eqTelecom(requestDto.getTelecom())
+                        , eqUseYn(requestDto.getUseYn())
+                        , eqMatchingYn(requestDto.getMatchingYn())
+                        , betweenStartDateEndDate(requestDto.getSrhStartDate(), requestDto.getSrhEndDate())
                 )
                 .orderBy(goods.regiDateTime.desc());
 
@@ -116,21 +118,21 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
 
         query.select(Projections.fields(
                 Goods.class
-                ,goods.goodsId
-                ,goods.goodsName
-                ,goods.modelName
-                ,goods.maker
-                ,goods.originKey
-                ,goods.useYn
-                ,goods.matchingYn
-                ,goods.regiDateTime
-                ,maker.codeNm.as("makerName")
-                ,telecom.codeNm.as("telecomName")
-                ,network.codeNm.as("networkName")
-                ,Projections.fields(NetworkAttribute.class
-                        ,goods.networkAttribute.telecom
-                        ,goods.networkAttribute.network
-                    ).as("networkAttribute")
+                , goods.goodsId
+                , goods.goodsName
+                , goods.modelName
+                , goods.maker
+                , goods.originKey
+                , goods.useYn
+                , goods.matchingYn
+                , goods.regiDateTime
+                , maker.codeNm.as("makerName")
+                , telecom.codeNm.as("telecomName")
+                , network.codeNm.as("networkName")
+                , Projections.fields(NetworkAttribute.class
+                        , goods.networkAttribute.telecom
+                        , goods.networkAttribute.network
+                ).as("networkAttribute")
                 )
         );
 
@@ -161,19 +163,60 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
 
         query.where(
                 eqMaker(requestDto.getMaker())
-                ,eqNetwork(requestDto.getNetwork())
-                ,eqTelecom(requestDto.getTelecom())
-                ,where.or(Expressions.predicate(Ops.WRAPPED, where2)));
+                , eqNetwork(requestDto.getNetwork())
+                , eqTelecom(requestDto.getTelecom())
+                , where.or(Expressions.predicate(Ops.WRAPPED, where2)));
 
         query.orderBy(
                 goods.networkAttribute.telecom.asc()
-                ,goods.networkAttribute.network.asc()
-                ,goods.maker.asc()
-                ,goods.goodsName.asc()
-                ,goods.useYn.desc()
+                , goods.networkAttribute.network.asc()
+                , goods.maker.asc()
+                , goods.goodsName.asc()
+                , goods.useYn.desc()
         );
-
         return query.fetch();
+    }
+
+    @Override
+    public GoodsMatchRespDto goodsMatchBarcode(String commonBarcode) {
+        QCodeDetail telecom = new QCodeDetail("telecom");
+        QCodeDetail maker = new QCodeDetail("maker");
+
+        JPQLQuery<Goods> query = getQuerydsl().createQuery();
+
+        GoodsMatchRespDto goodsMatchRespDto =
+                query.select(Projections.fields(
+                        GoodsMatchRespDto.class
+                        , maker.codeSeq.as("maker")
+                        , maker.codeNm.as("makerName")
+                        , telecom.codeSeq.as("telecom")
+                        , telecom.codeNm.as("telecomName")
+                        , goods.goodsId.as("goodsId")
+                        , goods.goodsName.as("goodsName")
+                        , goods.modelName.as("modelName")
+                        , goods.capacity.as("capacity")
+                        , goodsOption.goodsOptionId.as("goodsOptionId")
+                        , goodsOption.colorName.as("colorName")
+                        , goodsOption.commonBarcode.as("commonBarcode")
+                )).from(goods)
+                        .innerJoin(goodsOption)
+                        .on(
+                                goodsOption.commonBarcode.eq(commonBarcode),
+                                goods.goodsId.eq(goodsOption.goods.goodsId)
+                        )
+                        .innerJoin(maker)
+                        .on(
+                                goods.maker.eq(maker.codeSeq),
+                                maker.useYn.eq("Y")
+                        )
+                        .innerJoin(telecom)
+                        .on(
+                                goods.networkAttribute.telecom.eq(telecom.codeSeq),
+                                telecom.useYn.eq("Y")
+                        ).fetchFirst();
+
+
+        return goodsMatchRespDto;
     }
 
     private BooleanExpression containsGoodsName(String name) {

@@ -6,6 +6,7 @@ import com.daema.commgmt.domain.GoodsRegReq;
 import com.daema.commgmt.domain.GoodsRegReqReject;
 import com.daema.commgmt.domain.attr.NetworkAttribute;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
+import com.daema.commgmt.domain.dto.response.GoodsMatchRespDto;
 import com.daema.commgmt.repository.GoodsOptionRepository;
 import com.daema.commgmt.repository.GoodsRegReqRejectRepository;
 import com.daema.commgmt.repository.GoodsRegReqRepository;
@@ -293,6 +294,13 @@ public class GoodsMgmtService {
         } else {
             throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
         }
+    }
+
+    @Transactional(readOnly = true)
+    public GoodsMatchRespDto goodsMatchBarcode(String commonBarcode) {
+
+        return goodsRepository.goodsMatchBarcode(commonBarcode);
+
     }
 }
 
