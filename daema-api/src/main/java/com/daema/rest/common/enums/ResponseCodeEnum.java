@@ -7,7 +7,10 @@ public enum ResponseCodeEnum {
     UNAUTHORIZED_FUNC("9002", "기능 수행 권한을 가지고 있지 않습니다"),
     NOT_APPROVAL_USER("9003", "관리점 담당자에게 승인되지 않은 사용자 입니다"),
     DELETED_USER("9004", "탈퇴한 사용자 입니다"),
-    FAIL("9999", "FAIL")
+    FAIL("9999", "FAIL"),
+    NOT_MATCH_TELECOM("1001", "선택하신 통신사와 기기의 통신사가 상이합니다."),
+    DUPL_DATA("1002", "중복된 데이터가 존재합니다."),
+
     ;
 
     private String resultCode;

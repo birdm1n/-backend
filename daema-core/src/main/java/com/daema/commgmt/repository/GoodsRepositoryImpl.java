@@ -213,7 +213,7 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         .on(
                                 goods.networkAttribute.telecom.eq(telecom.codeSeq),
                                 telecom.useYn.eq("Y")
-                        ).fetchFirst();
+                        ).fetchOne();
 
 
         return goodsMatchRespDto;

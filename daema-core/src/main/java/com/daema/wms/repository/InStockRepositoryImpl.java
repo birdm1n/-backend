@@ -31,7 +31,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
 
         query.select(Projections.fields(
                 InStockWaitDto.class
-                , inStockWait.waitId.as("waitId")
+//                , inStockWait.waitId.as("waitId")
                 , inStockWait.regiDateTime.as("regiDateTime")
 //            ,inStockWait.regiUserId.as("regiUserId")
 //            ,inStockWait.updDateTime.as("updDateTime")

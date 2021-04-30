@@ -116,10 +116,10 @@ public class GoodsMgmtController {
     }
 
     @ApiOperation(value = "바코드 매칭 상품 정보 조회", notes = "바코드로 매칭하여 상품정보를 조회합니다.")
-    @GetMapping("/goodsMatchBarcode/{commonBarcode}")
-    public ResponseEntity<CommonResponse<ResponseDto<GoodsMatchRespDto>>> goodsMatchBarcode(@ApiParam(value = "바코드", required = true) @PathVariable(value = "commonBarcode") String commonBarcode) {
+    @GetMapping("/goodsMatchBarcode/{fullBarcode}")
+    public ResponseEntity<CommonResponse<ResponseDto<GoodsMatchRespDto>>> goodsMatchBarcode(@ApiParam(value = "바코드", required = true) @PathVariable(value = "fullBarcode") String fullBarcode) {
 
-        return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.goodsMatchBarcode(commonBarcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+        return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.goodsMatchBarcode(fullBarcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 }
 

@@ -297,11 +297,11 @@ public class GoodsMgmtService {
     }
 
     @Transactional(readOnly = true)
-    public GoodsMatchRespDto goodsMatchBarcode(String commonBarcode) {
-
+    public GoodsMatchRespDto goodsMatchBarcode(String fullBarcode) {
+        String commonBarcode = CommonUtil.getCmnBarcode(fullBarcode);
         return goodsRepository.goodsMatchBarcode(commonBarcode);
-
     }
+
 }
 
 

@@ -57,7 +57,7 @@ public class InStockWaitDto {
     private Long ownStoreId;
 
     // 보유처
-    private Long holdStoreId;
+    private Long stockId;
     private String stockName;
 
     //재고구분 // 1, "매장재고" / 2, "이동재고"
@@ -79,6 +79,7 @@ public class InStockWaitDto {
     private long goodsOptionId;
     private String colorName;
     private String commonBarcode;
+    private String fullBarcode;
 
     // 입고단가
     private int inStockAmt;

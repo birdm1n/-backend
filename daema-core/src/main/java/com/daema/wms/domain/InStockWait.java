@@ -1,9 +1,6 @@
 package com.daema.wms.domain;
 
 import com.daema.base.domain.common.BaseEntity;
-import com.daema.commgmt.domain.Goods;
-import com.daema.commgmt.domain.GoodsOption;
-import com.daema.commgmt.domain.Store;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -15,15 +12,19 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @EqualsAndHashCode(of="wait_id")
 @ToString
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="in_stock_wait")
 public class InStockWait extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "wait_id")
-    private Long waitId;
+    @Column(name = "full_barcode")
+    private String fullBarcode;
+
+    @Column(name = "common_barcode")
+    private String commonBarcode;
 
     @NotBlank
     @Column(nullable = false, name = "in_stock_status", columnDefinition ="char(1)")
@@ -41,6 +42,9 @@ public class InStockWait extends BaseEntity {
 
     @Column(name = "stock_id")
     private Long stockId;
+
+    @Column(name = "stock_name")
+    private String stockName;
 
     @Nullable
     @Column(name = "product_faulty_yn", columnDefinition ="char(1)")
@@ -66,17 +70,10 @@ public class InStockWait extends BaseEntity {
     @Column(name = "own_store_id")
     private Long ownStoreId;
 
-    @Column(name = "hold_store_id")
-    private Long holdStoreId;
-
     @Column(name = "goods_option_id")
     private Long goodsOptionId;
 
     @Column(name = "goods_id")
     private Long goodsId;
-
-//    @Column(name = "dvc_name")
-//    private Long deviceName;
-
 
 }

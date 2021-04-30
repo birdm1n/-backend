@@ -29,10 +29,14 @@ public class InStockMgmtController {
         return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getWaitInStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-    @ApiOperation(value = "입고 대기 등록", notes = "신규 입고처리를 합니다.")
+    @ApiOperation(value = "입고 대기 등록", notes = "신규 입고대기 처리를 합니다.")
     @GetMapping("/insertWaitInStock")
     public ResponseEntity<CommonResponse<Void>> insertWaitInStock(@ApiParam(value = "입고 정보", required = true) InStockWaitDto requestDto) {
-        inStockMgmtService.insertWaitInStock(requestDto);
+        ResponseCodeEnum responseCodeEnum = inStockMgmtService.insertWaitInStock(requestDto);
+
+        if (ResponseCodeEnum.OK != responseCodeEnum) {
+            return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
+        }
         return responseHandler.ok();
     }
 
