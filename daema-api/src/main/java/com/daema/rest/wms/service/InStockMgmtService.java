@@ -1,5 +1,7 @@
 package com.daema.rest.wms.service;
 
+import com.daema.commgmt.domain.dto.response.GoodsMatchRespDto;
+import com.daema.commgmt.repository.GoodsRepository;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.util.AuthenticationUtil;
@@ -22,13 +24,15 @@ public class InStockMgmtService {
     private final InStockRepository inStockRepository;
     private final BarcodeRepository barcodeRepository;
     private final DeviceRepository deviceRepository;
+    private final GoodsRepository goodsRepository;
     private final InStockWaitRepository inStockWaitRepository;
     private final AuthenticationUtil authenticationUtil;
 
-    public InStockMgmtService(InStockRepository inStockRepository, BarcodeRepository barcodeRepository, DeviceRepository deviceRepository, InStockWaitRepository inStockWaitRepository, AuthenticationUtil authenticationUtil) {
+    public InStockMgmtService(InStockRepository inStockRepository, BarcodeRepository barcodeRepository, DeviceRepository deviceRepository, GoodsRepository goodsRepository, InStockWaitRepository inStockWaitRepository, AuthenticationUtil authenticationUtil) {
         this.inStockRepository = inStockRepository;
         this.barcodeRepository = barcodeRepository;
         this.deviceRepository = deviceRepository;
+        this.goodsRepository = goodsRepository;
         this.inStockWaitRepository = inStockWaitRepository;
         this.authenticationUtil = authenticationUtil;
     }
@@ -51,17 +55,23 @@ public class InStockMgmtService {
             return ResponseCodeEnum.DUPL_DATA;
         }
 
+
+        GoodsMatchRespDto goodsMatchRespDto = goodsRepository.goodsMatchBarcode(commonBarcode);
+        if (goodsMatchRespDto != null) {
+            return ResponseCodeEnum.NODATA;
+        }
+
         //todo inStock => stock에 storeId로 입고된 데이터가 있는지 확인
 
 
         InStockWait insertEntity =
                 InStockWait.builder()
+                        .provId(requestDto.getProvId())
                         .fullBarcode(requestDto.getFullBarcode())
                         .commonBarcode(requestDto.getCommonBarcode())
                         .inStockStatus(requestDto.getInStockStatus())
                         .inStockAmt(requestDto.getInStockAmt())
                         .inStockMemo(requestDto.getInStockMemo())
-                        .provId(requestDto.getProvId())
                         .stockId(requestDto.getStockId())
                         .stockName(requestDto.getStockName())
                         .productFaultyYn(requestDto.getProductFaultyYn())

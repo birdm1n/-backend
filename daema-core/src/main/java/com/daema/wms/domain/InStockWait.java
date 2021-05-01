@@ -20,6 +20,18 @@ import javax.validation.constraints.NotBlank;
 public class InStockWait extends BaseEntity {
 
     @Id
+    @Column(name = "wait_id")
+    private Long waitId;
+
+    @Column(name = "prov_id")
+    private Long provId;
+
+    @Column(name = "telecom")
+    private int telecom;
+
+    @Column(name = "telecomName")
+    private String telecomName;
+
     @Column(name = "full_barcode")
     private String fullBarcode;
 
@@ -37,8 +49,7 @@ public class InStockWait extends BaseEntity {
     @Column(name = "in_stock_memo")
     private String inStockMemo;
 
-    @Column(name = "prov_id")
-    private Long provId;
+
 
     @Column(name = "stock_id")
     private Long stockId;
