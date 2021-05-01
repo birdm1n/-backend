@@ -82,7 +82,7 @@ public class CommonUtil {
                 String uniqBarcode = inBarcode.substring(
                         barcodeSize - 8,
                         barcodeSize
-                        );
+                );
                 outBarcode = inBarcode.replace(uniqBarcode, "");
             }
         }
@@ -100,5 +100,13 @@ public class CommonUtil {
             }
         }
         return true;
+    }
+
+    public static String appendLeft(String src, String apchar, int len) {
+        int count = len - src.trim().length();
+        for(int i=0;i<count;i++)
+            src = apchar.trim() + src.trim();
+
+        return src;
     }
 }
