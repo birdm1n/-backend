@@ -2,13 +2,18 @@ package com.daema.rest.base.service;
 
 import com.daema.commgmt.repository.PubNotiRawDataRepository;
 import com.daema.rest.base.excel.ExcelMeta;
+import com.daema.rest.common.Constants;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
+import com.daema.rest.common.util.DateUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTimeUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,6 +103,35 @@ public class ExcelDownloadService {
         }
 
         return xlsMap;
+    }
+
+    public void removeTmpFileAndSaveHistory(String templateFile, String excelFileName, byte[] excelData) {
+
+        String saveFilePath = Constants.XLS_DOWNLOAD_PATH.concat(File.separator).concat(DateUtil.getTodayYYYYMM())
+                .concat(File.separator).concat(authenticationUtil.getMemberSeq() + "")
+                .concat(File.separator);
+
+        try{
+            //파일경로 셋팅
+            File dir = new File(saveFilePath);
+            if(!dir.exists()){
+                dir.mkdirs();
+            }
+
+            try (OutputStream os = new FileOutputStream(saveFilePath.concat(File.separator).concat(excelFileName).concat(".xlsx"))) {
+                os.write(excelData);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //template 파일 삭제
+            System.gc();
+            Thread.sleep(500);
+            new File(templateFile).delete();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
 
