@@ -39,10 +39,9 @@ public class ExcelUtil {
 
     public byte[] makeExcel(String templateFile) throws Exception {
 
-        XSSFWorkbook wb = new XSSFWorkbook();
         byte[] bytes = new byte[0];
 
-        try {
+        try (XSSFWorkbook wb = new XSSFWorkbook()) {
             // Step 1. Create a template file. Setup sheets and workbook-level
             // objects such as
             // cell styles, number formats, etc.
