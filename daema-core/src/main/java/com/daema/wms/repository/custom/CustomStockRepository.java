@@ -11,5 +11,6 @@ public interface CustomStockRepository {
 
     List<SelectStockDto> selectStockList(long storeId, Integer telecom);
 
+    SelectStockDto getStock(Long storeId, Integer telecom, Long stockId);
 
 }

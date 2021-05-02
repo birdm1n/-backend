@@ -10,9 +10,10 @@ import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.wms.domain.InStockWait;
 import com.daema.wms.domain.Provider;
-import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
+import com.daema.wms.domain.dto.request.InStockWaitInsertReqDto;
 import com.daema.wms.domain.dto.response.InStockWaitDto;
+import com.daema.wms.domain.dto.response.SelectStockDto;
 import com.daema.wms.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +44,7 @@ public class InStockMgmtService {
         this.providerRepository = providerRepository;
         this.authenticationUtil = authenticationUtil;
     }
-
+    @Transactional(readOnly = true)
     public List<InStockWaitDto> getWaitInStockList(InStockRequestDto requestDto) {
         requestDto.setStoreId(authenticationUtil.getStoreId());
         List<InStockWaitDto> dataList = inStockRepository.getWaitInStockList(requestDto);
@@ -52,7 +53,7 @@ public class InStockMgmtService {
     }
 
     @Transactional
-    public ResponseCodeEnum insertWaitInStock(InStockWaitDto requestDto) {
+    public ResponseCodeEnum insertWaitInStock(InStockWaitInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
         String commonBarcode = CommonUtil.getCmnBarcode(requestDto.getFullBarcode());
 
@@ -63,17 +64,18 @@ public class InStockMgmtService {
         }
         
         // 공급처 정보
-
         Provider provider = providerRepository.findByProvIdAndDelYn(requestDto.getProvId(), StatusEnum.FLAG_N.getStatusMsg());
         if(provider == null){
             return ResponseCodeEnum.NO_PROV;
         }
 
         // 보유처 정보
-        Stock stockEntity = stockRepository.findByStockIdAndDelYn(requestDto.getStockId(), StatusEnum.FLAG_N.getStatusMsg());
-        if (stockEntity == null) {
+        SelectStockDto stockDto = stockRepository.getStock(storeId,requestDto.getTelecom(),requestDto.getStockId());
+        if (stockDto == null) {
             return ResponseCodeEnum.NO_STOCK;
         }
+        String statusStr = storeId != stockDto.getStoreId() ? "이동재고" : "매장재고" ;
+
 
         //todo inStock => stock에 storeId로 입고된 데이터가 있는지 확인
         
@@ -96,24 +98,32 @@ public class InStockMgmtService {
 
         InStockWait insertEntity =
                 InStockWait.builder()
-                        .provId(requestDto.getProvId())
-                        .stockId(requestDto.getStockId())
-                        .stockName(requestDto.getStockName())
+                        .telecom(goodsMatchRespDto.getTelecom())
+                        .telecomName(goodsMatchRespDto.getTelecomName())
+                        .provId(provider.getProvId())
+                        .stockId(stockDto.getStockId())
+                        .stockName(stockDto.getStockName())
+                        .statusStr(statusStr)
+                        .maker(goodsMatchRespDto.getMaker())
+                        .makerName(goodsMatchRespDto.getMakerName())
+                        .goodsId(goodsMatchRespDto.getGoodsId())
+                        .goodsName(goodsMatchRespDto.getGoodsName())
+                        .modelName(goodsMatchRespDto.getModelName())
+                        .capacity(goodsMatchRespDto.getCapacity())
+                        .goodsOptionId(goodsMatchRespDto.getGoodsOptionId())
+                        .colorName(goodsMatchRespDto.getColorName())
                         .fullBarcode(requestDto.getFullBarcode())
                         .commonBarcode(commonBarcode)
-                        .inStockStatus(requestDto.getInStockStatus()) // 정상, 개봉
-                        .inStockMemo(requestDto.getInStockMemo())
+                        .inStockAmt(inStockAmt)
+                        .inStockStatus(requestDto.getInStockStatus())
                         .productFaultyYn(requestDto.getProductFaultyYn())
                         .extrrStatus(requestDto.getExtrrStatus())
+                        .inStockMemo(requestDto.getInStockMemo())
                         .productMissYn(requestDto.getProductMissYn())
                         .missProduct(requestDto.getMissProduct())
                         .ddctAmt(requestDto.getDdctAmt())
                         .ownStoreId(storeId)
-                        .holdStoreId(stockEntity.getRegiStoreId())
-
-                        .inStockAmt(inStockAmt)
-                        .goodsOptionId(goodsMatchRespDto.getGoodsOptionId())
-                        .goodsId(goodsMatchRespDto.getGoodsId())
+                        .holdStoreId(stockDto.getStoreId())
                         .build();
         inStockWaitRepository.save(insertEntity);
         return ResponseCodeEnum.OK;

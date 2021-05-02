@@ -139,4 +139,41 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         .fetch();
         return selectStockListDto;
     }
+
+    @Override
+    public SelectStockDto getStock(Long storeId, Integer telecom, Long stockId) {
+        JPQLQuery<SelectStockDto> query = getQuerydsl().createQuery();
+        query.select(Projections.fields(
+                SelectStockDto.class
+                , stock.stockId.as("stockId")
+                , stock.stockName.as("stockName")
+                , stock.stockType.as("stockType")
+                , new CaseBuilder()
+                        .when(stock.stockType.eq("O"))
+                        .then(openStore.storeId)
+                        .otherwise(store.storeId).as("storeId")
+        ));
+
+        SelectStockDto StockDto =
+                query.from(stock)
+                        .leftJoin(openStore)
+                        .on(
+                                stock.storeId.eq(openStore.openStoreId),
+                                stock.stockType.eq("O")
+                        )
+                        .leftJoin(store)
+                        .on(
+                                stock.storeId.eq(store.storeId),
+                                (stock.stockType.eq("I").or(stock.stockType.eq("S")))
+                        )
+                        .where(
+                                stock.stockId.eq(stockId),
+                                stock.regiStoreId.eq(storeId),
+                                stock.delYn.eq("N"),
+                                stock.parentStockId.eq(0L),
+                                (openStore.telecom.eq(telecom).or(store.telecom.eq(telecom)))
+                        )
+                        .fetchOne();
+        return StockDto;
+    }
 }

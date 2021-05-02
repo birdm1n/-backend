@@ -1,20 +1,10 @@
 package com.daema.rest.wms.dto;
 
 import com.daema.base.domain.Member;
-import com.daema.wms.domain.Device;
 import com.daema.wms.domain.InStock;
-import com.daema.wms.domain.Provider;
-import com.daema.wms.domain.Stock;
-import com.daema.wms.domain.dto.response.StockListDto;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
-
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Getter
 @Setter
@@ -24,7 +14,7 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 public class InStockMgmtDto {
 
     private Long inStockId;
-    private String inStockStatus;
+    private InStock.StockStatus inStockStatus;
     private int inStockAmt;
     private String inStockMemo;
     private LocalDateTime regiDateTime;

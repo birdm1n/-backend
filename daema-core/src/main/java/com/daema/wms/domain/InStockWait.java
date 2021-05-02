@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -23,8 +24,48 @@ public class InStockWait extends BaseEntity {
     @Column(name = "wait_id")
     private Long waitId;
 
+    @NotNull
+    @Column(name = "telecom")
+    private int telecom;
+
+    @Column(name = "telecom_name")
+    private String telecomName;
+
     @Column(name = "prov_id")
     private Long provId;
+
+    @Column(name = "stock_id")
+    private Long stockId;
+
+    @Column(name = "stock_name")
+    private String stockName;
+    // 재고구분
+    @Column(name = "status_str")
+    private String statusStr;
+
+    @Column(name = "maker")
+    private int maker;
+
+    @Column(name = "maker_name")
+    private String makerName;
+
+    @Column(name = "goods_id")
+    private Long goodsId;
+
+    @Column(name = "goods_name")
+    private String goodsName;
+
+    @Column(name = "model_name")
+    private String modelName;
+
+    @Column(name = "capacity")
+    private String capacity;
+
+    @Column(name = "goods_option_id")
+    private Long goodsOptionId;
+
+    @Column(name = "color_name")
+    private String colorName;
 
     @Column(name = "full_barcode")
     private String fullBarcode;
@@ -32,34 +73,28 @@ public class InStockWait extends BaseEntity {
     @Column(name = "common_barcode")
     private String commonBarcode;
 
-
-
-    @Column(nullable = false, name = "in_stock_status", columnDefinition ="char(1)")
-    private String inStockStatus;
-
+    // 입고 단가
     @Column(name = "in_stock_amt")
     private int inStockAmt;
+    
+    // 입고상태
+    @Column(name = "in_stock_status")
+    @Enumerated(EnumType.STRING)
+    private InStock.StockStatus inStockStatus;
 
-    @Column(name = "in_stock_memo")
-    private String inStockMemo;
-
-
-
-    @Column(name = "stock_id")
-    private Long stockId;
-
-    @Column(name = "stock_name")
-    private String stockName;
-
+    // 제품상태
     @Nullable
     @Column(name = "product_faulty_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"N\"")
     private String productFaultyYn;
 
-    @NotBlank
-    @Column(nullable = false, name = "extrr_status", columnDefinition ="char(1)")
-    @ColumnDefault("1")
-    private String extrrStatus;
+    // 외장상태
+    @Column(name = "extrr_status")
+    @Enumerated(EnumType.STRING)
+    private Device.ExtrrStatus extrrStatus;
+
+    @Column(name = "in_stock_memo")
+    private String inStockMemo;
 
     @Nullable
     @Column(name = "product_miss_yn", columnDefinition ="char(1)")
@@ -77,11 +112,5 @@ public class InStockWait extends BaseEntity {
 
     @Column(name = "hold_store_id")
     private Long holdStoreId;
-
-    @Column(name = "goods_option_id")
-    private Long goodsOptionId;
-
-    @Column(name = "goods_id")
-    private Long goodsId;
-
+    
 }

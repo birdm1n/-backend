@@ -6,6 +6,7 @@ import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.service.InStockMgmtService;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
+import com.daema.wms.domain.dto.request.InStockWaitInsertReqDto;
 import com.daema.wms.domain.dto.response.InStockWaitDto;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class InStockMgmtController {
 
     @ApiOperation(value = "입고 대기 등록", notes = "신규 입고대기 처리를 합니다.")
     @GetMapping("/insertWaitInStock")
-    public ResponseEntity<CommonResponse<Void>> insertWaitInStock(@ApiParam(value = "입고 정보", required = true) InStockWaitDto requestDto) {
+    public ResponseEntity<CommonResponse<Void>> insertWaitInStock(@ApiParam(value = "입고 정보", required = true) InStockWaitInsertReqDto requestDto) {
         ResponseCodeEnum responseCodeEnum = inStockMgmtService.insertWaitInStock(requestDto);
 
         if (ResponseCodeEnum.OK != responseCodeEnum) {

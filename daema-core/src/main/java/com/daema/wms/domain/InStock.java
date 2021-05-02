@@ -23,10 +23,23 @@ public class InStock extends BaseEntity {
     @Column(name = "in_stock_id")
     private Long inStockId;
 
-    @NotBlank
-    @Column(nullable = false, name = "in_stock_status", columnDefinition ="char(1)")
-    @ColumnDefault("1")
-    private String inStockStatus;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private StockStatus inStockStatus;
+    public enum StockStatus {
+        NORMAL( "정상"),
+        OPEN("개봉")
+        ;
+        private final String statusMsg;
+
+        StockStatus(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
+
 
     @Column(name = "in_stock_amt")
     private int inStockAmt;
@@ -45,5 +58,7 @@ public class InStock extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "dvc_id")
     private Device device;
+
+
 
 }

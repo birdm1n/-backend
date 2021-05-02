@@ -33,10 +33,24 @@ public class Device extends BaseEntity {
     @ColumnDefault("\"N\"")
     private String productFaultyYn;
 
-    @NotBlank
-    @Column(nullable = false, name = "extrr_status", columnDefinition ="char(1)")
-    @ColumnDefault("1")
-    private String extrrStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "extrr_status")
+    private ExtrrStatus extrrStatus;
+    public enum ExtrrStatus {
+        T( "상"),
+        M( "중"),
+        B( "하"),
+        F( "파손")
+        ;
+        private final String statusMsg;
+
+        ExtrrStatus(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
 
     @Nullable
     @Column(name = "product_miss_yn", columnDefinition ="char(1)")
@@ -46,7 +60,7 @@ public class Device extends BaseEntity {
     @Column(name = "miss_product")
     private String missProduct;
 
-    @Column(name = "ddct,_amt")
+    @Column(name = "ddct_amt")
     private int ddctAmt;
 
     // 소유권을 가지는 Store
