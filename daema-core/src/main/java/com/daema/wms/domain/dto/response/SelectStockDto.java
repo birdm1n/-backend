@@ -6,10 +6,11 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SelectStockListDto {
+public class SelectStockDto {
 
     private Long stockId;
     private String stockName;
     private String stockType;
+    private Long storeId;
 
 }

@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ProviderRepository extends JpaRepository<Provider, Long> , CustomProviderRepository {
     List<Provider> findByStoreIdAndUseYnOrderByProvName(long storeId, String statusMsg);
+
+    Provider findByProvIdAndDelYn(Long provId, String statusMsg);
 }

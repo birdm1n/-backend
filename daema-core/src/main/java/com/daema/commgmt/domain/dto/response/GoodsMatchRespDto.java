@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GoodsMatchRespDto {
 
-    // 공통
     private int maker;
     private String makerName;
     private int telecom;

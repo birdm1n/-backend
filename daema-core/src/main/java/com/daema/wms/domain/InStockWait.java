@@ -26,21 +26,15 @@ public class InStockWait extends BaseEntity {
     @Column(name = "prov_id")
     private Long provId;
 
-    @Column(name = "telecom")
-    private int telecom;
-
-    @Column(name = "telecomName")
-    private String telecomName;
-
     @Column(name = "full_barcode")
     private String fullBarcode;
 
     @Column(name = "common_barcode")
     private String commonBarcode;
 
-    @NotBlank
+
+
     @Column(nullable = false, name = "in_stock_status", columnDefinition ="char(1)")
-    @ColumnDefault("1")
     private String inStockStatus;
 
     @Column(name = "in_stock_amt")
@@ -80,6 +74,9 @@ public class InStockWait extends BaseEntity {
 
     @Column(name = "own_store_id")
     private Long ownStoreId;
+
+    @Column(name = "hold_store_id")
+    private Long holdStoreId;
 
     @Column(name = "goods_option_id")
     private Long goodsOptionId;

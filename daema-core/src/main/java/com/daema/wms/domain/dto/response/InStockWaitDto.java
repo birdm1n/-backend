@@ -1,22 +1,11 @@
 package com.daema.wms.domain.dto.response;
 
 import com.daema.base.domain.Member;
-import com.daema.commgmt.domain.Goods;
-import com.daema.commgmt.domain.GoodsOption;
-import com.daema.commgmt.domain.Store;
-import com.daema.wms.domain.Device;
-import com.daema.wms.domain.Provider;
-import com.daema.wms.domain.Stock;
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.envers.Audited;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.annotation.Nullable;
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Data
 @NoArgsConstructor
@@ -53,15 +42,18 @@ public class InStockWaitDto {
     private int telecom;
     private String telecomName;
 
-    // 소유권을 가지는 Store = 관리점
-    private Long ownStoreId;
-
     // 보유처
     private Long stockId;
     private String stockName;
 
-    //재고구분 // 1, "매장재고" / 2, "이동재고"
+    // 소유권을 가지는 Store = 관리점
+    private Long ownStoreId;
+    // 보유처 StoreId
+    private Long holdStoreId;
+
+    // O - openStore, S - store, I - inner (내부 관리)
     private String stockType;
+
 
     //제조사
     private int maker;

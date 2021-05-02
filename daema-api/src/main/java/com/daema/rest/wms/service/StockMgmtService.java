@@ -12,7 +12,7 @@ import com.daema.rest.wms.dto.StockMgmtDto;
 import com.daema.rest.wms.dto.response.StockMgmtResponseDto;
 import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.StockRequestDto;
-import com.daema.wms.domain.dto.response.SelectStockListDto;
+import com.daema.wms.domain.dto.response.SelectStockDto;
 import com.daema.wms.domain.dto.response.StockListDto;
 import com.daema.wms.repository.StockRepository;
 import org.springframework.stereotype.Service;
@@ -142,7 +142,7 @@ public class StockMgmtService {
 		}
 	}
 
-    public List<SelectStockListDto> selectStockList(Integer telecom) {
+    public List<SelectStockDto> selectStockList(Integer telecom) {
 		long storeId = authenticationUtil.getStoreId();
 		return stockRepository.selectStockList(storeId, telecom);
     }
