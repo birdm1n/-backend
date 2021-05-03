@@ -51,14 +51,16 @@ public class InStockMgmtService {
     @Transactional(readOnly = true)
     public InStockWaitResponseDto getWaitInStockList(InStock.StockStatus inStockStatus) {
         long storeId = authenticationUtil.getStoreId();
-        List<InStockWait> entityList = inStockWaitRepository.findByOwnStoreIdOrHoldStoreIdAndDelYnAndInStockStatusOrderByRegiDateTimeDesc(storeId, storeId, StatusEnum.FLAG_N.getStatusMsg(), inStockStatus);
-
         InStockWaitResponseDto responseDto = new InStockWaitResponseDto();
-
+        
+        List<InStockWait> entityList = inStockWaitRepository.findByOwnStoreIdOrHoldStoreIdAndDelYnAndInStockStatusOrderByRegiDateTimeDesc(storeId, storeId, StatusEnum.FLAG_N.getStatusMsg(), inStockStatus);
         List<InStockWaitDto> InStockWaitDtoList = entityList.stream()
                 .map(InStockWaitDto::from)
                 .collect(Collectors.toList());
         responseDto.setInStockWaitDtoList(InStockWaitDtoList);
+
+
+
 
         List<InStockWaitGroupDto> inStockWaitGroupDtoList = inStockWaitRepository.groupInStockWaitList(storeId, inStockStatus);
         responseDto.setInStockWaitGroupDtoList(inStockWaitGroupDtoList);

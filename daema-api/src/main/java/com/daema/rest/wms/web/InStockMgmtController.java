@@ -1,18 +1,19 @@
 package com.daema.rest.wms.web;
 
-import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.service.InStockMgmtService;
 import com.daema.wms.domain.InStock;
-import com.daema.wms.domain.dto.request.InStockRequestDto;
 import com.daema.wms.domain.dto.request.InStockWaitInsertReqDto;
-import com.daema.wms.domain.dto.response.InStockWaitDto;
 import com.daema.wms.domain.dto.response.InStockWaitResponseDto;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(value = "입고/입고현황 API", tags = "입고/입고현황 API")
 @RestController
@@ -41,6 +42,11 @@ public class InStockMgmtController {
             return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
         }
         return responseHandler.ok();
+    }
+    @ApiOperation(value = "입고대기 삭제", notes = "입고대기 데이터를 삭제합니다.")
+    @DeleteMapping("/deleteWaitInStock")
+    public ResponseEntity<CommonResponse<Void>> deleteWaitInStock(@ApiParam(name = "입고대기 삭제", required = true)  @RequestBody ModelMap reqModel){
+        return null;
     }
 
 }
