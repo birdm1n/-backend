@@ -49,4 +49,5 @@ public abstract class BaseEntity {
     @ColumnDefault("\"N\"")
     private String delYn;
 
+
 }

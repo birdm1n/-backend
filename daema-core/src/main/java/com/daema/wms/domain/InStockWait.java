@@ -115,5 +115,8 @@ public class InStockWait extends BaseEntity {
 
     @Column(name = "hold_store_id")
     private Long holdStoreId;
-    
+
+    public void updateDelYn(String delYn){
+        super.setDelYn(delYn);
+    }
 }

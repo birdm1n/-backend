@@ -5,7 +5,9 @@ import com.daema.commgmt.domain.dto.response.GoodsMatchRespDto;
 import com.daema.commgmt.repository.GoodsRepository;
 import com.daema.commgmt.repository.PubNotiRepository;
 import com.daema.rest.common.enums.ResponseCodeEnum;
+import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.enums.StatusEnum;
+import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.wms.domain.InStock;
@@ -19,8 +21,12 @@ import com.daema.wms.domain.dto.response.SelectStockDto;
 import com.daema.wms.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -139,5 +145,27 @@ public class InStockMgmtService {
                         .build();
         inStockWaitRepository.save(insertEntity);
         return ResponseCodeEnum.OK;
+    }
+
+    @Transactional
+    public void deleteWaitInStock(ModelMap reqModelMap) {
+        List<Number> delWaitIds = (ArrayList<Number>) reqModelMap.get("waitId");
+        if (CommonUtil.isNotEmptyList(delWaitIds)) {
+            List<InStockWait> inStockWaitList = inStockWaitRepository.findAllById(
+                    delWaitIds.stream()
+                            .map(Number::longValue).collect(Collectors.toList())
+            );
+            if (CommonUtil.isNotEmptyList(inStockWaitList)) {
+                Optional.ofNullable(inStockWaitList)
+                        .orElseGet(Collections::emptyList)
+                        .forEach(inStockWait ->
+                                inStockWait.updateDelYn(StatusEnum.FLAG_Y.getStatusMsg())
+                        );
+            }else{
+                throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+            }
+        }else{
+            throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+        }
     }
 }

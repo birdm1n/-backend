@@ -7,9 +7,7 @@ import com.daema.rest.wms.service.InStockMgmtService;
 import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.dto.request.InStockWaitInsertReqDto;
 import com.daema.wms.domain.dto.response.InStockWaitResponseDto;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +42,13 @@ public class InStockMgmtController {
         return responseHandler.ok();
     }
     @ApiOperation(value = "입고대기 삭제", notes = "입고대기 데이터를 삭제합니다.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "대기 ID", required = true, example = "1", name = "waitId", paramType = "query", allowMultiple = true)
+    })
     @DeleteMapping("/deleteWaitInStock")
-    public ResponseEntity<CommonResponse<Void>> deleteWaitInStock(@ApiParam(name = "입고대기 삭제", required = true)  @RequestBody ModelMap reqModel){
-        return null;
+    public ResponseEntity<CommonResponse<Void>> deleteWaitInStock(@ApiIgnore @RequestBody ModelMap reqModel) {
+        inStockMgmtService.deleteWaitInStock(reqModel);
+        return responseHandler.ok();
     }
 
 }
