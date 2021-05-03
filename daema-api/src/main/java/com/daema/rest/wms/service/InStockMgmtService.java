@@ -52,26 +52,16 @@ public class InStockMgmtService {
     public InStockWaitResponseDto getWaitInStockList(InStock.StockStatus inStockStatus) {
         long storeId = authenticationUtil.getStoreId();
         InStockWaitResponseDto responseDto = new InStockWaitResponseDto();
-        
-        List<InStockWait> entityList = inStockWaitRepository.findByOwnStoreIdOrHoldStoreIdAndDelYnAndInStockStatusOrderByRegiDateTimeDesc(storeId, storeId, StatusEnum.FLAG_N.getStatusMsg(), inStockStatus);
+
+        List<InStockWait> entityList = inStockWaitRepository.getList(storeId, inStockStatus);
         List<InStockWaitDto> InStockWaitDtoList = entityList.stream()
                 .map(InStockWaitDto::from)
                 .collect(Collectors.toList());
         responseDto.setInStockWaitDtoList(InStockWaitDtoList);
 
-
-
-
         List<InStockWaitGroupDto> inStockWaitGroupDtoList = inStockWaitRepository.groupInStockWaitList(storeId, inStockStatus);
         responseDto.setInStockWaitGroupDtoList(inStockWaitGroupDtoList);
 
-//        Map<String, List<InStockWaitGroupDto>> test = entityList.stream()
-//                .map(InStockWaitGroupDto::from)
-//                .collect(
-//                        groupingBy(
-//                                InStockWaitGroupDto::getTelecomName
-//                        )
-//                );
         return responseDto;
     }
 

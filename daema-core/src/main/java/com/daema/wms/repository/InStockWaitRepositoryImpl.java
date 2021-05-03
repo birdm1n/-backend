@@ -6,6 +6,7 @@ import com.daema.wms.domain.dto.response.InStockWaitGroupDto;
 import com.daema.wms.repository.custom.CustomInStockWaitRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import javax.persistence.EntityManager;
@@ -53,6 +54,19 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
                         , inStockWait.modelName
                         , inStockWait.capacity
                         , inStockWait.colorName
+                )
+                .orderBy(inStockWait.regiDateTime.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<InStockWait> getList(long storeId, InStock.StockStatus inStockStatus) {
+        JPAQueryFactory queryFactory =  new JPAQueryFactory(em);
+        return queryFactory.selectFrom(inStockWait)
+                .where(
+                        inStockWait.delYn.eq("N"),
+                        inStockWait.inStockStatus.eq(inStockStatus),
+                        inStockWait.ownStoreId.eq(storeId).or(inStockWait.holdStoreId.eq(storeId))
                 )
                 .orderBy(inStockWait.regiDateTime.desc())
                 .fetch();
