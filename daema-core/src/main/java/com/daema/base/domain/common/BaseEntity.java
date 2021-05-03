@@ -29,7 +29,7 @@ public abstract class BaseEntity {
 
     @NotAudited
     @CreatedBy  // 최초 생성자
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "regi_user_id", referencedColumnName = "seq", updatable = false)
     @Audited(targetAuditMode = NOT_AUDITED) // User 테이블까지 이력을 추적하지 않겠다는 설정 필수
     private Member regiUserId;
@@ -39,7 +39,7 @@ public abstract class BaseEntity {
     private LocalDateTime updDateTime;
 
     @LastModifiedBy // 마지막 수정자
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "upd_user_id", referencedColumnName = "seq")
     @Audited(targetAuditMode = NOT_AUDITED) // User 테이블까지 이력을 추적하지 않겠다는 설정 필수
     private Member updUserId;

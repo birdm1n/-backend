@@ -6,7 +6,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -21,6 +20,7 @@ import javax.validation.constraints.NotNull;
 public class InStockWait extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wait_id")
     private Long waitId;
 
@@ -106,6 +106,9 @@ public class InStockWait extends BaseEntity {
 
     @Column(name = "ddct_amt")
     private int ddctAmt;
+
+    @Column(name = "add_ddct_amt")
+    private int addDdctAmt;
 
     @Column(name = "own_store_id")
     private Long ownStoreId;

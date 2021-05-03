@@ -8,17 +8,20 @@ import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
+import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.InStockWait;
 import com.daema.wms.domain.Provider;
-import com.daema.wms.domain.dto.request.InStockRequestDto;
 import com.daema.wms.domain.dto.request.InStockWaitInsertReqDto;
 import com.daema.wms.domain.dto.response.InStockWaitDto;
+import com.daema.wms.domain.dto.response.InStockWaitGroupDto;
+import com.daema.wms.domain.dto.response.InStockWaitResponseDto;
 import com.daema.wms.domain.dto.response.SelectStockDto;
 import com.daema.wms.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InStockMgmtService {
@@ -44,12 +47,30 @@ public class InStockMgmtService {
         this.providerRepository = providerRepository;
         this.authenticationUtil = authenticationUtil;
     }
-    @Transactional(readOnly = true)
-    public List<InStockWaitDto> getWaitInStockList(InStockRequestDto requestDto) {
-        requestDto.setStoreId(authenticationUtil.getStoreId());
-        List<InStockWaitDto> dataList = inStockRepository.getWaitInStockList(requestDto);
 
-        return dataList;
+    @Transactional(readOnly = true)
+    public InStockWaitResponseDto getWaitInStockList(InStock.StockStatus inStockStatus) {
+        long storeId = authenticationUtil.getStoreId();
+        List<InStockWait> entityList = inStockWaitRepository.findByOwnStoreIdOrHoldStoreIdAndDelYnAndInStockStatusOrderByRegiDateTimeDesc(storeId, storeId, StatusEnum.FLAG_N.getStatusMsg(), inStockStatus);
+
+        InStockWaitResponseDto responseDto = new InStockWaitResponseDto();
+
+        List<InStockWaitDto> InStockWaitDtoList = entityList.stream()
+                .map(InStockWaitDto::from)
+                .collect(Collectors.toList());
+        responseDto.setInStockWaitDtoList(InStockWaitDtoList);
+
+        List<InStockWaitGroupDto> inStockWaitGroupDtoList = inStockWaitRepository.groupInStockWaitList(storeId, inStockStatus);
+        responseDto.setInStockWaitGroupDtoList(inStockWaitGroupDtoList);
+
+//        Map<String, List<InStockWaitGroupDto>> test = entityList.stream()
+//                .map(InStockWaitGroupDto::from)
+//                .collect(
+//                        groupingBy(
+//                                InStockWaitGroupDto::getTelecomName
+//                        )
+//                );
+        return responseDto;
     }
 
     @Transactional
@@ -62,39 +83,37 @@ public class InStockMgmtService {
         if (selectEntity != null) {
             return ResponseCodeEnum.DUPL_DATA;
         }
-        
+
         // 공급처 정보
         Provider provider = providerRepository.findByProvIdAndDelYn(requestDto.getProvId(), StatusEnum.FLAG_N.getStatusMsg());
-        if(provider == null){
+        if (provider == null) {
             return ResponseCodeEnum.NO_PROV;
         }
 
         // 보유처 정보
-        SelectStockDto stockDto = stockRepository.getStock(storeId,requestDto.getTelecom(),requestDto.getStockId());
+        SelectStockDto stockDto = stockRepository.getStock(storeId, requestDto.getTelecom(), requestDto.getStockId());
         if (stockDto == null) {
             return ResponseCodeEnum.NO_STOCK;
         }
-        String statusStr = storeId != stockDto.getStoreId() ? "이동재고" : "매장재고" ;
+        String statusStr = storeId != stockDto.getStoreId() ? "이동재고" : "매장재고";
 
 
         //todo inStock => stock에 storeId로 입고된 데이터가 있는지 확인
-        
+
         // 상품정보
         GoodsMatchRespDto goodsMatchRespDto = goodsRepository.goodsMatchBarcode(commonBarcode);
         if (goodsMatchRespDto != null) {
             return ResponseCodeEnum.NODATA;
         }
-        if(requestDto.getTelecom() != goodsMatchRespDto.getTelecom()){
+        if (requestDto.getTelecom() != goodsMatchRespDto.getTelecom()) {
             return ResponseCodeEnum.NOT_MATCH_TELECOM;
         }
         // todo 입고단가가 존재하지 않는경우 처리 / release_amt 0원처리?
         int inStockAmt = 0;
         PubNoti pubNoti = pubNotiRepository.findTopByGoodsIdOrderByRegiDateTimeDesc(goodsMatchRespDto.getGoodsId());
-        if(pubNoti != null){
+        if (pubNoti != null) {
             inStockAmt = pubNoti.getReleaseAmt();
         }
-
-
 
         InStockWait insertEntity =
                 InStockWait.builder()
@@ -122,6 +141,7 @@ public class InStockMgmtService {
                         .productMissYn(requestDto.getProductMissYn())
                         .missProduct(requestDto.getMissProduct())
                         .ddctAmt(requestDto.getDdctAmt())
+                        .addDdctAmt(requestDto.getAddDdctAmt())
                         .ownStoreId(storeId)
                         .holdStoreId(stockDto.getStoreId())
                         .build();

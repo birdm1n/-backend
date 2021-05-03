@@ -36,6 +36,9 @@ public class InStockWaitInsertReqDto {
     @ApiModelProperty(value = "차감비")
     private int ddctAmt;
 
+    @ApiModelProperty(value = "추가 차감비")
+    private int addDdctAmt;
+
     @ApiModelProperty(value = "구성품 누락여부")
     private String productMissYn;
     

@@ -5,14 +5,16 @@ import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.service.InStockMgmtService;
+import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
 import com.daema.wms.domain.dto.request.InStockWaitInsertReqDto;
 import com.daema.wms.domain.dto.response.InStockWaitDto;
+import com.daema.wms.domain.dto.response.InStockWaitResponseDto;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Api(value = "입고 관리 API", tags = "입고 관리 API")
+@Api(value = "입고/입고현황 API", tags = "입고/입고현황 API")
 @RestController
 @RequestMapping("/v1/api/DeviceManagement/InStockMgmt")
 public class InStockMgmtController {
@@ -25,14 +27,14 @@ public class InStockMgmtController {
     }
 
     @ApiOperation(value = "입고 대기 목록 조회", notes = "입고 대기 목록을 조회합니다")
-    @GetMapping("/getWaitInStockList")
-    public ResponseEntity<CommonResponse<ResponseDto<InStockWaitDto>>> getWaitInStockList(InStockRequestDto requestDto) {
-        return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getWaitInStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    @GetMapping("/getWaitInStockList/{inStockStatus}")
+    public ResponseEntity<CommonResponse<InStockWaitResponseDto>> getWaitInStockList(@ApiParam(name = "입고상태", required = true) @PathVariable InStock.StockStatus inStockStatus ) {
+        return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getWaitInStockList(inStockStatus), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "입고 대기 등록", notes = "신규 입고대기 처리를 합니다.")
-    @GetMapping("/insertWaitInStock")
-    public ResponseEntity<CommonResponse<Void>> insertWaitInStock(@ApiParam(value = "입고 정보", required = true) InStockWaitInsertReqDto requestDto) {
+    @PostMapping("/insertWaitInStock")
+    public ResponseEntity<CommonResponse<Void>> insertWaitInStock(@RequestBody InStockWaitInsertReqDto requestDto) {
         ResponseCodeEnum responseCodeEnum = inStockMgmtService.insertWaitInStock(requestDto);
 
         if (ResponseCodeEnum.OK != responseCodeEnum) {

@@ -52,13 +52,11 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
 //            ,inStockWait.goodsOptionId.as("goodsOptionId")
 //            ,inStockWait.goodsId.as("goodsId")
         ));
-        List<InStockWaitDto> inStockWaitDtoList =
-                query.from(inStockWait)
-                        .leftJoin(provider).on(inStockWait.provId.eq(provider.provId))
-                        .leftJoin(store).on(inStockWait.ownStoreId.eq(store.storeId))
-                        .leftJoin(store).on(inStockWait.ownStoreId.eq(store.storeId))
-                        .fetch();
 
-        return inStockWaitDtoList;
+        return query.from(inStockWait)
+                .leftJoin(provider).on(inStockWait.provId.eq(provider.provId))
+                .leftJoin(store).on(inStockWait.ownStoreId.eq(store.storeId))
+                .leftJoin(store).on(inStockWait.ownStoreId.eq(store.storeId))
+                .fetch();
     }
 }
