@@ -10,14 +10,14 @@ import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
-import com.daema.wms.domain.InStock;
+import com.daema.rest.wms.dto.request.InStockWaitInsertReqDto;
 import com.daema.wms.domain.InStockWait;
 import com.daema.wms.domain.Provider;
-import com.daema.wms.domain.dto.request.InStockWaitInsertReqDto;
 import com.daema.wms.domain.dto.response.InStockWaitDto;
 import com.daema.wms.domain.dto.response.InStockWaitGroupDto;
 import com.daema.wms.domain.dto.response.InStockWaitResponseDto;
 import com.daema.wms.domain.dto.response.SelectStockDto;
+import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +55,7 @@ public class InStockMgmtService {
     }
 
     @Transactional(readOnly = true)
-    public InStockWaitResponseDto getWaitInStockList(InStock.StockStatus inStockStatus) {
+    public InStockWaitResponseDto getWaitInStockList(WmsEnum.StockStatus inStockStatus) {
         long storeId = authenticationUtil.getStoreId();
         InStockWaitResponseDto responseDto = new InStockWaitResponseDto();
 

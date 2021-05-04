@@ -3,6 +3,7 @@ package com.daema.wms.domain;
 import com.daema.base.domain.common.BaseEntity;
 import com.daema.commgmt.domain.Goods;
 import com.daema.commgmt.domain.GoodsOption;
+import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -25,21 +26,7 @@ public class InStock extends BaseEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private StockStatus inStockStatus;
-    public enum StockStatus {
-        NORMAL( "정상"),
-        OPEN("개봉")
-        ;
-        private final String statusMsg;
-
-        StockStatus(String statusMsg) {
-            this.statusMsg = statusMsg;
-        }
-        public String getStatusMsg() {
-            return this.statusMsg;
-        }
-    }
-
+    private WmsEnum.StockStatus inStockStatus;
 
     @Column(name = "in_stock_amt")
     private int inStockAmt;
@@ -58,7 +45,5 @@ public class InStock extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "dvc_id")
     private Device device;
-
-
 
 }

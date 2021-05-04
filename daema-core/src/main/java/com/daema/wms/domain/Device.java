@@ -1,18 +1,14 @@
 package com.daema.wms.domain;
 
 import com.daema.base.domain.common.BaseEntity;
-import com.daema.commgmt.domain.Goods;
 import com.daema.commgmt.domain.GoodsOption;
 import com.daema.commgmt.domain.Store;
+import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.envers.AuditOverride;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -35,22 +31,7 @@ public class Device extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "extrr_status")
-    private ExtrrStatus extrrStatus;
-    public enum ExtrrStatus {
-        T( "상"),
-        M( "중"),
-        B( "하"),
-        F( "파손")
-        ;
-        private final String statusMsg;
-
-        ExtrrStatus(String statusMsg) {
-            this.statusMsg = statusMsg;
-        }
-        public String getStatusMsg() {
-            return this.statusMsg;
-        }
-    }
+    private WmsEnum.DeviceExtrrStatus extrrStatus;
 
     @Nullable
     @Column(name = "product_miss_yn", columnDefinition ="char(1)")

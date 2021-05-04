@@ -1,6 +1,7 @@
 package com.daema.wms.domain;
 
 import com.daema.base.domain.common.BaseEntity;
+import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -80,7 +81,7 @@ public class InStockWait extends BaseEntity {
     // 입고상태
     @Column(name = "in_stock_status")
     @Enumerated(EnumType.STRING)
-    private InStock.StockStatus inStockStatus;
+    private WmsEnum.StockStatus inStockStatus;
 
     // 제품상태
     @Nullable
@@ -91,7 +92,7 @@ public class InStockWait extends BaseEntity {
     // 외장상태
     @Column(name = "extrr_status")
     @Enumerated(EnumType.STRING)
-    private Device.ExtrrStatus extrrStatus;
+    private WmsEnum.DeviceExtrrStatus extrrStatus;
 
     @Column(name = "in_stock_memo")
     private String inStockMemo;

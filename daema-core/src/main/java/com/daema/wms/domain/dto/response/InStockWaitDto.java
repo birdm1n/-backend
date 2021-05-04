@@ -3,6 +3,7 @@ package com.daema.wms.domain.dto.response;
 import com.daema.wms.domain.Device;
 import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.InStockWait;
+import com.daema.wms.domain.enums.WmsEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -77,7 +78,7 @@ public class InStockWaitDto {
 
 
     // 입고상태 =  1, "정상"/ 2, "개봉"
-    private InStock.StockStatus inStockStatus;
+    private WmsEnum.StockStatus inStockStatus;
 
     // 제품상태 =  N, "-" / Y, "불량"
     private String productFaultyYn;
@@ -86,7 +87,7 @@ public class InStockWaitDto {
     private String productMissYn;
 
     // 외장상태 = 1, "상" / 2, "중" / 3, "하" / 4, "파손"
-    private Device.ExtrrStatus extrrStatus;
+    private WmsEnum.DeviceExtrrStatus extrrStatus;
 
 
     private LocalDateTime regiDateTime;

@@ -1,7 +1,6 @@
-package com.daema.wms.domain.dto.request;
+package com.daema.rest.wms.dto.request;
 
-import com.daema.wms.domain.Device;
-import com.daema.wms.domain.InStock;
+import com.daema.wms.domain.enums.WmsEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,13 +24,13 @@ public class InStockWaitInsertReqDto {
     private String fullBarcode;
 
     @ApiModelProperty(value = "입고상태",  required = true)
-    private InStock.StockStatus inStockStatus;
+    private WmsEnum.StockStatus inStockStatus;
 
     @ApiModelProperty(value = "제품상태")
     private String productFaultyYn;
 
     @ApiModelProperty(value = "외장상태",  required = true)
-    private Device.ExtrrStatus extrrStatus;
+    private WmsEnum.DeviceExtrrStatus extrrStatus;
 
     @ApiModelProperty(value = "차감비")
     private int ddctAmt;

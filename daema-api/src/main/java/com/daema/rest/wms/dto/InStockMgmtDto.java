@@ -2,6 +2,7 @@ package com.daema.rest.wms.dto;
 
 import com.daema.base.domain.Member;
 import com.daema.wms.domain.InStock;
+import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class InStockMgmtDto {
 
     private Long inStockId;
-    private InStock.StockStatus inStockStatus;
+    private WmsEnum.StockStatus inStockStatus;
     private int inStockAmt;
     private String inStockMemo;
     private LocalDateTime regiDateTime;
