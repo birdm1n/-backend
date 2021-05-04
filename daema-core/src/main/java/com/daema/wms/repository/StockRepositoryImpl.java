@@ -95,7 +95,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "        on parent.stock_id = child.parent_stock_id " +
                 "            and child.regi_store_id = :regi_store_id " +
                 "            and child.del_yn = 'N' " +
-                "      order by hierarchy + '' ");
+                "      order by hierarchy ");
 
 
         Query query = em.createNativeQuery(sb.toString(), "StockList")

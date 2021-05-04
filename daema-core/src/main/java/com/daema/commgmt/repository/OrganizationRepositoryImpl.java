@@ -89,7 +89,7 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
                 "        on parent.org_id = child.parent_org_id " +
                 "            and child.store_id = :store_id " +
                 "            and child.del_yn = 'N' " +
-                "      order by hierarchy + '' ");
+                "      order by hierarchy ");
 
 
         Query query = em.createNativeQuery(sb.toString(), "OrgnztList")
