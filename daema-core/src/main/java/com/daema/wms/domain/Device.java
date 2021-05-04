@@ -24,6 +24,13 @@ public class Device extends BaseEntity {
     @Column(name = "dvc_id")
     private Long dvcId;
 
+    @Column(name = "barcode_type")
+    @Enumerated(EnumType.STRING)
+    private WmsEnum.BarcodeType barcodeType;
+
+    @Column(name = "full_barcode")
+    private String fullBarcode;
+
     @Nullable
     @Column(name = "product_faulty_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"N\"")
@@ -56,5 +63,8 @@ public class Device extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_id")
     private Stock stock;
+
+    @Column(name = "add_ddct_amt")
+    private int addDdctAmt;
 
 }

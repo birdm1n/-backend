@@ -1,14 +1,10 @@
 package com.daema.wms.domain;
 
 import com.daema.base.domain.common.BaseEntity;
-import com.daema.commgmt.domain.Goods;
-import com.daema.commgmt.domain.GoodsOption;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -26,7 +22,7 @@ public class InStock extends BaseEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private WmsEnum.StockStatus inStockStatus;
+    private WmsEnum.InStockStatus inStockStatus;
 
     @Column(name = "in_stock_amt")
     private int inStockAmt;
@@ -37,10 +33,6 @@ public class InStock extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prov_id")
     private Provider provider;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_id")
-    private Stock stock;
 
     @OneToOne
     @JoinColumn(name = "dvc_id")

@@ -23,8 +23,11 @@ public class InStockWaitInsertReqDto {
     @ApiModelProperty(value = "기기일련번호(바코드)",  required = true)
     private String fullBarcode;
 
+    @ApiModelProperty(value = "바코드입력 구분",  required = true)
+    private WmsEnum.BarcodeType barcodeType;
+
     @ApiModelProperty(value = "입고상태",  required = true)
-    private WmsEnum.StockStatus inStockStatus;
+    private WmsEnum.InStockStatus inStockStatus;
 
     @ApiModelProperty(value = "제품상태")
     private String productFaultyYn;

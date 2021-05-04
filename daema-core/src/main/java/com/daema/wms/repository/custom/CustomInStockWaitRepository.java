@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CustomInStockWaitRepository {
 
-    List<InStockWaitGroupDto> groupInStockWaitList(long storeId, WmsEnum.StockStatus inStockStatus);
+    List<InStockWaitGroupDto> groupInStockWaitList(long storeId, WmsEnum.InStockStatus inStockStatus);
 
-    List<InStockWait> getList(long storeId, WmsEnum.StockStatus inStockStatus);
+    List<InStockWait> getList(long storeId, WmsEnum.InStockStatus inStockStatus);
 }

@@ -1,7 +1,5 @@
 package com.daema.wms.domain.dto.response;
 
-import com.daema.wms.domain.Device;
-import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.InStockWait;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.AllArgsConstructor;
@@ -78,7 +76,8 @@ public class InStockWaitDto {
 
 
     // 입고상태 =  1, "정상"/ 2, "개봉"
-    private WmsEnum.StockStatus inStockStatus;
+    private WmsEnum.InStockStatus inStockStatus;
+    private String inStockStatusMsg;
 
     // 제품상태 =  N, "-" / Y, "불량"
     private String productFaultyYn;
@@ -88,7 +87,7 @@ public class InStockWaitDto {
 
     // 외장상태 = 1, "상" / 2, "중" / 3, "하" / 4, "파손"
     private WmsEnum.DeviceExtrrStatus extrrStatus;
-
+    private String extrrStatusMsg;
 
     private LocalDateTime regiDateTime;
     private Long regiUserId;
@@ -124,9 +123,11 @@ public class InStockWaitDto {
                 .fullBarcode(entity.getFullBarcode())
                 .inStockAmt(entity.getInStockAmt())
                 .inStockStatus(entity.getInStockStatus())
+                .inStockStatusMsg(entity.getInStockStatus().getStatusMsg())
                 .productFaultyYn(entity.getProductFaultyYn())
                 .productMissYn(entity.getProductMissYn())
                 .extrrStatus(entity.getExtrrStatus())
+                .extrrStatusMsg(entity.getExtrrStatus().getStatusMsg())
                 .regiDateTime(entity.getRegiDateTime())
                 .regiUserId(entity.getRegiUserId().getSeq())
                 .regiUserName(entity.getRegiUserId().getUsername())

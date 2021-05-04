@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class InStockMgmtDto {
 
     private Long inStockId;
-    private WmsEnum.StockStatus inStockStatus;
+    private WmsEnum.InStockStatus inStockStatus;
     private int inStockAmt;
     private String inStockMemo;
     private LocalDateTime regiDateTime;

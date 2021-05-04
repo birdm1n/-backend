@@ -55,7 +55,7 @@ public class InStockMgmtService {
     }
 
     @Transactional(readOnly = true)
-    public InStockWaitResponseDto getWaitInStockList(WmsEnum.StockStatus inStockStatus) {
+    public InStockWaitResponseDto getWaitInStockList(WmsEnum.InStockStatus inStockStatus) {
         long storeId = authenticationUtil.getStoreId();
         InStockWaitResponseDto responseDto = new InStockWaitResponseDto();
 
@@ -106,7 +106,7 @@ public class InStockMgmtService {
         if (requestDto.getTelecom() != goodsMatchRespDto.getTelecom()) {
             return ResponseCodeEnum.NOT_MATCH_TELECOM;
         }
-        // todo 입고단가가 존재하지 않는경우 처리 / release_amt 0원처리?
+
         int inStockAmt = 0;
         PubNoti pubNoti = pubNotiRepository.findTopByGoodsIdOrderByRegiDateTimeDesc(goodsMatchRespDto.getGoodsId());
         if (pubNoti != null) {
@@ -129,6 +129,7 @@ public class InStockMgmtService {
                         .capacity(goodsMatchRespDto.getCapacity())
                         .goodsOptionId(goodsMatchRespDto.getGoodsOptionId())
                         .colorName(goodsMatchRespDto.getColorName())
+                        .barcodeType(requestDto.getBarcodeType())
                         .fullBarcode(requestDto.getFullBarcode())
                         .commonBarcode(commonBarcode)
                         .inStockAmt(inStockAmt)

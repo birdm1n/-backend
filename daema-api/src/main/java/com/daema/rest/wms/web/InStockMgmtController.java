@@ -27,7 +27,7 @@ public class InStockMgmtController {
 
     @ApiOperation(value = "입고 대기 목록 조회", notes = "입고 대기 목록을 조회합니다")
     @GetMapping("/getWaitInStockList/{inStockStatus}")
-    public ResponseEntity<CommonResponse<InStockWaitResponseDto>> getWaitInStockList(@ApiParam(name = "입고상태", required = true) @PathVariable WmsEnum.StockStatus inStockStatus ) {
+    public ResponseEntity<CommonResponse<InStockWaitResponseDto>> getWaitInStockList(@ApiParam(name = "입고상태", required = true) @PathVariable WmsEnum.InStockStatus inStockStatus ) {
         return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getWaitInStockList(inStockStatus), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
@@ -41,13 +41,25 @@ public class InStockMgmtController {
         }
         return responseHandler.ok();
     }
+
     @ApiOperation(value = "입고대기 삭제", notes = "입고대기 데이터를 삭제합니다.")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "대기 ID", required = true, example = "1", name = "waitId", paramType = "query", allowMultiple = true)
     })
-    @DeleteMapping("/deleteWaitInStock")
+    @PostMapping("/deleteWaitInStock")
     public ResponseEntity<CommonResponse<Void>> deleteWaitInStock(@ApiIgnore @RequestBody ModelMap reqModel) {
         inStockMgmtService.deleteWaitInStock(reqModel);
+        return responseHandler.ok();
+    }
+
+    @ApiOperation(value = "입고 등록", notes = "신규 입고 처리를 합니다.")
+    @PostMapping("/inserInStock")
+    public ResponseEntity<CommonResponse<Void>> insertInStock(@ApiParam(name = "신규입고", required = true) @RequestBody InStockWaitInsertReqDto requestDto) {
+        ResponseCodeEnum responseCodeEnum = inStockMgmtService.insertWaitInStock(requestDto);
+
+        if (ResponseCodeEnum.OK != responseCodeEnum) {
+            return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
+        }
         return responseHandler.ok();
     }
 

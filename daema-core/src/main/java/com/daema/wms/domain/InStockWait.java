@@ -68,6 +68,10 @@ public class InStockWait extends BaseEntity {
     @Column(name = "color_name")
     private String colorName;
 
+    @Column(name = "barcode_type")
+    @Enumerated(EnumType.STRING)
+    private WmsEnum.BarcodeType barcodeType;
+
     @Column(name = "full_barcode")
     private String fullBarcode;
 
@@ -81,7 +85,7 @@ public class InStockWait extends BaseEntity {
     // 입고상태
     @Column(name = "in_stock_status")
     @Enumerated(EnumType.STRING)
-    private WmsEnum.StockStatus inStockStatus;
+    private WmsEnum.InStockStatus inStockStatus;
 
     // 제품상태
     @Nullable

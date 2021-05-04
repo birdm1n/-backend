@@ -1,6 +1,5 @@
 package com.daema.wms.repository;
 
-import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.InStockWait;
 import com.daema.wms.domain.dto.response.InStockWaitGroupDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -26,7 +25,7 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
     private EntityManager em;
 
     @Override
-    public List<InStockWaitGroupDto> groupInStockWaitList(long storeId, WmsEnum.StockStatus inStockStatus) {
+    public List<InStockWaitGroupDto> groupInStockWaitList(long storeId, WmsEnum.InStockStatus inStockStatus) {
         JPQLQuery<InStockWaitGroupDto> query = getQuerydsl().createQuery();
 
 
@@ -61,7 +60,7 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     @Override
-    public List<InStockWait> getList(long storeId, WmsEnum.StockStatus inStockStatus) {
+    public List<InStockWait> getList(long storeId, WmsEnum.InStockStatus inStockStatus) {
         JPAQueryFactory queryFactory =  new JPAQueryFactory(em);
         return queryFactory.selectFrom(inStockWait)
                 .where(
