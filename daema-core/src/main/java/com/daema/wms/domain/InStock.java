@@ -6,11 +6,13 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Builder
 @Getter
 @Setter
 @EqualsAndHashCode(of="in_stock_id")
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="in_stock")
 public class InStock extends BaseEntity {

@@ -3,6 +3,7 @@ package com.daema.rest.wms.web;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
+import com.daema.rest.wms.dto.request.InStockInsertReqDto;
 import com.daema.rest.wms.dto.request.InStockWaitInsertReqDto;
 import com.daema.rest.wms.service.InStockMgmtService;
 import com.daema.wms.domain.dto.response.InStockWaitResponseDto;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 @Api(value = "입고/입고현황 API", tags = "입고/입고현황 API")
 @RestController
@@ -54,8 +57,8 @@ public class InStockMgmtController {
 
     @ApiOperation(value = "입고 등록", notes = "신규 입고 처리를 합니다.")
     @PostMapping("/inserInStock")
-    public ResponseEntity<CommonResponse<Void>> insertInStock(@ApiParam(name = "신규입고", required = true) @RequestBody InStockWaitInsertReqDto requestDto) {
-        ResponseCodeEnum responseCodeEnum = inStockMgmtService.insertWaitInStock(requestDto);
+    public ResponseEntity<CommonResponse<Void>> insertInStock(@ApiParam(name = "신규입고", required = true) @RequestBody List<InStockInsertReqDto> requestDto) {
+        ResponseCodeEnum responseCodeEnum = inStockMgmtService.inserInStock(requestDto);
 
         if (ResponseCodeEnum.OK != responseCodeEnum) {
             return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
