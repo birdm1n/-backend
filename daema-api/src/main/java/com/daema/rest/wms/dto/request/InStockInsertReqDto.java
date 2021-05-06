@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class InStockInsertReqDto {
+    @ApiModelProperty(value = "공급처 ID",  required = true)
+    private Long waitId;
 
     @ApiModelProperty(value = "공급처 ID",  required = true)
     private Long provId;

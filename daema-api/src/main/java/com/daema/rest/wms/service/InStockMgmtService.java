@@ -179,12 +179,15 @@ public class InStockMgmtService {
     public ResponseCodeEnum insertInStock(List<InStockInsertReqDto> reqListDto) {
         long storeId = authenticationUtil.getStoreId();
         long userId = authenticationUtil.getMemberSeq();
+        List<Long> inStockWaitIds = new ArrayList<>();
         List<Device> devices = new ArrayList<>();
         List<DeviceStock> deviceStocks = new ArrayList<>();
         List<DeviceStatus> deviceStatuses = new ArrayList<>();
         List<InStock> inStocks = new ArrayList<>();
         if (CommonUtil.isNotEmptyList(reqListDto)) {
             for (InStockInsertReqDto reqDto : reqListDto) {
+                inStockWaitIds.add(reqDto.getWaitId());
+
                 devices.add(
                         Device.builder()
                                 .barcodeType(reqDto.getBarcodeType())
@@ -257,6 +260,18 @@ public class InStockMgmtService {
             }
 
             inStockRepository.saveAll(inStocks);
+
+
+            List<InStockWait> inStockWaitList =  inStockWaitRepository.findAllById(inStockWaitIds);
+            if (CommonUtil.isNotEmptyList(inStockWaitList)) {
+                Optional.of(inStockWaitList)
+                        .orElseGet(Collections::emptyList)
+                        .forEach(inStockWait ->
+                                inStockWait.updateDelYn(StatusEnum.FLAG_Y.getStatusMsg())
+                        );
+            } else {
+                throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+            }
 
         } else {
             throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
