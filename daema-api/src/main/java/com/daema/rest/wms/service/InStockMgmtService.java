@@ -183,24 +183,24 @@ public class InStockMgmtService {
                 Device saveDevice = deviceRepository.save(Device.builder()
                         .barcodeType(reqDto.getBarcodeType())
                         .fullBarcode(reqDto.getFullBarcode())
-                        .productFaultyYn(reqDto.getProductFaultyYn())
-                        .extrrStatus(reqDto.getExtrrStatus())
-                        .productMissYn(reqDto.getProductMissYn())
-                        .missProduct(reqDto.getMissProduct())
-                        .addDdctAmt(reqDto.getAddDdctAmt())
-                        .ddctAmt(reqDto.getDdctAmt())
+//                        .productFaultyYn(reqDto.getProductFaultyYn())
+//                        .extrrStatus(reqDto.getExtrrStatus())
+//                        .productMissYn(reqDto.getProductMissYn())
+//                        .missProduct(reqDto.getMissProduct())
+//                        .addDdctAmt(reqDto.getAddDdctAmt())
+//                        .ddctAmt(reqDto.getDdctAmt())
                         .goodsOption(GoodsOption
                                 .builder()
                                 .goodsOptionId(reqDto.getGoodsOptionId())
                                 .build())
-                        .stock(Stock
-                                .builder()
-                                .stockId(reqDto.getStockId())
-                                .build())
-                        .ownStore(Store
-                                .builder()
-                                .storeId(reqDto.getOwnStoreId())
-                                .build())
+//                        .stock(Stock
+//                                .builder()
+//                                .stockId(reqDto.getStockId())
+//                                .build())
+//                        .ownStore(Store
+//                                .builder()
+//                                .storeId(reqDto.getOwnStoreId())
+//                                .build())
                         .build());
                 inStocks.add(InStock.builder()
                         .inStockStatus(reqDto.getInStockStatus())
