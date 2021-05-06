@@ -41,19 +41,22 @@ public class DeviceStatus extends BaseEntity {
     private String missProduct;
 
     @Column(name = "ddct_amt")
-    private int ddctAmt;
+    private Integer ddctAmt;
 
     @Column(name = "add_ddct_amt")
-    private int addDdctAmt;
+    private Integer addDdctAmt;
+
+    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1)")
+    private String ddctReleaseAmtYn;
 
     @ManyToOne
     @JoinColumn(name = "dvc_id")
     private Device device;
 
-    @OneToOne(mappedBy = "inDeviceStatus")
+    @OneToOne(mappedBy = "inDeviceStatus", fetch = FetchType.LAZY)
     private InStock inStock;
 
-    @OneToOne(mappedBy = "returnDeviceStatus")
+    @OneToOne(mappedBy = "returnDeviceStatus", fetch = FetchType.LAZY)
     private ReturnStock returnStock;
 
 }

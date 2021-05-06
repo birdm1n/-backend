@@ -36,15 +36,15 @@ public class InStock extends BaseEntity {
     @JoinColumn(name = "prov_id")
     private Provider provider;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_id")
     private Device device;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_stock_id")
     private DeviceStock deviceStock;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_status_id")
     private DeviceStatus inDeviceStatus;
 }

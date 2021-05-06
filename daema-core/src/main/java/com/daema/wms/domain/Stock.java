@@ -86,10 +86,10 @@ public class Stock {
     @Column(name = "upd_datetime")
     private LocalDateTime updDateTime;
 
-    @OneToMany(mappedBy = "prevStock")
+    @OneToMany(mappedBy = "prevStock", fetch = FetchType.LAZY)
     private List<DeviceStock> prevDeviceStockList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "nextStock")
+    @OneToMany(mappedBy = "nextStock", fetch = FetchType.LAZY)
     private List<DeviceStock> nextDeviceStockList = new ArrayList<>();
 
     @Builder

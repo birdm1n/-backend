@@ -1,10 +1,10 @@
 package com.daema.wms.domain;
 
-import com.daema.base.domain.common.BaseEntity;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name="return_stock")
-public class ReturnStock extends BaseEntity {
+public class ReturnStock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,32 +28,48 @@ public class ReturnStock extends BaseEntity {
      * 반품비
      */
     @Column(name = "return_stock_amt")
-    private int returnStockAmt;
+    private Integer returnStockAmt;
 
     @Column(name = "return_stock_memo")
     private String returnStockMemo;
 
-    @OneToOne
+    /**
+     * 출고가 차감 YN
+     */
+    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1)")
+    private String ddctReleaseAmtYn;
+
+    @Column(name = "regi_user_id")
+    private long regiUserId;
+
+    @Column(name = "regi_datetime")
+    private LocalDateTime regiDateTime;
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_id")
     private Device device;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_stock_id")
     private DeviceStock deviceStock;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_status_id")
     private DeviceStatus returnDeviceStatus;
 
     @Builder
-    public ReturnStock(Long returnStockId, WmsEnum.InStockStatus inStockStatus, int returnStockAmt
-            , String returnStockMemo, Device device, DeviceStock deviceStock, DeviceStatus returnDeviceStatus){
+    public ReturnStock(Long returnStockId, WmsEnum.InStockStatus inStockStatus, Integer returnStockAmt
+            , String returnStockMemo, String ddctReleaseAmtYn, Device device, DeviceStock deviceStock, DeviceStatus returnDeviceStatus
+            ,long regiUserId ,LocalDateTime regiDateTime){
         this.returnStockId = returnStockId;
         this.inStockStatus = inStockStatus;
         this.returnStockAmt = returnStockAmt;
         this.returnStockMemo = returnStockMemo;
+        this.ddctReleaseAmtYn = ddctReleaseAmtYn;
         this.device = device;
         this.deviceStock = deviceStock;
         this.returnDeviceStatus = returnDeviceStatus;
+        this.regiUserId = regiUserId;
+        this.regiDateTime = regiDateTime;
     }
 }

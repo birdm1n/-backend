@@ -41,7 +41,7 @@ public class DeviceStock {
     @Column(name = "regi_datetime")
     private LocalDateTime regiDateTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_id")
     private Device device;
 
@@ -50,7 +50,7 @@ public class DeviceStock {
      * 1 : 공급처(창고 아이디 없음 stock 맵핑 불가)
      * 2, 3, 4, 5, 6, 7 : 현 보유처
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prev_stock_id", referencedColumnName = "stock_id")
     private Stock prevStock;
 
@@ -64,11 +64,11 @@ public class DeviceStock {
      * 6 : 다음 보유처(관리점 또는 미가입 대리점. 오프라인으로 기기 판매 가능하다고 함)
      * 7 : 다음 보유처(내 보유처)
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id")
     private Stock nextStock;
 
-    @OneToOne(mappedBy = "deviceStock")
+    @OneToOne(mappedBy = "deviceStock", fetch = FetchType.LAZY)
     private Delivery delivery;
 
     @Builder
