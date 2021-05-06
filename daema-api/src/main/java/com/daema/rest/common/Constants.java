@@ -28,7 +28,7 @@ public class Constants {
 
     public static final String[] SECURITY_WEB_IGNORE_URLS = {
             "/v2/api-docs", "/swagger-resources/**",
-            "/swagger-ui.html", "/webjars/**", "/swagger/**","/**"
+            "/swagger-ui.html", "/webjars/**", "/swagger/**"
     };
 
     public static final String BIZ_JOIN_URL = "/store/sign-up";
