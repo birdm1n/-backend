@@ -58,7 +58,7 @@ public class InStockMgmtController {
     @ApiOperation(value = "입고 등록", notes = "신규 입고 처리를 합니다.")
     @PostMapping("/insertInStock")
     public ResponseEntity<CommonResponse<Void>> insertInStock(@ApiParam(name = "신규입고", required = true) @RequestBody List<InStockInsertReqDto> requestDto) {
-        ResponseCodeEnum responseCodeEnum = inStockMgmtService.inserInStock(requestDto);
+        ResponseCodeEnum responseCodeEnum = inStockMgmtService.insertInStock(requestDto);
 
         if (ResponseCodeEnum.OK != responseCodeEnum) {
             return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());

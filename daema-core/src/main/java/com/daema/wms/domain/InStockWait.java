@@ -91,7 +91,7 @@ public class InStockWait extends BaseEntity {
     @Nullable
     @Column(name = "product_faulty_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"N\"")
-    private String productFaultyYn;
+    private String productFaultyYn = "N";
 
     // 외장상태
     @Column(name = "extrr_status")
@@ -104,7 +104,7 @@ public class InStockWait extends BaseEntity {
     @Nullable
     @Column(name = "product_miss_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"N\"")
-    private String productMissYn;
+    private String productMissYn = "N";
 
     @Column(name = "miss_product")
     private String missProduct;

@@ -1,8 +1,10 @@
 package com.daema.commgmt.domain;
 
+import com.daema.wms.domain.Device;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +32,11 @@ public class GoodsOption {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id")
     private Goods goods;
+
+    @OneToMany(mappedBy = "goodsOption")
+    private List<Device> device;
+
+
 
     @Builder
     public GoodsOption(long goodsOptionId, String colorName, String distributor, String commonBarcode, Goods goods){

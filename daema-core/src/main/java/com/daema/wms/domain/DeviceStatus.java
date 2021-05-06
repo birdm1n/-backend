@@ -7,12 +7,13 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
-
+@Builder
 @Getter
 @Setter
 @EqualsAndHashCode(of="dvc_status_id")
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="device_status")
 public class DeviceStatus extends BaseEntity {
@@ -25,7 +26,7 @@ public class DeviceStatus extends BaseEntity {
     @Nullable
     @Column(name = "product_faulty_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"N\"")
-    private String productFaultyYn;
+    private String productFaultyYn = "N";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "extrr_status")
@@ -34,7 +35,7 @@ public class DeviceStatus extends BaseEntity {
     @Nullable
     @Column(name = "product_miss_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"N\"")
-    private String productMissYn;
+    private String productMissYn = "N";
 
     @Column(name = "miss_product")
     private String missProduct;
@@ -54,4 +55,5 @@ public class DeviceStatus extends BaseEntity {
 
     @OneToOne(mappedBy = "returnDeviceStatus")
     private ReturnStock returnStock;
+
 }

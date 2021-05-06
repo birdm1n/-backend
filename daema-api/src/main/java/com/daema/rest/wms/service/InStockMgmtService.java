@@ -21,14 +21,11 @@ import com.daema.wms.domain.dto.response.InStockWaitResponseDto;
 import com.daema.wms.domain.dto.response.SelectStockDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
-import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
-import javax.annotation.Nullable;
-import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,9 +42,11 @@ public class InStockMgmtService {
     private final GoodsRepository goodsRepository;
     private final InStockWaitRepository inStockWaitRepository;
     private final ProviderRepository providerRepository;
+    private final DeviceStockRepository deviceStockRepository;
+    private final DeviceStatusRepository deviceStatusRepository;
     private final AuthenticationUtil authenticationUtil;
 
-    public InStockMgmtService(InStockRepository inStockRepository, DeviceRepository deviceRepository, PubNotiRepository pubNotiRepository, StockRepository stockRepository, GoodsRepository goodsRepository, InStockWaitRepository inStockWaitRepository, ProviderRepository providerRepository, AuthenticationUtil authenticationUtil) {
+    public InStockMgmtService(InStockRepository inStockRepository, DeviceRepository deviceRepository, PubNotiRepository pubNotiRepository, StockRepository stockRepository, GoodsRepository goodsRepository, InStockWaitRepository inStockWaitRepository, ProviderRepository providerRepository, DeviceStockRepository deviceStockRepository, DeviceStatusRepository deviceStatusRepository, AuthenticationUtil authenticationUtil) {
         this.inStockRepository = inStockRepository;
         this.deviceRepository = deviceRepository;
         this.pubNotiRepository = pubNotiRepository;
@@ -55,6 +54,8 @@ public class InStockMgmtService {
         this.goodsRepository = goodsRepository;
         this.inStockWaitRepository = inStockWaitRepository;
         this.providerRepository = providerRepository;
+        this.deviceStockRepository = deviceStockRepository;
+        this.deviceStatusRepository = deviceStatusRepository;
         this.authenticationUtil = authenticationUtil;
     }
 
@@ -175,47 +176,86 @@ public class InStockMgmtService {
     }
 
     @Transactional
-    public ResponseCodeEnum inserInStock(List<InStockInsertReqDto> reqListDto) {
+    public ResponseCodeEnum insertInStock(List<InStockInsertReqDto> reqListDto) {
         long storeId = authenticationUtil.getStoreId();
+        long userId = authenticationUtil.getMemberSeq();
+        List<Device> devices = new ArrayList<>();
+        List<DeviceStock> deviceStocks = new ArrayList<>();
+        List<DeviceStatus> deviceStatuses = new ArrayList<>();
         List<InStock> inStocks = new ArrayList<>();
         if (CommonUtil.isNotEmptyList(reqListDto)) {
             for (InStockInsertReqDto reqDto : reqListDto) {
-                Device saveDevice = deviceRepository.save(
+                devices.add(
                         Device.builder()
-                        .barcodeType(reqDto.getBarcodeType())
-                        .fullBarcode(reqDto.getFullBarcode())
-//                        .productFaultyYn(reqDto.getProductFaultyYn())
-//                        .extrrStatus(reqDto.getExtrrStatus())
-//                        .productMissYn(reqDto.getProductMissYn())
-//                        .missProduct(reqDto.getMissProduct())
-//                        .addDdctAmt(reqDto.getAddDdctAmt())
-//                        .ddctAmt(reqDto.getDdctAmt())
-                        .goodsOption(GoodsOption
+                                .barcodeType(reqDto.getBarcodeType())
+                                .fullBarcode(reqDto.getFullBarcode())
+                                .goodsOption(
+                                        GoodsOption
+                                                .builder()
+                                                .goodsOptionId(reqDto.getGoodsOptionId())
+                                                .build()
+                                )
+                                .store(
+                                        Store
+                                                .builder()
+                                                .storeId(reqDto.getOwnStoreId())
+                                                .build()
+                                )
+                                .build()
+                );
+                // device 추가
+                deviceStatuses.add(
+                        DeviceStatus
                                 .builder()
-                                .goodsOptionId(reqDto.getGoodsOptionId())
-                                .build())
-//                        .stock(Stock
-//                                .builder()
-//                                .stockId(reqDto.getStockId())
-//                                .build())
-//                        .ownStore(Store
-//                                .builder()
-//                                .storeId(reqDto.getOwnStoreId())
-//                                .build())
-                        .build());
+                                .productFaultyYn(reqDto.getProductFaultyYn())
+                                .extrrStatus(reqDto.getExtrrStatus())
+                                .missProduct(reqDto.getMissProduct())
+                                .ddctAmt(reqDto.getDdctAmt())
+                                .addDdctAmt(reqDto.getAddDdctAmt())
+                                .build()
+                );
+                // device 추가
+                deviceStocks.add(
+                        DeviceStock
+                                .builder()
+                                .dvcStockType(WmsEnum.DvcStockType.IN_STOCK)
+                                .regiUserId(userId)
+                                .regiDateTime(LocalDateTime.now())
+                                .build()
+                );
 
-                inStocks.add(InStock.builder()
-                        .inStockStatus(reqDto.getInStockStatus())
-                        .inStockAmt(reqDto.getInStockAmt())
-                        .inStockMemo(reqDto.getInStockMemo())
-                        .provider(Provider
-                                .builder()
-                                .provId(reqDto.getProvId())
-                                .build())
-                        .device(saveDevice)
-                        .build());
+
+                inStocks.add(
+                        InStock.builder()
+                                .inStockStatus(reqDto.getInStockStatus())
+                                .inStockAmt(reqDto.getInStockAmt())
+                                .inStockMemo(reqDto.getInStockMemo())
+                                .provider(
+                                        Provider
+                                                .builder()
+                                                .provId(reqDto.getProvId())
+                                                .build()
+                                )
+                                .build()
+                );
 
             }
+            devices = deviceRepository.saveAll(devices);
+            for (int i = 0; i < devices.size(); i++) {
+                Device device = devices.get(i);
+                deviceStocks.get(i).setDevice(device);
+                deviceStatuses.get(i).setDevice(device);
+                inStocks.get(i).setDevice(device);
+            }
+            deviceStocks = deviceStockRepository.saveAll(deviceStocks);
+            deviceStatuses = deviceStatusRepository.saveAll(deviceStatuses);
+            for (int i = 0; i < deviceStocks.size(); i++) {
+                DeviceStock deviceStock = deviceStocks.get(i);
+                DeviceStatus deviceStatus = deviceStatuses.get(i);
+                inStocks.get(i).setDeviceStock(deviceStock);
+                inStocks.get(i).setInDeviceStatus(deviceStatus);
+            }
+
             inStockRepository.saveAll(inStocks);
 
         } else {

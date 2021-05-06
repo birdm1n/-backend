@@ -47,7 +47,7 @@ public abstract class BaseEntity {
     @NotAudited
     @Column(nullable = false, name = "del_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"N\"")
-    private String delYn;
+    private String delYn = "N";
 
 
 }

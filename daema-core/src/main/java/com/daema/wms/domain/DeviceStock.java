@@ -2,6 +2,7 @@ package com.daema.wms.domain;
 
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ public class DeviceStock {
     @Column(name = "regi_user_id")
     private long regiUserId;
 
+    @CreatedDate
     @Column(name = "regi_datetime")
     private LocalDateTime regiDateTime;
 
