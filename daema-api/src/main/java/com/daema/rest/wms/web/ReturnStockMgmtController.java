@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Api(value = "이동재고반품 API", tags = "이동재고반품 API")
 @RestController
@@ -36,8 +37,8 @@ public class ReturnStockMgmtController {
 
     @ApiOperation(value = "이동재고반품 등록", notes = "신규 이동재고반품 처리를 합니다.")
     @PostMapping("/insertReturnStock")
-    public ResponseEntity<CommonResponse<List<Long>>> insertReturnStock(@ApiParam(name = "신규 이동재고반품", required = true) @RequestBody List<ReturnStockReqDto> returnStockDtoList) {
-        List<Long> fails = returnStockMgmtService.insertReturnStock(returnStockDtoList);
+    public ResponseEntity<CommonResponse<Set<Long>>> insertReturnStock(@ApiParam(name = "신규 이동재고반품", required = true) @RequestBody List<ReturnStockReqDto> returnStockDtoList) {
+        Set<Long> fails = returnStockMgmtService.insertReturnStock(returnStockDtoList);
 
         return responseHandler.ok(fails);
     }
