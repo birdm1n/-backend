@@ -7,6 +7,8 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @SqlResultSetMapping(
         name="StockList",
@@ -83,6 +85,12 @@ public class Stock {
 
     @Column(name = "upd_datetime")
     private LocalDateTime updDateTime;
+
+    @OneToMany(mappedBy = "prevStock")
+    private List<DeviceStock> prevDeviceStockList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "nextStock")
+    private List<DeviceStock> nextDeviceStockList = new ArrayList<>();
 
     @Builder
     public Stock(long stockId, String stockName, long parentStockId, long storeId, String stockType, String chargerName

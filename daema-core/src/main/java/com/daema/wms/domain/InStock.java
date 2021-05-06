@@ -40,4 +40,11 @@ public class InStock extends BaseEntity {
     @JoinColumn(name = "dvc_id")
     private Device device;
 
+    @OneToOne
+    @JoinColumn(name = "dvc_stock_id")
+    private DeviceStock deviceStock;
+
+    @OneToOne
+    @JoinColumn(name = "dvc_status_id")
+    private DeviceStatus inDeviceStatus;
 }
