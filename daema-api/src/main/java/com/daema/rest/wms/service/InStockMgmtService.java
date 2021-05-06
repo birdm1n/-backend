@@ -146,7 +146,7 @@ public class InStockMgmtService {
                         .ddctAmt(requestDto.getDdctAmt())
                         .addDdctAmt(requestDto.getAddDdctAmt())
                         .ownStoreId(storeId)
-                        .holdStoreId(stockDto.getStoreId())
+                        .holdStoreId(stockDto.getStoreId()) //open_store_id
                         .build();
         inStockWaitRepository.save(insertEntity);
         return ResponseCodeEnum.OK;
@@ -180,7 +180,8 @@ public class InStockMgmtService {
         List<InStock> inStocks = new ArrayList<>();
         if (CommonUtil.isNotEmptyList(reqListDto)) {
             for (InStockInsertReqDto reqDto : reqListDto) {
-                Device saveDevice = deviceRepository.save(Device.builder()
+                Device saveDevice = deviceRepository.save(
+                        Device.builder()
                         .barcodeType(reqDto.getBarcodeType())
                         .fullBarcode(reqDto.getFullBarcode())
 //                        .productFaultyYn(reqDto.getProductFaultyYn())
@@ -202,6 +203,7 @@ public class InStockMgmtService {
 //                                .storeId(reqDto.getOwnStoreId())
 //                                .build())
                         .build());
+
                 inStocks.add(InStock.builder()
                         .inStockStatus(reqDto.getInStockStatus())
                         .inStockAmt(reqDto.getInStockAmt())

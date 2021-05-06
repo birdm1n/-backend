@@ -1,5 +1,6 @@
 package com.daema.wms.domain;
 
+import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,8 +29,9 @@ public class DeviceStock {
      * 6 - 판매이관
      * 7 - 반품
      */
-    @Column(nullable = false, name = "stock_type", columnDefinition ="char(1)")
-    private String stockType;
+    @Column(name = "dvc_stock_type")
+    @Enumerated(EnumType.STRING)
+    private WmsEnum.DvcStockType dvcStockType;
 
     @Column(name = "regi_user_id")
     private long regiUserId;
@@ -68,15 +70,14 @@ public class DeviceStock {
     private Delivery delivery;
 
     @Builder
-    public DeviceStock(Long dvcStockId, String stockType, Device device, Stock prevStock, Stock nextStock
-            ,Delivery delivery ,long regiUserId, LocalDateTime regiDateTime){
+    public DeviceStock(Long dvcStockId, WmsEnum.DvcStockType dvcStockType, long regiUserId, LocalDateTime regiDateTime, Device device, Stock prevStock, Stock nextStock, Delivery delivery) {
         this.dvcStockId = dvcStockId;
-        this.stockType = stockType;
+        this.dvcStockType = dvcStockType;
+        this.regiUserId = regiUserId;
+        this.regiDateTime = regiDateTime;
         this.device = device;
         this.prevStock = prevStock;
         this.nextStock = nextStock;
         this.delivery = delivery;
-        this.regiUserId = regiUserId;
-        this.regiDateTime = regiDateTime;
     }
 }
