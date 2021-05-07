@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -181,7 +180,7 @@ public class InStockMgmtService {
         long userId = authenticationUtil.getMemberSeq();
         List<Long> inStockWaitIds = new ArrayList<>();
         List<Device> devices = new ArrayList<>();
-        List<DeviceStock> deviceStocks = new ArrayList<>();
+        List<MoveStock> moveStocks = new ArrayList<>();
         List<DeviceStatus> deviceStatuses = new ArrayList<>();
         List<InStock> inStocks = new ArrayList<>();
         if (CommonUtil.isNotEmptyList(reqListDto)) {
@@ -217,16 +216,6 @@ public class InStockMgmtService {
                                 .addDdctAmt(reqDto.getAddDdctAmt())
                                 .build()
                 );
-                // device 추가
-                deviceStocks.add(
-                        DeviceStock
-                                .builder()
-                                .dvcStockType(WmsEnum.DvcStockType.IN_STOCK)
-                                .regiUserId(userId)
-                                .regiDateTime(LocalDateTime.now())
-                                .build()
-                );
-
 
                 inStocks.add(
                         InStock.builder()
@@ -246,16 +235,15 @@ public class InStockMgmtService {
             devices = deviceRepository.saveAll(devices);
             for (int i = 0; i < devices.size(); i++) {
                 Device device = devices.get(i);
-                deviceStocks.get(i).setDevice(device);
+                moveStocks.get(i).setDevice(device);
                 deviceStatuses.get(i).setDevice(device);
                 inStocks.get(i).setDevice(device);
             }
-            deviceStocks = deviceStockRepository.saveAll(deviceStocks);
+            moveStocks = deviceStockRepository.saveAll(moveStocks);
             deviceStatuses = deviceStatusRepository.saveAll(deviceStatuses);
-            for (int i = 0; i < deviceStocks.size(); i++) {
-                DeviceStock deviceStock = deviceStocks.get(i);
+            for (int i = 0; i < moveStocks.size(); i++) {
+                MoveStock moveStock = moveStocks.get(i);
                 DeviceStatus deviceStatus = deviceStatuses.get(i);
-                inStocks.get(i).setDeviceStock(deviceStock);
                 inStocks.get(i).setInDeviceStatus(deviceStatus);
             }
 

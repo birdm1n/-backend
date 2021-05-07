@@ -43,9 +43,11 @@ public class Delivery {
     @Column(name = "regi_datetime")
     private LocalDateTime regiDateTime;
 
-    @OneToOne
-    @JoinColumn(name = "dvc_stock_id")
-    private DeviceStock deviceStock;
+    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
+    private OutStock outStock;
+
+    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
+    private MoveStock moveStock;
 
     @Builder
     public Delivery(Long deliveryId, String deliveryType, Integer courier, String invoiceNo, String deliveryMemo

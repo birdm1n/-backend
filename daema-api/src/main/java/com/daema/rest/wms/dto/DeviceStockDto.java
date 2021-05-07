@@ -1,6 +1,6 @@
 package com.daema.rest.wms.dto;
 
-import com.daema.wms.domain.DeviceStock;
+import com.daema.wms.domain.MoveStock;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
 
@@ -13,23 +13,23 @@ import java.time.LocalDateTime;
 @Builder
 public class DeviceStockDto {
 
-	private Long dvcStockId;
-	private WmsEnum.DvcStockType dvcStockType;
+	private Long moveStockId;
+	private WmsEnum.MoveStockType moveStockType;
 	private long regiUserId;
 	private LocalDateTime regiDateTime;
 	private Long dvcId;
 	private Long prevStockId;
 	private Long nextStockId;
 
-	public static DeviceStockDto from(DeviceStock deviceStock) {
+	public static DeviceStockDto from(MoveStock moveStock) {
 		return DeviceStockDto.builder()
-				.dvcStockId(deviceStock.getDvcStockId())
-				.dvcStockType(deviceStock.getDvcStockType())
-				.regiUserId(deviceStock.getRegiUserId())
-				.regiDateTime(deviceStock.getRegiDateTime())
-				.dvcId(deviceStock.getDevice().getDvcId())
-				.prevStockId(deviceStock.getPrevStock().getStockId())
-				.nextStockId(deviceStock.getNextStock().getStockId())
+				.moveStockId(moveStock.getMoveStockId())
+				.moveStockType(moveStock.getMoveStockType())
+				.regiUserId(moveStock.getRegiUserId())
+				.regiDateTime(moveStock.getRegiDateTime())
+				.dvcId(moveStock.getDevice().getDvcId())
+				.prevStockId(moveStock.getPrevStock().getStockId())
+				.nextStockId(moveStock.getNextStock().getStockId())
 			.build();
 	}
 }

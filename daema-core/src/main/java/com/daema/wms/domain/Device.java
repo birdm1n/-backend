@@ -42,13 +42,16 @@ public class Device extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    @OneToOne(mappedBy = "device", fetch = FetchType.LAZY)
-    private InStock inStock;
+    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
+    private List<InStock> inStocks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
+    private List<OutStock> outStocks = new ArrayList<>();
 
     @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
     private List<DeviceStatus> deviceStatusList = new ArrayList<>();
 
     @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
-    private List<DeviceStock> deviceStockList = new ArrayList<>();
+    private List<MoveStock> moveStockList = new ArrayList<>();
 
 }

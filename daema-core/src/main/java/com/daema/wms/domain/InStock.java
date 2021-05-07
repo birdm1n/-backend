@@ -1,6 +1,7 @@
 package com.daema.wms.domain;
 
 import com.daema.base.domain.common.BaseEntity;
+import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
 
@@ -36,15 +37,19 @@ public class InStock extends BaseEntity {
     @JoinColumn(name = "prov_id")
     private Provider provider;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_id")
     private Device device;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dvc_stock_id")
-    private DeviceStock deviceStock;
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "dvc_status_id")
     private DeviceStatus inDeviceStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stock_id")
+    private Stock stock;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store;
 }

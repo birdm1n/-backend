@@ -116,20 +116,6 @@ class ReturnStockCtrl {
 		Device device = deviceRepository.findById(returnStockDto.getDvcId()).orElseGet(null);
 
 		if (device != null) {
-			DeviceStock deviceStock = deviceStockRepository.save(
-					DeviceStock.builder()
-							.dvcStockId(deviceStockDto.getDvcStockId())
-							.dvcStockType(deviceStockDto.getDvcStockType())
-							.device(device)
-							.prevStock(Stock.builder()
-									.stockId(deviceStockDto.getPrevStockId())
-									.build())
-							.nextStock(stock)
-							.regiUserId(authenticationUtil.getMemberSeq())
-							.regiDateTime(regiDatetime)
-							.build()
-			);
-
 			DeviceStatusDto deviceStatusDto = returnStockDto.getDeviceStatusDto();
 
 			DeviceStatus deviceStatus = deviceStatusRepository.save(
@@ -153,7 +139,10 @@ class ReturnStockCtrl {
 							.returnStockMemo(returnStockDto.getReturnStockMemo())
 							.ddctReleaseAmtYn(returnStockDto.getDdctReleaseAmtYn())
 							.device(device)
-							.deviceStock(deviceStock)
+							.prevStock(Stock.builder()
+									.stockId(deviceStockDto.getPrevStockId())
+									.build())
+							.nextStock(stock)
 							.returnDeviceStatus(deviceStatus)
 							.regiUserId(authenticationUtil.getMemberSeq())
 							.regiDateTime(regiDatetime)
