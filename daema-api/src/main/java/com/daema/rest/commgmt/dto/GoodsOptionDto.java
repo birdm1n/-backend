@@ -16,6 +16,9 @@ public class GoodsOptionDto {
 	private String colorName;
 	private String distributor;
 	private String commonBarcode;
+	private String capacity;
+	private String unLockYn;
+	private String delYn;
 
 	public static GoodsOptionDto from (GoodsOption goodsOption) {
 		return GoodsOptionDto.builder()
@@ -24,7 +27,10 @@ public class GoodsOptionDto {
 				.colorName(goodsOption.getColorName())
 				.distributor(goodsOption.getDistributor())
 				.commonBarcode(goodsOption.getCommonBarcode())
-				.build();
+				.capacity(goodsOption.getCapacity())
+				.delYn(goodsOption.getDelYn())
+				.unLockYn(goodsOption.getUnLockYn())
+			.build();
 	}
 
 	public static GoodsOption toEntity (GoodsOptionDto goodsOptionDto) {
@@ -34,6 +40,9 @@ public class GoodsOptionDto {
 				.colorName(goodsOptionDto.getColorName())
 				.distributor(goodsOptionDto.getDistributor())
 				.commonBarcode(goodsOptionDto.getCommonBarcode())
-				.build();
+				.capacity(goodsOptionDto.getCapacity())
+				.delYn(goodsOptionDto.getDelYn())
+				.unLockYn(goodsOptionDto.getUnLockYn())
+			.build();
 	}
 }

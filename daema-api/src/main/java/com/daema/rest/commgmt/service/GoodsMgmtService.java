@@ -188,18 +188,52 @@ public class GoodsMgmtService {
 
     @Transactional
     public void saveOptionInfo(List<GoodsOptionDto> goodsOptionDtos) {
-        //일괄 삭제, 재인서트
+
         if (goodsOptionDtos != null
                 && goodsOptionDtos.size() > 0) {
 
             Number goodsId = goodsOptionDtos.get(0).getGoodsId();
-            goodsOptionRepository.deleteByGoodsGoodsId(goodsId);
 
-            List<GoodsOption> insertOptionList = goodsOptionDtos.stream()
-                    .map(GoodsOptionDto::toEntity)
-                    .collect(Collectors.toList());
+            List<Number> ids = new ArrayList<>();
+            ids.add(goodsId);
 
-            goodsOptionRepository.saveAll(insertOptionList);
+            //goodsList 의 ids 로 옵션 추출
+            List<GoodsOption> optionList = goodsOptionRepository.findByGoodsGoodsIdIn(ids);
+            List<GoodsOption> saveOptionList = new ArrayList<>();
+            
+            Map<Number, GoodsOptionDto> optKeys = goodsOptionDtos.stream()
+                    .filter(goodsOptionDto -> goodsOptionDto.getGoodsOptionId() > 0)
+                    .collect(Collectors.toMap(GoodsOptionDto::getGoodsOptionId, goodsOptionDto -> goodsOptionDto));
+
+            optionList.forEach(
+                    goodsOption -> {
+                        if(!optKeys.containsKey(goodsOption.getGoodsOptionId())){
+                            goodsOption.updateDelYn(goodsOption, StatusEnum.FLAG_Y.getStatusMsg());
+                        }else{
+                            GoodsOptionDto goodsOptionDto = optKeys.get(goodsOption.getGoodsOptionId());
+
+                            goodsOption.setColorName(goodsOptionDto.getColorName());
+                            goodsOption.setDistributor(goodsOptionDto.getDistributor());
+                            goodsOption.setCommonBarcode(goodsOptionDto.getCommonBarcode());
+                            goodsOption.setCapacity(goodsOptionDto.getCapacity());
+                            goodsOption.setDelYn(goodsOptionDto.getDelYn());
+                            goodsOption.setUnLockYn(goodsOptionDto.getUnLockYn());
+                        }
+                    }
+            );
+
+            goodsOptionDtos.forEach(
+                    goodsOptionDto -> {
+                        if(goodsOptionDto.getGoodsOptionId() == 0) {
+                            goodsOptionDto.setDelYn(StatusEnum.FLAG_N.getStatusMsg());
+                            saveOptionList.add(
+                                    GoodsOptionDto.toEntity(goodsOptionDto)
+                            );
+                        }
+                    }
+            );
+
+            goodsOptionRepository.saveAll(saveOptionList);
 
         } else {
             throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());

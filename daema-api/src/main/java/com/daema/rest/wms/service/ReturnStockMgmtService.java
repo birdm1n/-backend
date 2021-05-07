@@ -34,18 +34,18 @@ public class ReturnStockMgmtService {
 	private final DeviceStatusRepository deviceStatusRepository;
 	private final DeviceStockRepository deviceStockRepository;
 	private final AuthenticationUtil authenticationUtil;
-	private final CtrlReturnStock ctrlReturnStock;
+	private final ReturnStockCtrl returnStockCtrl;
 
 	public ReturnStockMgmtService(StockRepository stockRepository, ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
 			,DeviceStatusRepository deviceStatusRepository, DeviceStockRepository deviceStockRepository
-			,AuthenticationUtil authenticationUtil, CtrlReturnStock ctrlReturnStock) {
+			,AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl) {
 		this.stockRepository = stockRepository;
 		this.returnStockRepository = returnStockRepository;
 		this.deviceRepository = deviceRepository;
 		this.deviceStatusRepository = deviceStatusRepository;
 		this.deviceStockRepository = deviceStockRepository;
 		this.authenticationUtil = authenticationUtil;
-		this.ctrlReturnStock = ctrlReturnStock;
+		this.returnStockCtrl = returnStockCtrl;
 	}
 
 	public ResponseDto<ReturnStockDto> getReturnStockList(ReturnStockRequestDto requestDto) {
@@ -68,7 +68,7 @@ public class ReturnStockMgmtService {
 			if (stock != null) {
 				for (ReturnStockReqDto returnStockDto : returnStockDtoList) {
 					try {
-						if(!ctrlReturnStock.save(returnStockDto, stock)){
+						if(!returnStockCtrl.save(returnStockDto, stock)){
 							failBarcode.add(returnStockDto.getDvcId());
 						}
 					}catch (Exception e){
@@ -88,7 +88,7 @@ public class ReturnStockMgmtService {
 }
 
 @Service
-class CtrlReturnStock {
+class ReturnStockCtrl {
 
 	private final ReturnStockRepository returnStockRepository;
 	private final DeviceRepository deviceRepository;
@@ -96,7 +96,7 @@ class CtrlReturnStock {
 	private final DeviceStockRepository deviceStockRepository;
 	private final AuthenticationUtil authenticationUtil;
 
-	public CtrlReturnStock(ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
+	public ReturnStockCtrl(ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
 			, DeviceStatusRepository deviceStatusRepository, DeviceStockRepository deviceStockRepository
 			, AuthenticationUtil authenticationUtil) {
 		this.returnStockRepository = returnStockRepository;

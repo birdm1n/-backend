@@ -29,6 +29,15 @@ public class GoodsOption {
     @Column(name = "common_barcode", length = 20)
     private String commonBarcode;
 
+    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1)")
+    private String delYn = "N";
+
+    @Column(nullable = false, name = "un_lock_yn", columnDefinition ="char(1)")
+    private String unLockYn = "N";
+
+    @Column(name = "capacity")
+    private String capacity;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id")
     private Goods goods;
@@ -39,12 +48,20 @@ public class GoodsOption {
 
 
     @Builder
-    public GoodsOption(long goodsOptionId, String colorName, String distributor, String commonBarcode, Goods goods){
+    public GoodsOption(long goodsOptionId, String colorName, String distributor, String commonBarcode
+                       ,String delYn ,String unLockYn ,String capacity ,Goods goods){
         this.goodsOptionId = goodsOptionId;
         this.colorName = colorName;
         this.distributor = distributor;
         this.commonBarcode = commonBarcode;
         this.goods = goods;
+        this.capacity = capacity;
+        this.delYn = delYn;
+        this.unLockYn = unLockYn;
     }
 
+    public GoodsOption updateDelYn(GoodsOption goodsOption, String delYn){
+        goodsOption.setDelYn(delYn);
+        return goodsOption;
+    }
 }
