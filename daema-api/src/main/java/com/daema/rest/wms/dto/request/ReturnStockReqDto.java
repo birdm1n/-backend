@@ -13,7 +13,7 @@ import lombok.*;
 public class ReturnStockReqDto {
 
 	private Long returnStockId;
-	private WmsEnum.InStockStatus inStockStatus;
+	private WmsEnum.InStockStatus returnStockStatus;
 	private Integer returnStockAmt;
 	private String returnStockMemo;
 	private String ddctReleaseAmtYn;

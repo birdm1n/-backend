@@ -8,4 +8,5 @@ import lombok.Setter;
 @Setter
 public class ReturnStockRequestDto extends SearchParamDto {
     //기기조회필터 사용
+    private String fullBarcode;
 }

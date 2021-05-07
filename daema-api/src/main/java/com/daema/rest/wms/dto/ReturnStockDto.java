@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class ReturnStockDto {
 
-	private WmsEnum.InStockStatus inStockStatus;
+	private WmsEnum.InStockStatus returnStockStatus;
 	private Integer returnStockAmt;
 	private String returnStockMemo;
 	private Long dvcId;

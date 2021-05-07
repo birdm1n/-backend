@@ -148,7 +148,7 @@ class ReturnStockCtrl {
 			returnStockRepository.save(
 					ReturnStock.builder()
 							.returnStockId(returnStockDto.getReturnStockId())
-							.inStockStatus(returnStockDto.getInStockStatus())
+							.returnStockStatus(returnStockDto.getReturnStockStatus())
 							.returnStockAmt(returnStockDto.getReturnStockAmt())
 							.returnStockMemo(returnStockDto.getReturnStockMemo())
 							.ddctReleaseAmtYn(returnStockDto.getDdctReleaseAmtYn())

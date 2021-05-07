@@ -22,7 +22,7 @@ public class ReturnStock {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private WmsEnum.InStockStatus inStockStatus;
+    private WmsEnum.InStockStatus returnStockStatus;
 
     /**
      * 반품비
@@ -58,11 +58,11 @@ public class ReturnStock {
     private DeviceStatus returnDeviceStatus;
 
     @Builder
-    public ReturnStock(Long returnStockId, WmsEnum.InStockStatus inStockStatus, Integer returnStockAmt
+    public ReturnStock(Long returnStockId, WmsEnum.InStockStatus returnStockStatus, Integer returnStockAmt
             , String returnStockMemo, String ddctReleaseAmtYn, Device device, DeviceStock deviceStock, DeviceStatus returnDeviceStatus
             ,long regiUserId ,LocalDateTime regiDateTime){
         this.returnStockId = returnStockId;
-        this.inStockStatus = inStockStatus;
+        this.returnStockStatus = returnStockStatus;
         this.returnStockAmt = returnStockAmt;
         this.returnStockMemo = returnStockMemo;
         this.ddctReleaseAmtYn = ddctReleaseAmtYn;
