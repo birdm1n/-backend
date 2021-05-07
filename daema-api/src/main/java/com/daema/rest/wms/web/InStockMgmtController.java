@@ -3,9 +3,12 @@ package com.daema.rest.wms.web;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
+import com.daema.rest.wms.dto.InStockMgmtDto;
 import com.daema.rest.wms.dto.request.InStockInsertReqDto;
 import com.daema.rest.wms.dto.request.InStockWaitInsertReqDto;
 import com.daema.rest.wms.service.InStockMgmtService;
+import com.daema.wms.domain.dto.request.InStockRequestDto;
+import com.daema.wms.domain.dto.response.InStockResponseDto;
 import com.daema.wms.domain.dto.response.InStockWaitResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import io.swagger.annotations.*;
@@ -30,13 +33,13 @@ public class InStockMgmtController {
 
     @ApiOperation(value = "입고 대기 목록 조회", notes = "입고 대기 목록을 조회합니다")
     @GetMapping("/getWaitInStockList/{inStockStatus}")
-    public ResponseEntity<CommonResponse<InStockWaitResponseDto>> getWaitInStockList(@ApiParam(name = "입고상태", required = true) @PathVariable WmsEnum.InStockStatus inStockStatus ) {
+    public ResponseEntity<CommonResponse<InStockWaitResponseDto>> getWaitInStockList(@ApiParam(value = "입고상태", required = true) @PathVariable WmsEnum.InStockStatus inStockStatus ) {
         return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getWaitInStockList(inStockStatus), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "입고 대기 등록", notes = "신규 입고대기 처리를 합니다.")
     @PostMapping("/insertWaitInStock")
-    public ResponseEntity<CommonResponse<Void>> insertWaitInStock(@ApiParam(name = "신규입고대기", required = true) @RequestBody InStockWaitInsertReqDto requestDto) {
+    public ResponseEntity<CommonResponse<Void>> insertWaitInStock(@ApiParam(value = "신규입고대기", required = true) @RequestBody InStockWaitInsertReqDto requestDto) {
         ResponseCodeEnum responseCodeEnum = inStockMgmtService.insertWaitInStock(requestDto);
 
         if (ResponseCodeEnum.OK != responseCodeEnum) {
@@ -57,13 +60,19 @@ public class InStockMgmtController {
 
     @ApiOperation(value = "입고 등록", notes = "신규 입고 처리를 합니다.")
     @PostMapping("/insertInStock")
-    public ResponseEntity<CommonResponse<Void>> insertInStock(@ApiParam(name = "신규입고", required = true) @RequestBody List<InStockInsertReqDto> requestDto) {
+    public ResponseEntity<CommonResponse<Void>> insertInStock(@ApiParam(value = "신규입고", required = true) @RequestBody List<InStockInsertReqDto> requestDto) {
         ResponseCodeEnum responseCodeEnum = inStockMgmtService.insertInStock(requestDto);
 
         if (ResponseCodeEnum.OK != responseCodeEnum) {
             return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
         }
         return responseHandler.ok();
+    }
+
+    @ApiOperation(value = "입고 목록 조회", notes = "입고 목록을 조회합니다")
+    @GetMapping("/getInStockList")
+    public ResponseEntity<CommonResponse<InStockResponseDto>> getInStockList(@ApiParam(value = "입고상태", required = true) InStockRequestDto requestDto ) {
+        return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getInStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.daema.rest.wms.service;
 
+import com.daema.base.domain.CodeDetail;
 import com.daema.commgmt.domain.GoodsOption;
 import com.daema.commgmt.domain.PubNoti;
 import com.daema.commgmt.domain.Store;
@@ -14,13 +15,13 @@ import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.wms.dto.request.InStockInsertReqDto;
 import com.daema.rest.wms.dto.request.InStockWaitInsertReqDto;
+import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.wms.domain.*;
-import com.daema.wms.domain.dto.response.InStockWaitDto;
-import com.daema.wms.domain.dto.response.InStockWaitGroupDto;
-import com.daema.wms.domain.dto.response.InStockWaitResponseDto;
-import com.daema.wms.domain.dto.response.SelectStockDto;
+import com.daema.wms.domain.dto.request.InStockRequestDto;
+import com.daema.wms.domain.dto.response.*;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -97,7 +98,7 @@ public class InStockMgmtService {
         if (stockDto == null) {
             return ResponseCodeEnum.NO_STOCK;
         }
-        String statusStr = storeId != stockDto.getStoreId() ? "이동재고" : "매장재고";
+        WmsEnum.StockStatStr statusStr = storeId != stockDto.getStoreId() ? WmsEnum.StockStatStr.M : WmsEnum.StockStatStr.I;
 
 
         //todo inStock => stock에 storeId로 입고된 데이터가 있는지 확인
@@ -268,5 +269,20 @@ public class InStockMgmtService {
 
         return ResponseCodeEnum.OK;
 
+    }
+
+    public Page<InStockResponseDto> getInStockList(InStockRequestDto requestDto) {
+        requestDto.setStoreId(authenticationUtil.getStoreId());
+
+        Page<InStockResponseDto> responseDtoPage = inStockRepository.getSearchPage(requestDto);
+
+        return null;
+    }
+
+    public SearchMatchResponseDto getMakerList(int telecom, long stockId) {
+
+        List<CodeDetail> codeDetailList = inStockRepository.getMakerList(telecom, stockId);
+
+        return null;
     }
 }

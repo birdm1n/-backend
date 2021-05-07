@@ -42,7 +42,8 @@ public class InStockWait extends BaseEntity {
     private String stockName;
     // 재고구분
     @Column(name = "status_str")
-    private String statusStr;
+    @Enumerated(EnumType.STRING)
+    private WmsEnum.StockStatStr statusStr;
 
     @Column(name = "maker")
     private int maker;

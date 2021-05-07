@@ -19,6 +19,20 @@ public enum WmsEnum {
         }
     }
 
+    public enum StockStatStr {
+        I("매장재고"),
+        M("이동재고")
+        ;
+        private final String statusMsg;
+
+        StockStatStr(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
+
     public enum InStockStatus {
         NORMAL( "정상"),
         OPEN("개봉")

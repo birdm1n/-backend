@@ -36,7 +36,7 @@ public class InStockInsertReqDto {
     @ApiModelProperty(value = "기기일련번호(바코드)",  required = true)
     private String fullBarcode;
 
-    @ApiModelProperty(value = "입고상태",  required = true)
+    @ApiModelProperty(value = "'입고상태",  required = true)
     private WmsEnum.InStockStatus inStockStatus;
 
     @ApiModelProperty(value = "외장상태",  required = true)

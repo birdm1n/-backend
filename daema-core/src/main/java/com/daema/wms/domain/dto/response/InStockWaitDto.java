@@ -50,7 +50,7 @@ public class InStockWaitDto {
     private String stockName;
 
     // 재고구분
-    private String statusStr;
+    private WmsEnum.StockStatStr statusStr;
 
     //제조사
     private int maker;
@@ -75,7 +75,7 @@ public class InStockWaitDto {
     private int inStockAmt;
 
 
-    // 입고상태 =  1, "정상"/ 2, "개봉"
+    // 입고상태
     private WmsEnum.InStockStatus inStockStatus;
     private String inStockStatusMsg;
 
@@ -85,7 +85,7 @@ public class InStockWaitDto {
     // 구성품 누락여부 = Y / N
     private String productMissYn;
 
-    // 외장상태 = 1, "상" / 2, "중" / 3, "하" / 4, "파손"
+    // 외장상태 = "상" / "중" / "하" / "파손"
     private WmsEnum.DeviceExtrrStatus extrrStatus;
     private String extrrStatusMsg;
 
