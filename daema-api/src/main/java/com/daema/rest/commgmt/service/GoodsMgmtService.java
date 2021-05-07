@@ -61,7 +61,7 @@ public class GoodsMgmtService {
                 .collect(Collectors.toList());
 
         //goodsList 의 ids 로 옵션 추출
-        List<GoodsOption> optionList = goodsOptionRepository.findByGoodsGoodsIdIn(ids);
+        List<GoodsOption> optionList = goodsOptionRepository.findByGoodsGoodsIdInAndDelYn(ids, StatusEnum.FLAG_N.getStatusMsg());
 
         Map<Goods, List<GoodsOption>> optionMap = optionList.stream()
                 .collect(Collectors.groupingBy(GoodsOption::getGoods));
@@ -161,7 +161,10 @@ public class GoodsMgmtService {
             if(CommonUtil.isNotEmptyList(goodsList)) {
                 Optional.ofNullable(goodsList).orElseGet(Collections::emptyList).forEach(goods -> {
                     goods.updateDelYn(goods, StatusEnum.FLAG_Y.getStatusMsg());
-                    goodsOptionRepository.deleteByGoodsGoodsId(goods.getGoodsId());
+
+                    goods.getOptionList().forEach(
+                            goodsOption -> goodsOption.updateDelYn(goodsOption, StatusEnum.FLAG_Y.getStatusMsg())
+                    );
                 });
             }else{
                 throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
@@ -198,7 +201,7 @@ public class GoodsMgmtService {
             ids.add(goodsId);
 
             //goodsList 의 ids 로 옵션 추출
-            List<GoodsOption> optionList = goodsOptionRepository.findByGoodsGoodsIdIn(ids);
+            List<GoodsOption> optionList = goodsOptionRepository.findByGoodsGoodsIdInAndDelYn(ids, StatusEnum.FLAG_N.getStatusMsg());
             List<GoodsOption> saveOptionList = new ArrayList<>();
             
             Map<Number, GoodsOptionDto> optKeys = goodsOptionDtos.stream()
@@ -216,7 +219,7 @@ public class GoodsMgmtService {
                             goodsOption.setDistributor(goodsOptionDto.getDistributor());
                             goodsOption.setCommonBarcode(goodsOptionDto.getCommonBarcode());
                             goodsOption.setCapacity(goodsOptionDto.getCapacity());
-                            goodsOption.setDelYn(goodsOptionDto.getDelYn());
+                            goodsOption.setDelYn(StatusEnum.FLAG_N.getStatusMsg());
                             goodsOption.setUnLockYn(goodsOptionDto.getUnLockYn());
                         }
                     }

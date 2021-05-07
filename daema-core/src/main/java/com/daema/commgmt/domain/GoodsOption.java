@@ -32,7 +32,7 @@ public class GoodsOption {
     @Column(nullable = false, name = "del_yn", columnDefinition ="char(1)")
     private String delYn = "N";
 
-    @Column(nullable = false, name = "un_lock_yn", columnDefinition ="char(1)")
+    @Column(name = "un_lock_yn", columnDefinition ="char(1)")
     private String unLockYn = "N";
 
     @Column(name = "capacity")
