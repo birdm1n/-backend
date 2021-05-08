@@ -88,12 +88,22 @@ public class ResponseDto<T> extends PagingDto {
      * @param dataList
      * @param fn
      */
-    public ResponseDto (Function<T, T> fn, Page<T> dataList){
+    public ResponseDto (Page<T> dataList, Function<T, T> fn){
         if(dataList != null) {
 
             setResponsePaginationInfo(dataList);
 
             this.setResultList(dataList.stream().map(fn).collect(Collectors.toList()));
+        }
+    }
+    
+    // Page<DTO>인 경우 사용
+    public ResponseDto (Page<T> dataList){
+        if(dataList != null) {
+
+            setResponsePaginationInfo(dataList);
+
+            this.setResultList(dataList.stream().collect(Collectors.toList()));
         }
     }
 

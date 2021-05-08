@@ -21,6 +21,7 @@ import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
+import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -339,6 +340,31 @@ public class GoodsMgmtService {
         return goodsRepository.goodsMatchBarcode(commonBarcode);
     }
 
+    @Transactional(readOnly = true)
+    public List<SearchMatchResponseDto> getCapacityList() {
+        long storeid = authenticationUtil.getStoreId();
+        List<Goods> goodsList =  goodsRepository.getCapacityList(storeid);
+
+        return goodsList.stream()
+                .map(goods -> SearchMatchResponseDto
+                        .builder()
+                        .capacity(goods.getCapacity())
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
+
+    public List<SearchMatchResponseDto> getColorList(long goodsId) {
+        List<GoodsOption> goodsOptionList = goodsRepository.getColorList(goodsId);
+        return goodsOptionList.stream()
+                .map(goodsOption -> SearchMatchResponseDto
+                        .builder()
+                        .goodsOptionId(goodsOption.getGoodsOptionId())
+                        .colorName(goodsOption.getColorName())
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
 }
 
 

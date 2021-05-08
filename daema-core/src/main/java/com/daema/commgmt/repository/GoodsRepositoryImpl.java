@@ -3,6 +3,7 @@ package com.daema.commgmt.repository;
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.commgmt.domain.Goods;
+import com.daema.commgmt.domain.GoodsOption;
 import com.daema.commgmt.domain.attr.NetworkAttribute;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
 import com.daema.commgmt.domain.dto.response.GoodsMatchRespDto;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.daema.commgmt.domain.QGoods.goods;
+import static com.daema.wms.domain.QDevice.device;
 import static com.daema.commgmt.domain.QGoodsOption.goodsOption;
 
 public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements CustomGoodsRepository {
@@ -217,6 +219,44 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
 
 
         return goodsMatchRespDto;
+    }
+
+    @Override
+    public List<Goods> getCapacityList(Long storeId) {
+        JPQLQuery<Goods> query = getQuerydsl().createQuery();
+        return query.select(Projections.fields(
+                Goods.class
+                , goods.capacity
+        ))
+                .distinct()
+                .from(device)
+                .innerJoin(device.goodsOption, goodsOption).on(
+                        device.store.storeId.eq(storeId),
+                        device.delYn.eq("N"),
+                        goodsOption.delYn.eq("N")
+                )
+                .innerJoin(goodsOption.goods, goods).on(
+                        goods.delYn.eq("N")
+                )
+                .orderBy(goods.capacity.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<GoodsOption> getColorList(long goodsId) {
+        JPQLQuery<GoodsOption> query = getQuerydsl().createQuery();
+        return query.select(Projections.fields(
+                GoodsOption.class
+                , goodsOption.goodsOptionId
+                , goodsOption.colorName
+        ))
+                .from(goodsOption)
+                .where(
+                        goodsOption.goods.goodsId.eq(goodsId),
+                        goodsOption.delYn.eq("N")
+                )
+                .orderBy(goodsOption.colorName.asc())
+                .fetch();
     }
 
     private BooleanExpression containsGoodsName(String name) {

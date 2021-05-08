@@ -1,12 +1,13 @@
 package com.daema.rest.wms.service;
 
-import com.daema.base.domain.CodeDetail;
+import com.daema.commgmt.domain.Goods;
 import com.daema.commgmt.domain.GoodsOption;
 import com.daema.commgmt.domain.PubNoti;
 import com.daema.commgmt.domain.Store;
 import com.daema.commgmt.domain.dto.response.GoodsMatchRespDto;
 import com.daema.commgmt.repository.GoodsRepository;
 import com.daema.commgmt.repository.PubNotiRepository;
+import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.enums.StatusEnum;
@@ -270,19 +271,25 @@ public class InStockMgmtService {
         return ResponseCodeEnum.OK;
 
     }
-
-    public Page<InStockResponseDto> getInStockList(InStockRequestDto requestDto) {
+    @Transactional(readOnly = true)
+    public ResponseDto<InStockResponseDto> getInStockList(InStockRequestDto requestDto) {
         requestDto.setStoreId(authenticationUtil.getStoreId());
 
-        Page<InStockResponseDto> responseDtoPage = inStockRepository.getSearchPage(requestDto);
-
-        return null;
+        Page<InStockResponseDto> responseDtoPage = inStockRepository.getInStockList(requestDto);
+        return new ResponseDto(responseDtoPage);
     }
 
-    public SearchMatchResponseDto getMakerList(int telecom, long stockId) {
+    @Transactional(readOnly = true)
+    public List<SearchMatchResponseDto> getDeviceList(int telecomId, int makerId) {
+        long storeId = authenticationUtil.getStoreId();
+        List<Goods> deviceList = inStockRepository.getDeviceList(storeId, telecomId , makerId);
 
-        List<CodeDetail> codeDetailList = inStockRepository.getMakerList(telecom, stockId);
-
-        return null;
+        return deviceList.stream()
+                .map(goods -> SearchMatchResponseDto
+                        .builder()
+                        .goodsId(goods.getGoodsId())
+                        .modelName(goods.getGoodsName())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

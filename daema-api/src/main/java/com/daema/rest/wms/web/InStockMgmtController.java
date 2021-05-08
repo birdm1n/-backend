@@ -1,5 +1,6 @@
 package com.daema.rest.wms.web;
 
+import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
@@ -71,7 +72,7 @@ public class InStockMgmtController {
 
     @ApiOperation(value = "입고 목록 조회", notes = "입고 목록을 조회합니다")
     @GetMapping("/getInStockList")
-    public ResponseEntity<CommonResponse<InStockResponseDto>> getInStockList(@ApiParam(value = "입고상태", required = true) InStockRequestDto requestDto ) {
+    public ResponseEntity<CommonResponse<ResponseDto<InStockResponseDto>>> getInStockList(@ApiParam(value = "입고상태", required = true) InStockRequestDto requestDto ) {
         return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getInStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
