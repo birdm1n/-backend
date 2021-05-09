@@ -49,7 +49,7 @@ public class DeviceStatus extends BaseEntity {
     @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1)")
     private String ddctReleaseAmtYn;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_id")
     private Device device;
 

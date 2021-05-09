@@ -7,10 +7,8 @@ import com.daema.commgmt.domain.Goods;
 import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
 import com.daema.wms.domain.dto.response.InStockResponseDto;
-import com.daema.wms.domain.dto.response.InStockWaitDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomInStockRepository;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
@@ -30,7 +28,6 @@ import static com.daema.commgmt.domain.QStore.store;
 import static com.daema.wms.domain.QDevice.device;
 import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
 import static com.daema.wms.domain.QInStock.inStock;
-import static com.daema.wms.domain.QInStockWait.inStockWait;
 import static com.daema.wms.domain.QProvider.provider;
 import static com.daema.wms.domain.QStock.stock;
 
@@ -42,41 +39,6 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
 
     @PersistenceContext
     private EntityManager em;
-
-    @Override
-    public List<InStockWaitDto> getWaitInStockList(InStockRequestDto requestDto) {
-        JPQLQuery<InStockWaitDto> query = getQuerydsl().createQuery();
-
-        query.select(Projections.fields(
-                InStockWaitDto.class
-//                , inStockWait.waitId.as("waitId")
-                , inStockWait.regiDateTime.as("regiDateTime")
-//            ,inStockWait.regiUserId.as("regiUserId")
-//            ,inStockWait.updDateTime.as("updDateTime")
-//            ,inStockWait.updUserId.as("updUserId")
-//            ,inStockWait.delYn.as("delYn")
-//            ,inStockWait.waitId.as("waitId")
-//            ,inStockWait.inStockType.as("inStockType")
-//            ,inStockWait.inStockStatus.as("inStockStatus")
-//            ,inStockWait.inStockAmt.as("inStockAmt")
-//            ,inStockWait.inStockMemo.as("inStockMemo")
-//            ,inStockWait.productFaultyYn.as("productFaultyYn")
-//            ,inStockWait.extrrStatus.as("extrrStatus")
-//            ,inStockWait.productMissYn.as("productMissYn")
-//            ,inStockWait.missProduct.as("missProduct")
-//            ,inStockWait.ddctAmt.as("ddctAmt")
-//            ,inStockWait.ownStoreId.as("ownStoreId")
-//            ,inStockWait.holdStoreId.as("holdStoreId")
-//            ,inStockWait.goodsOptionId.as("goodsOptionId")
-//            ,inStockWait.goodsId.as("goodsId")
-        ));
-
-        return query.from(inStockWait)
-                .leftJoin(provider).on(inStockWait.provId.eq(provider.provId))
-                .leftJoin(store).on(inStockWait.ownStoreId.eq(store.storeId))
-                .leftJoin(store).on(inStockWait.ownStoreId.eq(store.storeId))
-                .fetch();
-    }
 
     @Override
     public Page<InStockResponseDto> getInStockList(InStockRequestDto requestDto) {

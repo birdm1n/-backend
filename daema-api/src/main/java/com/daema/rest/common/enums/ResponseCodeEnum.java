@@ -9,9 +9,11 @@ public enum ResponseCodeEnum {
     DELETED_USER("9004", "탈퇴한 사용자 입니다"),
     FAIL("9999", "FAIL"),
     NOT_MATCH_TELECOM("1001", "선택하신 통신사와 기기의 통신사가 상이합니다."),
-    DUPL_DATA("1002", "중복된 데이터가 존재하지 않습니다."),
+    DUPL_DATA("1002", "중복된 데이터가 존재합니다.."),
     NO_STOCK("1003", "보유처 데이터가 존재하지 않습니다."),
     NO_PROV("1004", "공급처 데이터가 존재하지 않습니다."),
+    DUPL_DVC("1005", "동일한 기기가 존재합니다."),
+    NO_GOODS("1006", "공통 바코드와 일치하는 상품이 존재하지 않습니다.")
     ;
 
     private String resultCode;

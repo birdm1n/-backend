@@ -6,6 +6,7 @@ import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.dto.InStockMgmtDto;
 import com.daema.rest.wms.dto.request.InStockInsertReqDto;
+import com.daema.rest.wms.dto.request.InStockUpdateReqDto;
 import com.daema.rest.wms.dto.request.InStockWaitInsertReqDto;
 import com.daema.rest.wms.service.InStockMgmtService;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
@@ -74,6 +75,13 @@ public class InStockMgmtController {
     @GetMapping("/getInStockList")
     public ResponseEntity<CommonResponse<ResponseDto<InStockResponseDto>>> getInStockList(@ApiParam(value = "입고상태", required = true) InStockRequestDto requestDto ) {
         return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getInStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
+
+    @ApiOperation(value = "입고 목록 수정", notes = "입고 목록을 수정합니다")
+    @GetMapping("/updateInStock")
+    public ResponseEntity<CommonResponse<Void>> updateInStock(InStockUpdateReqDto requestDto ) {
+        inStockMgmtService.updateInStock(requestDto);
+        return responseHandler.ok();
     }
 
 }

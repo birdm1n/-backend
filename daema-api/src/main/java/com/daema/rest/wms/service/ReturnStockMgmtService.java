@@ -32,12 +32,12 @@ public class ReturnStockMgmtService {
 	private final ReturnStockRepository returnStockRepository;
 	private final DeviceRepository deviceRepository;
 	private final DeviceStatusRepository deviceStatusRepository;
-	private final DeviceStockRepository deviceStockRepository;
+	private final MoveStockRepository deviceStockRepository;
 	private final AuthenticationUtil authenticationUtil;
 	private final ReturnStockCtrl returnStockCtrl;
 
 	public ReturnStockMgmtService(StockRepository stockRepository, ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
-			,DeviceStatusRepository deviceStatusRepository, DeviceStockRepository deviceStockRepository
+			,DeviceStatusRepository deviceStatusRepository, MoveStockRepository deviceStockRepository
 			,AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl) {
 		this.stockRepository = stockRepository;
 		this.returnStockRepository = returnStockRepository;
@@ -93,11 +93,11 @@ class ReturnStockCtrl {
 	private final ReturnStockRepository returnStockRepository;
 	private final DeviceRepository deviceRepository;
 	private final DeviceStatusRepository deviceStatusRepository;
-	private final DeviceStockRepository deviceStockRepository;
+	private final MoveStockRepository deviceStockRepository;
 	private final AuthenticationUtil authenticationUtil;
 
 	public ReturnStockCtrl(ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
-			, DeviceStatusRepository deviceStatusRepository, DeviceStockRepository deviceStockRepository
+			, DeviceStatusRepository deviceStatusRepository, MoveStockRepository deviceStockRepository
 			, AuthenticationUtil authenticationUtil) {
 		this.returnStockRepository = returnStockRepository;
 		this.deviceRepository = deviceRepository;

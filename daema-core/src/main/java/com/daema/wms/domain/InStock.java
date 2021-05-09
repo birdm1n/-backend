@@ -45,7 +45,7 @@ public class InStock extends BaseEntity {
     @JoinColumn(name = "dvc_id")
     private Device device;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_status_id")
     private DeviceStatus inDeviceStatus;
 
