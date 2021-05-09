@@ -27,7 +27,7 @@ public class InStockRequestDto extends SearchParamDto {
     private int maker;
     
     //기기명
-    private String goodsId;
+    private Long goodsId;
     
     //용량
     private String capacity;

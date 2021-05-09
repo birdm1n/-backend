@@ -8,7 +8,9 @@ import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
 import com.daema.wms.domain.dto.response.InStockResponseDto;
 import com.daema.wms.domain.dto.response.InStockWaitDto;
+import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomInStockRepository;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -136,6 +139,21 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                 .innerJoin(telecom).on(
                     goods.networkAttribute.telecom.eq(telecom.codeSeq)
                 )
+                .where(
+                        betweenInstockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
+                        eqProvId(requestDto.getProvId()),
+                        eqStockId(requestDto.getStockId()),
+                        eqInStockStatus(requestDto.getInStockStatus()),
+                        eqStatusStr(requestDto.getStatusStr()),
+                        eqFullBarcode(requestDto.getFullBarcode()),
+                        eqFaultyYn(requestDto.getProductFaultyYn()),
+                        eqExtrrStatus(requestDto.getExtrrStatus()),
+                        eqColorName(requestDto.getColorName()),
+                        eqGoodsId(requestDto.getGoodsId()),
+                        eqCapacity(requestDto.getCapacity()),
+                        eqTelecom(requestDto.getTelecom()),
+                        eqMaker(requestDto.getMaker())
+                )
                 .orderBy(inStock.regiDateTime.desc())
                 .fetch();
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
@@ -148,6 +166,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
 
         return new PageImpl<>(resultList, pageable, total);
     }
+
 
     @Override
     public List<Goods> getDeviceList(long storeId, int telecomId, int makerId) {
@@ -187,4 +206,82 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
         }
         return goods.maker.eq(maker);
     }
+    private BooleanExpression eqProvId(Long provId) {
+        if(provId == null){
+            return null;
+        }
+        return inStock.provider.provId.eq(provId);
+
+    }
+    private BooleanExpression eqStockId(Long stockId) {
+        if(stockId == null){
+            return null;
+        }
+        return inStock.stock.stockId.eq(stockId);
+    }
+    private BooleanExpression eqGoodsId(Long goodsId) {
+        if(goodsId == null){
+            return null;
+        }
+        return goods.goodsId.eq(goodsId);
+    }
+
+    private BooleanExpression eqInStockStatus(WmsEnum.InStockStatus inStockStatus) {
+        if (inStockStatus == null){
+            return null;
+        }
+        return inStock.inStockStatus.eq(inStockStatus);
+    }
+    private BooleanExpression eqCapacity(String capacity) {
+        if(StringUtils.isEmpty(capacity)){
+            return null;
+        }
+        return goods.capacity.eq(capacity);
+    }
+    private BooleanExpression eqColorName(String colorName) {
+        if(StringUtils.isEmpty(colorName)){
+            return null;
+        }
+        return goodsOption.colorName.eq(colorName);
+    }
+
+    private BooleanExpression eqFullBarcode(String fullBarcode) {
+        if(StringUtils.isEmpty(fullBarcode)){
+            return null;
+        }
+        return device.fullBarcode.eq(fullBarcode);
+    }
+
+    private BooleanExpression eqExtrrStatus(WmsEnum.DeviceExtrrStatus extrrStatus) {
+        if(extrrStatus == null){
+            return null;
+        }
+        return deviceStatus.extrrStatus.eq(extrrStatus);
+    }
+
+    private BooleanExpression eqFaultyYn(String productFaultyYn) {
+        if(StringUtils.isEmpty(productFaultyYn)){
+            return null;
+        }
+        return deviceStatus.productFaultyYn.eq(productFaultyYn);
+    }
+
+    private BooleanExpression eqStatusStr(WmsEnum.StockStatStr statusStr) {
+        if(statusStr == null){
+            return null;
+        }
+        return inStock.statusStr.eq(statusStr);
+    }
+
+
+    private BooleanExpression betweenInstockRegDt(String startDt, String endDt){
+        if(StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)){
+            return null;
+        }
+        return inStock.regiDateTime.between(
+                RetrieveClauseBuilder.stringToLocalDateTime(startDt, "s"),
+                RetrieveClauseBuilder.stringToLocalDateTime(endDt, "e")
+        );
+    }
+
 }
