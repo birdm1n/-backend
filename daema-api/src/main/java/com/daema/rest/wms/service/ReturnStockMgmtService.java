@@ -8,10 +8,12 @@ import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.wms.dto.DeviceStatusDto;
-import com.daema.rest.wms.dto.DeviceStockDto;
 import com.daema.rest.wms.dto.ReturnStockDto;
 import com.daema.rest.wms.dto.request.ReturnStockReqDto;
-import com.daema.wms.domain.*;
+import com.daema.wms.domain.Device;
+import com.daema.wms.domain.DeviceStatus;
+import com.daema.wms.domain.ReturnStock;
+import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
 import com.daema.wms.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -112,11 +114,10 @@ class ReturnStockCtrl {
 		boolean success = false;
 
 		LocalDateTime regiDatetime = LocalDateTime.now();
-		DeviceStockDto deviceStockDto = returnStockDto.getDeviceStockDto();
 		Device device = deviceRepository.findById(returnStockDto.getDvcId()).orElseGet(null);
 
 		if (device != null) {
-			DeviceStatusDto deviceStatusDto = returnStockDto.getDeviceStatusDto();
+			DeviceStatusDto deviceStatusDto = returnStockDto.getReturnDeviceStatus();
 
 			DeviceStatus deviceStatus = deviceStatusRepository.save(
 					DeviceStatus.builder()
@@ -133,14 +134,14 @@ class ReturnStockCtrl {
 
 			returnStockRepository.save(
 					ReturnStock.builder()
-							.returnStockId(returnStockDto.getReturnStockId())
+							.returnStockId(0L)
 							.returnStockStatus(returnStockDto.getReturnStockStatus())
 							.returnStockAmt(returnStockDto.getReturnStockAmt())
 							.returnStockMemo(returnStockDto.getReturnStockMemo())
-							.ddctReleaseAmtYn(returnStockDto.getDdctReleaseAmtYn())
+							.ddctReleaseAmtYn(returnStockDto.getReturnDeviceStatus().getDdctReleaseAmtYn())
 							.device(device)
 							.prevStock(Stock.builder()
-									.stockId(deviceStockDto.getPrevStockId())
+									.stockId(returnStockDto.getPrevStockId())
 									.build())
 							.nextStock(stock)
 							.returnDeviceStatus(deviceStatus)

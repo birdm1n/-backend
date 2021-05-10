@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DeviceStockDto {
+public class MoveStockDto {
 
 	private Long moveStockId;
 	private WmsEnum.MoveStockType moveStockType;
@@ -21,8 +21,8 @@ public class DeviceStockDto {
 	private Long prevStockId;
 	private Long nextStockId;
 
-	public static DeviceStockDto from(MoveStock moveStock) {
-		return DeviceStockDto.builder()
+	public static MoveStockDto from(MoveStock moveStock) {
+		return MoveStockDto.builder()
 				.moveStockId(moveStock.getMoveStockId())
 				.moveStockType(moveStock.getMoveStockType())
 				.regiUserId(moveStock.getRegiUserId())

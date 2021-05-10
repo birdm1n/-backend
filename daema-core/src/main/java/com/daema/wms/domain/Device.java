@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "dvc_id")
-@ToString
+@ToString(exclude = {"inStocks", "outStocks", "deviceStatusList", "moveStockList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

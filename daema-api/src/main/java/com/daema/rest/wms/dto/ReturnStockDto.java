@@ -14,7 +14,7 @@ public class ReturnStockDto {
 	private Integer returnStockAmt;
 	private String returnStockMemo;
 	private Long dvcId;
-	private DeviceStockDto deviceStockDto;
+	private MoveStockDto deviceStockDto;
 	private DeviceStatusDto deviceStatusDto;
 }
 

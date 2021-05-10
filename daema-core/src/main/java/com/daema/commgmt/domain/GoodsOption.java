@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of="goodsOptionId")
-@ToString
+@ToString(exclude = {"device"})
 @NoArgsConstructor
 @Entity
 @Table(name="goods_option")
@@ -41,6 +41,7 @@ public class GoodsOption {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id")
     private Goods goods;
+
 
     @OneToMany(mappedBy = "goodsOption")
     private List<Device> device;

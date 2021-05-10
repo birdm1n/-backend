@@ -1,7 +1,6 @@
 package com.daema.commgmt.domain;
 
 import com.daema.commgmt.domain.attr.NetworkAttribute;
-import com.daema.wms.domain.Device;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -13,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of="goodsId")
-@ToString
+@ToString(exclude = {"optionList"})
 @NoArgsConstructor
 @Entity
 @Table(name="goods")

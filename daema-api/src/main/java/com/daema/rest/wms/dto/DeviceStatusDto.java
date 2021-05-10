@@ -17,6 +17,7 @@ public class DeviceStatusDto {
 	private String missProduct;
 	private Integer ddctAmt;
 	private Integer addDdctAmt;
+	private String ddctReleaseAmtYn;
 }
 
 

@@ -37,7 +37,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long seq;
+    private Long seq;
 
     //계정명. 로그인ID
     @Column(unique = true)

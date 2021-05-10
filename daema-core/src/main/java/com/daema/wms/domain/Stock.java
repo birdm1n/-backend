@@ -30,7 +30,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of="stock_id")
-@ToString
+@ToString(exclude = {"prevMoveStockList", "nextMoveStockList"})
 @NoArgsConstructor
 @Entity
 @Table(name="stock")

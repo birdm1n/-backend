@@ -40,6 +40,7 @@ public class InStockMgmtDto {
                 .updUserId(inStock.getUpdUserId())
                 .delYn(inStock.getDelYn())
                 .provId(inStock.getProvider().getProvId())
+                .stockId(inStock.getStock().getStockId())
                 .dvcId(inStock.getDevice().getDvcId())
                 .build();
     }
