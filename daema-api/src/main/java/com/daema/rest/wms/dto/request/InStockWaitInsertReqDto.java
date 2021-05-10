@@ -41,6 +41,9 @@ public class InStockWaitInsertReqDto {
     @ApiModelProperty(value = "추가 차감비")
     private int addDdctAmt;
 
+    @ApiModelProperty(value = "출고가 차감 여부")
+    private String outStockAmtYn;
+
     @ApiModelProperty(value = "구성품 누락여부")
     private String productMissYn;
     

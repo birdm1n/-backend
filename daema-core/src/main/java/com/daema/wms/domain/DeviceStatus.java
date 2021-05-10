@@ -46,6 +46,11 @@ public class DeviceStatus extends BaseEntity {
     @Column(name = "add_ddct_amt")
     private Integer addDdctAmt;
 
+    @Nullable
+    @Column(name = "out_stock_amt_yn", columnDefinition ="char(1)")
+    @ColumnDefault("\"N\"")
+    private String outStockAmtYn = "N";
+
     @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1)")
     private String ddctReleaseAmtYn;
 

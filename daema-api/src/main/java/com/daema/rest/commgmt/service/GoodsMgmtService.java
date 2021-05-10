@@ -43,7 +43,7 @@ public class GoodsMgmtService {
     private final AuthenticationUtil authenticationUtil;
 
     public GoodsMgmtService(GoodsRepository goodsRepository, GoodsOptionRepository goodsOptionRepository, GoodsRegReqRepository goodsRegReqRepository
-                            ,GoodsRegReqRejectRepository goodsRegReqRejectRepository, AuthenticationUtil authenticationUtil) {
+            , GoodsRegReqRejectRepository goodsRegReqRejectRepository, AuthenticationUtil authenticationUtil) {
         this.goodsRepository = goodsRepository;
         this.goodsOptionRepository = goodsOptionRepository;
         this.goodsRegReqRepository = goodsRegReqRepository;
@@ -77,8 +77,8 @@ public class GoodsMgmtService {
     }
 
     /**
-     * 시스템 관리자 : goods 테이블
-     * 일반 사용자 : goods_reg_req 테이블
+     시스템 관리자 : goods 테이블
+     일반 사용자 : goods_reg_req 테이블
      */
     public void insertData(GoodsMgmtDto goodsMgmtDto) {
         //TODO ifnull return 함수 추가
@@ -100,17 +100,17 @@ public class GoodsMgmtService {
             );
         } else {
             goodsRegReqRepository.save(
-                GoodsRegReq.builder()
-                        .goodsName(goodsMgmtDto.getGoodsName())
-                        .modelName(goodsMgmtDto.getModelName())
-                        .maker(goodsMgmtDto.getMaker())
-                        .telecom(goodsMgmtDto.getTelecom())
-                        .network(goodsMgmtDto.getNetwork())
-                        .capacity(goodsMgmtDto.getCapacity())
-                        .reqStoreId(authenticationUtil.getStoreId())
-                        .reqStatus(StatusEnum.REG_REQ.getStatusCode())
-                        .regiDateTime(LocalDateTime.now())
-                    .build()
+                    GoodsRegReq.builder()
+                            .goodsName(goodsMgmtDto.getGoodsName())
+                            .modelName(goodsMgmtDto.getModelName())
+                            .maker(goodsMgmtDto.getMaker())
+                            .telecom(goodsMgmtDto.getTelecom())
+                            .network(goodsMgmtDto.getNetwork())
+                            .capacity(goodsMgmtDto.getCapacity())
+                            .reqStoreId(authenticationUtil.getStoreId())
+                            .reqStatus(StatusEnum.REG_REQ.getStatusCode())
+                            .regiDateTime(LocalDateTime.now())
+                            .build()
             );
         }
     }
@@ -159,7 +159,7 @@ public class GoodsMgmtService {
                             .map(Number::longValue).collect(Collectors.toList())
             );
 
-            if(CommonUtil.isNotEmptyList(goodsList)) {
+            if (CommonUtil.isNotEmptyList(goodsList)) {
                 Optional.ofNullable(goodsList).orElseGet(Collections::emptyList).forEach(goods -> {
                     goods.updateDelYn(goods, StatusEnum.FLAG_Y.getStatusMsg());
 
@@ -167,7 +167,7 @@ public class GoodsMgmtService {
                             goodsOption -> goodsOption.updateDelYn(goodsOption, StatusEnum.FLAG_Y.getStatusMsg())
                     );
                 });
-            }else{
+            } else {
                 throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
             }
         } else {
@@ -204,16 +204,16 @@ public class GoodsMgmtService {
             //goodsList 의 ids 로 옵션 추출
             List<GoodsOption> optionList = goodsOptionRepository.findByGoodsGoodsIdInAndDelYn(ids, StatusEnum.FLAG_N.getStatusMsg());
             List<GoodsOption> saveOptionList = new ArrayList<>();
-            
+
             Map<Number, GoodsOptionDto> optKeys = goodsOptionDtos.stream()
                     .filter(goodsOptionDto -> goodsOptionDto.getGoodsOptionId() > 0)
                     .collect(Collectors.toMap(GoodsOptionDto::getGoodsOptionId, goodsOptionDto -> goodsOptionDto));
 
             optionList.forEach(
                     goodsOption -> {
-                        if(!optKeys.containsKey(goodsOption.getGoodsOptionId())){
+                        if (!optKeys.containsKey(goodsOption.getGoodsOptionId())) {
                             goodsOption.updateDelYn(goodsOption, StatusEnum.FLAG_Y.getStatusMsg());
-                        }else{
+                        } else {
                             GoodsOptionDto goodsOptionDto = optKeys.get(goodsOption.getGoodsOptionId());
 
                             goodsOption.setColorName(goodsOptionDto.getColorName());
@@ -228,7 +228,7 @@ public class GoodsMgmtService {
 
             goodsOptionDtos.forEach(
                     goodsOptionDto -> {
-                        if(goodsOptionDto.getGoodsOptionId() == 0) {
+                        if (goodsOptionDto.getGoodsOptionId() == 0) {
                             goodsOptionDto.setDelYn(StatusEnum.FLAG_N.getStatusMsg());
                             saveOptionList.add(
                                     GoodsOptionDto.toEntity(goodsOptionDto)
@@ -259,10 +259,10 @@ public class GoodsMgmtService {
 
         GoodsRegReq goodsRegReq = goodsRegReqRepository.findById(goodsRegReqDto.getGoodsRegReqId()).orElse(null);
 
-        if(goodsRegReq != null) {
+        if (goodsRegReq != null) {
             goodsRegReq.updateReqStatus(goodsRegReq, goodsRegReqDto.getReqStatus());
 
-            if(goodsRegReqDto.getReqStatus() == StatusEnum.REG_REQ_APPROVAL.getStatusCode()) {
+            if (goodsRegReqDto.getReqStatus() == StatusEnum.REG_REQ_APPROVAL.getStatusCode()) {
                 //insertData 사용 안함. 요청 승인 정책이 시스템관리자에서 확장 또는 변경될 수 있음
                 goodsRepository.save(
                         Goods.builder()
@@ -279,7 +279,7 @@ public class GoodsMgmtService {
                                 .delYn(StatusEnum.FLAG_N.getStatusMsg())
                                 .build()
                 );
-            }else if(goodsRegReqDto.getReqStatus() == StatusEnum.REG_REQ_REJECT.getStatusCode()){
+            } else if (goodsRegReqDto.getReqStatus() == StatusEnum.REG_REQ_REJECT.getStatusCode()) {
                 GoodsRegReqReject goodsRegReqReject = new GoodsRegReqReject();
                 goodsRegReqReject.setGoodsRegReqId(goodsRegReq.getGoodsRegReqId());
                 goodsRegReqReject.setRejectComment(goodsRegReqDto.getRegReqRejectDto().getRejectComment());
@@ -287,10 +287,10 @@ public class GoodsMgmtService {
                 goodsRegReqReject.setRejectUserId(authenticationUtil.getMemberSeq());
 
                 goodsRegReqRejectRepository.save(goodsRegReqReject);
-            }else{
+            } else {
                 throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
             }
-        }else{
+        } else {
             throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
         }
     }
@@ -305,7 +305,7 @@ public class GoodsMgmtService {
     @Transactional
     public void applyMatchStatus(ModelMap reqModelMap) {
 
-        List<Number>  groupGoodsIds = (ArrayList<Number>) reqModelMap.get("groupGoodsId");
+        List<Number> groupGoodsIds = (ArrayList<Number>) reqModelMap.get("groupGoodsId");
         Integer useGoodsId = (Integer) reqModelMap.get("useGoodsId");
 
         if (CommonUtil.isNotEmptyList(groupGoodsIds)) {
@@ -315,18 +315,18 @@ public class GoodsMgmtService {
                             .map(Number::longValue).collect(Collectors.toList())
             );
 
-            if(CommonUtil.isNotEmptyList(goodsList)) {
+            if (CommonUtil.isNotEmptyList(goodsList)) {
                 Optional.ofNullable(goodsList).orElseGet(Collections::emptyList).forEach(goods -> {
 
                     goods.updateMatchYn(goods, StatusEnum.FLAG_Y.getStatusMsg());
 
-                    if(goods.getGoodsId() == useGoodsId){
+                    if (goods.getGoodsId() == useGoodsId) {
                         goods.updateUseYn(goods, StatusEnum.FLAG_Y.getStatusMsg());
-                    }else{
+                    } else {
                         goods.updateUseYn(goods, StatusEnum.FLAG_N.getStatusMsg());
                     }
                 });
-            }else{
+            } else {
                 throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
             }
         } else {
@@ -343,27 +343,72 @@ public class GoodsMgmtService {
     @Transactional(readOnly = true)
     public List<SearchMatchResponseDto> getCapacityList() {
         long storeid = authenticationUtil.getStoreId();
-        List<Goods> goodsList =  goodsRepository.getCapacityList(storeid);
+        List<Goods> goodsList = goodsRepository.getCapacityList(storeid);
 
-        return goodsList.stream()
-                .map(goods -> SearchMatchResponseDto
-                        .builder()
-                        .capacity(goods.getCapacity())
-                        .build()
-                )
-                .collect(Collectors.toList());
+        List<SearchMatchResponseDto> responseDtos = new ArrayList<>();
+        for (Goods goods : goodsList) {
+            if (goods != null) {
+                responseDtos.add(
+                        SearchMatchResponseDto
+                                .builder()
+                                .capacity(goods.getCapacity())
+                                .build()
+                );
+            }
+        }
+
+        return responseDtos;
     }
 
     public List<SearchMatchResponseDto> getColorList(long goodsId) {
         List<GoodsOption> goodsOptionList = goodsRepository.getColorList(goodsId);
-        return goodsOptionList.stream()
-                .map(goodsOption -> SearchMatchResponseDto
-                        .builder()
-                        .goodsOptionId(goodsOption.getGoodsOptionId())
-                        .colorName(goodsOption.getColorName())
-                        .build()
-                )
-                .collect(Collectors.toList());
+        List<SearchMatchResponseDto> responseDtos = new ArrayList<>();
+        if (CommonUtil.isNotEmptyList(goodsOptionList)) {
+            responseDtos = goodsOptionList.stream()
+                    .map(goodsOption -> SearchMatchResponseDto
+                            .builder()
+                            .goodsOptionId(goodsOption.getGoodsOptionId())
+                            .colorName(goodsOption.getColorName())
+                            .build()
+                    )
+                    .collect(Collectors.toList());
+        }
+        return responseDtos;
+    }
+
+    public List<SearchMatchResponseDto> getGoodsSelectList(int telecomId) {
+        List<Goods> goodsList = goodsRepository.getGoodsSelectList(telecomId);
+        List<SearchMatchResponseDto> responseDtos = new ArrayList<>();
+        if (CommonUtil.isNotEmptyList(goodsList)) {
+            responseDtos = goodsList.stream()
+                    .map(goods -> SearchMatchResponseDto
+                            .builder()
+                            .goodsId(goods.getGoodsId())
+                            .goodsName(goods.getGoodsName())
+                            .build()
+                    )
+                    .collect(Collectors.toList());
+        }
+        return responseDtos;
+    }
+
+    public List<SearchMatchResponseDto> getGoodsSelectCapacityList(long goodsId) {
+        List<Goods> goodsList = goodsRepository.getGoodsSelectCapacityList(goodsId);
+        List<SearchMatchResponseDto> responseDtos = new ArrayList<>();
+
+        for (Goods goods : goodsList) {
+
+            if (goods != null) {
+                responseDtos.add(
+                        SearchMatchResponseDto.builder()
+                                .goodsId(goods.getGoodsId())
+                                .capacity(goods.getCapacity())
+                                .build()
+                );
+            }
+        }
+
+        return responseDtos;
     }
 }
 

@@ -18,4 +18,8 @@ public interface CustomGoodsRepository {
     List<Goods> getCapacityList(Long storeId);
 
 	List<GoodsOption> getColorList(long goodsId);
+
+	List<Goods> getGoodsSelectList(int telecomId);
+
+	List<Goods> getGoodsSelectCapacityList(long goodsId);
 }

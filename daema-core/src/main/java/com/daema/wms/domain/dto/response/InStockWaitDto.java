@@ -23,6 +23,9 @@ public class InStockWaitDto {
     // 추가 차감비
     private int addDdctAmt;
 
+    // 출고가 차감 여부
+    private String outStockAmtYn;
+
     // 누락제품
     private String missProduct;
 
@@ -51,6 +54,7 @@ public class InStockWaitDto {
 
     // 재고구분
     private WmsEnum.StockStatStr statusStr;
+    private String statusStrMsg;
 
     //제조사
     private int maker;
@@ -101,6 +105,7 @@ public class InStockWaitDto {
                 .waitId(entity.getWaitId())
                 .ddctAmt(entity.getDdctAmt())
                 .addDdctAmt(entity.getAddDdctAmt())
+                .outStockAmtYn(entity.getOutStockAmtYn())
                 .missProduct(entity.getMissProduct())
                 .inStockMemo(entity.getInStockMemo())
                 .ownStoreId(entity.getOwnStoreId())
@@ -111,6 +116,7 @@ public class InStockWaitDto {
                 .stockId(entity.getStockId())
                 .stockName(entity.getStockName())
                 .statusStr(entity.getStatusStr())
+                .statusStrMsg(entity.getStatusStr().getStatusMsg())
                 .maker(entity.getMaker())
                 .makerName(entity.getMakerName())
                 .goodsId(entity.getGoodsId())

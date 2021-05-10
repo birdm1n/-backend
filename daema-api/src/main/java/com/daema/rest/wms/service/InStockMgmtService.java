@@ -44,18 +44,16 @@ public class InStockMgmtService {
     private final StockRepository stockRepository;
     private final GoodsRepository goodsRepository;
     private final InStockWaitRepository inStockWaitRepository;
-    private final MoveStockRepository moveStockRepository;
     private final DeviceStatusRepository deviceStatusRepository;
     private final AuthenticationUtil authenticationUtil;
 
-    public InStockMgmtService(InStockRepository inStockRepository, DeviceRepository deviceRepository, PubNotiRepository pubNotiRepository, StockRepository stockRepository, GoodsRepository goodsRepository, InStockWaitRepository inStockWaitRepository, MoveStockRepository deviceStockRepository, DeviceStatusRepository deviceStatusRepository, AuthenticationUtil authenticationUtil) {
+    public InStockMgmtService(InStockRepository inStockRepository, DeviceRepository deviceRepository, PubNotiRepository pubNotiRepository, StockRepository stockRepository, GoodsRepository goodsRepository, InStockWaitRepository inStockWaitRepository, DeviceStatusRepository deviceStatusRepository, AuthenticationUtil authenticationUtil) {
         this.inStockRepository = inStockRepository;
         this.deviceRepository = deviceRepository;
         this.pubNotiRepository = pubNotiRepository;
         this.stockRepository = stockRepository;
         this.goodsRepository = goodsRepository;
         this.inStockWaitRepository = inStockWaitRepository;
-        this.moveStockRepository = deviceStockRepository;
         this.deviceStatusRepository = deviceStatusRepository;
         this.authenticationUtil = authenticationUtil;
     }
@@ -80,7 +78,13 @@ public class InStockMgmtService {
     @Transactional
     public ResponseCodeEnum insertWaitInStock(InStockWaitInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
-        String commonBarcode = CommonUtil.getCmnBarcode(requestDto.getFullBarcode());
+        String commonBarcode = requestDto.getFullBarcode();
+        try{
+            commonBarcode = CommonUtil.getCmnBarcode(commonBarcode);
+        }catch (Exception e){
+            return ResponseCodeEnum.NO_GOODS;
+        }
+
 
         // 중복 입력 확인용
         InStockWait selectEntity = inStockWaitRepository.findByFullBarcodeAndDelYn(requestDto.getFullBarcode(), StatusEnum.FLAG_N.getStatusMsg());
@@ -145,6 +149,7 @@ public class InStockMgmtService {
                         .missProduct(requestDto.getMissProduct())
                         .ddctAmt(requestDto.getDdctAmt())
                         .addDdctAmt(requestDto.getAddDdctAmt())
+                        .outStockAmtYn(requestDto.getOutStockAmtYn())
                         .ownStoreId(storeId)
                         .holdStoreId(stockDto.getStoreId()) //open_store_id
                         .build();
@@ -178,9 +183,10 @@ public class InStockMgmtService {
     public ResponseCodeEnum insertInStock(List<InStockInsertReqDto> reqListDto) {
         List<Long> inStockWaitIds = new ArrayList<>();
         List<Device> devices = new ArrayList<>();
-        List<MoveStock> moveStocks = new ArrayList<>();
+        List<StoreStock> storeStocks = new ArrayList<>();
         List<DeviceStatus> deviceStatuses = new ArrayList<>();
         List<InStock> inStocks = new ArrayList<>();
+
         if (CommonUtil.isNotEmptyList(reqListDto)) {
             for (InStockInsertReqDto reqDto : reqListDto) {
                 inStockWaitIds.add(reqDto.getWaitId());
@@ -234,15 +240,13 @@ public class InStockMgmtService {
 
             for (int i = 0; i < devices.size(); i++) {
                 Device device = devices.get(i);
-                moveStocks.get(i).setDevice(device);
                 deviceStatuses.get(i).setDevice(device);
                 inStocks.get(i).setDevice(device);
             }
-            moveStocks = moveStockRepository.saveAll(moveStocks);
             deviceStatuses = deviceStatusRepository.saveAll(deviceStatuses);
 
-            for (int i = 0; i < moveStocks.size(); i++) {
-                MoveStock moveStock = moveStocks.get(i);
+            for (int i = 0; i < deviceStatuses.size(); i++) {
+
                 DeviceStatus deviceStatus = deviceStatuses.get(i);
                 inStocks.get(i).setInDeviceStatus(deviceStatus);
             }
@@ -298,7 +302,6 @@ public class InStockMgmtService {
                         new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name())
                 );
         inStock.setInStockStatus(requestDto.getInStockStatus());
-        inStock.setInStockAmt(requestDto.getInStockAmt());
         inStock.setInStockMemo(requestDto.getInStockMemo());
 
         DeviceStatus deviceStatus = inStock.getInDeviceStatus();

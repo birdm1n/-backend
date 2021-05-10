@@ -4,7 +4,6 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.rest.wms.dto.InStockMgmtDto;
 import com.daema.rest.wms.dto.request.InStockInsertReqDto;
 import com.daema.rest.wms.dto.request.InStockUpdateReqDto;
 import com.daema.rest.wms.dto.request.InStockWaitInsertReqDto;
@@ -60,7 +59,13 @@ public class InStockMgmtController {
         return responseHandler.ok();
     }
 
-    @ApiOperation(value = "입고 등록", notes = "신규 입고 처리를 합니다.")
+    @ApiOperation(value = "입고 목록 조회", notes = "입고 목록을 조회합니다")
+    @GetMapping("/getInStockList")
+    public ResponseEntity<CommonResponse<ResponseDto<InStockResponseDto>>> getInStockList(@ApiParam(value = "입고상태", required = true) InStockRequestDto requestDto ) {
+        return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getInStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
+
+    @ApiOperation(value = "입고 등록", notes = "신규 입고리스트를 처리를 합니다.")
     @PostMapping("/insertInStock")
     public ResponseEntity<CommonResponse<Void>> insertInStock(@ApiParam(value = "신규입고", required = true) @RequestBody List<InStockInsertReqDto> requestDto) {
         ResponseCodeEnum responseCodeEnum = inStockMgmtService.insertInStock(requestDto);
@@ -69,12 +74,6 @@ public class InStockMgmtController {
             return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
         }
         return responseHandler.ok();
-    }
-
-    @ApiOperation(value = "입고 목록 조회", notes = "입고 목록을 조회합니다")
-    @GetMapping("/getInStockList")
-    public ResponseEntity<CommonResponse<ResponseDto<InStockResponseDto>>> getInStockList(@ApiParam(value = "입고상태", required = true) InStockRequestDto requestDto ) {
-        return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getInStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "입고 목록 수정", notes = "입고 목록을 수정합니다")

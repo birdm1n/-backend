@@ -259,6 +259,38 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 .fetch();
     }
 
+    @Override
+    public List<Goods> getGoodsSelectList(int telecomId) {
+        JPQLQuery<Goods> query = getQuerydsl().createQuery();
+
+        return query.select(Projections.fields(
+                Goods.class
+                , goods.goodsId
+                , goods.goodsName
+        ))
+                .from(goods)
+                .where(
+                        eqTelecomId(telecomId)
+                )
+                .orderBy(goods.goodsName.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<Goods> getGoodsSelectCapacityList(long goodsId) {
+        JPQLQuery<Goods> query = getQuerydsl().createQuery();
+        return query.select(Projections.fields(
+                Goods.class
+                , goods.goodsId
+                , goods.capacity
+        ))
+                .from(goods)
+                .where(
+                        goods.goodsId.eq(goodsId)
+                )
+                .fetch();
+    }
+
     private BooleanExpression containsGoodsName(String name) {
         if (StringUtils.isEmpty(name)) {
             return null;
@@ -285,6 +317,13 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
             return null;
         }
         return goods.networkAttribute.network.eq(name);
+    }
+
+    private BooleanExpression eqTelecomId(int name) {
+        if (name <= 0) {
+            return null;
+        }
+        return goods.networkAttribute.telecom.eq(name);
     }
 
     private BooleanExpression eqTelecom(Integer[] name) {

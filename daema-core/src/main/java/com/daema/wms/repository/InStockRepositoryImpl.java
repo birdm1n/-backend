@@ -146,9 +146,11 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                         goodsOption.delYn.eq("N")
                 )
                 .innerJoin(goodsOption.goods, goods).on(
-                        eqTelecom(telecomId),
-                        eqMaker(makerId),
                         goods.delYn.eq("N")
+                )
+                .where(
+                        eqTelecom(telecomId),
+                        eqMaker(makerId)
                 )
                 .orderBy(goods.goodsName.asc())
                 .fetch();
