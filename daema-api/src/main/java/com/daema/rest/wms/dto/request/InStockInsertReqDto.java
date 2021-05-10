@@ -36,8 +36,11 @@ public class InStockInsertReqDto {
     @ApiModelProperty(value = "기기일련번호(바코드)",  required = true)
     private String fullBarcode;
 
-    @ApiModelProperty(value = "'입고상태",  required = true)
+    @ApiModelProperty(value = "입고상태",  required = true)
     private WmsEnum.InStockStatus inStockStatus;
+
+    @ApiModelProperty(value = "재고구분",  required = true)
+    private WmsEnum.StockStatStr statusStr;
 
     @ApiModelProperty(value = "외장상태",  required = true)
     private WmsEnum.DeviceExtrrStatus extrrStatus;
@@ -56,6 +59,9 @@ public class InStockInsertReqDto {
 
     @ApiModelProperty(value = "추가 차감비")
     private int addDdctAmt;
+
+    @ApiModelProperty(value = "출고가 차감 여부")
+    private String outStockAmtYn;
 
     @ApiModelProperty(value = "구성품 누락여부")
     private String productMissYn;

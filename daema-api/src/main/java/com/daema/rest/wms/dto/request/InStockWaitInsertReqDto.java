@@ -53,4 +53,14 @@ public class InStockWaitInsertReqDto {
     @ApiModelProperty(value = "입고메모")
     private String inStockMemo;
 
+    // 바코드 정보가 없을 경우
+    @ApiModelProperty(value = "상품 ID")
+    private Long goodsId;
+
+    @ApiModelProperty(value = "상품옵션 ID")
+    private Long goodsOptionId;
+
+    @ApiModelProperty(value = "용량")
+    private String capacity;
+
 }

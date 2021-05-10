@@ -1,5 +1,6 @@
 package com.daema.wms.domain.dto.response;
 
+import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
 
 @Getter
@@ -12,5 +13,6 @@ public class SelectStockDto {
     private String stockName;
     private String stockType;
     private Long storeId;
+    private WmsEnum.StockStatStr statusStr;
 
 }
