@@ -92,6 +92,26 @@ public enum WmsEnum {
         }
     }
 
+    public enum StockType {
+        IN_STOCK("입고"),
+        SELL_MOVE("판매이동"),
+        STOCK_MOVE("재고이동"),
+        STOCK_TRNS("재고이관"),
+        FAULTY_TRNS("불량이관"),
+        SELL_TRNS("판매이관"),
+        OUT_STOCK("출고"),
+        ;
+
+        private final String statusMsg;
+
+        StockType(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
+
     public enum BarcodeType {
         S("스캐너"),
         K("키보드")
