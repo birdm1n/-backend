@@ -35,17 +35,17 @@ public class StoreStock extends BaseEntity {
     private WmsEnum.StockType stockType;
 
     /**
+     * WmsEnum.StockType 에 따라 테이블 join 한다
+     */
+    @Column(name = "stock_type_id")
+    private Long stockTypeId;
+
+    /**
      * 재고여부. Y-보유 재고, N-소멸 재고
      */
     @Column(nullable = false, name = "stock_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"Y\"")
     private String stockYn = "Y";
-
-    /**
-     * WmsEnum.StockType 에 따라 테이블 join 한다
-     */
-    @Column(name = "stock_type_id")
-    private Long stockTypeId;
 
     /**
      * 이전 보유처
@@ -63,12 +63,73 @@ public class StoreStock extends BaseEntity {
 
     @Builder
     public StoreStock(Long storeStockId, Store store, WmsEnum.StockType stockType, Device device,
-                      Stock prevStock, Stock nextStock){
+                      String stockYn, Long stockTypeId, Stock prevStock, Stock nextStock){
         this.storeStockId = storeStockId;
         this.store = store;
         this.stockType = stockType;
+        this.stockYn = stockYn;
+        this.stockTypeId = stockTypeId;
         this.device = device;
         this.prevStock = prevStock;
         this.nextStock = nextStock;
     }
+
+    public StoreStock updateStoreStock(StoreStock storeStock, StoreStock setData){
+
+        storeStock.setStore(setData.getStore());
+        storeStock.setDevice(setData.getDevice());
+        storeStock.setStockType(setData.getStockType());
+        storeStock.setStockTypeId(setData.getStockTypeId());
+        storeStock.setStockYn(setData.getStockYn());
+        storeStock.setPrevStock(setData.getPrevStock());
+        storeStock.setNextStock(setData.getNextStock());
+
+        return storeStock;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
