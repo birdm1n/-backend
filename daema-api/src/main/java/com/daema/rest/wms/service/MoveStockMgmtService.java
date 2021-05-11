@@ -4,6 +4,7 @@ import com.daema.base.repository.CodeDetailRepository;
 import com.daema.commgmt.repository.GoodsOptionRepository;
 import com.daema.commgmt.repository.GoodsRepository;
 import com.daema.commgmt.repository.PubNotiRepository;
+import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.response.*;
@@ -47,4 +48,8 @@ public class MoveStockMgmtService {
     }
 
 
+    public ResponseDto<MoveStockResponseDto> getMoveAndTrnsList(WmsEnum.MovePathType movePathType) {
+
+        return null;
+    }
 }

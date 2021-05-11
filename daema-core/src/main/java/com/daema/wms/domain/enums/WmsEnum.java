@@ -113,6 +113,24 @@ public enum WmsEnum {
         }
     }
 
+    public enum MovePathType {
+        SELL_MOVE("판매이동"),
+        STOCK_MOVE("재고이동"),
+        STOCK_TRNS("재고이관"),
+        FAULTY_TRNS("불량이관"),
+        SELL_TRNS("판매이관"),
+        ;
+
+        private final String statusMsg;
+
+        MovePathType(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
+
     public enum BarcodeType {
         S("스캐너"),
         K("키보드")

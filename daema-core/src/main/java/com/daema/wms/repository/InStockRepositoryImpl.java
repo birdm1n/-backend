@@ -87,7 +87,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
         ))
                 .from(inStock)
                 .innerJoin(inStock.regiUserId, regMember)
-                .innerJoin(inStock.regiUserId, updMember)
+                .innerJoin(inStock.updUserId, updMember)
                 .innerJoin(inStock.device, device)
                 .innerJoin(inStock.inDeviceStatus, deviceStatus)
                 .innerJoin(inStock.stock, stock)
