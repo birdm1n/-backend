@@ -260,6 +260,9 @@ public class InStockMgmtService {
                 Stock stockObj = Stock.builder()
                         .stockId(reqDto.getStockId())
                         .build();
+                Provider providerObj = Provider.builder()
+                        .provId(reqDto.getProvId())
+                        .build();
                 inStockWaitIds.add(reqDto.getWaitId());
 
                 devices.add(
@@ -294,11 +297,7 @@ public class InStockMgmtService {
                                 .statusStr(reqDto.getStatusStr())
                                 .inStockAmt(reqDto.getInStockAmt())
                                 .inStockMemo(reqDto.getInStockMemo())
-                                .provider(
-                                        Provider.builder()
-                                                .provId(reqDto.getProvId())
-                                                .build()
-                                )
+                                .provider(providerObj)
                                 .stock(stockObj)
                                 .store(storeObj)
                                 .build()
@@ -334,7 +333,7 @@ public class InStockMgmtService {
             }
             // 3. 입고 insert
             inStocks = inStockRepository.saveAll(inStocks);
-            for (int i = 0; i < inStocks.size(); i++){
+            for (int i = 0; i < inStocks.size(); i++) {
                 InStock tmpInStock = inStocks.get(i);
                 storeStocks.get(i).setStockTypeId(tmpInStock.getInStockId());
             }
@@ -372,7 +371,7 @@ public class InStockMgmtService {
     }
 
     @Transactional(readOnly = true)
-    public List<SearchMatchResponseDto> getDeviceList(int telecomId, int makerId) {
+    public List<SearchMatchResponseDto> getDeviceList(Integer telecomId, Integer makerId) {
         long storeId = authenticationUtil.getStoreId();
         List<Goods> deviceList = inStockRepository.getDeviceList(storeId, telecomId, makerId);
 
@@ -401,7 +400,5 @@ public class InStockMgmtService {
         deviceStatus.setAddDdctAmt(requestDto.getAddDdctAmt());
         deviceStatus.setProductMissYn(requestDto.getProductMissYn());
         deviceStatus.setMissProduct(requestDto.getMissProduct());
-
-
     }
 }

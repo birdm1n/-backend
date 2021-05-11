@@ -3,10 +3,10 @@ package com.daema.rest.wms.dto.request;
 import com.daema.wms.domain.enums.WmsEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-@Data
+import org.springframework.util.StringUtils;
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class InStockWaitInsertReqDto {
@@ -29,11 +29,11 @@ public class InStockWaitInsertReqDto {
     @ApiModelProperty(value = "입고상태",  required = true)
     private WmsEnum.InStockStatus inStockStatus;
 
-    @ApiModelProperty(value = "제품상태")
-    private String productFaultyYn;
-
     @ApiModelProperty(value = "외장상태",  required = true)
     private WmsEnum.DeviceExtrrStatus extrrStatus;
+
+    @ApiModelProperty(value = "제품상태")
+    private String productFaultyYn ;
 
     @ApiModelProperty(value = "차감비")
     private int ddctAmt;
@@ -42,11 +42,11 @@ public class InStockWaitInsertReqDto {
     private int addDdctAmt;
 
     @ApiModelProperty(value = "출고가 차감 여부")
-    private String ddctReleaseAmtYn;
+    private String ddctReleaseAmtYn = "N";
 
     @ApiModelProperty(value = "구성품 누락여부")
-    private String productMissYn;
-    
+    private String productMissYn = "N";
+
     @ApiModelProperty(value = "누락제품")
     private String missProduct;
 
@@ -63,4 +63,85 @@ public class InStockWaitInsertReqDto {
     @ApiModelProperty(value = "용량")
     private String capacity;
 
+    public void setProvId(Long provId) {
+        this.provId = provId;
+    }
+
+    public void setTelecom(int telecom) {
+        this.telecom = telecom;
+    }
+
+    public void setStockId(Long stockId) {
+        this.stockId = stockId;
+    }
+
+    public void setFullBarcode(String fullBarcode) {
+        this.fullBarcode = fullBarcode;
+    }
+
+    public void setBarcodeType(WmsEnum.BarcodeType barcodeType) {
+        this.barcodeType = barcodeType;
+    }
+
+    public void setInStockStatus(WmsEnum.InStockStatus inStockStatus) {
+        this.inStockStatus = inStockStatus;
+    }
+
+    public void setExtrrStatus(WmsEnum.DeviceExtrrStatus extrrStatus) {
+        this.extrrStatus = extrrStatus;
+    }
+
+    public void setProductFaultyYn(String productFaultyYn) {
+        if(StringUtils.isEmpty(productFaultyYn)){
+            this.productFaultyYn = "N";
+        }else {
+            this.productFaultyYn = productFaultyYn;
+        }
+
+    }
+
+    public void setDdctAmt(int ddctAmt) {
+        this.ddctAmt = ddctAmt;
+    }
+
+    public void setAddDdctAmt(int addDdctAmt) {
+        this.addDdctAmt = addDdctAmt;
+    }
+
+    public void setDdctReleaseAmtYn(String ddctReleaseAmtYn) {
+        if(StringUtils.isEmpty(ddctReleaseAmtYn)){
+            this.ddctReleaseAmtYn = "N";
+        }else{
+            this.ddctReleaseAmtYn = ddctReleaseAmtYn;
+        }
+    }
+
+    public void setProductMissYn(String productMissYn) {
+        if(StringUtils.isEmpty(productMissYn)){
+            this.productMissYn = "N";
+        }else{
+            this.productMissYn = productMissYn;
+        }
+
+    }
+
+    public void setMissProduct(String missProduct) {
+        this.missProduct = missProduct;
+    }
+
+    public void setInStockMemo(String inStockMemo) {
+        this.inStockMemo = inStockMemo;
+    }
+
+    public void setGoodsId(Long goodsId) {
+        this.goodsId = goodsId;
+    }
+
+    public void setGoodsOptionId(Long goodsOptionId) {
+        this.goodsOptionId = goodsOptionId;
+    }
+
+    public void setCapacity(String capacity) {
+        this.capacity = capacity;
+    }
 }

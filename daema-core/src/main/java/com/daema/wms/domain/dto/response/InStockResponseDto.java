@@ -43,6 +43,7 @@ public class InStockResponseDto {
 
     // 공급처
     private Long provId;
+    private String provName;
 
     // 보유처
     private Long stockId;
@@ -50,6 +51,7 @@ public class InStockResponseDto {
 
     // 재고구분
     private WmsEnum.StockStatStr statusStr;
+    private String statusStrMsg;
 
     //제조사
     private int maker;

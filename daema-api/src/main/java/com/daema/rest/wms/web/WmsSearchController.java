@@ -28,8 +28,8 @@ public class WmsSearchController {
 
     @ApiOperation(value = "관리점 기기 목록 조회", notes = "관리점이 보유하고 있는 기기목록을 조회")
     @GetMapping("/getDeviceList")
-    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getDeviceList(@ApiParam(value = "통신사 ID") @RequestParam int telecomId,
-                                                                                @ApiParam(value = "제조사 ID") @RequestParam int makerId) {
+    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getDeviceList(@ApiParam(value = "통신사 ID") @RequestParam(required = false) Integer telecomId,
+                                                                                @ApiParam(value = "제조사 ID") @RequestParam(required = false) Integer makerId) {
         return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getDeviceList(telecomId, makerId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
     @ApiOperation(value = "상품 Select 목록 조회", notes = "상품 Select 목록을 조회합니다")

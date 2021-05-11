@@ -59,6 +59,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                 , telecom.codeSeq.as("telecom")
                 , telecom.codeNm.as("telecomName")
                 , provider.provId.as("provId")
+                , provider.provName.as("provName")
                 , stock.stockId.as("stockId")
                 , stock.stockName.as("stockName")
                 , inStock.statusStr.as("statusStr")
@@ -108,7 +109,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                         eqStockId(requestDto.getStockId()),
                         eqInStockStatus(requestDto.getInStockStatus()),
                         eqStatusStr(requestDto.getStatusStr()),
-                        eqFullBarcode(requestDto.getFullBarcode()),
+                        containsFullBarcode(requestDto.getFullBarcode()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
                         eqExtrrStatus(requestDto.getExtrrStatus()),
                         eqColorName(requestDto.getColorName()),
@@ -128,6 +129,9 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
             if(dto.getExtrrStatus() != null) {
                 dto.setExtrrStatusMsg(dto.getExtrrStatus().getStatusMsg());
             }
+            if(dto.getStatusStr() != null){
+                dto.setStatusStrMsg(dto.getStatusStr().getStatusMsg());
+            }
         }
         long total = query.fetchCount();
 
@@ -136,7 +140,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
 
 
     @Override
-    public List<Goods> getDeviceList(long storeId, int telecomId, int makerId) {
+    public List<Goods> getDeviceList(long storeId, Integer telecomId, Integer makerId) {
         JPQLQuery<Goods> query = getQuerydsl().createQuery();
         return query.select(Projections.fields(
                 Goods.class
@@ -162,15 +166,15 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
 
     }
 
-    private BooleanExpression eqTelecom(int telecom) {
-        if (telecom <= 0) {
+    private BooleanExpression eqTelecom(Integer telecom) {
+        if (telecom == null) {
             return null;
         }
         return goods.networkAttribute.telecom.eq(telecom);
     }
 
-    private BooleanExpression eqMaker(int maker) {
-        if (maker <= 0) {
+    private BooleanExpression eqMaker(Integer maker) {
+        if (maker == null) {
             return null;
         }
         return goods.maker.eq(maker);
@@ -214,11 +218,11 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
         return goodsOption.colorName.eq(colorName);
     }
 
-    private BooleanExpression eqFullBarcode(String fullBarcode) {
+    private BooleanExpression containsFullBarcode(String fullBarcode) {
         if(StringUtils.isEmpty(fullBarcode)){
             return null;
         }
-        return device.fullBarcode.eq(fullBarcode);
+        return device.fullBarcode.contains(fullBarcode);
     }
 
     private BooleanExpression eqExtrrStatus(WmsEnum.DeviceExtrrStatus extrrStatus) {
