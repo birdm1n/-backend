@@ -1,4 +1,4 @@
-package com.daema.rest.common.enums;
+package com.daema.base.enums;
 
 public enum StatusEnum {
 
