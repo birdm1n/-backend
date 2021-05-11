@@ -1,5 +1,6 @@
 package com.daema.rest.commgmt.service;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.PubNoti;
 import com.daema.commgmt.domain.dto.response.PubNotiMappingDto;
 import com.daema.commgmt.domain.dto.response.PubNotiRawDataListDto;
@@ -11,7 +12,6 @@ import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.commgmt.dto.PubNotiMgmtDto;
 import com.daema.rest.commgmt.dto.response.PubNotiMgmtResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
-import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.exception.UnAuthorizedException;
 import com.daema.rest.common.util.AuthenticationUtil;

@@ -1,5 +1,6 @@
 package com.daema.rest.commgmt.service;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.Goods;
 import com.daema.commgmt.domain.GoodsOption;
 import com.daema.commgmt.domain.GoodsRegReq;
@@ -16,7 +17,6 @@ import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.commgmt.dto.GoodsOptionDto;
 import com.daema.rest.commgmt.dto.GoodsRegReqDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
-import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;

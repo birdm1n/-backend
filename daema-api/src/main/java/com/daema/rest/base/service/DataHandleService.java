@@ -2,6 +2,8 @@ package com.daema.rest.base.service;
 
 import com.daema.base.domain.CodeDetail;
 import com.daema.base.domain.Member;
+import com.daema.base.enums.StatusEnum;
+import com.daema.base.enums.TypeEnum;
 import com.daema.base.enums.UserRole;
 import com.daema.base.repository.CodeDetailRepository;
 import com.daema.base.repository.MemberRepository;
@@ -16,8 +18,6 @@ import com.daema.rest.base.dto.CodeDetailDto;
 import com.daema.rest.base.dto.RetrieveInitDataResponseDto;
 import com.daema.rest.commgmt.dto.SaleStoreMgmtDto;
 import com.daema.rest.common.Constants;
-import com.daema.rest.common.enums.StatusEnum;
-import com.daema.rest.common.enums.TypeEnum;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.JwtUtil;
 import com.daema.rest.common.util.RedisUtil;

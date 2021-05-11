@@ -1,5 +1,6 @@
 package com.daema.commgmt.repository;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.QRoleMgmt;
 import com.daema.commgmt.domain.RoleMgmt;
 import com.daema.commgmt.repository.custom.CustomRoleMgmtRepository;
@@ -31,12 +32,12 @@ public class RoleMgmtRepositoryImpl extends QuerydslRepositorySupport implements
         query.from(roleMgmt);
 
         BooleanBuilder where = new BooleanBuilder();
-        where.and(roleMgmt.necessaryYn.eq("Y")
-                .and(roleMgmt.delYn.eq("N")));
+        where.and(roleMgmt.necessaryYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
+                .and(roleMgmt.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())));
 
         BooleanBuilder where2 = new BooleanBuilder();
         where2.and(roleMgmt.storeId.eq(storeId))
-                .and(roleMgmt.delYn.eq("N"));
+                .and(roleMgmt.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()));
 
         query.where(where.or(Expressions.predicate(Ops.WRAPPED, where2)));
 

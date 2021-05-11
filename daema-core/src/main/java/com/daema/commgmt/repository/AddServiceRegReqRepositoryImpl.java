@@ -1,10 +1,11 @@
 package com.daema.commgmt.repository;
 
+import com.daema.base.domain.QCodeDetail;
+import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.AddServiceRegReq;
 import com.daema.commgmt.domain.AddServiceRegReqReject;
-import com.daema.base.domain.QCodeDetail;
 import com.daema.commgmt.domain.QStore;
-import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
 import com.daema.commgmt.repository.custom.CustomAddServiceRegReqRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -68,7 +69,7 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
                 .innerJoin(telecom)
                 .on(addServiceRegReq.telecom.eq(telecom.codeSeq)
                         .and(telecom.codeId.eq("TELECOM"))
-                        .and(telecom.useYn.eq("Y"))
+                        .and(telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .innerJoin(store)
                 .on(addServiceRegReq.reqStoreId.eq(store.storeId))

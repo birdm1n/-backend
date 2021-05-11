@@ -1,8 +1,9 @@
 package com.daema.commgmt.repository;
 
-import com.daema.commgmt.domain.AddService;
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.base.enums.StatusEnum;
+import com.daema.commgmt.domain.AddService;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
 import com.daema.commgmt.repository.custom.CustomAddServiceRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -32,10 +33,10 @@ public class AddServiceRepositoryImpl extends QuerydslRepositorySupport implemen
         JPQLQuery<AddService> query = getQuerydsl().createQuery();
 
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(addService.delYn.eq("N"));
+        builder.and(addService.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()));
 
         if(!isAdmin){
-            builder.and(addService.useYn.eq("Y"));
+            builder.and(addService.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()));
         }
 
         QCodeDetail telecom = new QCodeDetail("telecom");
@@ -59,7 +60,7 @@ public class AddServiceRepositoryImpl extends QuerydslRepositorySupport implemen
                 .innerJoin(telecom)
                 .on(addService.telecom.eq(telecom.codeSeq)
                         .and(telecom.codeId.eq("TELECOM"))
-                        .and(telecom.useYn.eq("Y"))
+                        .and(telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .where(
                         containsAddSvcName(requestDto.getAddSvcName())

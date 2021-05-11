@@ -1,5 +1,6 @@
 package com.daema.rest.commgmt.service;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.AddService;
 import com.daema.commgmt.domain.AddServiceRegReq;
 import com.daema.commgmt.domain.AddServiceRegReqReject;
@@ -11,7 +12,6 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.commgmt.dto.AddServiceMgmtDto;
 import com.daema.rest.commgmt.dto.AddServiceRegReqDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
-import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;

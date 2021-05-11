@@ -2,6 +2,8 @@ package com.daema.rest.commgmt.service;
 
 import com.daema.base.domain.Member;
 import com.daema.base.domain.QMember;
+import com.daema.base.enums.StatusEnum;
+import com.daema.base.enums.TypeEnum;
 import com.daema.base.repository.MemberRepository;
 import com.daema.commgmt.domain.*;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
@@ -17,8 +19,6 @@ import com.daema.rest.commgmt.dto.OpeningStoreMgmtDto;
 import com.daema.rest.commgmt.dto.response.OpeningStoreSaleStoreResponseDto;
 import com.daema.rest.commgmt.dto.response.OpeningStoreUserResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
-import com.daema.rest.common.enums.StatusEnum;
-import com.daema.rest.common.enums.TypeEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;

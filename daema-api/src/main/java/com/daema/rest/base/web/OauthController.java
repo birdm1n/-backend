@@ -1,11 +1,9 @@
 package com.daema.rest.base.web;
 
 import com.daema.base.domain.Member;
-import com.daema.base.enums.UserRole;
 import com.daema.rest.base.dto.request.SocialDataRequest;
 import com.daema.rest.base.service.AuthService;
 import com.daema.rest.common.enums.ResponseCodeEnum;
-import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.common.util.CookieUtil;
 import com.daema.rest.common.util.JwtUtil;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 
 @RestController
 @RequestMapping("/oauth")

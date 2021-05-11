@@ -1,11 +1,11 @@
 package com.daema.rest.wms.service;
 
+import com.daema.base.enums.StatusEnum;
+import com.daema.base.enums.TypeEnum;
 import com.daema.base.repository.MemberRepository;
 import com.daema.commgmt.domain.Store;
 import com.daema.commgmt.repository.StoreRepository;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
-import com.daema.rest.common.enums.StatusEnum;
-import com.daema.rest.common.enums.TypeEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.StockMgmtDto;

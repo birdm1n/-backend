@@ -1,5 +1,6 @@
 package com.daema.commgmt.repository;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.Charge;
 import com.daema.commgmt.domain.QCharge;
 import com.daema.base.domain.QCodeDetail;
@@ -36,10 +37,10 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
         JPQLQuery<Charge> query = getQuerydsl().createQuery();
 
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(charge.delYn.eq("N"));
+        builder.and(charge.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()));
 
         if(!isAdmin){
-            builder.and(charge.useYn.eq("Y"));
+            builder.and(charge.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()));
         }
 
         QCodeDetail telecom = new QCodeDetail("telecom");
@@ -69,12 +70,12 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
                 .innerJoin(telecom)
                 .on(charge.networkAttribute.telecom.eq(telecom.codeSeq)
                         .and(telecom.codeId.eq("TELECOM"))
-                        .and(telecom.useYn.eq("Y"))
+                        .and(telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .innerJoin(network)
                 .on(charge.networkAttribute.network.eq(network.codeSeq)
                         .and(network.codeId.eq("NETWORK"))
-                        .and(network.useYn.eq("Y"))
+                        .and(network.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .where(
                         builder
@@ -127,22 +128,22 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
         query.innerJoin(telecom)
                 .on(charge.networkAttribute.telecom.eq(telecom.codeSeq)
                         .and(telecom.codeId.eq("TELECOM"))
-                        .and(telecom.useYn.eq("Y"))
+                        .and(telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .innerJoin(network)
                 .on(charge.networkAttribute.network.eq(network.codeSeq)
                         .and(network.codeId.eq("NETWORK"))
-                        .and(network.useYn.eq("Y"))
+                        .and(network.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 );
 
         BooleanBuilder where = new BooleanBuilder();
-        where.and(charge.matchingYn.eq("N")
-                .and(charge.delYn.eq("N")));
+        where.and(charge.matchingYn.eq(StatusEnum.FLAG_N.getStatusMsg())
+                .and(charge.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())));
 
         BooleanBuilder where2 = new BooleanBuilder();
-        where2.and(charge.matchingYn.eq("Y")
-                .and(charge.useYn.eq("Y"))
-                .and(charge.delYn.eq("N")));
+        where2.and(charge.matchingYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
+                .and(charge.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+                .and(charge.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())));
 
         query.where(
                 eqNetwork(requestDto.getNetwork())

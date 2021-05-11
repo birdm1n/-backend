@@ -1,5 +1,7 @@
 package com.daema.rest.commgmt.service;
 
+import com.daema.base.enums.StatusEnum;
+import com.daema.base.enums.TypeEnum;
 import com.daema.base.enums.UserRole;
 import com.daema.commgmt.domain.FuncMgmt;
 import com.daema.commgmt.domain.RoleMgmt;
@@ -17,8 +19,6 @@ import com.daema.rest.commgmt.dto.SaleStoreMgmtDto;
 import com.daema.rest.commgmt.dto.request.SaleStoreUserWrapperDto;
 import com.daema.rest.common.Constants;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
-import com.daema.rest.common.enums.StatusEnum;
-import com.daema.rest.common.enums.TypeEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;

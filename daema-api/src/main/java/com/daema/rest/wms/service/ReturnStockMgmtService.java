@@ -1,9 +1,10 @@
 package com.daema.rest.wms.service;
 
+import com.daema.base.enums.StatusEnum;
+import com.daema.base.enums.TypeEnum;
+import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
-import com.daema.rest.common.enums.StatusEnum;
-import com.daema.rest.common.enums.TypeEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
@@ -15,6 +16,7 @@ import com.daema.wms.domain.DeviceStatus;
 import com.daema.wms.domain.ReturnStock;
 import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
+import com.daema.wms.domain.dto.response.ReturnStockResponseDto;
 import com.daema.wms.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -52,9 +54,11 @@ public class ReturnStockMgmtService {
 
 	public ResponseDto<ReturnStockDto> getReturnStockList(ReturnStockRequestDto requestDto) {
 
-		Page<ReturnStock> dataList = returnStockRepository.getSearchPage(requestDto);
+		requestDto.setStoreId(authenticationUtil.getStoreId());
 
-		return new ResponseDto(ReturnStockDto.class, dataList);
+		Page<ReturnStockResponseDto> dataList = returnStockRepository.getSearchPage(requestDto);
+
+		return new ResponseDto(dataList);
 	}
 
 	public Set<Long> insertReturnStock(List<ReturnStockReqDto> returnStockDtoList) {
@@ -145,6 +149,9 @@ class ReturnStockCtrl {
 									.build())
 							.nextStock(stock)
 							.returnDeviceStatus(deviceStatus)
+							.store(Store.builder()
+									.storeId(authenticationUtil.getStoreId())
+									.build())
 							.regiUserId(authenticationUtil.getMemberSeq())
 							.regiDateTime(regiDatetime)
 							.build()

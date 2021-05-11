@@ -1,5 +1,6 @@
 package com.daema.commgmt.repository;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.*;
 import com.daema.commgmt.repository.custom.CustomPubNotiRepository;
 import com.querydsl.jpa.JPQLQuery;
@@ -84,7 +85,7 @@ public class PubNotiRepositoryImpl extends QuerydslRepositorySupport implements 
                 .where(
                         pubNoti.chargeId.eq(reqPubNoti.getChargeId())
                         .and(pubNoti.goodsId.eq(reqPubNoti.getGoodsId()))
-                        .and(pubNoti.delYn.eq("N"))
+                        .and(pubNoti.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
                 )
                 .orderBy(pubNoti.releaseDate.desc()
                         ,pubNoti.regiDateTime.desc());
@@ -99,9 +100,9 @@ public class PubNotiRepositoryImpl extends QuerydslRepositorySupport implements 
                 .where(
                         goods.networkAttribute.telecom.eq(telecom)
                                 .and(goods.networkAttribute.network.eq(network))
-                                .and(goods.delYn.eq("N"))
-                                .and(goods.matchingYn.eq("Y"))
-                                .and(goods.useYn.eq("Y"))
+                                .and(goods.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
+                                .and(goods.matchingYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+                                .and(goods.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .orderBy(goods.goodsName.asc());
 
@@ -116,9 +117,9 @@ public class PubNotiRepositoryImpl extends QuerydslRepositorySupport implements 
                 .where(
                         charge.networkAttribute.telecom.eq(telecom)
                                 .and(charge.networkAttribute.network.eq(network))
-                                .and(charge.delYn.eq("N"))
-                                .and(charge.matchingYn.eq("Y"))
-                                .and(charge.useYn.eq("Y"))
+                                .and(charge.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
+                                .and(charge.matchingYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+                                .and(charge.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .orderBy(charge.chargeName.asc());
 

@@ -1,6 +1,7 @@
 package com.daema.rest.commgmt.service;
 
 import com.daema.base.domain.Member;
+import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.UserRole;
 import com.daema.base.repository.MemberRepository;
 import com.daema.base.repository.MemberRoleRepository;
@@ -18,7 +19,6 @@ import com.daema.rest.commgmt.dto.OrganizationMgmtDto;
 import com.daema.rest.commgmt.dto.response.OrganizationMgmtResponseDto;
 import com.daema.rest.common.Constants;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
-import com.daema.rest.common.enums.StatusEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;

@@ -1,6 +1,7 @@
 package com.daema.wms.repository;
 
 import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.base.enums.StatusEnum;
 import com.daema.wms.domain.Provider;
 import com.daema.wms.domain.dto.request.ProviderRequestDto;
 import com.daema.wms.repository.custom.CustomProviderRepository;
@@ -54,7 +55,7 @@ public class ProviderRepositoryImpl extends QuerydslRepositorySupport implements
 
         query.where(
                 provider.storeId.eq(requestDto.getStoreId())
-                ,provider.delYn.eq("N")
+                ,provider.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 ,containsProvName(requestDto.getProvName())
                 ,containsChargerName(requestDto.getChargerName())
                 ,containsChargerPhone(requestDto.getChargerPhone())

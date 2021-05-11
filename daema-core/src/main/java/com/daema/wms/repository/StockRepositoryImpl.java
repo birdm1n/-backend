@@ -1,5 +1,6 @@
 package com.daema.wms.repository;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.StockRequestDto;
 import com.daema.wms.domain.dto.response.SelectStockDto;
@@ -16,8 +17,8 @@ import javax.persistence.Query;
 import java.util.List;
 
 import static com.daema.commgmt.domain.QOpenStore.openStore;
-import static com.daema.wms.domain.QStock.stock;
 import static com.daema.commgmt.domain.QStore.store;
+import static com.daema.wms.domain.QStock.stock;
 
 public class StockRepositoryImpl extends QuerydslRepositorySupport implements CustomStockRepository {
 
@@ -132,7 +133,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         )
                         .where(
                                 stock.regiStoreId.eq(storeId),
-                                stock.delYn.eq("N"),
+                                stock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                                 stock.parentStockId.eq(0L),
                                 (openStore.telecom.eq(telecom).or(store.telecom.eq(telecom)))
                         )
@@ -169,7 +170,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         .where(
                                 stock.stockId.eq(stockId),
                                 stock.regiStoreId.eq(storeId),
-                                stock.delYn.eq("N"),
+                                stock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                                 stock.parentStockId.eq(0L),
                                 (openStore.telecom.eq(telecom).or(store.telecom.eq(telecom)))
                         )

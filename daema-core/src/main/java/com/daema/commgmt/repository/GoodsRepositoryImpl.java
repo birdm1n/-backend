@@ -2,6 +2,7 @@ package com.daema.commgmt.repository;
 
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.Goods;
 import com.daema.commgmt.domain.GoodsOption;
 import com.daema.commgmt.domain.attr.NetworkAttribute;
@@ -24,8 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.daema.commgmt.domain.QGoods.goods;
-import static com.daema.wms.domain.QDevice.device;
 import static com.daema.commgmt.domain.QGoodsOption.goodsOption;
+import static com.daema.wms.domain.QDevice.device;
 
 public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements CustomGoodsRepository {
 
@@ -39,10 +40,10 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
         JPQLQuery<Goods> query = getQuerydsl().createQuery();
 
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(goods.delYn.eq("N"));
+        builder.and(goods.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()));
 
         if (!isAdmin) {
-            builder.and(goods.useYn.eq("Y"));
+            builder.and(goods.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()));
         }
 
         QCodeDetail telecom = new QCodeDetail("telecom");
@@ -75,17 +76,17 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 .innerJoin(maker)
                 .on(goods.maker.eq(maker.codeSeq)
                         .and(maker.codeId.eq("MAKER"))
-                        .and(maker.useYn.eq("Y"))
+                        .and(maker.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .innerJoin(telecom)
                 .on(goods.networkAttribute.telecom.eq(telecom.codeSeq)
                         .and(telecom.codeId.eq("TELECOM"))
-                        .and(telecom.useYn.eq("Y"))
+                        .and(telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .innerJoin(network)
                 .on(goods.networkAttribute.network.eq(network.codeSeq)
                         .and(network.codeId.eq("NETWORK"))
-                        .and(network.useYn.eq("Y"))
+                        .and(network.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .where(
                         builder
@@ -141,27 +142,27 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
         query.innerJoin(maker)
                 .on(goods.maker.eq(maker.codeSeq)
                         .and(maker.codeId.eq("MAKER"))
-                        .and(maker.useYn.eq("Y"))
+                        .and(maker.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .innerJoin(telecom)
                 .on(goods.networkAttribute.telecom.eq(telecom.codeSeq)
                         .and(telecom.codeId.eq("TELECOM"))
-                        .and(telecom.useYn.eq("Y"))
+                        .and(telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .innerJoin(network)
                 .on(goods.networkAttribute.network.eq(network.codeSeq)
                         .and(network.codeId.eq("NETWORK"))
-                        .and(network.useYn.eq("Y"))
+                        .and(network.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 );
 
         BooleanBuilder where = new BooleanBuilder();
-        where.and(goods.matchingYn.eq("N")
-                .and(goods.delYn.eq("N")));
+        where.and(goods.matchingYn.eq(StatusEnum.FLAG_N.getStatusMsg())
+                .and(goods.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())));
 
         BooleanBuilder where2 = new BooleanBuilder();
-        where2.and(goods.matchingYn.eq("Y")
-                .and(goods.useYn.eq("Y"))
-                .and(goods.delYn.eq("N")));
+        where2.and(goods.matchingYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
+                .and(goods.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+                .and(goods.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())));
 
         query.where(
                 eqMaker(requestDto.getMaker())
@@ -209,12 +210,12 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         .innerJoin(maker)
                         .on(
                                 goods.maker.eq(maker.codeSeq),
-                                maker.useYn.eq("Y")
+                                maker.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
                         )
                         .innerJoin(telecom)
                         .on(
                                 goods.networkAttribute.telecom.eq(telecom.codeSeq),
-                                telecom.useYn.eq("Y")
+                                telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
                         ).fetchOne();
 
 
@@ -232,11 +233,11 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 .from(device)
                 .innerJoin(device.goodsOption, goodsOption).on(
                         device.store.storeId.eq(storeId),
-                        device.delYn.eq("N"),
-                        goodsOption.delYn.eq("N")
+                        device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
+                        goodsOption.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 )
                 .innerJoin(goodsOption.goods, goods).on(
-                        goods.delYn.eq("N")
+                        goods.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 )
                 .orderBy(goods.capacity.asc())
                 .fetch();
@@ -253,7 +254,7 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 .from(goodsOption)
                 .where(
                         goodsOption.goods.goodsId.eq(goodsId),
-                        goodsOption.delYn.eq("N")
+                        goodsOption.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 )
                 .orderBy(goodsOption.colorName.asc())
                 .fetch();

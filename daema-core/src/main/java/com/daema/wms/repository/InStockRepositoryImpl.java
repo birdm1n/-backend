@@ -3,6 +3,7 @@ package com.daema.wms.repository;
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.QMember;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.Goods;
 import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
@@ -142,11 +143,11 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                 .from(device)
                 .innerJoin(device.goodsOption, goodsOption).on(
                         device.store.storeId.eq(storeId),
-                        device.delYn.eq("N"),
-                        goodsOption.delYn.eq("N")
+                        device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
+                        goodsOption.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 )
                 .innerJoin(goodsOption.goods, goods).on(
-                        goods.delYn.eq("N")
+                        goods.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 )
                 .where(
                         eqTelecom(telecomId),

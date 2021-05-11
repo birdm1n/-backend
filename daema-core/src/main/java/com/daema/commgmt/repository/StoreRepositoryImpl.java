@@ -1,7 +1,8 @@
 package com.daema.commgmt.repository;
 
-import com.daema.commgmt.domain.Store;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.base.enums.StatusEnum;
+import com.daema.commgmt.domain.Store;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
 import com.daema.commgmt.repository.custom.CustomStoreRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -18,9 +19,9 @@ import org.springframework.util.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.daema.base.domain.QCodeDetail.codeDetail;
 import static com.daema.commgmt.domain.QStore.store;
 import static com.daema.commgmt.domain.QStoreMap.storeMap;
-import static com.daema.base.domain.QCodeDetail.codeDetail;
 
 public class StoreRepositoryImpl extends QuerydslRepositorySupport implements CustomStoreRepository {
 
@@ -56,13 +57,13 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements Cu
         query.innerJoin(storeMap)
                 .on(store.storeId.eq(storeMap.storeId)
                         .and(storeMap.parentStoreId.eq(requestDto.getParentStoreId()))
-                        .and(store.useYn.eq("Y"))
+                        .and(store.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 );
 
         query.innerJoin(codeDetail)
                 .on(store.telecom.eq(codeDetail.codeSeq)
                     .and(codeDetail.codeId.eq("TELECOM"))
-                    .and(codeDetail.useYn.eq("Y"))
+                    .and(codeDetail.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 );
 
         query.where(
@@ -167,8 +168,8 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements Cu
         query.innerJoin(storeMap)
                 .on(storeMap.parentStoreId.eq(parentStoreId)
                         .and(store.storeId.eq(storeMap.storeId))
-                        .and(store.useYn.eq("Y")
-                                .and(storeMap.useYn.eq("Y")))
+                        .and(store.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
+                                .and(storeMap.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg())))
                 );
 
         query.orderBy(orderSpecifier);

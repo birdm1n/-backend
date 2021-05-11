@@ -1,5 +1,6 @@
 package com.daema.wms.repository;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.wms.domain.InStockWait;
 import com.daema.wms.domain.dto.response.InStockWaitGroupDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -42,7 +43,7 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
         ))
                 .from(inStockWait)
                 .where(
-                        inStockWait.delYn.eq("N"),
+                        inStockWait.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                         inStockWait.inStockStatus.eq(inStockStatus),
                         inStockWait.ownStoreId.eq(storeId).or(inStockWait.holdStoreId.eq(storeId))
                 )
@@ -64,7 +65,7 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
         JPAQueryFactory queryFactory =  new JPAQueryFactory(em);
         return queryFactory.selectFrom(inStockWait)
                 .where(
-                        inStockWait.delYn.eq("N"),
+                        inStockWait.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                         inStockWait.inStockStatus.eq(inStockStatus),
                         inStockWait.ownStoreId.eq(storeId).or(inStockWait.holdStoreId.eq(storeId))
                 )

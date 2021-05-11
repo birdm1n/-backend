@@ -1,11 +1,12 @@
 package com.daema.commgmt.repository;
 
+import com.daema.base.domain.QCodeDetail;
+import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.ChargeRegReq;
 import com.daema.commgmt.domain.ChargeRegReqReject;
-import com.daema.base.domain.QCodeDetail;
 import com.daema.commgmt.domain.QStore;
 import com.daema.commgmt.domain.attr.NetworkAttribute;
-import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
 import com.daema.commgmt.repository.custom.CustomChargeRegReqRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -74,12 +75,12 @@ public class ChargeRegReqRepositoryImpl extends QuerydslRepositorySupport implem
                 .innerJoin(telecom)
                 .on(chargeRegReq.networkAttribute.telecom.eq(telecom.codeSeq)
                         .and(telecom.codeId.eq("TELECOM"))
-                        .and(telecom.useYn.eq("Y"))
+                        .and(telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .innerJoin(network)
                 .on(chargeRegReq.networkAttribute.network.eq(network.codeSeq)
                         .and(network.codeId.eq("NETWORK"))
-                        .and(network.useYn.eq("Y"))
+                        .and(network.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .innerJoin(store)
                 .on(chargeRegReq.reqStoreId.eq(store.storeId))

@@ -1,5 +1,6 @@
 package com.daema.commgmt.repository;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.FuncRoleMap;
 import com.daema.commgmt.domain.QFuncRoleMap;
 import com.daema.commgmt.domain.QRoleMgmt;
@@ -43,12 +44,12 @@ public class FuncRoleMapRepositoryImpl extends QuerydslRepositorySupport impleme
         BooleanBuilder on = new BooleanBuilder();
         on.and(roleMgmt.storeId.eq(storeId)
                 .and(roleMgmt.roleId.eq(funcRoleMap.roleId))
-                .and(roleMgmt.delYn.eq("N")));
+                .and(roleMgmt.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())));
 
         BooleanBuilder on2 = new BooleanBuilder();
-        on2.and(roleMgmt.necessaryYn.eq("Y")
+        on2.and(roleMgmt.necessaryYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
                 .and(roleMgmt.roleId.eq(funcRoleMap.roleId)))
-                .and(roleMgmt.delYn.eq("N"));
+                .and(roleMgmt.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()));
 
         query.innerJoin(roleMgmt)
                 .on(
