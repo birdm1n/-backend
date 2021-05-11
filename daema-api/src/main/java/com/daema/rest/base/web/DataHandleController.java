@@ -1,15 +1,17 @@
 package com.daema.rest.base.web;
 
 import com.daema.rest.base.dto.RetrieveInitDataResponseDto;
+import com.daema.rest.base.service.DataHandleService;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.rest.base.service.DataHandleService;
+import com.daema.wms.domain.dto.response.DeviceHistoryResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/dataHandle")
@@ -62,6 +64,14 @@ public class DataHandleController {
     @PostMapping("/generatorJoinPath")
     public ResponseEntity<CommonResponse<String>> generatorJoinPath(@RequestBody ModelMap reqModel) {
         return responseHandler.ok(dataHandleService.generatorJoinPath(reqModel));
+    }
+
+    /**
+     * 기기 이력 조회
+     */
+    @GetMapping("/retrieveDeviceHistory")
+    public ResponseEntity<CommonResponse<List<DeviceHistoryResponseDto>>> retrieveDeviceHistory(@RequestParam Long dvcId) {
+        return responseHandler.getResponseMessageAsRetrieveResult(dataHandleService.retrieveDeviceHistory(dvcId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 }
 

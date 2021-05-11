@@ -4,6 +4,7 @@ import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.QMember;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.base.enums.TypeEnum;
+import com.daema.base.util.CommonUtil;
 import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.ReturnStock;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
@@ -27,6 +28,7 @@ import static com.daema.commgmt.domain.QGoodsOption.goodsOption;
 import static com.daema.commgmt.domain.QStore.store;
 import static com.daema.wms.domain.QDevice.device;
 import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
+import static com.daema.wms.domain.QInStock.inStock;
 import static com.daema.wms.domain.QReturnStock.returnStock;
 
 public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport implements CustomReturnStockRepository {
@@ -45,6 +47,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
 
         QCodeDetail maker = new QCodeDetail("maker");
         QCodeDetail telecom = new QCodeDetail("telecom");
+
         query.select(Projections.fields(
                 ReturnStockResponseDto.class
                 , returnStock.returnStockId.as("returnStockId")
@@ -60,7 +63,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 , nextStock.stockId.as("nextStockId")
                 , nextStock.stockName.as("nextStockName")
                 , new CaseBuilder()
-                        .when(returnStock.nextStock.stockType.eq("I"))
+                        .when(returnStock.nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()))
                         .then(WmsEnum.StockStatStr.I.getStatusMsg())
                         .otherwise(WmsEnum.StockStatStr.M.getStatusMsg()).as("statusStr")
                 , maker.codeSeq.as("maker")
@@ -81,11 +84,10 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 , returnStock.regiDateTime.as("regiDateTime")
                 , regMember.seq.as("regiUserId")
                 , regMember.username.as("regiUserName")
+                , inStock.regiDateTime.as("inStockRegiDateTime")
         ))
                 .from(returnStock)
-                .innerJoin(regMember).on(
-                        returnStock.regiUserId.eq(regMember.seq)
-                )
+                .innerJoin(returnStock.regiUserId, regMember)
                 .innerJoin(returnStock.device, device)
                 .innerJoin(returnStock.returnDeviceStatus, deviceStatus)
                 .innerJoin(returnStock.prevStock, prevStock)
@@ -93,6 +95,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 .innerJoin(returnStock.store, store).on(
                         store.storeId.eq(requestDto.getStoreId())
                 )
+                .innerJoin(returnStock.device.inStocks, inStock)
                 .innerJoin(device.goodsOption, goodsOption)
                 .innerJoin(goodsOption.goods, goods)
                 .innerJoin(maker).on(
@@ -102,7 +105,8 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 goods.networkAttribute.telecom.eq(telecom.codeSeq)
         )
                 .where(
-                        betweenReturnstockRegDt(requestDto.getReturnStockRegiDate(), requestDto.getReturnStockRegiDate()),
+                        betweenReturnStockRegDt(requestDto.getReturnStockRegiDate(), requestDto.getReturnStockRegiDate()),
+                        betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
                         eqNextStockId(requestDto.getNextStockId()),
                         eqReturnStockStatus(requestDto.getReturnStockStatus()),
                         eqStatusStr(requestDto.getStatusStr()),
@@ -115,8 +119,8 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                         eqTelecom(requestDto.getTelecom()),
                         eqMaker(requestDto.getMaker())
                 )
-                .orderBy(returnStock.regiDateTime.desc())
-                .fetch();
+                .groupBy(returnStock.device)
+                .orderBy(returnStock.regiDateTime.desc(), returnStock.device.dvcId.desc(), inStock.inStockId.desc());
 
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
 
@@ -125,21 +129,23 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         for (ReturnStockResponseDto dto: resultList){
             dto.setReturnStockStatusMsg(dto.getReturnStockStatus().getStatusMsg());
             dto.setExtrrStatusMsg(dto.getExtrrStatus().getStatusMsg());
+            dto.setDiffReturnStockRegiDate(CommonUtil.diffLocalDateTimeToDays(dto.getRegiDateTime()));
+            dto.setDiffInStockRegiDate(CommonUtil.diffLocalDateTimeToDays(dto.getInStockRegiDateTime()));
         }
         long total = query.fetchCount();
 
         return new PageImpl<>(resultList, pageable, total);
     }
 
-    private BooleanExpression eqTelecom(int telecom) {
-        if (telecom <= 0) {
+    private BooleanExpression eqTelecom(Integer telecom) {
+        if (telecom == null) {
             return null;
         }
         return goods.networkAttribute.telecom.eq(telecom);
     }
 
-    private BooleanExpression eqMaker(int maker) {
-        if (maker <= 0) {
+    private BooleanExpression eqMaker(Integer maker) {
+        if (maker == null) {
             return null;
         }
         return goods.maker.eq(maker);
@@ -209,12 +215,21 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         }
     }
 
-
-    private BooleanExpression betweenReturnstockRegDt(String startDt, String endDt){
+    private BooleanExpression betweenReturnStockRegDt(String startDt, String endDt){
         if(StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)){
             return null;
         }
         return returnStock.regiDateTime.between(
+                RetrieveClauseBuilder.stringToLocalDateTime(startDt, "s"),
+                RetrieveClauseBuilder.stringToLocalDateTime(endDt, "e")
+        );
+    }
+
+    private BooleanExpression betweenInStockRegDt(String startDt, String endDt){
+        if(StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)){
+            return null;
+        }
+        return inStock.regiDateTime.between(
                 RetrieveClauseBuilder.stringToLocalDateTime(startDt, "s"),
                 RetrieveClauseBuilder.stringToLocalDateTime(endDt, "e")
         );

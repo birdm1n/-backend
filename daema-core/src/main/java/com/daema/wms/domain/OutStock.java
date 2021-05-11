@@ -1,5 +1,6 @@
 package com.daema.wms.domain;
 
+import com.daema.base.domain.Member;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="out_stock_id")
+@EqualsAndHashCode(of="outStockId")
 @ToString
 @NoArgsConstructor
 @Entity
@@ -26,8 +27,9 @@ public class OutStock {
     @Enumerated(EnumType.STRING)
     private WmsEnum.OutStockType outStockType;
 
-    @Column(name = "regi_user_id")
-    private long regiUserId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq")
+    private Member regiUserId;
 
     @CreatedDate
     @Column(name = "regi_datetime")
@@ -63,7 +65,7 @@ public class OutStock {
     private Store store;
 
     @Builder
-    public OutStock(Long outStockId, WmsEnum.OutStockType outStockType, long regiUserId, LocalDateTime regiDateTime,
+    public OutStock(Long outStockId, WmsEnum.OutStockType outStockType, Member regiUserId, LocalDateTime regiDateTime,
                     Device device, Stock prevStock, Stock nextStock, Delivery delivery, Store store) {
         this.outStockId = outStockId;
         this.outStockType = outStockType;

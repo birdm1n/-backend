@@ -93,6 +93,7 @@ public enum WmsEnum {
     }
 
     public enum StockType {
+        UNKNOWN("UNKNOWN"),
         IN_STOCK("입고"),
         SELL_MOVE("판매이동"),
         STOCK_MOVE("재고이동"),

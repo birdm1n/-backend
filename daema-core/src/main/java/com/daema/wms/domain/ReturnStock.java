@@ -1,5 +1,6 @@
 package com.daema.wms.domain;
 
+import com.daema.base.domain.Member;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="return_stock_id")
+@EqualsAndHashCode(of="returnStockId")
 @ToString
 @NoArgsConstructor
 @Entity
@@ -44,13 +45,14 @@ public class ReturnStock {
     @ColumnDefault("\"N\"")
     private String ddctReleaseAmtYn = "N";
 
-    @Column(name = "regi_user_id")
-    private long regiUserId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq")
+    private Member regiUserId;
 
     @Column(name = "regi_datetime")
     private LocalDateTime regiDateTime;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_id")
     private Device device;
 
@@ -80,7 +82,7 @@ public class ReturnStock {
     public ReturnStock(Long returnStockId, WmsEnum.InStockStatus returnStockStatus, Integer returnStockAmt
             , String returnStockMemo, String ddctReleaseAmtYn, Device device, DeviceStatus returnDeviceStatus
             ,Stock prevStock, Stock nextStock, Store store
-            ,long regiUserId ,LocalDateTime regiDateTime){
+            ,Member regiUserId ,LocalDateTime regiDateTime){
         this.returnStockId = returnStockId;
         this.returnStockStatus = returnStockStatus;
         this.returnStockAmt = returnStockAmt;

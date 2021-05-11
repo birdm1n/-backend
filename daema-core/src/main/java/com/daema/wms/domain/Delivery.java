@@ -1,5 +1,6 @@
 package com.daema.wms.domain;
 
+import com.daema.base.domain.Member;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="delivery_id")
+@EqualsAndHashCode(of="deliveryId")
 @ToString
 @NoArgsConstructor
 @Entity
@@ -37,8 +38,9 @@ public class Delivery {
     @Column(name = "delivery_memo")
     private String deliveryMemo;
 
-    @Column(name = "regi_user_id")
-    private long regiUserId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq")
+    private Member regiUserId;
 
     @Column(name = "regi_datetime")
     private LocalDateTime regiDateTime;
@@ -51,7 +53,7 @@ public class Delivery {
 
     @Builder
     public Delivery(Long deliveryId, String deliveryType, Integer courier, String invoiceNo, String deliveryMemo
-            ,long regiUserId ,LocalDateTime regiDateTime){
+            ,Member regiUserId ,LocalDateTime regiDateTime){
         this.deliveryId = deliveryId;
         this.deliveryType = deliveryType;
         this.courier = courier;

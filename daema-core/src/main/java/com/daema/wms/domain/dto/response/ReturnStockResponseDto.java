@@ -100,4 +100,39 @@ public class ReturnStockResponseDto {
     private LocalDateTime regiDateTime;
     private Long regiUserId;
     private String regiUserName;
+    private LocalDateTime inStockRegiDateTime;
+
+    private Long diffReturnStockRegiDate;
+    private Long diffInStockRegiDate;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

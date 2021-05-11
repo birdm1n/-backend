@@ -1,5 +1,6 @@
 package com.daema.wms.domain;
 
+import com.daema.base.domain.Member;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="move_stock_id")
+@EqualsAndHashCode(of="moveStockId")
 @ToString
 @NoArgsConstructor
 @Entity
@@ -26,8 +27,9 @@ public class MoveStock {
     @Enumerated(EnumType.STRING)
     private WmsEnum.MoveStockType moveStockType;
 
-    @Column(name = "regi_user_id")
-    private long regiUserId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq")
+    private Member regiUserId;
 
     @CreatedDate
     @Column(name = "regi_datetime")
@@ -62,7 +64,7 @@ public class MoveStock {
     private Store store;
 
     @Builder
-    public MoveStock(Long moveStockId, WmsEnum.MoveStockType moveStockType, long regiUserId, LocalDateTime regiDateTime,
+    public MoveStock(Long moveStockId, WmsEnum.MoveStockType moveStockType, Member regiUserId, LocalDateTime regiDateTime,
                      Device device, Stock prevStock, Stock nextStock, Delivery delivery, Store store) {
         this.moveStockId = moveStockId;
         this.moveStockType = moveStockType;

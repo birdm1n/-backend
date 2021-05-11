@@ -23,6 +23,8 @@ import com.daema.rest.common.util.JwtUtil;
 import com.daema.rest.common.util.RedisUtil;
 import com.daema.rest.wms.dto.ProviderMgmtDto;
 import com.daema.wms.domain.Provider;
+import com.daema.wms.domain.dto.response.DeviceHistoryResponseDto;
+import com.daema.wms.repository.DeviceRepository;
 import com.daema.wms.repository.ProviderRepository;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.AuthorizationServiceException;
@@ -48,6 +50,7 @@ public class DataHandleService {
     private final MemberRepository memberRepository;
     private final ProviderRepository providerRepository;
     private final OrganizationRepository organizationRepository;
+    private final DeviceRepository deviceRepository;
 
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
@@ -61,9 +64,10 @@ public class DataHandleService {
                              ,StoreRepository storeRepository, CodeDetailRepository codeDetailRepository
                              ,MemberRepository memberRepository
                              ,ProviderRepository providerRepository
-                             ,JwtUtil jwtUtil, RedisUtil redisUtil
-            ,RequestMappingHandlerMapping handlerMapping, AuthenticationUtil authenticationUtil
-            ,OrganizationRepository organizationRepository) {
+            ,OrganizationRepository organizationRepository
+            ,DeviceRepository deviceRepository
+            ,JwtUtil jwtUtil, RedisUtil redisUtil
+            ,RequestMappingHandlerMapping handlerMapping, AuthenticationUtil authenticationUtil) {
         this.funcMgmtRepository = funcMgmtRepository;
         this.pubNotiRawDataRepository = pubNotiRawDataRepository;
         this.storeRepository = storeRepository;
@@ -76,6 +80,7 @@ public class DataHandleService {
         this.authenticationUtil = authenticationUtil;
         this.providerRepository = providerRepository;
         this.organizationRepository = organizationRepository;
+        this.deviceRepository = deviceRepository;
     }
 
     @Transactional
@@ -87,7 +92,7 @@ public class DataHandleService {
             Set<RequestMappingInfo> keys = mappings.keySet();
             Iterator<RequestMappingInfo> iterator = keys.iterator();
 
-            List<FuncMgmt> javaList = new ArrayList<FuncMgmt>();
+            List<FuncMgmt> javaList = new ArrayList<>();
             String[] nickname;
             HashMap<String, FuncMgmt> map = new HashMap<>();
 
@@ -266,6 +271,10 @@ public class DataHandleService {
         }
 
         return returnUrl;
+    }
+
+    public List<DeviceHistoryResponseDto> retrieveDeviceHistory(Long dvcId){
+        return deviceRepository.getDeviceHistory(dvcId, authenticationUtil.getStoreId());
     }
 }
 

@@ -13,8 +13,8 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-@EqualsAndHashCode(of = "dvc_id")
-@ToString(exclude = {"inStocks", "outStocks", "deviceStatusList", "moveStockList"})
+@EqualsAndHashCode(of = "dvcId")
+@ToString(exclude = {"inStocks", "outStocks", "deviceStatusList", "moveStockList", "returnStockList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -53,5 +53,8 @@ public class Device extends BaseEntity {
 
     @OneToMany(mappedBy = "device")
     private List<MoveStock> moveStockList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "device")
+    private List<ReturnStock> returnStockList = new ArrayList<>();
 
 }

@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Setter
-@EqualsAndHashCode(of="dvc_status_id")
+@EqualsAndHashCode(of="dvcStatusId")
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,7 +38,7 @@ public class DeviceStatus extends BaseEntity {
     private String productMissYn = "N";
 
     @Column(name = "miss_product")
-    private String missProduct;
+    private String missProduct = null;
 
     @Column(name = "ddct_amt")
     private Integer ddctAmt;
