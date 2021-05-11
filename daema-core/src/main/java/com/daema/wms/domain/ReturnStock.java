@@ -3,7 +3,9 @@ package com.daema.wms.domain;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -37,8 +39,10 @@ public class ReturnStock {
     /**
      * 출고가 차감 YN
      */
+    @Nullable
     @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1)")
-    private String ddctReleaseAmtYn;
+    @ColumnDefault("\"N\"")
+    private String ddctReleaseAmtYn = "N";
 
     @Column(name = "regi_user_id")
     private long regiUserId;

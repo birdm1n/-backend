@@ -116,10 +116,13 @@ public class InStockWait extends BaseEntity {
     @Column(name = "add_ddct_amt")
     private int addDdctAmt;
 
+    /**
+     * 출고가 차감 YN
+     */
     @Nullable
-    @Column(name = "out_stock_amt_yn", columnDefinition ="char(1)")
+    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"N\"")
-    private String outStockAmtYn = "N";
+    private String ddctReleaseAmtYn = "N";
 
     @Column(name = "own_store_id")
     private Long ownStoreId;

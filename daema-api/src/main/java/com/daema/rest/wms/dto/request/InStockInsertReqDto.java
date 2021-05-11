@@ -61,7 +61,7 @@ public class InStockInsertReqDto {
     private int addDdctAmt;
 
     @ApiModelProperty(value = "출고가 차감 여부")
-    private String outStockAmtYn;
+    private String ddctReleaseAmtYn;
 
     @ApiModelProperty(value = "구성품 누락여부")
     private String productMissYn;

@@ -152,7 +152,7 @@ public class InStockMgmtService {
                         .missProduct(requestDto.getMissProduct())
                         .ddctAmt(requestDto.getDdctAmt())
                         .addDdctAmt(requestDto.getAddDdctAmt())
-                        .outStockAmtYn(requestDto.getOutStockAmtYn())
+                        .ddctReleaseAmtYn(requestDto.getDdctReleaseAmtYn())
                         .ownStoreId(storeId)
                         .holdStoreId(stockDto.getStoreId()) //open_store_id
                         .build();
@@ -213,7 +213,7 @@ public class InStockMgmtService {
                         .missProduct(requestDto.getMissProduct())
                         .ddctAmt(requestDto.getDdctAmt())
                         .addDdctAmt(requestDto.getAddDdctAmt())
-                        .outStockAmtYn(requestDto.getOutStockAmtYn())
+                        .ddctReleaseAmtYn(requestDto.getDdctReleaseAmtYn())
                         .ownStoreId(storeId)
                         .holdStoreId(stockDto.getStoreId()) //open_store_id
                         .build();
@@ -284,7 +284,7 @@ public class InStockMgmtService {
                                 .missProduct(reqDto.getMissProduct())
                                 .ddctAmt(reqDto.getDdctAmt())
                                 .addDdctAmt(reqDto.getAddDdctAmt())
-                                .outStockAmtYn(reqDto.getOutStockAmtYn())
+                                .ddctReleaseAmtYn(reqDto.getDdctReleaseAmtYn())
                                 .build()
                 );
 

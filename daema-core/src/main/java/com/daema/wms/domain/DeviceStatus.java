@@ -46,13 +46,13 @@ public class DeviceStatus extends BaseEntity {
     @Column(name = "add_ddct_amt")
     private Integer addDdctAmt;
 
+    /**
+     * 출고가 차감 YN
+     */
     @Nullable
-    @Column(name = "out_stock_amt_yn", columnDefinition ="char(1)")
+    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"N\"")
-    private String outStockAmtYn = "N";
-
-//    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1)")
-//    private String ddctReleaseAmtYn;
+    private String ddctReleaseAmtYn = "N";
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_id")

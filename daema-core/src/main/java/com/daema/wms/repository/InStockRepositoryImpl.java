@@ -122,8 +122,12 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
         List<InStockResponseDto> resultList = query.fetch();
         for (InStockResponseDto dto: resultList){
-            dto.setInStockStatusMsg(dto.getInStockStatus().getStatusMsg());
-            dto.setExtrrStatusMsg(dto.getExtrrStatus().getStatusMsg());
+            if(dto.getInStockStatus() != null) {
+                dto.setInStockStatusMsg(dto.getInStockStatus().getStatusMsg());
+            }
+            if(dto.getExtrrStatus() != null) {
+                dto.setExtrrStatusMsg(dto.getExtrrStatus().getStatusMsg());
+            }
         }
         long total = query.fetchCount();
 

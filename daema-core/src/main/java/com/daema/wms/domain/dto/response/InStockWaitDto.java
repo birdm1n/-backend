@@ -24,7 +24,7 @@ public class InStockWaitDto {
     private int addDdctAmt;
 
     // 출고가 차감 여부
-    private String outStockAmtYn;
+    private String ddctReleaseAmtYn;
 
     // 누락제품
     private String missProduct;
@@ -105,7 +105,7 @@ public class InStockWaitDto {
                 .waitId(entity.getWaitId())
                 .ddctAmt(entity.getDdctAmt())
                 .addDdctAmt(entity.getAddDdctAmt())
-                .outStockAmtYn(entity.getOutStockAmtYn())
+                .ddctReleaseAmtYn(entity.getDdctReleaseAmtYn())
                 .missProduct(entity.getMissProduct())
                 .inStockMemo(entity.getInStockMemo())
                 .ownStoreId(entity.getOwnStoreId())
