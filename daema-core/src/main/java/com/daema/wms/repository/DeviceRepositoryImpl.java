@@ -12,7 +12,7 @@ import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 
 import static com.daema.base.domain.QMember.member;
@@ -131,7 +131,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 dto.setDiffStockRegiDate(CommonUtil.diffLocalDateTimeToDays(dto.getRegiDateTime()));
             }
 
-            historyList.sort(Comparator.comparing(DeviceHistoryResponseDto::getRegiDateTime));
+            Collections.sort(historyList, (dto1, dto2) -> dto2.getRegiDateTime().compareTo(dto1.getRegiDateTime()));
         }
 
         return historyList;
