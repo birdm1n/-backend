@@ -16,6 +16,8 @@ public class ReturnStockResponseDto {
 
     private Long returnStockId;
 
+    private Long dvcId;
+
     // 차감비
     private int ddctAmt;
 

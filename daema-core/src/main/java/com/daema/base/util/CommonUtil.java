@@ -6,6 +6,6 @@ import java.time.temporal.ChronoUnit;
 public class CommonUtil {
 
     public static long diffLocalDateTimeToDays(LocalDateTime targetDateTime) {
-        return ChronoUnit.DAYS.between(LocalDateTime.now(), targetDateTime);
+        return ChronoUnit.DAYS.between(targetDateTime, LocalDateTime.now());
     }
 }

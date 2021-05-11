@@ -7,14 +7,16 @@ import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomDeviceRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
+import static com.daema.base.domain.QMember.member;
+import static com.daema.commgmt.domain.QStore.store;
 import static com.daema.wms.domain.QDevice.device;
 import static com.daema.wms.domain.QInStock.inStock;
 import static com.daema.wms.domain.QMoveStock.moveStock;
@@ -29,79 +31,110 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
 
     @Override
     public List<DeviceHistoryResponseDto> getDeviceHistory(Long dvcId, Long storeId) {
-        JPQLQuery<DeviceHistoryResponseDto> query = getQuerydsl().createQuery();
+        JPQLQuery<DeviceHistoryResponseDto> inStockQuery = getQuerydsl().createQuery();
+        JPQLQuery<DeviceHistoryResponseDto> moveStockQuery = getQuerydsl().createQuery();
+        JPQLQuery<DeviceHistoryResponseDto> outStockQuery = getQuerydsl().createQuery();
+        JPQLQuery<DeviceHistoryResponseDto> returnStockQuery = getQuerydsl().createQuery();
 
-        DateTimePath<LocalDateTime> aliasRegiDatetime = Expressions.dateTimePath(LocalDateTime.class, "regiDateTime");
+        inStockQuery.select(Projections.fields(
+                DeviceHistoryResponseDto.class
+                , Expressions.asString(WmsEnum.StockType.IN_STOCK.getStatusMsg()).as("stockTypeMsg")
+                , inStock.regiDateTime.as("regiDateTime")
+                , inStock.store.storeName.as("storeName")
+                , inStock.regiUserId.name.as("regiUserName")
+                )
+        )
+                .from(device)
+                .innerJoin(device.inStocks, inStock)
+                .on(device.dvcId.eq(dvcId).and(device.store.storeId.eq(storeId)))
+                .innerJoin(inStock.store, store)
+                .on(inStock.device.dvcId.eq(dvcId).and(inStock.store.storeId.eq(storeId)))
+                .innerJoin(inStock.regiUserId, member)
+                .on(inStock.device.dvcId.eq(dvcId).and(inStock.regiUserId.seq.eq(member.seq)));
 
+        List<DeviceHistoryResponseDto> historyList = new ArrayList<>(inStockQuery.fetch());
 
-        query.select(Projections.fields(
+        moveStockQuery.select(Projections.fields(
                 DeviceHistoryResponseDto.class
                 , new CaseBuilder()
-                        .when(inStock.inStockId.isNotNull())
-                        .then(WmsEnum.StockType.IN_STOCK.getStatusMsg())
                         .when(moveStock.moveStockType.eq(WmsEnum.MoveStockType.STOCK_MOVE))
                         .then(WmsEnum.StockType.STOCK_MOVE.getStatusMsg())
                         .when(moveStock.moveStockType.eq(WmsEnum.MoveStockType.SELL_MOVE))
                         .then(WmsEnum.StockType.SELL_MOVE.getStatusMsg())
+                        .otherwise(WmsEnum.StockType.UNKNOWN.getStatusMsg())
+                        .as("stockTypeMsg")
+                , moveStock.regiDateTime.as("regiDateTime")
+                , moveStock.store.storeName.as("storeName")
+                , moveStock.regiUserId.name.as("regiUserName")
+                )
+        )
+                .from(device)
+                .innerJoin(device.moveStockList, moveStock)
+                .on(device.dvcId.eq(dvcId).and(device.store.storeId.eq(storeId)))
+                .innerJoin(moveStock.store, store)
+                .on(moveStock.device.dvcId.eq(dvcId).and(moveStock.store.storeId.eq(storeId)))
+                .innerJoin(moveStock.regiUserId, member)
+                .on(moveStock.device.dvcId.eq(dvcId).and(moveStock.regiUserId.seq.eq(member.seq)));
+
+        historyList.addAll(moveStockQuery.fetch());
+
+
+        outStockQuery.select(Projections.fields(
+                DeviceHistoryResponseDto.class
+                , new CaseBuilder()
                         .when(outStock.outStockType.eq(WmsEnum.OutStockType.STOCK_TRNS))
                         .then(WmsEnum.StockType.STOCK_TRNS.getStatusMsg())
                         .when(outStock.outStockType.eq(WmsEnum.OutStockType.FAULTY_TRNS))
                         .then(WmsEnum.StockType.FAULTY_TRNS.getStatusMsg())
                         .when(outStock.outStockType.eq(WmsEnum.OutStockType.SELL_TRNS))
                         .then(WmsEnum.StockType.SELL_TRNS.getStatusMsg())
-                        .when(returnStock.returnStockId.isNotNull())
-                        .then(WmsEnum.StockType.OUT_STOCK.getStatusMsg())
                         .otherwise(WmsEnum.StockType.UNKNOWN.getStatusMsg())
                         .as("stockTypeMsg")
-                , new CaseBuilder()
-                        .when(inStock.regiDateTime.isNotNull())
-                        .then(inStock.regiDateTime)
-                        .when(moveStock.regiDateTime.isNotNull())
-                        .then(moveStock.regiDateTime)
-                        .when(outStock.regiDateTime.isNotNull())
-                        .then(outStock.regiDateTime)
-                        .when(returnStock.regiDateTime.isNotNull())
-                        .then(returnStock.regiDateTime)
-                        .otherwise(Expressions.nullExpression())
-                        .as(aliasRegiDatetime)
-                , new CaseBuilder()
-                        .when(inStock.store.storeId.isNotNull())
-                        .then(inStock.store.storeName)
-                        .when(moveStock.store.storeId.isNotNull())
-                        .then(moveStock.store.storeName)
-                        .when(outStock.store.storeId.isNotNull())
-                        .then(outStock.store.storeName)
-                        .when(returnStock.store.storeId.isNotNull())
-                        .then(returnStock.store.storeName)
-                        .otherwise(Expressions.nullExpression())
-                        .as("storeName")
-                , new CaseBuilder()
-                        .when(inStock.regiUserId.isNotNull())
-                        .then(inStock.regiUserId.name)
-                        .when(moveStock.regiUserId.isNotNull())
-                        .then(moveStock.regiUserId.name)
-                        .when(outStock.regiUserId.isNotNull())
-                        .then(outStock.regiUserId.name)
-                        .when(returnStock.regiUserId.isNotNull())
-                        .then(returnStock.regiUserId.name)
-                        .otherwise(Expressions.nullExpression())
-                        .as("regiUserName")
+                , outStock.regiDateTime.as("regiDateTime")
+                , outStock.store.storeName.as("storeName")
+                , outStock.regiUserId.name.as("regiUserName")
                 )
         )
                 .from(device)
-                .leftJoin(device.inStocks, inStock)
-                .leftJoin(device.moveStockList, moveStock)
-                .leftJoin(device.outStocks, outStock)
-                .leftJoin(device.returnStockList, returnStock)
-                .orderBy(aliasRegiDatetime.desc());
+                .innerJoin(device.outStocks, outStock)
+                .on(device.dvcId.eq(dvcId).and(device.store.storeId.eq(storeId)))
+                .innerJoin(outStock.store, store)
+                .on(outStock.device.dvcId.eq(dvcId).and(outStock.store.storeId.eq(storeId)))
+                .innerJoin(outStock.regiUserId, member)
+                .on(outStock.device.dvcId.eq(dvcId).and(outStock.regiUserId.seq.eq(member.seq)));
 
-        List<DeviceHistoryResponseDto> resultList = query.fetch();
+        historyList.addAll(outStockQuery.fetch());
 
-        for (DeviceHistoryResponseDto dto : resultList) {
-            dto.setDiffStockRegiDate(CommonUtil.diffLocalDateTimeToDays(dto.getRegiDateTime()));
+
+        returnStockQuery.select(Projections.fields(
+                DeviceHistoryResponseDto.class
+                , Expressions.asString(WmsEnum.StockType.OUT_STOCK.getStatusMsg()).as("stockTypeMsg")
+                , returnStock.regiDateTime.as("regiDateTime")
+                , returnStock.store.storeName.as("storeName")
+                , returnStock.regiUserId.name.as("regiUserName")
+                )
+        )
+                .from(device)
+                .innerJoin(device.returnStockList, returnStock)
+                .on(device.dvcId.eq(dvcId).and(device.store.storeId.eq(storeId)))
+                .innerJoin(returnStock.store, store)
+                .on(returnStock.device.dvcId.eq(dvcId).and(returnStock.store.storeId.eq(storeId)))
+                .innerJoin(returnStock.regiUserId, member)
+                .on(returnStock.device.dvcId.eq(dvcId).and(returnStock.regiUserId.seq.eq(member.seq)));
+
+        historyList.addAll(returnStockQuery.fetch());
+
+        if (historyList != null
+                && historyList.size() > 0) {
+
+            for (DeviceHistoryResponseDto dto : historyList) {
+                dto.setDiffStockRegiDate(CommonUtil.diffLocalDateTimeToDays(dto.getRegiDateTime()));
+            }
+
+            historyList.sort(Comparator.comparing(DeviceHistoryResponseDto::getRegiDateTime));
         }
 
-        return resultList;
+        return historyList;
     }
 }
 

@@ -51,6 +51,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         query.select(Projections.fields(
                 ReturnStockResponseDto.class
                 , returnStock.returnStockId.as("returnStockId")
+                , device.dvcId.as("dvcId")
                 , deviceStatus.ddctAmt.as("ddctAmt")
                 , deviceStatus.addDdctAmt.as("addDdctAmt")
                 , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
