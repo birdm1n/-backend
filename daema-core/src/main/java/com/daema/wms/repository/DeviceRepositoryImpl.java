@@ -128,7 +128,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 && historyList.size() > 0) {
 
             for (DeviceHistoryResponseDto dto : historyList) {
-                dto.setDiffStockRegiDate(CommonUtil.diffLocalDateTimeToDays(dto.getRegiDateTime()));
+                dto.setDiffStockRegiDate(CommonUtil.diffDaysLocalDate(dto.getRegiDateTime().toLocalDate()));
             }
 
             Collections.sort(historyList, (dto1, dto2) -> dto2.getRegiDateTime().compareTo(dto1.getRegiDateTime()));

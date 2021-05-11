@@ -130,8 +130,8 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         for (ReturnStockResponseDto dto: resultList){
             dto.setReturnStockStatusMsg(dto.getReturnStockStatus().getStatusMsg());
             dto.setExtrrStatusMsg(dto.getExtrrStatus().getStatusMsg());
-            dto.setDiffReturnStockRegiDate(CommonUtil.diffLocalDateTimeToDays(dto.getRegiDateTime()));
-            dto.setDiffInStockRegiDate(CommonUtil.diffLocalDateTimeToDays(dto.getInStockRegiDateTime()));
+            dto.setDiffReturnStockRegiDate(CommonUtil.diffDaysLocalDate(dto.getRegiDateTime().toLocalDate()));
+            dto.setDiffInStockRegiDate(CommonUtil.diffDaysLocalDate(dto.getInStockRegiDateTime().toLocalDate()));
         }
         long total = query.fetchCount();
 
