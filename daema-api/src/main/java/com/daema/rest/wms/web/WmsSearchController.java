@@ -32,11 +32,6 @@ public class WmsSearchController {
                                                                                 @ApiParam(value = "제조사 ID") @RequestParam(required = false) Integer makerId) {
         return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getDeviceList(telecomId, makerId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
-//    @ApiOperation(value = "기기 용량 select 목록 조회", notes = "선택한 기기의 용량 조회")
-//    @GetMapping("/getCapacityList")
-//    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getCapacityList() {
-//        return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.getCapacityList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
-//    }
 
     @ApiOperation(value = "상품 Select 목록 조회", notes = "상품 Select 목록을 조회합니다")
     @GetMapping("/getGoodsSelectList/{telecomId}")

@@ -114,9 +114,10 @@ public class InStockMgmtService {
         if (requestDto.getColorName() == null) return ResponseCodeEnum.NO_COLOR;
         if (requestDto.getCapacity() == null) return ResponseCodeEnum.NO_CAPACITY;
 
-        GoodsOption goodsOptionEntity = goodsOptionRepository.findTopByCapacityAndColorNameAndDelYn(requestDto.getCapacity(),requestDto.getColorName(), "N");
+        Goods goodsEntity = goodsRepository.findById(requestDto.getGoodsId()).orElse(null);
+        GoodsOption goodsOptionEntity = goodsOptionRepository.findTopByGoodsAndCapacityAndColorNameAndDelYn( goodsEntity, requestDto.getCapacity() ,requestDto.getColorName(), "N");
         if(goodsOptionEntity == null) return ResponseCodeEnum.NO_CAPACITY_COLOR;
-        Goods goodsEntity = goodsOptionEntity.getGoods();
+
         CodeDetail telecom = codeDetailRepository.findById(goodsEntity.getNetworkAttribute().getTelecom()).orElse(null);
         CodeDetail maker = codeDetailRepository.findById(goodsEntity.getMaker()).orElse(null);
 

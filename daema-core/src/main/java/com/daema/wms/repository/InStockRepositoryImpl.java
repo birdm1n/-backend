@@ -94,8 +94,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                     store.storeId.eq(requestDto.getStoreId())
                 )
                 .innerJoin(inStock.provider, provider)
-                .innerJoin(device
-                        .goodsOption, goodsOption)
+                .innerJoin(device.goodsOption, goodsOption)
                 .innerJoin(goodsOption.goods, goods)
                 .innerJoin(maker).on(
                     goods.maker.eq(maker.codeSeq)
