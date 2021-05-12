@@ -56,7 +56,6 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 , goods.goodsName
                 , goods.modelName
                 , goods.maker
-                , goods.capacity
                 , goods.originKey
                 , goods.useYn
                 , goods.matchingYn
@@ -197,67 +196,29 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         , goods.goodsId.as("goodsId")
                         , goods.goodsName.as("goodsName")
                         , goods.modelName.as("modelName")
-                        , goods.capacity.as("capacity")
                         , goodsOption.goodsOptionId.as("goodsOptionId")
+                        , goodsOption.capacity.as("capacity")
                         , goodsOption.colorName.as("colorName")
                         , goodsOption.commonBarcode.as("commonBarcode")
                 )).from(goods)
-                        .innerJoin(goodsOption)
+                        .innerJoin(goods, goodsOption.goods)
                         .on(
                                 goodsOption.commonBarcode.eq(commonBarcode),
-                                goods.goodsId.eq(goodsOption.goods.goodsId)
+                                goods.delYn.eq("N"),
+                                goodsOption.delYn.eq("N")
+
                         )
                         .innerJoin(maker)
                         .on(
                                 goods.maker.eq(maker.codeSeq),
-                                maker.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
+                                maker.useYn.eq("Y")
                         )
                         .innerJoin(telecom)
                         .on(
                                 goods.networkAttribute.telecom.eq(telecom.codeSeq),
-                                telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
+                                telecom.useYn.eq("Y")
                         ).fetchOne();
-
-
         return goodsMatchRespDto;
-    }
-
-    @Override
-    public List<Goods> getCapacityList(Long storeId) {
-        JPQLQuery<Goods> query = getQuerydsl().createQuery();
-        return query.select(Projections.fields(
-                Goods.class
-                , goods.capacity
-        ))
-                .distinct()
-                .from(device)
-                .innerJoin(device.goodsOption, goodsOption).on(
-                        device.store.storeId.eq(storeId),
-                        device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
-                        goodsOption.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
-                )
-                .innerJoin(goodsOption.goods, goods).on(
-                        goods.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
-                )
-                .orderBy(goods.capacity.asc())
-                .fetch();
-    }
-
-    @Override
-    public List<GoodsOption> getColorList(long goodsId) {
-        JPQLQuery<GoodsOption> query = getQuerydsl().createQuery();
-        return query.select(Projections.fields(
-                GoodsOption.class
-                , goodsOption.goodsOptionId
-                , goodsOption.colorName
-        ))
-                .from(goodsOption)
-                .where(
-                        goodsOption.goods.goodsId.eq(goodsId),
-                        goodsOption.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
-                )
-                .orderBy(goodsOption.colorName.asc())
-                .fetch();
     }
 
     @Override
@@ -271,24 +232,42 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
         ))
                 .from(goods)
                 .where(
-                        eqTelecomId(telecomId)
+                        eqTelecomId(telecomId),
+                        goods.delYn.eq("N")
                 )
                 .orderBy(goods.goodsName.asc())
                 .fetch();
     }
 
     @Override
-    public List<Goods> getGoodsSelectCapacityList(long goodsId) {
-        JPQLQuery<Goods> query = getQuerydsl().createQuery();
+    public List<GoodsOption> getGoodsSelectCapacityList(long goodsId) {
+        JPQLQuery<GoodsOption> query = getQuerydsl().createQuery();
         return query.select(Projections.fields(
-                Goods.class
-                , goods.goodsId
-                , goods.capacity
+                GoodsOption.class
+                , goodsOption.capacity
         ))
-                .from(goods)
+                .from(goodsOption)
                 .where(
-                        goods.goodsId.eq(goodsId)
+                        goodsOption.goods.goodsId.eq(goodsId),
+                        goodsOption.delYn.eq("N")
                 )
+                .fetch();
+    }
+
+    @Override
+    public List<GoodsOption> getColorList(long goodsId, String capacity) {
+        JPQLQuery<GoodsOption> query = getQuerydsl().createQuery();
+        return query.select(Projections.fields(
+                GoodsOption.class
+                , goodsOption.colorName
+        ))
+                .from(goodsOption)
+                .where(
+                        goodsOption.goods.goodsId.eq(goodsId),
+                        goodsOption.capacity.eq(capacity),
+                        goodsOption.delYn.eq("N")
+                )
+                .orderBy(goodsOption.colorName.asc())
                 .fetch();
     }
 

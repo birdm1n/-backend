@@ -15,11 +15,10 @@ public interface CustomGoodsRepository {
 
 	GoodsMatchRespDto goodsMatchBarcode(String commonBarcode);
 
-    List<Goods> getCapacityList(Long storeId);
 
-	List<GoodsOption> getColorList(long goodsId);
+	List<GoodsOption> getColorList(long goodsId, String capacity);
 
 	List<Goods> getGoodsSelectList(int telecomId);
 
-	List<Goods> getGoodsSelectCapacityList(long goodsId);
+	List<GoodsOption> getGoodsSelectCapacityList(long goodsId);
 }

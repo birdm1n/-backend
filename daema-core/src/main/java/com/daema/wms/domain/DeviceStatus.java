@@ -54,6 +54,10 @@ public class DeviceStatus extends BaseEntity {
     @ColumnDefault("\"N\"")
     private String ddctReleaseAmtYn = "N";
 
+    @Column(name = "in_stock_status")
+    @Enumerated(EnumType.STRING)
+    private WmsEnum.InStockStatus inStockStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_id")
     private Device device;

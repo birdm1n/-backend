@@ -56,6 +56,9 @@ public class Device extends BaseEntity {
     @Column(name = "full_barcode")
     private String fullBarcode;
 
+    @Column(name = "in_stock_amt")
+    private int inStockAmt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_option_id")
     private GoodsOption goodsOption;

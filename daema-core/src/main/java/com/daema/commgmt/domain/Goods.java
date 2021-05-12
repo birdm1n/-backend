@@ -49,14 +49,13 @@ public class Goods extends GoodsBase{
     private List<GoodsOption> optionList;
 
     @Builder
-    public Goods(long goodsId, String goodsName, String modelName, int maker, int telecom, int network, String capacity
+    public Goods(long goodsId, String goodsName, String modelName, int maker, int telecom, int network
             , String originKey, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn, String makerName, String networkName, String telecomName){
         this.goodsId = goodsId;
         this.goodsName = goodsName;
         this.modelName = modelName;
         this.maker = maker;
         this.networkAttribute = new NetworkAttribute(telecom, network);
-        this.capacity = capacity;
         this.originKey = originKey;
         this.useYn = useYn;
         this.matchingYn = matchingYn;

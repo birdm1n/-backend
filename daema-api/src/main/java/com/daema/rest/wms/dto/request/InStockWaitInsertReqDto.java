@@ -56,12 +56,14 @@ public class InStockWaitInsertReqDto {
     // 바코드 정보가 없을 경우
     @ApiModelProperty(value = "상품 ID")
     private Long goodsId;
-
-    @ApiModelProperty(value = "상품옵션 ID")
-    private Long goodsOptionId;
-
+    
     @ApiModelProperty(value = "용량")
     private String capacity;
+
+    @ApiModelProperty(value = "색상")
+    private String colorName;
+
+    
 
     public void setProvId(Long provId) {
         this.provId = provId;
@@ -137,8 +139,8 @@ public class InStockWaitInsertReqDto {
         this.goodsId = goodsId;
     }
 
-    public void setGoodsOptionId(Long goodsOptionId) {
-        this.goodsOptionId = goodsOptionId;
+    public void setColorName(String colorName) {
+        this.colorName = colorName;
     }
 
     public void setCapacity(String capacity) {

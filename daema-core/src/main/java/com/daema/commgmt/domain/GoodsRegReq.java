@@ -41,7 +41,7 @@ public class GoodsRegReq extends GoodsBase{
 
     @Builder
     public GoodsRegReq(long goodsRegReqId, long reqStoreId, String goodsName, String modelName
-            , int maker, int telecom, int network, String capacity, LocalDateTime regiDateTime, int reqStatus
+            , int maker, int telecom, int network, LocalDateTime regiDateTime, int reqStatus
             , String makerName, String networkName, String telecomName
             ,String reqStoreName){
         this.goodsRegReqId = goodsRegReqId;
@@ -50,7 +50,6 @@ public class GoodsRegReq extends GoodsBase{
         this.modelName = modelName;
         this.maker = maker;
         this.networkAttribute = new NetworkAttribute(telecom, network);
-        this.capacity = capacity;
         this.reqStatus = reqStatus;
         this.regiDateTime = regiDateTime;
         this.makerName = makerName;

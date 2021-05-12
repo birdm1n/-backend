@@ -31,8 +31,6 @@ public abstract class GoodsBase {
     @Embedded
     protected NetworkAttribute networkAttribute;
 
-    @Column(name = "capacity", length = 8)
-    protected String capacity;
 
     @Column(name = "regi_datetime")
     protected LocalDateTime regiDateTime;

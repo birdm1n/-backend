@@ -41,7 +41,8 @@ public class GoodsMgmtDto {
 				.maker(goods.getMaker())
 				.telecom(goods.getNetworkAttribute().getTelecom())
 				.network(goods.getNetworkAttribute().getNetwork())
-				.capacity(goods.getCapacity())
+				// todo 2021 수정
+//				.capacity(goods.getCapacity())
 				.originKey(goods.getOriginKey())
 				.regiDateTime(goods.getRegiDateTime())
 				.useYn(goods.getUseYn())

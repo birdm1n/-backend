@@ -78,7 +78,8 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 , goodsOption.commonBarcode.as("commonBarcode")
                 , device.fullBarcode.as("fullBarcode")
                 , returnStock.returnStockAmt.as("returnStockAmt")
-                , returnStock.returnStockStatus.as("returnStockStatus")
+                // todo 2021 수정
+//                , returnStock.returnStockStatus.as("returnStockStatus")
                 , deviceStatus.productFaultyYn.as("productFaultyYn")
                 , deviceStatus.productMissYn.as("productMissYn")
                 , deviceStatus.extrrStatus.as("extrrStatus")
@@ -109,7 +110,8 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                         betweenReturnStockRegDt(requestDto.getReturnStockRegiDate(), requestDto.getReturnStockRegiDate()),
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
                         eqNextStockId(requestDto.getNextStockId()),
-                        eqReturnStockStatus(requestDto.getReturnStockStatus()),
+// todo 2021 수정
+//                        eqReturnStockStatus(requestDto.getReturnStockStatus()),
                         eqStatusStr(requestDto.getStatusStr()),
                         eqFullBarcode(requestDto.getFullBarcode()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
@@ -164,13 +166,13 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         }
         return goods.goodsId.eq(goodsId);
     }
-
-    private BooleanExpression eqReturnStockStatus(WmsEnum.InStockStatus returnStockStatus) {
-        if (returnStockStatus == null){
-            return null;
-        }
-        return returnStock.returnStockStatus.eq(returnStockStatus);
-    }
+    // todo 2021 수정
+//    private BooleanExpression eqReturnStockStatus(WmsEnum.InStockStatus returnStockStatus) {
+//        if (returnStockStatus == null){
+//            return null;
+//        }
+//        return returnStock.returnStockStatus.eq(returnStockStatus);
+//    }
     private BooleanExpression eqCapacity(String capacity) {
         if(StringUtils.isEmpty(capacity)){
             return null;

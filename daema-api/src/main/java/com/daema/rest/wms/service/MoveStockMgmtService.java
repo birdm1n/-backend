@@ -10,6 +10,7 @@ import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.response.*;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +48,21 @@ public class MoveStockMgmtService {
         this.authenticationUtil = authenticationUtil;
     }
 
-
+    @Transactional(readOnly = true)
     public ResponseDto<MoveStockResponseDto> getMoveAndTrnsList(WmsEnum.MovePathType movePathType) {
+        long sotreId = authenticationUtil.getStoreId();
+        // 이동 프로세스
+        if(WmsEnum.MovePathType.SELL_MOVE == movePathType || WmsEnum.MovePathType.STOCK_MOVE == movePathType) {
+            Page<MoveStockResponseDto> resultPageDto = moveStockRepository.getMoveTypeList(movePathType);
+        }
+        
+        // 이관 프로세스
+        if(WmsEnum.MovePathType.SELL_TRNS == movePathType ||
+                WmsEnum.MovePathType.STOCK_TRNS == movePathType||
+                WmsEnum.MovePathType.FAULTY_TRNS == movePathType){
+            Page<MoveStockResponseDto> resultPageDto = moveStockRepository.getTransTypeList(movePathType);
+
+        }
 
         return null;
     }

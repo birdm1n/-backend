@@ -16,6 +16,7 @@ public enum ResponseCodeEnum {
     NO_GOODS("1006", "공통 바코드와 일치하는 상품이 존재하지 않습니다"),
     NO_COLOR("1007", "색상을 선택해주세요"),
     NO_CAPACITY("1007", "용량을 선택해주세요"),
+    NO_CAPACITY_COLOR("1007", "용량과 색상이 일치하는 기기가 없습니다")
     ;
 
     private String resultCode;

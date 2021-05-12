@@ -37,7 +37,8 @@ public class GoodsRegReqDto {
 				.maker(goodsRegReq.getMaker())
 				.telecom(goodsRegReq.getNetworkAttribute().getTelecom())
 				.network(goodsRegReq.getNetworkAttribute().getNetwork())
-				.capacity(goodsRegReq.getCapacity())
+				// todo 2021 수정
+//				.capacity(goodsRegReq.getCapacity())
 				.regiDateTime(goodsRegReq.getRegiDateTime())
 				.reqStatus(goodsRegReq.getReqStatus())
 				.regReqRejectDto(GoodsRegReqRejectDto.from(goodsRegReq.getGoodsRegReqReject()))

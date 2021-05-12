@@ -52,7 +52,6 @@ public class GoodsRegReqRepositoryImpl extends QuerydslRepositorySupport impleme
                 ,goodsRegReq.goodsRegReqId
                 ,goodsRegReq.modelName
                 ,goodsRegReq.maker
-                ,goodsRegReq.capacity
                 ,goodsRegReq.goodsName
                 ,goodsRegReq.reqStatus
                 ,goodsRegReq.reqStoreId

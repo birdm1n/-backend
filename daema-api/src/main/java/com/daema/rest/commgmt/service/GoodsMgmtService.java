@@ -90,7 +90,6 @@ public class GoodsMgmtService {
                             .maker(goodsMgmtDto.getMaker())
                             .telecom(goodsMgmtDto.getTelecom())
                             .network(goodsMgmtDto.getNetwork())
-                            .capacity(goodsMgmtDto.getCapacity())
                             .originKey(goodsMgmtDto.getOriginKey())
                             .useYn(goodsMgmtDto.getUseYn())
                             .matchingYn(goodsMgmtDto.getMatchingYn())
@@ -106,7 +105,6 @@ public class GoodsMgmtService {
                             .maker(goodsMgmtDto.getMaker())
                             .telecom(goodsMgmtDto.getTelecom())
                             .network(goodsMgmtDto.getNetwork())
-                            .capacity(goodsMgmtDto.getCapacity())
                             .reqStoreId(authenticationUtil.getStoreId())
                             .reqStatus(StatusEnum.REG_REQ.getStatusCode())
                             .regiDateTime(LocalDateTime.now())
@@ -128,7 +126,6 @@ public class GoodsMgmtService {
             goods.setModelName(goodsMgmtDto.getModelName());
             goods.setMaker(goodsMgmtDto.getMaker());
             goods.setNetworkAttribute(new NetworkAttribute(goodsMgmtDto.getTelecom(), goodsMgmtDto.getNetwork()));
-            goods.setCapacity(goodsMgmtDto.getCapacity());
 
             if (StringUtils.hasText(goodsMgmtDto.getOriginKey())) {
                 goods.setOriginKey(goodsMgmtDto.getOriginKey());
@@ -243,7 +240,7 @@ public class GoodsMgmtService {
             throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
         }
     }
-
+    @Transactional(readOnly = true)
     public ResponseDto<GoodsRegReqDto> getRegReqList(ComMgmtRequestDto requestDto) {
 
         requestDto.setStoreId(authenticationUtil.getStoreId());
@@ -271,7 +268,6 @@ public class GoodsMgmtService {
                                 .maker(goodsRegReq.getMaker())
                                 .telecom(goodsRegReq.getNetworkAttribute().getTelecom())
                                 .network(goodsRegReq.getNetworkAttribute().getNetwork())
-                                .capacity(goodsRegReq.getCapacity())
                                 .originKey("R".concat(String.valueOf(goodsRegReq.getGoodsRegReqId())))
                                 .regiDateTime(LocalDateTime.now())
                                 .useYn(StatusEnum.FLAG_N.getStatusMsg())
@@ -341,33 +337,13 @@ public class GoodsMgmtService {
     }
 
     @Transactional(readOnly = true)
-    public List<SearchMatchResponseDto> getCapacityList() {
-        long storeid = authenticationUtil.getStoreId();
-        List<Goods> goodsList = goodsRepository.getCapacityList(storeid);
-
-        List<SearchMatchResponseDto> responseDtos = new ArrayList<>();
-        for (Goods goods : goodsList) {
-            if (goods != null) {
-                responseDtos.add(
-                        SearchMatchResponseDto
-                                .builder()
-                                .capacity(goods.getCapacity())
-                                .build()
-                );
-            }
-        }
-
-        return responseDtos;
-    }
-
-    public List<SearchMatchResponseDto> getColorList(long goodsId) {
-        List<GoodsOption> goodsOptionList = goodsRepository.getColorList(goodsId);
+    public List<SearchMatchResponseDto> getColorList(long goodsId, String capacity) {
+        List<GoodsOption> goodsOptionList = goodsRepository.getColorList(goodsId, capacity);
         List<SearchMatchResponseDto> responseDtos = new ArrayList<>();
         if (CommonUtil.isNotEmptyList(goodsOptionList)) {
             responseDtos = goodsOptionList.stream()
                     .map(goodsOption -> SearchMatchResponseDto
                             .builder()
-                            .goodsOptionId(goodsOption.getGoodsOptionId())
                             .colorName(goodsOption.getColorName())
                             .build()
                     )
@@ -375,7 +351,7 @@ public class GoodsMgmtService {
         }
         return responseDtos;
     }
-
+    @Transactional(readOnly = true)
     public List<SearchMatchResponseDto> getGoodsSelectList(int telecomId) {
         List<Goods> goodsList = goodsRepository.getGoodsSelectList(telecomId);
         List<SearchMatchResponseDto> responseDtos = new ArrayList<>();
@@ -391,18 +367,15 @@ public class GoodsMgmtService {
         }
         return responseDtos;
     }
-
+    @Transactional(readOnly = true)
     public List<SearchMatchResponseDto> getGoodsSelectCapacityList(long goodsId) {
-        List<Goods> goodsList = goodsRepository.getGoodsSelectCapacityList(goodsId);
+        List<GoodsOption> goodsOptionList = goodsRepository.getGoodsSelectCapacityList(goodsId);
         List<SearchMatchResponseDto> responseDtos = new ArrayList<>();
-
-        for (Goods goods : goodsList) {
-
-            if (goods != null) {
+        for (GoodsOption goodsOption : goodsOptionList) {
+            if(goodsOption != null) {
                 responseDtos.add(
                         SearchMatchResponseDto.builder()
-                                .goodsId(goods.getGoodsId())
-                                .capacity(goods.getCapacity())
+                                .capacity(goodsOption.getCapacity())
                                 .build()
                 );
             }

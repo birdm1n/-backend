@@ -77,8 +77,8 @@ public class InStockMgmtController {
     }
 
     @ApiOperation(value = "입고 목록 수정", notes = "입고 목록을 수정합니다")
-    @GetMapping("/updateInStock")
-    public ResponseEntity<CommonResponse<Void>> updateInStock(InStockUpdateReqDto requestDto ) {
+    @PostMapping("/updateInStock")
+    public ResponseEntity<CommonResponse<Void>> updateInStock(@RequestBody InStockUpdateReqDto requestDto ) {
         inStockMgmtService.updateInStock(requestDto);
         return responseHandler.ok();
     }

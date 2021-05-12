@@ -23,16 +23,9 @@ public class InStock extends BaseEntity {
     @Column(name = "in_stock_id")
     private Long inStockId;
 
-    @Column(name = "in_stock_status")
-    @Enumerated(EnumType.STRING)
-    private WmsEnum.InStockStatus inStockStatus;
-
     @Column(name = "status_str")
     @Enumerated(EnumType.STRING)
     private WmsEnum.StockStatStr statusStr;
-
-    @Column(name = "in_stock_amt")
-    private int inStockAmt;
 
     @Column(name = "in_stock_memo")
     private String inStockMemo;

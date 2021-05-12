@@ -32,6 +32,12 @@ public class WmsSearchController {
                                                                                 @ApiParam(value = "제조사 ID") @RequestParam(required = false) Integer makerId) {
         return responseHandler.getResponseMessageAsRetrieveResult(inStockMgmtService.getDeviceList(telecomId, makerId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
+//    @ApiOperation(value = "기기 용량 select 목록 조회", notes = "선택한 기기의 용량 조회")
+//    @GetMapping("/getCapacityList")
+//    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getCapacityList() {
+//        return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.getCapacityList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+//    }
+
     @ApiOperation(value = "상품 Select 목록 조회", notes = "상품 Select 목록을 조회합니다")
     @GetMapping("/getGoodsSelectList/{telecomId}")
     public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getGoodsSelectList(@ApiParam(value = "통신사 ID", required = true) @PathVariable int telecomId) {
@@ -44,17 +50,11 @@ public class WmsSearchController {
         return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.getGoodsSelectCapacityList(goodsId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-    @ApiOperation(value = "기기 용량 select 목록 조회", notes = "선택한 기기의 용량 조회")
-    @GetMapping("/getCapacityList")
-    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getCapacityList() {
-        return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.getCapacityList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
-    }
-
-
-    @ApiOperation(value = "상품 색상 select 목록 조회", notes = "선택한 상품의 색상 조회")
-    @GetMapping("/getColorList/{goodsId}")
-    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getColorList(@ApiParam(value = "상품 ID", required = true) @PathVariable long goodsId) {
-        return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.getColorList(goodsId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    @ApiOperation(value = "상품 색상 select 목록 조회", notes = "선택한 상품과 용량에 대한 색상 조회")
+    @GetMapping("/getColorList")
+    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getColorList(@ApiParam(value = "상품 ID", required = true) @RequestParam long goodsId,
+                                                                               @ApiParam(value = "용량", required = true) @RequestParam String capacity) {
+        return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.getColorList(goodsId, capacity), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
 
