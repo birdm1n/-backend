@@ -4,9 +4,9 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.rest.wms.dto.response.StoreStockMgmtResponseDto;
 import com.daema.rest.wms.service.StoreStockMgmtService;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
+import com.daema.wms.domain.dto.response.StoreStockResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class StoreStockMgmtController {
 
     @ApiOperation(value = "재고 조회", notes = "재고 목록을 조회합니다")
     @GetMapping("/getStoreStockList")
-    public ResponseEntity<CommonResponse<ResponseDto<StoreStockMgmtResponseDto>>> getStoreStockList(StoreStockRequestDto requestDto) {
+    public ResponseEntity<CommonResponse<ResponseDto<StoreStockResponseDto>>> getStoreStockList(StoreStockRequestDto requestDto) {
         return responseHandler.getResponseMessageAsRetrieveResult(storeStockMgmtService.getStoreStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 }

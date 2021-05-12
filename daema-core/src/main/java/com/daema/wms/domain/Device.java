@@ -80,4 +80,7 @@ public class Device extends BaseEntity {
     @OneToMany(mappedBy = "device")
     private List<ReturnStock> returnStockList = new ArrayList<>();
 
+    @OneToOne(mappedBy = "device")
+    private StoreStock storeStock;
+
 }

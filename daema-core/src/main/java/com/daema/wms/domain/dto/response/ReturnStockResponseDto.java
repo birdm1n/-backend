@@ -82,8 +82,8 @@ public class ReturnStockResponseDto {
     // 입고단가
     private int inStockAmt;
 
+    // 반품비
     private int returnStockAmt;
-
 
     // 입고상태 =  1, "정상"/ 2, "개봉"
     private WmsEnum.InStockStatus returnStockStatus;

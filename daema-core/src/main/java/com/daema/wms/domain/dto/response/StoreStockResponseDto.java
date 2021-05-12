@@ -16,11 +16,20 @@ public class StoreStockResponseDto {
 
     private Long inStockId;
 
+    private Long storeStockId;
+
+    private WmsEnum.StockType stockType;
+
+    private Long dvcId;
+
     // 차감비
     private int ddctAmt;
 
     // 추가 차감비
     private int addDdctAmt;
+
+    // 출고가 차감 YN
+    private String ddctReleaseAmtYn;
 
     // 누락제품
     private String missProduct;
@@ -28,11 +37,13 @@ public class StoreStockResponseDto {
     // 입고메모
     private String inStockMemo;
 
-    // 소유권을 가지는 Store = 관리점
-//    private Long ownStoreId;
-//
-//    // 보유처 StoreId
-//    private Long holdStoreId;
+    // 이전 보유처
+    private Long prevStockId;
+    private String prevStockName;
+
+    // 현재 보유처
+    private Long nextStockId;
+    private String nextStockName;
 
     /**
      Desc : 기기별 입력정보 및 모델별 입력정보
@@ -49,7 +60,7 @@ public class StoreStockResponseDto {
     private String stockName;
 
     // 재고구분
-    private WmsEnum.StockStatStr statusStr;
+    private String statusStr;
 
     //제조사
     private int maker;
@@ -73,10 +84,16 @@ public class StoreStockResponseDto {
     // 입고단가
     private int inStockAmt;
 
+    // 반품비
+    private int returnStockAmt;
 
     // 입고상태 =  1, "정상"/ 2, "개봉"
     private WmsEnum.InStockStatus inStockStatus;
     private String inStockStatusMsg;
+
+    // 반품상태 =  1, "정상"/ 2, "개봉"
+    private WmsEnum.InStockStatus returnStockStatus;
+    private String returnStockStatusMsg;
 
     // 제품상태 =  N, "-" / Y, "불량"
     private String productFaultyYn;
@@ -94,4 +111,8 @@ public class StoreStockResponseDto {
     private LocalDateTime updDateTime;
     private Long updUserId;
     private String updUserName;
+    private LocalDateTime inStockRegiDateTime;
+
+    private Long diffStoreStockCheckDate;
+    private Long diffInStockRegiDate;
 }

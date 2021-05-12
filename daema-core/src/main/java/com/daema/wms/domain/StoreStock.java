@@ -7,11 +7,13 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="store_stock_id")
-@ToString
+@EqualsAndHashCode(of="storeStockId")
+@ToString(exclude = {"storeStockCheckList"})
 @NoArgsConstructor
 @Entity
 @Table(name="store_stock")
@@ -60,6 +62,12 @@ public class StoreStock extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id")
     private Stock nextStock;
+
+    /**
+     * 재고조사일
+     */
+    @OneToMany(mappedBy = "storeStock")
+    private List<StoreStockCheck> storeStockCheckList = new ArrayList<>();
 
     @Builder
     public StoreStock(Long storeStockId, Store store, WmsEnum.StockType stockType, Device device,

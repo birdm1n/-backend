@@ -72,7 +72,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 , goods.goodsId.as("goodsId")
                 , goods.goodsName.as("goodsName")
                 , goods.modelName.as("modelName")
-                , goods.capacity.as("capacity")
+                , goodsOption.capacity.as("capacity")
                 , goodsOption.goodsOptionId.as("goodsOptionId")
                 , goodsOption.colorName.as("colorName")
                 , goodsOption.commonBarcode.as("commonBarcode")
@@ -175,7 +175,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         if(StringUtils.isEmpty(capacity)){
             return null;
         }
-        return goods.capacity.eq(capacity);
+        return goodsOption.capacity.eq(capacity);
     }
     private BooleanExpression eqColorName(String colorName) {
         if(StringUtils.isEmpty(colorName)){

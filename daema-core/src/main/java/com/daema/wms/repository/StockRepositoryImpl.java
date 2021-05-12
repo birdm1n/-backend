@@ -251,7 +251,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
             sb.append(" and go.color_name = '").append(requestDto.getCapacity()).append("'");
         }
         if(StringUtils.hasText(requestDto.getFullBarcode())){
-            sb.append(" and fullBarcode like '%").append(requestDto.getFullBarcode()).append("%'");
+            sb.append(" and full_barcode like '%").append(requestDto.getFullBarcode()).append("%'");
         }
 
         sb.append(" order by hierarchy, goods_name, cd1.code_nm, cd2.code_nm ");

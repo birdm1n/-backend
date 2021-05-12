@@ -1,6 +1,7 @@
 package com.daema.rest.wms.service;
 
 import com.daema.base.repository.MemberRepository;
+import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.StoreStockMgmtDto;
 import com.daema.rest.wms.dto.response.StockMgmtResponseDto;
@@ -29,15 +30,13 @@ public class StoreStockMgmtService {
 		this.authenticationUtil = authenticationUtil;
 	}
 
-	public StockMgmtResponseDto getStoreStockList(StoreStockRequestDto requestDto) {
+	public ResponseDto<StockMgmtResponseDto> getStoreStockList(StoreStockRequestDto requestDto) {
 
 		requestDto.setStoreId(authenticationUtil.getStoreId());
 
-		StockMgmtResponseDto stockMgmtResponseDto = new StockMgmtResponseDto();
-		
 		Page<StoreStockResponseDto> dataList = storeStockRepository.getStoreStockList(requestDto);
 
-		return stockMgmtResponseDto;
+		return new ResponseDto(dataList);
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)
