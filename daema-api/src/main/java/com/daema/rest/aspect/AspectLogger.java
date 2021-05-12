@@ -32,23 +32,6 @@ public class AspectLogger {
         String authorization = request.getHeader("Authorization");
 
         long startTime = System.currentTimeMillis();
-        Object[] objs = proceedingJoinPoint.getArgs();
-
-        StringBuffer argsToString = new StringBuffer();
-
-        argsToString.append("authorization_").append(authorization).append(" : ");
-
-        if(objs != null){
-            for(int i = 0; i < objs.length; i++){
-                if(objs[i] != null){
-                    if(i < objs.length - 1) {
-                        argsToString.append("'").append(objs[i].toString()).append("',");
-                    } else {
-                        argsToString.append("'").append(objs[i].toString()).append("'");
-                    }
-                }
-            }
-        }
 
         String sessionId = null;
         Object output;
@@ -60,7 +43,9 @@ public class AspectLogger {
         if (sessionId != null) {
             StringBuffer enterLog = new StringBuffer();
             enterLog.append("Enter : ").append(proceedingJoinPoint.getSignature());
-            enterLog.append(" with args(").append(argsToString).append(")");
+            enterLog.append("authorization_").append(authorization).append(" : ");
+            enterLog.append(" with args(")
+                    .append(loggerParam(proceedingJoinPoint.getArgs())).append(")");
             enterLog.append(". Session ID: ").append(RequestContextHolder.getRequestAttributes().getSessionId());
 
             logger.info(enterLog.toString());
@@ -86,8 +71,67 @@ public class AspectLogger {
     public void afterThrowingTargetMethod(JoinPoint joinPoint, Exception exception) {
         StringBuffer throwingLog = new StringBuffer();
         throwingLog.append("C @AfterThrowing Exiting: ").append(joinPoint.getSignature());
+        throwingLog.append(" with args(").append(loggerParam(joinPoint.getArgs())).append(")");
         throwingLog.append(". Session ID: ").append(RequestContextHolder.getRequestAttributes().getSessionId());
+        throwingLog.append(". Exception: ").append(exception.getMessage());
 
-        logger.info(throwingLog.toString());
+        logger.error(throwingLog.toString());
+    }
+
+    private StringBuffer loggerParam(Object[] objs){
+
+        StringBuffer argsToString = new StringBuffer();
+
+        //TODO objs reflection
+        if(objs != null) {
+            for (int i = 0; i < objs.length; i++) {
+                if (objs[i] != null) {
+                    if (i < objs.length - 1) {
+                        argsToString.append("'").append(objs[i].toString()).append("',");
+                    } else {
+                        argsToString.append("'").append(objs[i].toString()).append("'");
+                    }
+                }
+            }
+        }
+        return argsToString;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

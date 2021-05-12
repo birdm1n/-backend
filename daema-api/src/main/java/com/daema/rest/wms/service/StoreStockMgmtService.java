@@ -10,6 +10,8 @@ import com.daema.wms.domain.dto.response.StoreStockResponseDto;
 import com.daema.wms.repository.StoreStockRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StoreStockMgmtService {
@@ -38,6 +40,7 @@ public class StoreStockMgmtService {
 		return stockMgmtResponseDto;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	public StoreStock cuStoreStock(StoreStockMgmtDto storeStockDto){
 
 		StoreStock storeStock = storeStockRepository.findByStoreAndDevice(storeStockDto.getStore(), storeStockDto.getDevice());

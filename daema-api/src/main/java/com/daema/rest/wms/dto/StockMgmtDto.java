@@ -32,6 +32,7 @@ public class StockMgmtDto {
 	private LocalDateTime updDateTime;
 	private int depth;
 	private String hierarchy;
+	private int dvcCnt;
 
 	private List<StockMgmtDto> children;
 
@@ -64,6 +65,7 @@ public class StockMgmtDto {
 				.chargerName(stockListDto.getChargerName())
 				.chargerPhone(stockListDto.getChargerPhone())
 				.hierarchy(stockListDto.getHierarchy())
+				.dvcCnt(stockListDto.getDvcCnt())
 			.build();
 	}
 }

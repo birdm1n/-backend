@@ -72,6 +72,8 @@ public class ErrorHandlerAdvice extends ResponseEntityExceptionHandler {
     }
 
     private void errorLogging(WebRequest request, Exception ex, Object body, HttpStatus httpErrorStatus){
+
+        //TODO parameter logging
         if(httpErrorStatus.is5xxServerError()) {
             logger.error("Exception occurred", ex.getMessage());
         } else {

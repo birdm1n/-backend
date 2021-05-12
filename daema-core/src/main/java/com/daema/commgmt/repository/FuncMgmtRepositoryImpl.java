@@ -47,6 +47,8 @@ public class FuncMgmtRepositoryImpl extends QuerydslRepositorySupport implements
                         .and(funcRoleMap.funcId.eq(funcMgmt.funcId))
                 );
 
+        query.groupBy(funcRoleMap.funcId);
+
         return Optional.ofNullable(query.fetch())
                 .orElseGet(Collections::emptyList)
                 .stream()

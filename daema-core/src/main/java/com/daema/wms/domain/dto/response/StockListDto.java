@@ -27,4 +27,5 @@ public class StockListDto {
 
     private String hierarchy;
 
+    private int dvcCnt;
 }

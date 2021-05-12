@@ -100,7 +100,7 @@ public enum WmsEnum {
         STOCK_TRNS("재고이관"),
         FAULTY_TRNS("불량이관"),
         SELL_TRNS("판매이관"),
-        OUT_STOCK("출고"),
+        RETURN_STOCK("반품"),
         ;
 
         private final String statusMsg;

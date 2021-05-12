@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -49,8 +50,10 @@ public class StockMgmtService {
 		requestDto.setStoreId(authenticationUtil.getStoreId());
 
 		StockMgmtResponseDto stockMgmtResponseDto = new StockMgmtResponseDto();
-		
-		List<StockListDto> dataList = stockRepository.getStockList(requestDto);
+
+		HashMap<String, List> stockDeviceListMap = stockRepository.getStockAndDeviceList(requestDto);
+
+		List<StockListDto> dataList = stockDeviceListMap.get("stockList");
 		List<StockMgmtDto> stockList = new ArrayList<>();
 
 		for(Iterator<StockListDto> iterator = dataList.iterator(); iterator.hasNext();){
@@ -63,22 +66,26 @@ public class StockMgmtService {
 
 			}else if(StringUtils.countOccurrencesOf(stockDto.getHierarchy(), "/") == 2){
 
-				addChildrenElementToOrgnzt(stockList.get(stockList.size() - 1), stockDto);
+				addChildrenElementToStock(stockList.get(stockList.size() - 1), stockDto);
 
 			}else if(StringUtils.countOccurrencesOf(stockDto.getHierarchy(), "/") == 3){
 
-				addChildrenElementToOrgnzt(stockList.get(stockList.size() - 1).getChildren()
+				addChildrenElementToStock(stockList.get(stockList.size() - 1).getChildren()
 						.get(stockList.get(stockList.size() - 1).getChildren().size() - 1), stockDto);
 			}
 		}
 
 		stockMgmtResponseDto.setStoreName(storeRepository.findById(requestDto.getStoreId()).orElseGet(Store::new).getStoreName());
 		stockMgmtResponseDto.setStockList(stockList);
+		stockMgmtResponseDto.setStockDeviceList(stockDeviceListMap.get("stockDeviceList"));
+
+		//TODO dvcCnt 각 보유처별 기기 카운트. 하위 보유처 포함
+
 
 		return stockMgmtResponseDto;
 	}
 
-	private void addChildrenElementToOrgnzt(StockMgmtDto parent, StockListDto child){
+	private void addChildrenElementToStock(StockMgmtDto parent, StockListDto child){
 		if(parent.getChildren() == null){
 			parent.setChildren(new ArrayList<>());
 		}

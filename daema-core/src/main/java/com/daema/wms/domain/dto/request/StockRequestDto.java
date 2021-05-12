@@ -7,5 +7,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StockRequestDto extends SearchParamDto {
-    //기기조회필터 사용
+
+    private Long stockId;
+    private Long telecom;
+    private Long maker;
+    private Long goodsId;
+    private String capacity;
+    private String colorName;
+    private String fullBarcode;
+
 }

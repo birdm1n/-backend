@@ -108,7 +108,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
 
         returnStockQuery.select(Projections.fields(
                 DeviceHistoryResponseDto.class
-                , Expressions.asString(WmsEnum.StockType.OUT_STOCK.getStatusMsg()).as("stockTypeMsg")
+                , Expressions.asString(WmsEnum.StockType.RETURN_STOCK.getStatusMsg()).as("stockTypeMsg")
                 , returnStock.regiDateTime.as("regiDateTime")
                 , returnStock.store.storeName.as("storeName")
                 , returnStock.regiUserId.name.as("regiUserName")

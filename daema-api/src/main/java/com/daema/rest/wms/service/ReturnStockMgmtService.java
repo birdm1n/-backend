@@ -11,13 +11,12 @@ import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.wms.dto.DeviceStatusDto;
 import com.daema.rest.wms.dto.ReturnStockDto;
+import com.daema.rest.wms.dto.StoreStockMgmtDto;
 import com.daema.rest.wms.dto.request.ReturnStockReqDto;
-import com.daema.wms.domain.Device;
-import com.daema.wms.domain.DeviceStatus;
-import com.daema.wms.domain.ReturnStock;
-import com.daema.wms.domain.Stock;
+import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
 import com.daema.wms.domain.dto.response.ReturnStockResponseDto;
+import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -101,15 +100,18 @@ class ReturnStockCtrl {
 	private final DeviceRepository deviceRepository;
 	private final DeviceStatusRepository deviceStatusRepository;
 	private final MoveStockRepository deviceStockRepository;
+	private final StoreStockMgmtService storeStockMgmtService;
 	private final AuthenticationUtil authenticationUtil;
 
 	public ReturnStockCtrl(ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
 			, DeviceStatusRepository deviceStatusRepository, MoveStockRepository deviceStockRepository
+		   ,StoreStockMgmtService storeStockMgmtService
 			, AuthenticationUtil authenticationUtil) {
 		this.returnStockRepository = returnStockRepository;
 		this.deviceRepository = deviceRepository;
 		this.deviceStatusRepository = deviceStatusRepository;
 		this.deviceStockRepository = deviceStockRepository;
+		this.storeStockMgmtService = storeStockMgmtService;
 		this.authenticationUtil = authenticationUtil;
 	}
 
@@ -137,7 +139,7 @@ class ReturnStockCtrl {
 							.build()
 			);
 
-			returnStockRepository.save(
+			ReturnStock returnStock = returnStockRepository.save(
 					ReturnStock.builder()
 							.returnStockId(0L)
 							.returnStockStatus(returnStockDto.getReturnStockStatus())
@@ -157,6 +159,19 @@ class ReturnStockCtrl {
 									.seq(authenticationUtil.getMemberSeq())
 									.build())
 							.regiDateTime(regiDatetime)
+							.build()
+			);
+
+			storeStockMgmtService.cuStoreStock(
+					StoreStockMgmtDto.builder()
+							.storeStockId(0L)
+							.store(returnStock.getStore())
+							.stockType(WmsEnum.StockType.RETURN_STOCK)
+							.stockYn("Y")
+							.stockTypeId(returnStock.getReturnStockId())
+							.device(returnStock.getDevice())
+							.prevStock(returnStock.getPrevStock())
+							.nextStock(returnStock.getNextStock())
 							.build()
 			);
 

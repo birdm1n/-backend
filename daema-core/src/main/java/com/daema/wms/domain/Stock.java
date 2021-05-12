@@ -23,13 +23,14 @@ import java.util.List;
                         @ColumnResult(name="stock_type", type = String.class),
                         @ColumnResult(name="charger_name", type = String.class),
                         @ColumnResult(name="charger_phone", type = String.class),
-                        @ColumnResult(name="hierarchy", type = String.class)
+                        @ColumnResult(name="hierarchy", type = String.class),
+                        @ColumnResult(name="dvc_cnt", type = Integer.class)
                 })
 )
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="stock_id")
+@EqualsAndHashCode(of="stockId")
 @ToString(exclude = {"prevMoveStockList", "nextMoveStockList"})
 @NoArgsConstructor
 @Entity

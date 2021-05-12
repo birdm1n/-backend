@@ -120,8 +120,9 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                         eqTelecom(requestDto.getTelecom()),
                         eqMaker(requestDto.getMaker())
                 )
-                .groupBy(returnStock.device)
-                .orderBy(returnStock.regiDateTime.desc(), returnStock.device.dvcId.desc(), inStock.inStockId.desc());
+                //.groupBy(returnStock.device)
+                //.orderBy(returnStock.regiDateTime.desc(), returnStock.device.dvcId.desc(), inStock.inStockId.desc());
+                .orderBy(returnStock.regiDateTime.desc());
 
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
 
@@ -187,7 +188,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         if(StringUtils.isEmpty(fullBarcode)){
             return null;
         }
-        return device.fullBarcode.eq(fullBarcode);
+        return device.fullBarcode.contains(fullBarcode);
     }
 
     private BooleanExpression eqExtrrStatus(WmsEnum.DeviceExtrrStatus extrrStatus) {
