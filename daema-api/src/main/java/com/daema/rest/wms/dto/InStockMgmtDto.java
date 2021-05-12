@@ -31,9 +31,6 @@ public class InStockMgmtDto {
     public static InStockMgmtDto from(InStock inStock) {
         return InStockMgmtDto.builder()
                 .inStockId(inStock.getInStockId())
-                // todo 2021 수정
-//                .inStockStatus(inStock.getInStockStatus())
-//                .inStockAmt(inStock.getInStockAmt())
                 .inStockMemo(inStock.getInStockMemo())
                 .regiDateTime(inStock.getRegiDateTime())
                 .regiUserId(inStock.getRegiUserId())

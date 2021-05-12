@@ -139,8 +139,7 @@ public class InStockMgmtService {
                         .goodsId(goodsEntity.getGoodsId())
                         .goodsName(goodsEntity.getGoodsName())
                         .modelName(goodsEntity.getModelName())
-                        // todo 2021 수정
-//                        .capacity(goodsEntity.getCapacity())
+                        .capacity(goodsOptionEntity.getCapacity())
                         .goodsOptionId(goodsOptionEntity.getGoodsOptionId())
                         .colorName(goodsOptionEntity.getColorName())
                         .barcodeType(requestDto.getBarcodeType())
@@ -271,6 +270,7 @@ public class InStockMgmtService {
                         Device.builder()
                                 .barcodeType(reqDto.getBarcodeType())
                                 .fullBarcode(reqDto.getFullBarcode())
+                                .inStockAmt(reqDto.getInStockAmt())
                                 .goodsOption(
                                         GoodsOption.builder()
                                                 .goodsOptionId(reqDto.getGoodsOptionId())
@@ -290,15 +290,13 @@ public class InStockMgmtService {
                                 .ddctAmt(reqDto.getDdctAmt())
                                 .addDdctAmt(reqDto.getAddDdctAmt())
                                 .ddctReleaseAmtYn(reqDto.getDdctReleaseAmtYn())
+                                .inStockStatus(reqDto.getInStockStatus())
                                 .build()
                 );
 
                 inStocks.add(
                         InStock.builder()
-                                // todo 2021 수정
-//                                .inStockStatus(reqDto.getInStockStatus())
                                 .statusStr(reqDto.getStatusStr())
-//                                .inStockAmt(reqDto.getInStockAmt())
                                 .inStockMemo(reqDto.getInStockMemo())
                                 .provider(providerObj)
                                 .stock(stockObj)
@@ -393,11 +391,10 @@ public class InStockMgmtService {
                 .orElseThrow(() ->
                         new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name())
                 );
-        // todo 2021 수정
-//        inStock.setInStockStatus(requestDto.getInStockStatus());
         inStock.setInStockMemo(requestDto.getInStockMemo());
 
         DeviceStatus deviceStatus = inStock.getInDeviceStatus();
+        deviceStatus.setInStockStatus(requestDto.getInStockStatus());
         deviceStatus.setExtrrStatus(requestDto.getExtrrStatus());
         deviceStatus.setProductFaultyYn(requestDto.getProductFaultyYn());
         deviceStatus.setDdctAmt(requestDto.getDdctAmt());

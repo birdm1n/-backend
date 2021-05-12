@@ -40,7 +40,6 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
 
     @PersistenceContext
     private EntityManager em;
-// todo 2021 수정
     @Override
     public Page<InStockResponseDto> getInStockList(InStockRequestDto requestDto) {
         JPQLQuery<InStockResponseDto> query = getQuerydsl().createQuery();
@@ -68,13 +67,13 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                 , goods.goodsId.as("goodsId")
                 , goods.goodsName.as("goodsName")
                 , goods.modelName.as("modelName")
-//                , goods.capacity.as("capacity")
+                , goodsOption.capacity.as("capacity")
                 , goodsOption.goodsOptionId.as("goodsOptionId")
                 , goodsOption.colorName.as("colorName")
                 , goodsOption.commonBarcode.as("commonBarcode")
                 , device.fullBarcode.as("fullBarcode")
-//                , inStock.inStockAmt.as("inStockAmt")
-//                , inStock.inStockStatus.as("inStockStatus")
+                , device.inStockAmt.as("inStockAmt")
+                , deviceStatus.inStockStatus.as("inStockStatus")
                 , deviceStatus.productFaultyYn.as("productFaultyYn")
                 , deviceStatus.productMissYn.as("productMissYn")
                 , deviceStatus.extrrStatus.as("extrrStatus")
@@ -107,14 +106,14 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                         betweenInstockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
                         eqProvId(requestDto.getProvId()),
                         eqStockId(requestDto.getStockId()),
-//                        eqInStockStatus(requestDto.getInStockStatus()),
+                        eqInStockStatus(requestDto.getInStockStatus()),
                         eqStatusStr(requestDto.getStatusStr()),
                         containsFullBarcode(requestDto.getFullBarcode()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
                         eqExtrrStatus(requestDto.getExtrrStatus()),
                         eqColorName(requestDto.getColorName()),
                         eqGoodsId(requestDto.getGoodsId()),
-//                        eqCapacity(requestDto.getCapacity()),
+                        eqCapacity(requestDto.getCapacity()),
                         eqTelecom(requestDto.getTelecom()),
                         eqMaker(requestDto.getMaker())
                 )
@@ -194,20 +193,18 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
         }
         return goods.goodsId.eq(goodsId);
     }
-// todo 2021 수정
-//    private BooleanExpression eqInStockStatus(WmsEnum.InStockStatus inStockStatus) {
-//        if (inStockStatus == null){
-//            return null;
-//        }
-//        return inStock.inStockStatus.eq(inStockStatus);
-//    }
-// todo 2021 수정
-//    private BooleanExpression eqCapacity(String capacity) {
-//        if(StringUtils.isEmpty(capacity)){
-//            return null;
-//        }
-//        return goods.capacity.eq(capacity);
-//    }
+    private BooleanExpression eqInStockStatus(WmsEnum.InStockStatus inStockStatus) {
+        if (inStockStatus == null){
+            return null;
+        }
+        return deviceStatus.inStockStatus.eq(inStockStatus);
+    }
+    private BooleanExpression eqCapacity(String capacity) {
+        if(StringUtils.isEmpty(capacity)){
+            return null;
+        }
+        return goodsOption.capacity.eq(capacity);
+    }
     private BooleanExpression eqColorName(String colorName) {
         if(StringUtils.isEmpty(colorName)){
             return null;
