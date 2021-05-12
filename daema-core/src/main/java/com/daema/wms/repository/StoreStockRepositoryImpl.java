@@ -5,7 +5,6 @@ import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
 import com.daema.base.util.CommonUtil;
-import com.daema.wms.domain.QDeviceStatus;
 import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.StoreStock;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
@@ -49,8 +48,6 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         JPQLQuery<StoreStockResponseDto> query = getQuerydsl().createQuery();
         QStock prevStock = new QStock("prevStock");
         QStock nextStock = new QStock("nextStock");
-        QDeviceStatus inStockDeviceStatus = new QDeviceStatus("inStockDeviceStatus");
-        QDeviceStatus returnStockDeviceStatus = new QDeviceStatus("returnStockDeviceStatus");
 
         QCodeDetail maker = new QCodeDetail("maker");
         QCodeDetail telecom = new QCodeDetail("telecom");
@@ -70,6 +67,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , deviceStatus.addDdctAmt.as("addDdctAmt")
                 , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
                 , deviceStatus.missProduct.as("missProduct")
+                , deviceStatus.inStockStatus.as("inStockStatus")
 */
 
                 , telecom.codeSeq.as("telecom")
@@ -95,12 +93,11 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , goodsOption.colorName.as("colorName")
                 , goodsOption.commonBarcode.as("commonBarcode")
                 , goodsOption.capacity.as("capacity")
-// todo 2021 수정
-//                , inStock.regiDateTime.as("inStockRegiDateTime")
-//                , inStock.inStockAmt.as("inStockAmt")
-//                , inStock.inStockStatus.as("inStockStatus")
-//                , returnStock.returnStockStatus.as("returnStockStatus")
+
+                , inStock.regiDateTime.as("inStockRegiDateTime")
+                , device.inStockAmt.as("inStockAmt")
         ))
+
                 .from(storeStock)
                 .innerJoin(storeStock.device, device).on(
                 storeStock.device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
@@ -121,22 +118,16 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 .leftJoin(storeStock.prevStock, prevStock)
                 .innerJoin(storeStock.nextStock, nextStock)
 
-                .leftJoin(inStock).on(inStock.inStockId.eq(storeStock.stockTypeId))
+                .leftJoin(inStock.device, device)
 
-
-                .leftJoin(inStock.inDeviceStatus, inStockDeviceStatus)
-
-                .leftJoin(returnStock).on(returnStock.returnStockId.eq(storeStock.stockTypeId))
-                .leftJoin(returnStockDeviceStatus)
-                .on(returnStock.returnDeviceStatus.eq(returnStockDeviceStatus))
+                //.leftJoin(deviceStatus)
 
                 .where(
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
                         betweenStoreStockCheckDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
                         eqNextStockId(requestDto.getNextStockId()),
                         eqStatusStr(requestDto.getStatusStr()),
-// todo 2021 수정
-//                        eqInStockStatus(requestDto.getInStockStatus()),
+                        eqInStockStatus(requestDto.getInStockStatus()),
                         eqFullBarcode(requestDto.getFullBarcode()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
                         eqExtrrStatus(requestDto.getExtrrStatus()),
@@ -190,14 +181,13 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         }
         return goods.goodsId.eq(goodsId);
     }
-// todo 2021 수정
-//    private BooleanExpression eqInStockStatus(WmsEnum.InStockStatus inStockStatus) {
-//        if (inStockStatus == null) {
-//            return null;
-//        }
-//        return returnStock.returnStockStatus.eq(inStockStatus)
-//                .or(inStock.inStockStatus.eq(inStockStatus));
-//    }
+
+    private BooleanExpression eqInStockStatus(WmsEnum.InStockStatus inStockStatus) {
+        if (inStockStatus == null) {
+            return null;
+        }
+        return deviceStatus.inStockStatus.eq(inStockStatus);
+    }
 
     private BooleanExpression eqCapacity(String capacity) {
         if (StringUtils.isEmpty(capacity)) {

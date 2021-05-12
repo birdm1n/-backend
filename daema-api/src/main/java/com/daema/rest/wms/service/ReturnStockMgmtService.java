@@ -135,6 +135,7 @@ class ReturnStockCtrl {
 							.missProduct(deviceStatusDto.getMissProduct())
 							.ddctAmt(deviceStatusDto.getDdctAmt())
 							.addDdctAmt(deviceStatusDto.getAddDdctAmt())
+							.inStockStatus(returnStockDto.getReturnStockStatus())
 							.device(device)
 							.build()
 			);
@@ -142,8 +143,6 @@ class ReturnStockCtrl {
 			ReturnStock returnStock = returnStockRepository.save(
 					ReturnStock.builder()
 							.returnStockId(0L)
-							// todo 2021 수정
-//							.returnStockStatus(returnStockDto.getReturnStockStatus())
 							.returnStockAmt(returnStockDto.getReturnStockAmt())
 							.returnStockMemo(returnStockDto.getReturnStockMemo())
 							.ddctReleaseAmtYn(returnStockDto.getReturnDeviceStatus().getDdctReleaseAmtYn())
