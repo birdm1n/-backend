@@ -122,6 +122,14 @@ class ReturnStockCtrl {
 
 		LocalDateTime regiDatetime = LocalDateTime.now();
 		Device device = deviceRepository.findById(returnStockDto.getDvcId()).orElseGet(null);
+		List<ReturnStock> returnStocks = returnStockRepository.findByDeviceAndStore(
+				Device.builder()
+						.dvcId(returnStockDto.getDvcId())
+						.build(),
+				Store.builder()
+						.storeId(authenticationUtil.getStoreId())
+						.build()
+		);
 
 		if (device != null) {
 			DeviceStatusDto deviceStatusDto = returnStockDto.getReturnDeviceStatus();
@@ -139,6 +147,15 @@ class ReturnStockCtrl {
 							.device(device)
 							.build()
 			);
+
+			//기존 반품 이력 업데이트
+			if(CommonUtil.isNotEmptyList(returnStocks)){
+				returnStocks.forEach(
+						returnStock -> {
+							returnStock.updateDelYn(returnStock, StatusEnum.FLAG_Y.getStatusMsg());
+						}
+				);
+			}
 
 			ReturnStock returnStock = returnStockRepository.save(
 					ReturnStock.builder()
@@ -159,6 +176,7 @@ class ReturnStockCtrl {
 									.seq(authenticationUtil.getMemberSeq())
 									.build())
 							.regiDateTime(regiDatetime)
+							.delYn(StatusEnum.FLAG_N.getStatusMsg())
 							.build()
 			);
 
@@ -167,7 +185,7 @@ class ReturnStockCtrl {
 							.storeStockId(0L)
 							.store(returnStock.getStore())
 							.stockType(WmsEnum.StockType.RETURN_STOCK)
-							.stockYn("Y")
+							.stockYn(StatusEnum.FLAG_Y.getStatusMsg())
 							.stockTypeId(returnStock.getReturnStockId())
 							.device(returnStock.getDevice())
 							.prevStock(returnStock.getPrevStock())

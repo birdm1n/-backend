@@ -91,10 +91,6 @@ public class StoreStockResponseDto {
     private WmsEnum.InStockStatus inStockStatus;
     private String inStockStatusMsg;
 
-    // 반품상태 =  1, "정상"/ 2, "개봉"
-    private WmsEnum.InStockStatus returnStockStatus;
-    private String returnStockStatusMsg;
-
     // 제품상태 =  N, "-" / Y, "불량"
     private String productFaultyYn;
 
