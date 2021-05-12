@@ -58,6 +58,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , storeStock.stockType.as("stockType")
                 , device.dvcId.as("dvcId")
                 , device.fullBarcode.as("fullBarcode")
+                , device.inStockAmt.as("inStockAmt")
 /*
 
                 , deviceStatus.productFaultyYn.as("productFaultyYn")
@@ -79,10 +80,8 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , prevStock.stockName.as("prevStockName")
                 , nextStock.stockId.as("nextStockId")
                 , nextStock.stockName.as("nextStockName")
-
                 , new CaseBuilder()
-                        .when(returnStock.nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode())
-                                .or(inStock.stock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode())))
+                        .when(nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()))
                         .then(WmsEnum.StockStatStr.I.getStatusMsg())
                         .otherwise(WmsEnum.StockStatStr.M.getStatusMsg()).as("statusStr")
                 , goods.goodsId.as("goodsId")
@@ -95,7 +94,6 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , goodsOption.capacity.as("capacity")
 
                 , inStock.regiDateTime.as("inStockRegiDateTime")
-                , device.inStockAmt.as("inStockAmt")
         ))
 
                 .from(storeStock)
@@ -118,7 +116,11 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 .leftJoin(storeStock.prevStock, prevStock)
                 .innerJoin(storeStock.nextStock, nextStock)
 
-                .leftJoin(inStock.device, device)
+                .leftJoin(inStock).on(inStock.device.dvcId.eq(storeStock.device.dvcId))
+                .leftJoin(returnStock).on(
+                        returnStock.device.dvcId.eq(storeStock.device.dvcId)
+                .and(returnStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
+        )
 
                 //.leftJoin(deviceStatus)
 
@@ -126,7 +128,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
                         betweenStoreStockCheckDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
                         eqNextStockId(requestDto.getNextStockId()),
-                        eqStatusStr(requestDto.getStatusStr()),
+                        eqStatusStr(nextStock, requestDto.getStatusStr()),
                         eqInStockStatus(requestDto.getInStockStatus()),
                         eqFullBarcode(requestDto.getFullBarcode()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
@@ -144,7 +146,6 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         List<StoreStockResponseDto> resultList = query.fetch();
 
         for (StoreStockResponseDto dto : resultList) {
-            dto.setReturnStockStatusMsg(dto.getReturnStockStatus().getStatusMsg());
             dto.setInStockStatusMsg(dto.getInStockStatus().getStatusMsg());
             dto.setExtrrStatusMsg(dto.getExtrrStatus().getStatusMsg());
             dto.setDiffInStockRegiDate(CommonUtil.diffDaysLocalDate(dto.getInStockRegiDateTime().toLocalDate()));
@@ -224,18 +225,17 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         return deviceStatus.productFaultyYn.eq(productFaultyYn);
     }
 
-    private BooleanExpression eqStatusStr(WmsEnum.StockStatStr statusStr) {
+    private BooleanExpression eqStatusStr(QStock nextStock, WmsEnum.StockStatStr statusStr) {
         if (statusStr == null) {
             return null;
         }
 
         if (WmsEnum.StockStatStr.I == statusStr) {
-            return returnStock.nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode())
-                    .or(inStock.stock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()));
+            return nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode());
         } else {
-            return returnStock.nextStock.stockType.ne(TypeEnum.STOCK_TYPE_I.getStatusCode())
-                    .and(inStock.stock.stockType.ne(TypeEnum.STOCK_TYPE_I.getStatusCode()));
+            return nextStock.stockType.ne(TypeEnum.STOCK_TYPE_I.getStatusCode());
         }
+
     }
 
     private BooleanExpression betweenStoreStockCheckDt(String startDt, String endDt) {

@@ -3,6 +3,7 @@ package com.daema.wms.repository;
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.QMember;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
 import com.daema.base.util.CommonUtil;
 import com.daema.wms.domain.QStock;
@@ -96,7 +97,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 .innerJoin(returnStock.store, store).on(
                         store.storeId.eq(requestDto.getStoreId())
                 )
-                .innerJoin(returnStock.device.inStocks, inStock)
+                .innerJoin(inStock).on(inStock.device.dvcId.eq(returnStock.device.dvcId))
                 .innerJoin(device.goodsOption, goodsOption)
                 .innerJoin(goodsOption.goods, goods)
                 .innerJoin(maker).on(
@@ -106,6 +107,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 goods.networkAttribute.telecom.eq(telecom.codeSeq)
         )
                 .where(
+                        returnStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                         betweenReturnStockRegDt(requestDto.getReturnStockRegiDate(), requestDto.getReturnStockRegiDate()),
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
                         eqNextStockId(requestDto.getNextStockId()),

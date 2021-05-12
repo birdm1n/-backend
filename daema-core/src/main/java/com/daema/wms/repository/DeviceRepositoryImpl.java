@@ -1,5 +1,6 @@
 package com.daema.wms.repository;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.base.util.CommonUtil;
 import com.daema.wms.domain.Device;
 import com.daema.wms.domain.dto.response.DeviceHistoryResponseDto;
@@ -120,7 +121,8 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .innerJoin(returnStock.store, store)
                 .on(returnStock.device.dvcId.eq(dvcId).and(returnStock.store.storeId.eq(storeId)))
                 .innerJoin(returnStock.regiUserId, member)
-                .on(returnStock.device.dvcId.eq(dvcId).and(returnStock.regiUserId.seq.eq(member.seq)));
+                .on(returnStock.device.dvcId.eq(dvcId).and(returnStock.regiUserId.seq.eq(member.seq)))
+                .where(returnStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()));
 
         historyList.addAll(returnStockQuery.fetch());
 
