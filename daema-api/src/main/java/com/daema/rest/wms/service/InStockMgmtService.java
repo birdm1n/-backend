@@ -11,6 +11,7 @@ import com.daema.commgmt.domain.dto.response.GoodsMatchRespDto;
 import com.daema.commgmt.repository.GoodsOptionRepository;
 import com.daema.commgmt.repository.GoodsRepository;
 import com.daema.commgmt.repository.PubNotiRepository;
+import com.daema.commgmt.repository.StoreRepository;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
@@ -87,12 +88,13 @@ public class InStockMgmtService {
     @Transactional
     public ResponseCodeEnum insertWaitInStock(InStockWaitInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
+        Store store = Store.builder().storeId(storeId).build();
         // 중복 입력 확인용
-        InStockWait selectEntity = inStockWaitRepository.findByFullBarcodeAndDelYn(requestDto.getFullBarcode(), StatusEnum.FLAG_N.getStatusMsg());
+        InStockWait selectEntity = inStockWaitRepository.findByOwnStoreIdAndFullBarcodeAndDelYn(storeId, requestDto.getFullBarcode(), StatusEnum.FLAG_N.getStatusMsg());
         if (selectEntity != null) return ResponseCodeEnum.DUPL_DATA;
 
         //device 테이블에 중복된 기기가 있는지 확인
-        Device duplDvc = deviceRepository.findByFullBarcodeAndDelYn(requestDto.getFullBarcode(), StatusEnum.FLAG_N.getStatusMsg()).orElse(null);
+        Device duplDvc = deviceRepository.findByStoreAndFullBarcodeAndDelYn(store, requestDto.getFullBarcode(), StatusEnum.FLAG_N.getStatusMsg()).orElse(null);
         if (duplDvc != null) return ResponseCodeEnum.DUPL_DVC;
         // 보유처 정보
         SelectStockDto stockDto = stockRepository.getStock(storeId, requestDto.getTelecom(), requestDto.getStockId());

@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface DeviceRepository extends JpaRepository<Device, Long> , CustomDeviceRepository {
     Device findByFullBarcodeAndStoreAndDelYn(String fullBarcode, Store store, String delYn);
-    Optional<Device> findByFullBarcodeAndDelYn(String fullBarcode, String delYn);
+    Optional<Device> findByStoreAndFullBarcodeAndDelYn(Store store, String fullBarcode, String delYn);
 }

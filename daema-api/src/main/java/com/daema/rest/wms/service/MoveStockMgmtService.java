@@ -5,7 +5,9 @@ import com.daema.commgmt.repository.GoodsOptionRepository;
 import com.daema.commgmt.repository.GoodsRepository;
 import com.daema.commgmt.repository.PubNotiRepository;
 import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.util.AuthenticationUtil;
+import com.daema.rest.wms.dto.request.MoveStockInsertReqDto;
 import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.response.*;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -61,9 +63,14 @@ public class MoveStockMgmtService {
                 WmsEnum.MovePathType.STOCK_TRNS == movePathType||
                 WmsEnum.MovePathType.FAULTY_TRNS == movePathType){
             Page<MoveStockResponseDto> resultPageDto = moveStockRepository.getTransTypeList(movePathType);
-
         }
 
         return null;
+    }
+
+    public ResponseCodeEnum insertMoveStock(MoveStockInsertReqDto requestDto) {
+        
+
+        return ResponseCodeEnum.OK;
     }
 }

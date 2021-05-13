@@ -131,6 +131,21 @@ public enum WmsEnum {
         }
     }
 
+    public enum DeliveryType {
+        QUICK("퀵"),
+        PS("택배"),
+        DIRECT("직접전달"),
+        ;
+        private final String statusMsg;
+
+        DeliveryType(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
+
     public enum BarcodeType {
         S("스캐너"),
         K("키보드")

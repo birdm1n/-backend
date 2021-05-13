@@ -17,6 +17,8 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
     public Page<MoveStockResponseDto> getMoveTypeList(WmsEnum.MovePathType movePathType) {
         JPQLQuery<MoveStockResponseDto> query = getQuerydsl().createQuery();
 
+
+
         return null;
     }
 

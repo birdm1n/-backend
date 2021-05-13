@@ -1,6 +1,7 @@
 package com.daema.wms.domain;
 
 import com.daema.base.domain.Member;
+import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,13 +26,15 @@ public class Delivery {
      * 2 : 퀵
      * 3 : 직접전달
      */
-    @Column(nullable = false, name = "delivery_type", columnDefinition ="char(1)")
-    private String deliveryType;
+    @Column(name = "delivery_type")
+    @Enumerated(EnumType.STRING)
+    private WmsEnum.DeliveryType deliveryType;
 
     //택배사 codeSeq
     @Column(name = "courier")
     private Integer courier;
-
+    
+    //송장번호
     @Column(name = "invoice_no")
     private String invoiceNo;
 
@@ -52,7 +55,7 @@ public class Delivery {
     private MoveStock moveStock;
 
     @Builder
-    public Delivery(Long deliveryId, String deliveryType, Integer courier, String invoiceNo, String deliveryMemo
+    public Delivery(Long deliveryId, WmsEnum.DeliveryType deliveryType, Integer courier, String invoiceNo, String deliveryMemo
             ,Member regiUserId ,LocalDateTime regiDateTime){
         this.deliveryId = deliveryId;
         this.deliveryType = deliveryType;

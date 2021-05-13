@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InStockWaitRepository extends JpaRepository<InStockWait, Long>, CustomInStockWaitRepository {
 
-    InStockWait findByFullBarcodeAndDelYn(String fullBarcode, String statusMsg);
+    InStockWait findByOwnStoreIdAndFullBarcodeAndDelYn(Long storeId, String fullBarcode, String statusMsg);
 
 }

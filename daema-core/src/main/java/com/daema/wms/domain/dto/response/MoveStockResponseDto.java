@@ -28,12 +28,6 @@ public class MoveStockResponseDto {
     // 입고메모
     private String inStockMemo;
 
-    // 소유권을 가지는 Store = 관리점
-//    private Long ownStoreId;
-//
-//    // 보유처 StoreId
-//    private Long holdStoreId;
-
     /**
      Desc : 기기별 입력정보 및 모델별 입력정보
      */

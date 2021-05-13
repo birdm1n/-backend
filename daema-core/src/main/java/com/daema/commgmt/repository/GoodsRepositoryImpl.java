@@ -200,8 +200,8 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         , goodsOption.capacity.as("capacity")
                         , goodsOption.colorName.as("colorName")
                         , goodsOption.commonBarcode.as("commonBarcode")
-                )).from(goods)
-                        .innerJoin(goods, goodsOption.goods)
+                )).from(goodsOption)
+                        .innerJoin(goodsOption.goods, goods)
                         .on(
                                 goodsOption.commonBarcode.eq(commonBarcode),
                                 goods.delYn.eq("N"),
