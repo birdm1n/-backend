@@ -4,9 +4,8 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.rest.wms.dto.request.InStockWaitInsertReqDto;
 import com.daema.rest.wms.dto.request.MoveStockInsertReqDto;
-import com.daema.rest.wms.service.InStockMgmtService;
+import com.daema.rest.wms.dto.request.SellMoveInsertReqDto;
 import com.daema.rest.wms.service.MoveStockMgmtService;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -33,9 +32,9 @@ public class MoveStockMgmtController {
     }
 
     @ApiOperation(value = "판매이동 등록", notes = "판매이동 등록 기능을 수행합니다.")
-    @PostMapping("/insertWaitInStock")
-    public ResponseEntity<CommonResponse<Void>> insertMoveStock(@ApiParam(value = "신규입고대기", required = true) @RequestBody MoveStockInsertReqDto requestDto) {
-        ResponseCodeEnum responseCodeEnum = moveStockMgmtService.insertMoveStock(requestDto);
+    @PostMapping("/insertSellMove")
+    public ResponseEntity<CommonResponse<Void>> insertSellMove(@ApiParam(value = "판매이동 등록", required = true) @RequestBody SellMoveInsertReqDto requestDto) {
+        ResponseCodeEnum responseCodeEnum = moveStockMgmtService.insertSellMove(requestDto);
 
         if (ResponseCodeEnum.OK != responseCodeEnum) {
             return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());

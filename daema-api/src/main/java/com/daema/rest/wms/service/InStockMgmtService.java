@@ -11,7 +11,6 @@ import com.daema.commgmt.domain.dto.response.GoodsMatchRespDto;
 import com.daema.commgmt.repository.GoodsOptionRepository;
 import com.daema.commgmt.repository.GoodsRepository;
 import com.daema.commgmt.repository.PubNotiRepository;
-import com.daema.commgmt.repository.StoreRepository;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
@@ -94,7 +93,7 @@ public class InStockMgmtService {
         if (selectEntity != null) return ResponseCodeEnum.DUPL_DATA;
 
         //device 테이블에 중복된 기기가 있는지 확인
-        Device duplDvc = deviceRepository.findByStoreAndFullBarcodeAndDelYn(store, requestDto.getFullBarcode(), StatusEnum.FLAG_N.getStatusMsg()).orElse(null);
+        Device duplDvc = deviceRepository.findByFullBarcodeAndStoreAndDelYn(requestDto.getFullBarcode(), store, StatusEnum.FLAG_N.getStatusMsg());
         if (duplDvc != null) return ResponseCodeEnum.DUPL_DVC;
         // 보유처 정보
         SelectStockDto stockDto = stockRepository.getStock(storeId, requestDto.getTelecom(), requestDto.getStockId());
