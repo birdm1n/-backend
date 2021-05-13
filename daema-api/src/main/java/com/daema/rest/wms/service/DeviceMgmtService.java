@@ -9,23 +9,29 @@ import com.daema.rest.wms.dto.InStockMgmtDto;
 import com.daema.rest.wms.dto.StockMgmtDto;
 import com.daema.rest.wms.dto.response.DeviceResponseDto;
 import com.daema.wms.domain.Device;
+import com.daema.wms.domain.dto.response.DeviceStatusListDto;
 import com.daema.wms.repository.DeviceRepository;
+import com.daema.wms.repository.DeviceStatusRepository;
 import com.daema.wms.repository.InStockRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DeviceMgmtService {
 
 	private final InStockRepository inStockRepository;
 	private final DeviceRepository deviceRepository;
+	private final DeviceStatusRepository deviceStatusRepository;
 	private final CodeDetailRepository codeDetailRepository;
 	private final AuthenticationUtil authenticationUtil;
 
 	public DeviceMgmtService(InStockRepository inStockRepository, DeviceRepository deviceRepository,
-							 CodeDetailRepository codeDetailRepository,
-			AuthenticationUtil authenticationUtil) {
+							 DeviceStatusRepository deviceStatusRepository, CodeDetailRepository codeDetailRepository,
+							 AuthenticationUtil authenticationUtil) {
 		this.inStockRepository = inStockRepository;
 		this.deviceRepository = deviceRepository;
+		this.deviceStatusRepository = deviceStatusRepository;
 		this.codeDetailRepository = codeDetailRepository;
 		this.authenticationUtil = authenticationUtil;
 	}
@@ -62,4 +68,12 @@ public class DeviceMgmtService {
 		return deviceResponseDto;
 	}
 
+	/**
+	 * 기기별 최종 상태값 가져옴
+	 * @param dvcIds
+	 * @return
+	 */
+	public List<DeviceStatusListDto> getLastDeviceStatusInfo(List<Long> dvcIds){
+		return deviceStatusRepository.getLastDeviceStatusInfo(dvcIds);
+	}
 }

@@ -4,16 +4,17 @@ import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
-import com.daema.base.util.CommonUtil;
 import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.StoreStock;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
 import com.daema.wms.domain.dto.response.StoreStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomStoreStockRepository;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,6 +34,7 @@ import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
 import static com.daema.wms.domain.QInStock.inStock;
 import static com.daema.wms.domain.QReturnStock.returnStock;
 import static com.daema.wms.domain.QStoreStock.storeStock;
+import static com.daema.wms.domain.QStoreStockCheck.storeStockCheck;
 
 public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implements CustomStoreStockRepository {
 
@@ -46,6 +48,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
     @Override
     public Page<StoreStockResponseDto> getStoreStockList(StoreStockRequestDto requestDto) {
         JPQLQuery<StoreStockResponseDto> query = getQuerydsl().createQuery();
+
         QStock prevStock = new QStock("prevStock");
         QStock nextStock = new QStock("nextStock");
 
@@ -59,17 +62,6 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , device.dvcId.as("dvcId")
                 , device.fullBarcode.as("fullBarcode")
                 , device.inStockAmt.as("inStockAmt")
-/*
-
-                , deviceStatus.productFaultyYn.as("productFaultyYn")
-                , deviceStatus.productMissYn.as("productMissYn")
-                , deviceStatus.extrrStatus.as("extrrStatus")
-                , deviceStatus.ddctAmt.as("ddctAmt")
-                , deviceStatus.addDdctAmt.as("addDdctAmt")
-                , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
-                , deviceStatus.missProduct.as("missProduct")
-                , deviceStatus.inStockStatus.as("inStockStatus")
-*/
 
                 , telecom.codeSeq.as("telecom")
                 , telecom.codeNm.as("telecomName")
@@ -94,12 +86,46 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , goodsOption.capacity.as("capacity")
 
                 , inStock.regiDateTime.as("inStockRegiDateTime")
-        ))
+                , inStock.inStockMemo.as("inStockMemo")
+
+                , returnStock.returnStockAmt.as("returnStockAmt")
+                , returnStock.returnStockMemo.as("returnStockMemo")
+                , returnStock.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+
+                , ExpressionUtils.as(
+                        JPAExpressions
+                                .select(storeStockCheck.regiDateTime.max())
+                                .from(storeStockCheck)
+                                .where(storeStock.storeStockId.eq(storeStockCheck.storeStock.storeStockId))
+                                .groupBy(storeStockCheck.storeStock.storeStockId),
+                        "stockCheckDateTime1")
+                , ExpressionUtils.as(
+                        JPAExpressions
+                                .select(storeStockCheck.regiDateTime.max())
+                                .from(storeStockCheck)
+                                .where(
+                                        storeStock.storeStockId.eq(storeStockCheck.storeStock.storeStockId)
+                                                .and(storeStockCheck.regiDateTime
+                                                        .lt(JPAExpressions
+                                                                .select(storeStockCheck.regiDateTime.max())
+                                                                .from(storeStockCheck)
+                                                                .where(storeStock.storeStockId
+                                                                        .eq(storeStockCheck.storeStock.storeStockId))
+                                                                .groupBy(storeStockCheck.storeStock.storeStockId)
+                                                        )
+                                                )
+                                )
+                                .groupBy(storeStockCheck.storeStock.storeStockId),
+                        "stockCheckDateTime2")
+                )
+
+
+        )
 
                 .from(storeStock)
                 .innerJoin(storeStock.device, device).on(
                 storeStock.device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
-                .and(storeStock.stockYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+                        .and(storeStock.stockYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
         )
                 .innerJoin(storeStock.store, store).on(
                 store.storeId.eq(requestDto.getStoreId())
@@ -116,13 +142,12 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 .leftJoin(storeStock.prevStock, prevStock)
                 .innerJoin(storeStock.nextStock, nextStock)
 
-                .leftJoin(inStock).on(inStock.device.dvcId.eq(storeStock.device.dvcId))
+                .leftJoin(inStock).on(
+                inStock.device.dvcId.eq(storeStock.device.dvcId))
                 .leftJoin(returnStock).on(
-                        returnStock.device.dvcId.eq(storeStock.device.dvcId)
-                .and(returnStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
+                returnStock.device.dvcId.eq(storeStock.device.dvcId)
+                        .and(returnStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
         )
-
-                //.leftJoin(deviceStatus)
 
                 .where(
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
@@ -145,11 +170,6 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
 
         List<StoreStockResponseDto> resultList = query.fetch();
 
-        for (StoreStockResponseDto dto : resultList) {
-            dto.setInStockStatusMsg(dto.getInStockStatus().getStatusMsg());
-            dto.setExtrrStatusMsg(dto.getExtrrStatus().getStatusMsg());
-            dto.setDiffInStockRegiDate(CommonUtil.diffDaysLocalDate(dto.getInStockRegiDateTime().toLocalDate()));
-        }
         long total = query.fetchCount();
 
         return new PageImpl<>(resultList, pageable, total);

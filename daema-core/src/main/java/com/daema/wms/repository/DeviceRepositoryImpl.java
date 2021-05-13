@@ -1,7 +1,6 @@
 package com.daema.wms.repository;
 
 import com.daema.base.enums.StatusEnum;
-import com.daema.base.util.CommonUtil;
 import com.daema.wms.domain.Device;
 import com.daema.wms.domain.dto.response.DeviceHistoryResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -128,10 +127,6 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
 
         if (historyList != null
                 && historyList.size() > 0) {
-
-            for (DeviceHistoryResponseDto dto : historyList) {
-                dto.setDiffStockRegiDate(CommonUtil.diffDaysLocalDate(dto.getRegiDateTime().toLocalDate()));
-            }
 
             Collections.sort(historyList, (dto1, dto2) -> dto2.getRegiDateTime().compareTo(dto1.getRegiDateTime()));
         }

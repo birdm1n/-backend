@@ -5,7 +5,6 @@ import com.daema.base.domain.QMember;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
-import com.daema.base.util.CommonUtil;
 import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.ReturnStock;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
@@ -130,12 +129,6 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
 
         List<ReturnStockResponseDto> resultList = query.fetch();
 
-        for (ReturnStockResponseDto dto: resultList){
-            dto.setReturnStockStatusMsg(dto.getReturnStockStatus().getStatusMsg());
-            dto.setExtrrStatusMsg(dto.getExtrrStatus().getStatusMsg());
-            dto.setDiffReturnStockRegiDate(CommonUtil.diffDaysLocalDate(dto.getRegiDateTime().toLocalDate()));
-            dto.setDiffInStockRegiDate(CommonUtil.diffDaysLocalDate(dto.getInStockRegiDateTime().toLocalDate()));
-        }
         long total = query.fetchCount();
 
         return new PageImpl<>(resultList, pageable, total);
