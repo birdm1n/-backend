@@ -1,5 +1,6 @@
 package com.daema.rest.wms.service;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.base.repository.CodeDetailRepository;
 import com.daema.commgmt.domain.Store;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
@@ -37,8 +38,8 @@ public class DeviceMgmtService {
 	}
 
 	public DeviceResponseDto getDeviceInfoFromFullBarcode(String fullBarcode){
-		Device device = deviceRepository.findByFullBarcodeAndStore(fullBarcode
-				, Store.builder().storeId(authenticationUtil.getStoreId()).build());
+
+		Device device = retrieveFullBarcode(fullBarcode);
 
 		DeviceResponseDto deviceResponseDto = new DeviceResponseDto();
 
@@ -66,6 +67,12 @@ public class DeviceMgmtService {
 		deviceResponseDto.setStockMgmtDto(StockMgmtDto.from(device.getInStocks().get(0).getStock()));
 
 		return deviceResponseDto;
+	}
+
+	public Device retrieveFullBarcode(String fullBarcode){
+		return deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullBarcode
+				, Store.builder().storeId(authenticationUtil.getStoreId()).build()
+				, StatusEnum.FLAG_N.getStatusMsg());
 	}
 
 	/**

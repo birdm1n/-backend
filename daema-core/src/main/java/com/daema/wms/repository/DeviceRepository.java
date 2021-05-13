@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface DeviceRepository extends JpaRepository<Device, Long> , CustomDeviceRepository {
-    Device findByFullBarcodeAndStore(String fullBarcode, Store store);
+    Device findByFullBarcodeAndStoreAndDelYn(String fullBarcode, Store store, String delYn);
     Optional<Device> findByFullBarcodeAndDelYn(String fullBarcode, String delYn);
 }
