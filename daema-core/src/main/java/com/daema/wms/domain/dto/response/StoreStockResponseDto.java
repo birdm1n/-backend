@@ -15,6 +15,8 @@ public class StoreStockResponseDto {
 
     private Long inStockId;
 
+    private Long returnStockId;
+
     private Long storeStockId;
 
     private WmsEnum.StockType stockType;
@@ -74,6 +76,9 @@ public class StoreStockResponseDto {
     // 반품비
     private int returnStockAmt;
 
+    // 반품메모
+    private String returnStockMemo;
+
     private LocalDateTime regiDateTime;
     private Long regiUserId;
     private String regiUserName;
@@ -90,6 +95,22 @@ public class StoreStockResponseDto {
     private LocalDateTime stockCheckDateTime2;
 
     private DeviceStatusListDto deviceStatusListDto;
+
+    public Long getReturnStockId() {
+        return returnStockId;
+    }
+
+    public void setReturnStockId(Long returnStockId) {
+        this.returnStockId = returnStockId;
+    }
+
+    public String getReturnStockMemo() {
+        return returnStockMemo;
+    }
+
+    public void setReturnStockMemo(String returnStockMemo) {
+        this.returnStockMemo = returnStockMemo;
+    }
 
     public Long getInStockId() {
         return inStockId;

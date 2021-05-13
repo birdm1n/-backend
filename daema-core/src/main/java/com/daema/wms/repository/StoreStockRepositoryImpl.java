@@ -10,10 +10,10 @@ import com.daema.wms.domain.dto.request.StoreStockRequestDto;
 import com.daema.wms.domain.dto.response.StoreStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomStoreStockRepository;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.daema.commgmt.domain.QGoods.goods;
@@ -48,6 +49,8 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
     @Override
     public Page<StoreStockResponseDto> getStoreStockList(StoreStockRequestDto requestDto) {
         JPQLQuery<StoreStockResponseDto> query = getQuerydsl().createQuery();
+
+        Path<LocalDateTime> stockCheckDateTime1 = Expressions.path(LocalDateTime.class, "stockCheckDateTime1");
 
         QStock prevStock = new QStock("prevStock");
         QStock nextStock = new QStock("nextStock");
@@ -85,9 +88,11 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , goodsOption.commonBarcode.as("commonBarcode")
                 , goodsOption.capacity.as("capacity")
 
+                , inStock.inStockId.as("inStockId")
                 , inStock.regiDateTime.as("inStockRegiDateTime")
                 , inStock.inStockMemo.as("inStockMemo")
 
+                , returnStock.returnStockId.as("returnStockId")
                 , returnStock.returnStockAmt.as("returnStockAmt")
                 , returnStock.returnStockMemo.as("returnStockMemo")
                 , returnStock.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
@@ -98,7 +103,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                                 .from(storeStockCheck)
                                 .where(storeStock.storeStockId.eq(storeStockCheck.storeStock.storeStockId))
                                 .groupBy(storeStockCheck.storeStock.storeStockId),
-                        "stockCheckDateTime1")
+                        stockCheckDateTime1)
                 , ExpressionUtils.as(
                         JPAExpressions
                                 .select(storeStockCheck.regiDateTime.max())
@@ -164,7 +169,10 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                         eqTelecom(requestDto.getTelecom()),
                         eqMaker(requestDto.getMaker())
                 )
-                .orderBy(storeStock.regiDateTime.desc());
+                .orderBy(
+                        new OrderSpecifier(Order.DESC, stockCheckDateTime1).nullsLast()
+                        , storeStock.regiDateTime.desc()
+                );
 
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
 
