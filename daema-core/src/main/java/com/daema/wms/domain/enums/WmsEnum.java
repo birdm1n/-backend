@@ -147,12 +147,29 @@ public enum WmsEnum {
     }
 
     public enum DeliveryStatus {
-        GO("배송중"),
+        NONE("-"),
+        PROGRESS("배송중"),
         COMPL("배송완료")
         ;
         private final String statusMsg;
 
         DeliveryStatus(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
+
+    public enum JudgementStatus {
+        WAIT("판정대기"),
+        PROGRESS("판정진행중"),
+        COMPL("판정완료"),
+        REJECT("판정반려"),
+        ;
+        private final String statusMsg;
+
+        JudgementStatus(String statusMsg) {
             this.statusMsg = statusMsg;
         }
         public String getStatusMsg() {
