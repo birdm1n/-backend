@@ -24,7 +24,9 @@ import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.common.util.JwtUtil;
+import com.daema.rest.wms.dto.MoveStockAlarmDto;
 import com.daema.rest.wms.dto.StockMgmtDto;
+import com.daema.rest.wms.service.MoveStockMgmtService;
 import com.daema.rest.wms.service.StockMgmtService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -51,19 +53,21 @@ public class SaleStoreMgmtService {
 	private final FuncMgmtRepository funcMgmtRepository;
 
 	private final StockMgmtService stockMgmtService;
+	private final MoveStockMgmtService moveStockMgmtService;
 
 	private final AuthenticationUtil authenticationUtil;
 
 	private final JwtUtil jwtUtil;
 
 	public SaleStoreMgmtService(StoreRepository storeRepository, StoreMapRepository storeMapRepository, OrganizationMgmtService organizationMgmtService, StockMgmtService stockMgmtService
-								,RoleFuncMgmtService roleFuncMgmtService, FuncMgmtRepository funcMgmtRepository ,AuthenticationUtil authenticationUtil, JwtUtil jwtUtil) {
+			, RoleFuncMgmtService roleFuncMgmtService, FuncMgmtRepository funcMgmtRepository, MoveStockMgmtService moveStockMgmtService, AuthenticationUtil authenticationUtil, JwtUtil jwtUtil) {
 		this.storeRepository = storeRepository;
 		this.storeMapRepository = storeMapRepository;
 		this.organizationMgmtService = organizationMgmtService;
 		this.roleFuncMgmtService = roleFuncMgmtService;
 		this.funcMgmtRepository = funcMgmtRepository;
 		this.stockMgmtService = stockMgmtService;
+		this.moveStockMgmtService = moveStockMgmtService;
 		this.authenticationUtil = authenticationUtil;
 		this.jwtUtil = jwtUtil;
 	}
@@ -157,6 +161,17 @@ public class SaleStoreMgmtService {
 						.updDateTime(LocalDateTime.now())
 					.build()
 		);
+
+
+		//장기 재고 알람설정 기본값 설정
+		MoveStockAlarmDto moveStockAlarmDto = new MoveStockAlarmDto();
+		moveStockAlarmDto.setStoreId(resultStoreId);
+		moveStockAlarmDto.setResellDay(30);
+		moveStockAlarmDto.setUndeliveredDay(15);
+		moveStockAlarmDto.setMemberSeq(memberSeq);
+
+		moveStockMgmtService.setLongTimeStoreStockAlarm(moveStockAlarmDto);
+
 
 		//가입 링크를 통한 관리점 / 영업점 맵핑 프로세스
 		String accessToken = jwtUtil.getAccessTokenFromHeader(request, JwtUtil.AUTHORIZATION);

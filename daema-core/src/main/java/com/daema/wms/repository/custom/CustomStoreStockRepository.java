@@ -7,4 +7,5 @@ import org.springframework.data.domain.Page;
 public interface CustomStoreStockRepository {
 
     Page<StoreStockResponseDto> getStoreStockList(StoreStockRequestDto requestDto);
+    Page<StoreStockResponseDto> getLongTimeStoreStockList(StoreStockRequestDto requestDto);
 }

@@ -1,30 +1,30 @@
 package com.daema.rest.wms.service;
 
+import com.daema.base.domain.Member;
 import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.util.AuthenticationUtil;
+import com.daema.rest.wms.dto.MoveStockAlarmDto;
 import com.daema.rest.wms.dto.request.SellMoveInsertReqDto;
-import com.daema.wms.domain.Delivery;
-import com.daema.wms.domain.Device;
-import com.daema.wms.domain.MoveStock;
-import com.daema.wms.domain.StoreStock;
+import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
-import com.daema.wms.repository.DeliveryRepository;
-import com.daema.wms.repository.DeviceRepository;
-import com.daema.wms.repository.MoveStockRepository;
-import com.daema.wms.repository.StoreStockRepository;
+import com.daema.wms.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
 public class MoveStockMgmtService {
 
     private final MoveStockRepository moveStockRepository;
+    private final MoveStockAlarmRepository moveStockAlarmRepository;
     private final AuthenticationUtil authenticationUtil;
     private final DeliveryRepository deliveryRepository;
     private final StoreStockRepository storeStockRepository;
@@ -99,5 +99,34 @@ public class MoveStockMgmtService {
         storeStock.setStockTypeId(moveStock.getMoveStockId());
 
         return ResponseCodeEnum.OK;
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void setLongTimeStoreStockAlarm(MoveStockAlarmDto requestDto){
+
+        Store store = Store.builder().storeId(requestDto.getStoreId()).build();
+        Member member = Member.builder().seq(requestDto.getMemberSeq()).build();
+
+        MoveStockAlarm moveStockAlarm = moveStockAlarmRepository.findByStore(store);
+
+        if(moveStockAlarm != null){
+            moveStockAlarm.updateMoveStockAlarm(
+                    moveStockAlarm
+                    , requestDto.getResellDay()
+                    , requestDto.getUndeliveredDay()
+                    , member
+            );
+        }else {
+            moveStockAlarmRepository.save(
+                    MoveStockAlarm.builder()
+                            .store(store)
+                            .resellDay(requestDto.getResellDay())
+                            .undeliveredDay(requestDto.getUndeliveredDay())
+                            .updUserId(member)
+                            .updDateTime(LocalDateTime.now())
+                            .build()
+            );
+        }
     }
 }

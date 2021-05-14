@@ -148,7 +148,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         "           , stock_name " +
                         "           , hierarchy " +
                         "           , full_barcode " +
-                        "           , ifnull(inst.in_stock_amt, 0) as in_stock_amt " +
+                        "           , ifnull(in_stock_amt, 0) as in_stock_amt " +
                         "           , goods_option_id " +
                         "        from device as dv " +
                         "        inner join ( " +
@@ -221,9 +221,6 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         "                  and ss.next_stock_id = sd.stock_id " +
                         "        ) as ss_sd " +
                         "        on dv.dvc_id = ss_sd.dvc_id " +
-                        "        left join in_stock as inst " +
-                        "        on inst.in_stock_id = ss_sd.stock_type_id " +
-                        "            and stock_type = 'IN_STOCK' " +
                         "  ) as stock_dv " +
                         "  on go.goods_option_id = stock_dv.goods_option_id " +
                         "  inner join code_detail cd1 " +

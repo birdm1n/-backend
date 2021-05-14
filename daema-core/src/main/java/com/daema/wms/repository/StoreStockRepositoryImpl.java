@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,6 +34,8 @@ import static com.daema.commgmt.domain.QStore.store;
 import static com.daema.wms.domain.QDevice.device;
 import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
 import static com.daema.wms.domain.QInStock.inStock;
+import static com.daema.wms.domain.QMoveStock.moveStock;
+import static com.daema.wms.domain.QMoveStockAlarm.moveStockAlarm;
 import static com.daema.wms.domain.QReturnStock.returnStock;
 import static com.daema.wms.domain.QStoreStock.storeStock;
 import static com.daema.wms.domain.QStoreStockCheck.storeStockCheck;
@@ -173,6 +176,125 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                         new OrderSpecifier(Order.DESC, stockCheckDateTime1).nullsLast()
                         , storeStock.regiDateTime.desc()
                 );
+
+        PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
+
+        List<StoreStockResponseDto> resultList = query.fetch();
+
+        long total = query.fetchCount();
+
+        return new PageImpl<>(resultList, pageable, total);
+    }
+
+    @Override
+    public Page<StoreStockResponseDto> getLongTimeStoreStockList(StoreStockRequestDto requestDto) {
+        JPQLQuery<StoreStockResponseDto> query = getQuerydsl().createQuery();
+
+        QStock prevStock = new QStock("prevStock");
+        QStock nextStock = new QStock("nextStock");
+
+        QCodeDetail maker = new QCodeDetail("maker");
+        QCodeDetail telecom = new QCodeDetail("telecom");
+
+        query.select(Projections.fields(
+                StoreStockResponseDto.class
+                , storeStock.storeStockId.as("storeStockId")
+                , storeStock.stockType.as("stockType")
+
+                , moveStock.regiDateTime.as("moveDateTime")
+
+                , device.dvcId.as("dvcId")
+                , device.fullBarcode.as("fullBarcode")
+                , device.inStockAmt.as("inStockAmt")
+
+                , telecom.codeSeq.as("telecom")
+                , telecom.codeNm.as("telecomName")
+                , maker.codeSeq.as("maker")
+                , maker.codeNm.as("makerName")
+
+                , prevStock.stockId.as("prevStockId")
+                , prevStock.stockName.as("prevStockName")
+                , nextStock.stockId.as("nextStockId")
+                , nextStock.stockName.as("nextStockName")
+                , new CaseBuilder()
+                        .when(nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()))
+                        .then(WmsEnum.StockStatStr.I.getStatusMsg())
+                        .otherwise(WmsEnum.StockStatStr.M.getStatusMsg()).as("statusStr")
+                , goods.goodsId.as("goodsId")
+                , goods.goodsName.as("goodsName")
+                , goods.modelName.as("modelName")
+
+                , goodsOption.goodsOptionId.as("goodsOptionId")
+                , goodsOption.colorName.as("colorName")
+                , goodsOption.commonBarcode.as("commonBarcode")
+                , goodsOption.capacity.as("capacity")
+
+                , inStock.inStockId.as("inStockId")
+                , inStock.regiDateTime.as("inStockRegiDateTime")
+                , inStock.inStockMemo.as("inStockMemo")
+
+                , returnStock.returnStockId.as("returnStockId")
+                , returnStock.returnStockAmt.as("returnStockAmt")
+                , returnStock.returnStockMemo.as("returnStockMemo")
+                , returnStock.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+                )
+        )
+
+                .from(storeStock)
+                .innerJoin(storeStock.store, store).on(
+                store.storeId.eq(requestDto.getStoreId())
+        )
+                .innerJoin(moveStockAlarm).on(
+                        moveStockAlarm.store.storeId.eq(store.storeId)
+        )
+                .innerJoin(storeStock.device, device).on(
+                        storeStock.device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
+                        .and(storeStock.stockYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+        )
+                .leftJoin(moveStock).on(
+                        storeStock.stockTypeId.eq(moveStock.moveStockId)
+                                .and(storeStock.stockType.eq(WmsEnum.StockType.STOCK_MOVE))
+        )
+                .innerJoin(device.goodsOption, goodsOption)
+                .innerJoin(goodsOption.goods, goods)
+                .innerJoin(maker).on(
+                goods.maker.eq(maker.codeSeq)
+        )
+                .innerJoin(telecom).on(
+                goods.networkAttribute.telecom.eq(telecom.codeSeq)
+        )
+
+                .leftJoin(storeStock.prevStock, prevStock)
+                .innerJoin(storeStock.nextStock, nextStock)
+
+                .leftJoin(inStock).on(
+                inStock.device.dvcId.eq(storeStock.device.dvcId))
+                .leftJoin(returnStock).on(
+                returnStock.device.dvcId.eq(storeStock.device.dvcId)
+                        .and(returnStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
+        )
+
+                .where(
+                        moveStockAlarm.undeliveredDay.loe(
+                                Expressions.dateTemplate(LocalDate.class
+                                        , "DATEDIFF({0}, {1})"
+                                        , LocalDate.now(), moveStock.regiDateTime).castToNum(Integer.class)
+                        ),
+                        betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
+                        betweenStoreStockCheckDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
+                        eqNextStockId(requestDto.getNextStockId()),
+                        eqStatusStr(nextStock, requestDto.getStatusStr()),
+                        eqInStockStatus(requestDto.getInStockStatus()),
+                        eqFullBarcode(requestDto.getFullBarcode()),
+                        eqFaultyYn(requestDto.getProductFaultyYn()),
+                        eqExtrrStatus(requestDto.getExtrrStatus()),
+                        eqColorName(requestDto.getColorName()),
+                        eqGoodsId(requestDto.getGoodsId()),
+                        eqCapacity(requestDto.getCapacity()),
+                        eqTelecom(requestDto.getTelecom()),
+                        eqMaker(requestDto.getMaker())
+                )
+                .orderBy(moveStock.regiDateTime.desc());
 
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
 
