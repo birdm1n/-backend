@@ -129,4 +129,8 @@ public class MoveStockMgmtService {
             );
         }
     }
+
+    public ResponseCodeEnum insertStockMove(SellMoveInsertReqDto requestDto) {
+        return null;
+    }
 }

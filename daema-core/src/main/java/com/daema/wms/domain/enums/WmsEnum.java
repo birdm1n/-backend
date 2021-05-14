@@ -146,6 +146,20 @@ public enum WmsEnum {
         }
     }
 
+    public enum DeliveryStatus {
+        GO("배송중"),
+        COMPL("배송완료")
+        ;
+        private final String statusMsg;
+
+        DeliveryStatus(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
+
     public enum BarcodeType {
         S("스캐너"),
         K("키보드")

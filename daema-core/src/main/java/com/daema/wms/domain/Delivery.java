@@ -54,6 +54,10 @@ public class Delivery extends BaseEntity {
     @Column(name = "delivery_memo")
     private String deliveryMemo;
 
+    @Column(name = "delivery_status")
+    @Enumerated(EnumType.STRING)
+    private WmsEnum.DeliveryStatus deliveryStatus;
+
     @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
     private OutStock outStock;
 
