@@ -37,7 +37,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "dvcId")
-@ToString(exclude = {"inStocks", "outStocks", "deviceStatusList", "moveStockList", "returnStockList"})
+@ToString(exclude = {"inStocks", "outStocks", "deviceStatusList", "moveStockList", "returnStockList", "storeStock", "deviceJudges"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -86,4 +86,6 @@ public class Device extends BaseEntity {
     @OneToOne(mappedBy = "device")
     private StoreStock storeStock;
 
+    @OneToMany(mappedBy = "device")
+    private List<DeviceJudge> deviceJudges = new ArrayList<>();
 }
