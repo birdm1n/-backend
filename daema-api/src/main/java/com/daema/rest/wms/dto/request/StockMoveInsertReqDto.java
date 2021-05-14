@@ -13,11 +13,17 @@ public class StockMoveInsertReqDto {
     @ApiModelProperty(value = "배송타입",  required = true)
     private WmsEnum.DeliveryType deliveryType;
 
-    @ApiModelProperty(value = "보유처 ID", example = "0",required = true)
-    private Long prevStockId;
-
-    @ApiModelProperty(value = "이동처 ID", required = true)
+    @ApiModelProperty(value = "이동처 ID", example = "0", required = true)
     private Long nextStockId;
+
+    @ApiModelProperty(value = "기기일련번호(바코드)",  required = true)
+    private String fullBarcode;
+
+    @ApiModelProperty(value = "택배사", example = "0",required = true)
+    private Integer courier;
+
+    @ApiModelProperty(value = "송장번호", required = true)
+    private String invoiceNo;
 
     @ApiModelProperty(value = "메모입력")
     private String deliveryMemo;

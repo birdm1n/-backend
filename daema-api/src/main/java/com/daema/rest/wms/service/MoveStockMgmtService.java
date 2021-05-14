@@ -7,6 +7,7 @@ import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.MoveStockAlarmDto;
 import com.daema.rest.wms.dto.request.SellMoveInsertReqDto;
+import com.daema.rest.wms.dto.request.StockMoveInsertReqDto;
 import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -29,6 +30,7 @@ public class MoveStockMgmtService {
     private final DeliveryRepository deliveryRepository;
     private final StoreStockRepository storeStockRepository;
     private final DeviceRepository deviceRepository;
+    private final StockRepository stockRepository;
 
 
     @Transactional(readOnly = true)
@@ -56,15 +58,19 @@ public class MoveStockMgmtService {
         Store store = Store.builder()
                 .storeId(storeId)
                 .build();
-        // 1. 기기 정보 조회
+        // 1. [기기] 정보 조회
         Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullbarcode, store, "N");
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
-        // 2. 기기 ID, store Id로 재고 조회
+        // 2. [재고] 조회
         StoreStock storeStock = storeStockRepository.findByStoreAndDevice(store, device);
         if (storeStock == null) return ResponseCodeEnum.NO_STORE_STOCK;
 
-        // 3. 배송 정보 저장
+
+        // 택배 타입인 경우 = 배송중
+        WmsEnum.DeliveryStatus deliveryStatus =
+                requestDto.getDeliveryType() == WmsEnum.DeliveryType.PS ? WmsEnum.DeliveryStatus.PROGRESS : WmsEnum.DeliveryStatus.NONE;
+        // 3. [배송] 정보 저장
         Delivery delivery = Delivery.builder()
                 .deliveryType(requestDto.getDeliveryType())
                 .cusName(requestDto.getCusName())
@@ -76,11 +82,12 @@ public class MoveStockMgmtService {
                 .courier(requestDto.getCourier())
                 .invoiceNo(requestDto.getInvoiceNo())
                 .deliveryMemo(requestDto.getDeliveryMemo())
+                .deliveryStatus(deliveryStatus)
                 .build();
         delivery = deliveryRepository.save(delivery);
 
-        // 4. 이동현황은 똑같다.
-        // 이전 보유처, 이후 보유처 정보 = 판매이동인 경우 동일하다
+        // 4. [이동재고] insert
+        // 판매이동 이기에 재고 보유처 같음
         MoveStock moveStock = MoveStock
                 .builder()
                 .moveStockType(WmsEnum.MoveStockType.SELL_MOVE)
@@ -92,11 +99,68 @@ public class MoveStockMgmtService {
                 .build();
         moveStock = moveStockRepository.save(moveStock);
 
-        // 5.
+        // 5. [재고] update
         // - 재고 테이블에 moveId
         // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
         storeStock.setStockType(WmsEnum.StockType.SELL_MOVE);
         storeStock.setStockTypeId(moveStock.getMoveStockId());
+
+
+        return ResponseCodeEnum.OK;
+    }
+    @Transactional
+    public ResponseCodeEnum insertStockMove(StockMoveInsertReqDto requestDto) {
+        long storeId = authenticationUtil.getStoreId();
+        String fullbarcode = requestDto.getFullBarcode();
+        Store store = Store.builder()
+                .storeId(storeId)
+                .build();
+        // 1. [기기] 정보 조회
+        Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullbarcode, store, "N");
+        if (device == null) return ResponseCodeEnum.NO_DEVICE;
+
+        // 2. [재고 ]조회
+        StoreStock storeStock = storeStockRepository.findByStoreAndDevice(store, device);
+        if (storeStock == null) return ResponseCodeEnum.NO_STORE_STOCK;
+
+        // 택배 타입인 경우 = 배송중
+        WmsEnum.DeliveryStatus deliveryStatus =
+                requestDto.getDeliveryType() == WmsEnum.DeliveryType.PS ? WmsEnum.DeliveryStatus.PROGRESS : WmsEnum.DeliveryStatus.NONE;
+
+        // 3. [배송] 정보 저장
+        Delivery delivery = Delivery.builder()
+                .deliveryType(requestDto.getDeliveryType())
+                .courier(requestDto.getCourier())
+                .invoiceNo(requestDto.getInvoiceNo())
+                .deliveryMemo(requestDto.getDeliveryMemo())
+                .deliveryStatus(deliveryStatus)
+                .build();
+        delivery = deliveryRepository.save(delivery);
+
+        
+        // 이전 보유처, 이동할 보유처 정보
+        Stock prevStock = storeStock.getNextStock(); //이전 보유처
+        Stock nextStock =  stockRepository.findById(requestDto.getNextStockId()).orElse(null); // 이동할 보유처
+        
+        // 4. [이동재고] insert
+        MoveStock moveStock = MoveStock
+                .builder()
+                .moveStockType(WmsEnum.MoveStockType.STOCK_MOVE)
+                .device(device)
+                .prevStock(prevStock)
+                .nextStock(nextStock)
+                .delivery(delivery)
+                .store(store)
+                .build();
+        moveStock = moveStockRepository.save(moveStock);
+
+        // 5. [재고] update
+        // - 재고 테이블에 moveId
+        // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
+        storeStock.setStockType(WmsEnum.StockType.STOCK_MOVE);
+        storeStock.setStockTypeId(moveStock.getMoveStockId());
+        storeStock.setPrevStock(prevStock);
+        storeStock.setNextStock(nextStock);
 
         return ResponseCodeEnum.OK;
     }
@@ -130,7 +194,5 @@ public class MoveStockMgmtService {
         }
     }
 
-    public ResponseCodeEnum insertStockMove(SellMoveInsertReqDto requestDto) {
-        return null;
-    }
+
 }

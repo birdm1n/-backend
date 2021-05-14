@@ -5,6 +5,7 @@ import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.dto.request.SellMoveInsertReqDto;
+import com.daema.rest.wms.dto.request.StockMoveInsertReqDto;
 import com.daema.rest.wms.service.MoveStockMgmtService;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -41,7 +42,7 @@ public class MoveStockMgmtController {
 
     @ApiOperation(value = "재고이동 등록", notes = "재고 이동 등록 기능을 수행합니다.")
     @PostMapping("/insertStockMove")
-    public ResponseEntity<CommonResponse<Void>> insertStockMove(@RequestBody SellMoveInsertReqDto requestDto) {
+    public ResponseEntity<CommonResponse<Void>> insertStockMove(@RequestBody StockMoveInsertReqDto requestDto) {
         ResponseCodeEnum responseCodeEnum = moveStockMgmtService.insertStockMove(requestDto);
 
         if (ResponseCodeEnum.OK != responseCodeEnum) {

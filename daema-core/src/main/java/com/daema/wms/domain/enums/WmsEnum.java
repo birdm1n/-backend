@@ -132,8 +132,8 @@ public enum WmsEnum {
     }
 
     public enum DeliveryType {
-        QUICK("퀵"),
         PS("택배"),
+        QUICK("퀵"),
         DIRECT("직접전달"),
         ;
         private final String statusMsg;
