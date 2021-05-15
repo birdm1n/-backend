@@ -8,4 +8,5 @@ public interface CustomStoreStockRepository {
 
     Page<StoreStockResponseDto> getStoreStockList(StoreStockRequestDto requestDto);
     Page<StoreStockResponseDto> getLongTimeStoreStockList(StoreStockRequestDto requestDto);
+    Page<StoreStockResponseDto> getFaultyStoreStockList(StoreStockRequestDto requestDto);
 }

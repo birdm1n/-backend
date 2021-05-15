@@ -10,11 +10,13 @@ import com.daema.wms.domain.dto.request.StoreStockRequestDto;
 import com.daema.wms.domain.dto.response.StoreStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomStoreStockRepository;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,14 +33,17 @@ import java.util.List;
 import static com.daema.commgmt.domain.QGoods.goods;
 import static com.daema.commgmt.domain.QGoodsOption.goodsOption;
 import static com.daema.commgmt.domain.QStore.store;
+import static com.daema.wms.domain.QDelivery.delivery;
 import static com.daema.wms.domain.QDevice.device;
+import static com.daema.wms.domain.QDeviceJudge.deviceJudge;
 import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
 import static com.daema.wms.domain.QInStock.inStock;
 import static com.daema.wms.domain.QMoveStock.moveStock;
 import static com.daema.wms.domain.QMoveStockAlarm.moveStockAlarm;
+import static com.daema.wms.domain.QOutStock.outStock;
+import static com.daema.wms.domain.QProvider.provider;
 import static com.daema.wms.domain.QReturnStock.returnStock;
 import static com.daema.wms.domain.QStoreStock.storeStock;
-import static com.daema.wms.domain.QStoreStockCheck.storeStockCheck;
 
 public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implements CustomStoreStockRepository {
 
@@ -53,7 +58,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
     public Page<StoreStockResponseDto> getStoreStockList(StoreStockRequestDto requestDto) {
         JPQLQuery<StoreStockResponseDto> query = getQuerydsl().createQuery();
 
-        Path<LocalDateTime> stockCheckDateTime1 = Expressions.path(LocalDateTime.class, "stockCheckDateTime1");
+        Path<LocalDateTime> compareCheckDateTime = Expressions.path(LocalDateTime.class, "compareCheckDateTime");
 
         QStock prevStock = new QStock("prevStock");
         QStock nextStock = new QStock("nextStock");
@@ -65,6 +70,9 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 StoreStockResponseDto.class
                 , storeStock.storeStockId.as("storeStockId")
                 , storeStock.stockType.as("stockType")
+                , storeStock.checkDateTime1.as("stockCheckDateTime1")
+                , storeStock.checkDateTime2.as("stockCheckDateTime2")
+
                 , device.dvcId.as("dvcId")
                 , device.fullBarcode.as("fullBarcode")
                 , device.inStockAmt.as("inStockAmt")
@@ -99,35 +107,12 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , returnStock.returnStockAmt.as("returnStockAmt")
                 , returnStock.returnStockMemo.as("returnStockMemo")
                 , returnStock.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
-
-                , ExpressionUtils.as(
-                        JPAExpressions
-                                .select(storeStockCheck.regiDateTime.max())
-                                .from(storeStockCheck)
-                                .where(storeStock.storeStockId.eq(storeStockCheck.storeStock.storeStockId))
-                                .groupBy(storeStockCheck.storeStock.storeStockId),
-                        stockCheckDateTime1)
-                , ExpressionUtils.as(
-                        JPAExpressions
-                                .select(storeStockCheck.regiDateTime.max())
-                                .from(storeStockCheck)
-                                .where(
-                                        storeStock.storeStockId.eq(storeStockCheck.storeStock.storeStockId)
-                                                .and(storeStockCheck.regiDateTime
-                                                        .lt(JPAExpressions
-                                                                .select(storeStockCheck.regiDateTime.max())
-                                                                .from(storeStockCheck)
-                                                                .where(storeStock.storeStockId
-                                                                        .eq(storeStockCheck.storeStock.storeStockId))
-                                                                .groupBy(storeStockCheck.storeStock.storeStockId)
-                                                        )
-                                                )
-                                )
-                                .groupBy(storeStockCheck.storeStock.storeStockId),
-                        "stockCheckDateTime2")
+                , new CaseBuilder()
+                        .when(storeStock.checkDateTime1.before(storeStock.checkDateTime2))
+                        .then(storeStock.checkDateTime2)
+                        .otherwise(storeStock.checkDateTime1)
+                        .as(compareCheckDateTime)
                 )
-
-
         )
 
                 .from(storeStock)
@@ -159,7 +144,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
 
                 .where(
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
-                        betweenStoreStockCheckDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
+                        betweenStoreStockCheckDt(requestDto.getStoreStockCheckDate(), requestDto.getStoreStockCheckDate()),
                         eqNextStockId(requestDto.getNextStockId()),
                         eqStatusStr(nextStock, requestDto.getStatusStr()),
                         eqInStockStatus(requestDto.getInStockStatus()),
@@ -173,7 +158,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                         eqMaker(requestDto.getMaker())
                 )
                 .orderBy(
-                        new OrderSpecifier(Order.DESC, stockCheckDateTime1).nullsLast()
+                        new OrderSpecifier(Order.DESC, compareCheckDateTime).nullsLast()
                         , storeStock.regiDateTime.desc()
                 );
 
@@ -245,15 +230,15 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 store.storeId.eq(requestDto.getStoreId())
         )
                 .innerJoin(moveStockAlarm).on(
-                        moveStockAlarm.store.storeId.eq(store.storeId)
+                moveStockAlarm.store.storeId.eq(store.storeId)
         )
                 .innerJoin(storeStock.device, device).on(
-                        storeStock.device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
+                storeStock.device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                         .and(storeStock.stockYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
         )
-                .leftJoin(moveStock).on(
-                        storeStock.stockTypeId.eq(moveStock.moveStockId)
-                                .and(storeStock.stockType.eq(WmsEnum.StockType.STOCK_MOVE))
+                .innerJoin(moveStock).on(
+                storeStock.stockTypeId.eq(moveStock.moveStockId)
+                        .and(storeStock.stockType.eq(WmsEnum.StockType.STOCK_MOVE))
         )
                 .innerJoin(device.goodsOption, goodsOption)
                 .innerJoin(goodsOption.goods, goods)
@@ -273,7 +258,6 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 returnStock.device.dvcId.eq(storeStock.device.dvcId)
                         .and(returnStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
         )
-
                 .where(
                         moveStockAlarm.undeliveredDay.loe(
                                 Expressions.dateTemplate(LocalDate.class
@@ -281,7 +265,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                                         , LocalDate.now(), moveStock.regiDateTime).castToNum(Integer.class)
                         ),
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
-                        betweenStoreStockCheckDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
+                        betweenMoveStockRegDt(requestDto.getMoveStockRegiDate(), requestDto.getMoveStockRegiDate()),
                         eqNextStockId(requestDto.getNextStockId()),
                         eqStatusStr(nextStock, requestDto.getStatusStr()),
                         eqInStockStatus(requestDto.getInStockStatus()),
@@ -295,6 +279,143 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                         eqMaker(requestDto.getMaker())
                 )
                 .orderBy(moveStock.regiDateTime.desc());
+
+        PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
+
+        List<StoreStockResponseDto> resultList = query.fetch();
+
+        long total = query.fetchCount();
+
+        return new PageImpl<>(resultList, pageable, total);
+    }
+
+    @Override
+    public Page<StoreStockResponseDto> getFaultyStoreStockList(StoreStockRequestDto requestDto) {
+        JPQLQuery<StoreStockResponseDto> query = getQuerydsl().createQuery();
+
+        QStock nextStock = new QStock("nextStock");
+
+        QCodeDetail maker = new QCodeDetail("maker");
+        QCodeDetail telecom = new QCodeDetail("telecom");
+
+        query.select(Projections.fields(
+                StoreStockResponseDto.class
+                , storeStock.storeStockId.as("storeStockId")
+                , storeStock.stockType.as("stockType")
+
+                , outStock.regiDateTime.as("moveDateTime")
+
+                , device.dvcId.as("dvcId")
+                , device.fullBarcode.as("fullBarcode")
+                , device.inStockAmt.as("inStockAmt")
+
+                , telecom.codeSeq.as("telecom")
+                , telecom.codeNm.as("telecomName")
+                , maker.codeSeq.as("maker")
+                , maker.codeNm.as("makerName")
+
+                , provider.provId.as("provId")
+                , provider.provName.as("provName")
+
+                , nextStock.stockId.as("stockId")
+                , nextStock.stockName.as("stockName")
+                , new CaseBuilder()
+                        .when(nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()))
+                        .then(WmsEnum.StockStatStr.I.getStatusMsg())
+                        .otherwise(WmsEnum.StockStatStr.M.getStatusMsg()).as("statusStr")
+
+                , goods.goodsId.as("goodsId")
+                , goods.goodsName.as("goodsName")
+                , goods.modelName.as("modelName")
+
+                , goodsOption.goodsOptionId.as("goodsOptionId")
+                , goodsOption.colorName.as("colorName")
+                , goodsOption.commonBarcode.as("commonBarcode")
+                , goodsOption.capacity.as("capacity")
+
+                , inStock.inStockId.as("inStockId")
+                , inStock.regiDateTime.as("inStockRegiDateTime")
+                , inStock.inStockMemo.as("inStockMemo")
+
+                , returnStock.returnStockId.as("returnStockId")
+                , returnStock.returnStockAmt.as("returnStockAmt")
+                , returnStock.returnStockMemo.as("returnStockMemo")
+                , returnStock.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+
+                , delivery.deliveryType.as("deliveryType")
+                , delivery.deliveryStatus.as("deliveryStatus")
+
+                , deviceJudge.judgeMemo.as("judgeMemo")
+                , deviceJudge.judgeStatus.as("judgeStatus")
+
+                )
+        )
+
+                .from(storeStock)
+                .innerJoin(storeStock.store, store).on(
+                store.storeId.eq(requestDto.getStoreId())
+        )
+                .innerJoin(storeStock.device, device)
+                //이관 후, 기기 삭제 또는 내 재고 상태가 아닐 수 있음
+                //storeStock.device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
+                //.and(storeStock.stockYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+
+                .innerJoin(outStock).on(
+                storeStock.stockTypeId.eq(outStock.outStockId)
+                        .and(storeStock.stockType.eq(WmsEnum.StockType.FAULTY_TRNS))
+        )
+                .innerJoin(device.goodsOption, goodsOption)
+                .innerJoin(goodsOption.goods, goods)
+                .innerJoin(maker).on(
+                goods.maker.eq(maker.codeSeq)
+        )
+                .innerJoin(telecom).on(
+                goods.networkAttribute.telecom.eq(telecom.codeSeq)
+        )
+
+                //현재보유처
+                .innerJoin(storeStock.nextStock, nextStock)
+
+                //공급처
+                .innerJoin(provider).on(
+                outStock.targetId.eq(provider.provId)
+        )
+
+                //배송
+                .innerJoin(outStock.delivery, delivery)
+
+                .leftJoin(deviceJudge).on(
+                outStock.device.dvcId.eq(deviceJudge.device.dvcId)
+                        .and(deviceJudge.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
+                        )
+
+        )
+
+                .leftJoin(inStock).on(
+                inStock.device.dvcId.eq(storeStock.device.dvcId))
+
+
+                .leftJoin(returnStock).on(
+                returnStock.device.dvcId.eq(storeStock.device.dvcId)
+                        .and(returnStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
+        );
+
+        query.where(
+                betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
+                eqNextStockId(requestDto.getNextStockId()),
+                eqProvId(requestDto.getProvId()),
+                eqStatusStr(nextStock, requestDto.getStatusStr()),
+                eqJudgmentStatus(requestDto.getJudgmentStatus()),
+                eqFullBarcode(requestDto.getFullBarcode()),
+                eqFaultyYn(requestDto.getProductFaultyYn()),
+                eqExtrrStatus(requestDto.getExtrrStatus()),
+                eqColorName(requestDto.getColorName()),
+                eqGoodsId(requestDto.getGoodsId()),
+                eqCapacity(requestDto.getCapacity()),
+                eqTelecom(requestDto.getTelecom()),
+                eqMaker(requestDto.getMaker())
+        )
+                .orderBy(outStock.regiDateTime.desc());
 
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
 
@@ -324,6 +445,13 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
             return null;
         }
         return storeStock.nextStock.stockId.eq(nextStockId);
+    }
+
+    private BooleanExpression eqProvId(Long provId) {
+        if (provId == null) {
+            return null;
+        }
+        return inStock.provider.provId.eq(provId);
     }
 
     private BooleanExpression eqGoodsId(Long goodsId) {
@@ -385,16 +513,33 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         } else {
             return nextStock.stockType.ne(TypeEnum.STOCK_TYPE_I.getStatusCode());
         }
+    }
 
+    private BooleanExpression eqJudgmentStatus(WmsEnum.JudgementStatus judgmentStatus) {
+        if (judgmentStatus == null) {
+            return null;
+        }
+
+        if (WmsEnum.JudgementStatus.WAIT == judgmentStatus) {
+            return deviceJudge.dvcJudgeId.isNull();
+        } else {
+            return deviceJudge.judgeStatus.eq(judgmentStatus);
+        }
     }
 
     private BooleanExpression betweenStoreStockCheckDt(String startDt, String endDt) {
         if (StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)) {
             return null;
         }
-        return returnStock.regiDateTime.between(
+
+        return storeStock.checkDateTime1.between(
                 RetrieveClauseBuilder.stringToLocalDateTime(startDt, "s"),
                 RetrieveClauseBuilder.stringToLocalDateTime(endDt, "e")
+        ).or(
+                storeStock.checkDateTime2.between(
+                        RetrieveClauseBuilder.stringToLocalDateTime(startDt, "s"),
+                        RetrieveClauseBuilder.stringToLocalDateTime(endDt, "e")
+                )
         );
     }
 
@@ -403,6 +548,16 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
             return null;
         }
         return inStock.regiDateTime.between(
+                RetrieveClauseBuilder.stringToLocalDateTime(startDt, "s"),
+                RetrieveClauseBuilder.stringToLocalDateTime(endDt, "e")
+        );
+    }
+
+    private BooleanExpression betweenMoveStockRegDt(String startDt, String endDt) {
+        if (StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)) {
+            return null;
+        }
+        return moveStock.regiDateTime.between(
                 RetrieveClauseBuilder.stringToLocalDateTime(startDt, "s"),
                 RetrieveClauseBuilder.stringToLocalDateTime(endDt, "e")
         );

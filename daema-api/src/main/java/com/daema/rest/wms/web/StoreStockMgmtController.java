@@ -4,6 +4,7 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
+import com.daema.rest.wms.dto.DeviceJudgeDto;
 import com.daema.rest.wms.dto.MoveStockAlarmDto;
 import com.daema.rest.wms.service.StoreStockMgmtService;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
@@ -57,6 +58,19 @@ public class StoreStockMgmtController {
     @PostMapping("/setLongTimeStoreStockAlarm")
     public ResponseEntity<CommonResponse<Void>> setLongTimeStoreStockAlarm(@RequestBody MoveStockAlarmDto requestDto) {
         storeStockMgmtService.cuMoveStockAlarm(requestDto);
+        return responseHandler.ok();
+    }
+
+    @ApiOperation(value = "불량기기 현황", notes = "불량기기 목록을 조회합니다")
+    @GetMapping("/getFaultyStoreStockList")
+    public ResponseEntity<CommonResponse<ResponseDto<StoreStockResponseDto>>> getFaultyStoreStockList(StoreStockRequestDto requestDto) {
+        return responseHandler.getResponseMessageAsRetrieveResult(storeStockMgmtService.getFaultyStoreStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
+
+    @ApiOperation(value = "판정 상태 변경", notes = "판정 상태 값을 변경 합니다.")
+    @PostMapping("/updateJudgementStatus")
+    public ResponseEntity<CommonResponse<Void>> updateJudgementStatus(@RequestBody DeviceJudgeDto requestDto) {
+        storeStockMgmtService.updateJudgementStatus(requestDto);
         return responseHandler.ok();
     }
 }

@@ -9,18 +9,15 @@ import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
+import com.daema.rest.wms.dto.DeviceJudgeDto;
 import com.daema.rest.wms.dto.MoveStockAlarmDto;
 import com.daema.rest.wms.dto.StoreStockMgmtDto;
-import com.daema.wms.domain.Device;
-import com.daema.wms.domain.MoveStockAlarm;
-import com.daema.wms.domain.StoreStock;
-import com.daema.wms.domain.StoreStockCheck;
+import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
 import com.daema.wms.domain.dto.response.DeviceStatusListDto;
 import com.daema.wms.domain.dto.response.StoreStockResponseDto;
-import com.daema.wms.repository.MoveStockAlarmRepository;
-import com.daema.wms.repository.StoreStockCheckRepository;
-import com.daema.wms.repository.StoreStockRepository;
+import com.daema.wms.domain.enums.WmsEnum;
+import com.daema.wms.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -39,18 +36,21 @@ public class StoreStockMgmtService {
 	private final MoveStockAlarmRepository moveStockAlarmRepository;
 	private final StoreStockRepository storeStockRepository;
 	private final StoreStockCheckRepository storeStockCheckRepository;
-	private final MemberRepository memberRepository;
+	private final StoreStockHistoryRepository storeStockHistoryRepository;
+	private final DeviceJudgeRepository deviceJudgeRepository;
+
 	private final MoveStockMgmtService moveStockMgmtService;
 
 	private final AuthenticationUtil authenticationUtil;
 
-	public StoreStockMgmtService(DeviceMgmtService deviceMgmtService, MoveStockAlarmRepository moveStockAlarmRepository, StoreStockRepository storeStockRepository, StoreStockCheckRepository storeStockCheckRepository, MemberRepository memberRepository
-			, MoveStockMgmtService moveStockMgmtService, AuthenticationUtil authenticationUtil) {
+	public StoreStockMgmtService(DeviceMgmtService deviceMgmtService, MoveStockAlarmRepository moveStockAlarmRepository, StoreStockRepository storeStockRepository, StoreStockCheckRepository storeStockCheckRepository, StoreStockHistoryRepository storeStockHistoryRepository, MemberRepository memberRepository
+			, DeviceJudgeRepository deviceJudgeRepository, MoveStockMgmtService moveStockMgmtService, AuthenticationUtil authenticationUtil) {
 		this.deviceMgmtService = deviceMgmtService;
 		this.moveStockAlarmRepository = moveStockAlarmRepository;
 		this.storeStockRepository = storeStockRepository;
 		this.storeStockCheckRepository = storeStockCheckRepository;
-		this.memberRepository = memberRepository;
+		this.storeStockHistoryRepository = storeStockHistoryRepository;
+		this.deviceJudgeRepository = deviceJudgeRepository;
 		this.moveStockMgmtService = moveStockMgmtService;
 		this.authenticationUtil = authenticationUtil;
 	}
@@ -61,25 +61,7 @@ public class StoreStockMgmtService {
 
 		Page<StoreStockResponseDto> dataList = storeStockRepository.getStoreStockList(requestDto);
 
-		//기기 최종 상태 가져오기
-		List<Long> dvcIds = Optional.ofNullable(dataList.getContent())
-				.orElseGet(Collections::emptyList)
-				.stream()
-				.map(StoreStockResponseDto::getDvcId)
-				.collect(Collectors.toList());
-
-		List<DeviceStatusListDto> deviceStatusListDtoList = deviceMgmtService.getLastDeviceStatusInfo(dvcIds);
-
-		if(CommonUtil.isNotEmptyList(deviceStatusListDtoList)){
-			dataList.getContent()
-					.forEach(
-							stock -> {
-								stock.setDeviceStatusListDto(deviceStatusListDtoList.stream()
-										.filter(device -> stock.getDvcId().equals(device.getDvcId()))
-								.findAny().orElse(null));
-							}
-					);
-		}
+		setDeviceStatusInfo(dataList.getContent());
 
 		return new ResponseDto(dataList);
 	}
@@ -120,6 +102,8 @@ public class StoreStockMgmtService {
 							.regiDateTime(LocalDateTime.now())
 					.build()
 			);
+
+			storeStock.updateStoreStockCheck(storeStock);
 		}else{
 			throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
 		}
@@ -131,25 +115,7 @@ public class StoreStockMgmtService {
 
 		Page<StoreStockResponseDto> dataList = storeStockRepository.getLongTimeStoreStockList(requestDto);
 
-		//기기 최종 상태 가져오기
-		List<Long> dvcIds = Optional.ofNullable(dataList.getContent())
-				.orElseGet(Collections::emptyList)
-				.stream()
-				.map(StoreStockResponseDto::getDvcId)
-				.collect(Collectors.toList());
-
-		List<DeviceStatusListDto> deviceStatusListDtoList = deviceMgmtService.getLastDeviceStatusInfo(dvcIds);
-
-		if(CommonUtil.isNotEmptyList(deviceStatusListDtoList)){
-			dataList.getContent()
-					.forEach(
-							stock -> {
-								stock.setDeviceStatusListDto(deviceStatusListDtoList.stream()
-										.filter(device -> stock.getDvcId().equals(device.getDvcId()))
-										.findAny().orElse(null));
-							}
-					);
-		}
+		setDeviceStatusInfo(dataList.getContent());
 
 		return new ResponseDto(dataList);
 	}
@@ -168,6 +134,73 @@ public class StoreStockMgmtService {
 		requestDto.setMemberSeq(authenticationUtil.getMemberSeq());
 
 		moveStockMgmtService.setLongTimeStoreStockAlarm(requestDto);
+	}
+
+	public ResponseDto<StoreStockResponseDto> getFaultyStoreStockList(StoreStockRequestDto requestDto) {
+
+		requestDto.setStoreId(authenticationUtil.getStoreId());
+
+		Page<StoreStockResponseDto> dataList = storeStockRepository.getFaultyStoreStockList(requestDto);
+
+		setDeviceStatusInfo(dataList.getContent());
+
+		return new ResponseDto(dataList);
+	}
+
+	public void updateJudgementStatus(DeviceJudgeDto requestDto){
+
+		Device device = Device.builder()
+				.dvcId(requestDto.getDvcId())
+				.build();
+
+		List<DeviceJudge> deviceJudgeList = deviceJudgeRepository.findByDevice(device);
+
+		if(CommonUtil.isNotEmptyList(deviceJudgeList)){
+			deviceJudgeList.forEach(
+					deviceJudge -> deviceJudge.updateDelYn(deviceJudge, StatusEnum.FLAG_Y.getStatusMsg())
+			);
+		}
+
+		deviceJudgeRepository.save(
+				DeviceJudge.builder()
+						.dvcJudgeId(0L)
+						.judgeStatus(requestDto.getJudgmentStatus())
+						.judgeMemo(requestDto.getJudgeMemo())
+						.device(device)
+				.build()
+		);
+	}
+
+	//기기 최종 상태 가져오기
+	private void setDeviceStatusInfo(List<StoreStockResponseDto> dataList){
+		List<Long> dvcIds = Optional.ofNullable(dataList)
+				.orElseGet(Collections::emptyList)
+				.stream()
+				.map(StoreStockResponseDto::getDvcId)
+				.collect(Collectors.toList());
+
+		List<DeviceStatusListDto> deviceStatusListDtoList = deviceMgmtService.getLastDeviceStatusInfo(dvcIds);
+
+		if(CommonUtil.isNotEmptyList(deviceStatusListDtoList)){
+			dataList.forEach(
+							stock -> {
+								stock.setDeviceStatusListDto(deviceStatusListDtoList.stream()
+										.filter(device -> stock.getDvcId().equals(device.getDvcId()))
+										.findAny().orElse(null));
+							}
+					);
+		}
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void arrangeStoreStockHistory(StoreStock storeStock, boolean delFlag){
+		storeStockHistoryRepository.arrangeStoreStockHistory(storeStock, delFlag);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void insertStoreStockHistory(StoreStock storeStock){
+		storeStock.setHistoryStatus(WmsEnum.HistoryStatus.USE);
+		storeStockHistoryRepository.save(storeStock.toHistoryEntity(storeStock));
 	}
 }
 

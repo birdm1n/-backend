@@ -14,6 +14,9 @@ public class StoreStockRequestDto extends SearchParamDto {
     //입고일
     private String inStockRegiDate;
 
+    //이동일
+    private String moveStockRegiDate;
+
     //재고확인일
     private String storeStockCheckDate;
 
@@ -46,4 +49,20 @@ public class StoreStockRequestDto extends SearchParamDto {
 
     // 기기일련번호(바코드)
     private String fullBarcode;
+
+    // 배송상태
+    private WmsEnum.DeliveryStatus deliveryStatus;
+
+    // 판정상태
+    private WmsEnum.JudgementStatus judgmentStatus;
+
+    // 판정메모
+    private String judgeMemo;
+
+    // 공급처
+    private Long provId;
+
+    // 기기ID
+    private Long dvcId;
+
 }

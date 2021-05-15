@@ -45,6 +45,7 @@ public class StoreStockResponseDto {
 
     // 공급처
     private Long provId;
+    private String provName;
 
     // 보유처
     private Long stockId;
@@ -81,6 +82,26 @@ public class StoreStockResponseDto {
     // 반품메모
     private String returnStockMemo;
 
+    //배송정보
+    private WmsEnum.DeliveryType deliveryType;
+    private String deliveryTypeMsg;
+
+    //택배사 codeSeq
+    private Integer courier;
+
+    //송장번호
+    private String invoiceNo;
+
+    private String deliveryMemo;
+
+    private WmsEnum.DeliveryStatus deliveryStatus;
+    private String deliveryStatusMsg;
+
+    //판정상태
+    private WmsEnum.JudgementStatus judgeStatus;
+    private String judgeStatusMsg;
+    private String judgeMemo;
+
     private LocalDateTime regiDateTime;
     private Long regiUserId;
     private String regiUserName;
@@ -97,7 +118,6 @@ public class StoreStockResponseDto {
     private LocalDateTime stockCheckDateTime1;
     private LocalDateTime stockCheckDateTime2;
     private LocalDateTime moveDateTime;
-    private Integer diffMoveDate;
 
     private DeviceStatusListDto deviceStatusListDto;
 
@@ -116,4 +136,47 @@ public class StoreStockResponseDto {
     public Long getDiffMoveDateTime() {
         return CommonUtil.diffDaysLocalDateTime(this.moveDateTime);
     }
+
+    public WmsEnum.JudgementStatus getJudgeStatus() {
+
+        WmsEnum.JudgementStatus tmpJudgeStatus = WmsEnum.JudgementStatus.WAIT;
+
+        if(judgeStatus != null){
+            tmpJudgeStatus = judgeStatus;
+        }
+        return tmpJudgeStatus;
+    }
+
+    public String getDeliveryTypeMsg() {
+        return this.deliveryType != null ? this.deliveryType.getStatusMsg() : "";
+    }
+
+    public String getDeliveryStatusMsg() {
+        return this.deliveryStatus != null ? this.deliveryStatus.getStatusMsg() : "";
+    }
+
+    public String getJudgeStatusMsg() {
+        return this.judgeStatus != null ? this.judgeStatus.getStatusMsg() : WmsEnum.JudgementStatus.WAIT.getStatusMsg();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -180,7 +180,7 @@ class ReturnStockCtrl {
 							.build()
 			);
 
-			storeStockMgmtService.cuStoreStock(
+			StoreStock storeStock = storeStockMgmtService.cuStoreStock(
 					StoreStockMgmtDto.builder()
 							.storeStockId(0L)
 							.store(returnStock.getStore())
@@ -192,6 +192,9 @@ class ReturnStockCtrl {
 							.nextStock(returnStock.getNextStock())
 							.build()
 			);
+
+			storeStockMgmtService.insertStoreStockHistory(storeStock);
+			storeStockMgmtService.arrangeStoreStockHistory(storeStock, false);
 
 			success = true;
 

@@ -32,4 +32,8 @@ public class DeviceJudge extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_id")
     private Device device;
+
+    public void updateDelYn(DeviceJudge deviceJudge, String delYn){
+        deviceJudge.setDelYn(delYn);
+    }
 }

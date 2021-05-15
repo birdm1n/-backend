@@ -23,6 +23,8 @@ public class StoreStockMgmtDto {
     private Stock prevStock;
     private Stock nextStock;
 
+    private WmsEnum.HistoryStatus historyStatus;
+
     public static StoreStockMgmtDto from(StoreStock storeStock) {
         return StoreStockMgmtDto.builder()
                 .storeStockId(storeStock.getStoreStockId())

@@ -8,13 +8,11 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @EqualsAndHashCode(of = "storeStockId")
-@ToString(exclude = {"storeStockCheckList"})
+@ToString
 @NoArgsConstructor
 @Entity
 @Table(name = "store_stock")
@@ -70,11 +68,8 @@ public class StoreStock extends BaseEntity {
     @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id")
     private Stock nextStock;
 
-    /**
-     * 재고조사일
-     */
-    @OneToMany(mappedBy = "storeStock")
-    private List<StoreStockCheck> storeStockCheckList = new ArrayList<>();
+    @Transient
+    private WmsEnum.HistoryStatus historyStatus;
 
     @Builder
     public StoreStock(Long storeStockId, Store store, WmsEnum.StockType stockType, Device device,
@@ -121,6 +116,20 @@ public class StoreStock extends BaseEntity {
         }
 
         return storeStock;
+    }
+
+    public StoreStockHistory toHistoryEntity(StoreStock storeStock){
+        return StoreStockHistory.builder()
+                .storeStockHistoryId(0L)
+                .storeStock(storeStock)
+                .store(storeStock.getStore())
+                .device(storeStock.getDevice())
+                .stockType(storeStock.getStockType())
+                .stockTypeId(storeStock.getStockTypeId())
+                .historyStatus(storeStock.getHistoryStatus())
+                .prevStock(storeStock.getPrevStock())
+                .nextStock(storeStock.getNextStock())
+                .build();
     }
 }
 

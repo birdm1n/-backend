@@ -177,6 +177,13 @@ public enum WmsEnum {
         }
     }
 
+    public enum HistoryStatus {
+        USE,
+        WAIT,
+        DEL
+        ;
+    }
+
     public enum BarcodeType {
         S("스캐너"),
         K("키보드")
