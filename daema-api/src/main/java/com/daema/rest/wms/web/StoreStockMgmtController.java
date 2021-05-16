@@ -8,6 +8,7 @@ import com.daema.rest.wms.dto.DeviceJudgeDto;
 import com.daema.rest.wms.dto.MoveStockAlarmDto;
 import com.daema.rest.wms.service.StoreStockMgmtService;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
+import com.daema.wms.domain.dto.response.StoreStockCheckListDto;
 import com.daema.wms.domain.dto.response.StoreStockResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,8 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api(value = "재고 관리 API", tags = "재고 관리 API")
 @RestController
@@ -40,6 +43,12 @@ public class StoreStockMgmtController {
     public ResponseEntity<CommonResponse<Void>> checkStoreStock(@ApiParam(value = "기기일련번호", required = true) @RequestBody ModelMap paramMap) {
         storeStockMgmtService.checkStoreStock(String.valueOf(paramMap.get("fullBarcode")));
         return responseHandler.ok();
+    }
+
+    @ApiOperation(value = "재고 확인 이력", notes = "재고 확인한 이력을 조회합니다")
+    @GetMapping("/getStoreStockCheckHistory")
+    public ResponseEntity<CommonResponse<List<StoreStockCheckListDto>>> getStoreStockCheckHistory(@ApiParam(value = "재고 ID", required = true, example = "1") @RequestParam Long storeStockId) {
+        return responseHandler.getResponseMessageAsRetrieveResult(storeStockMgmtService.getStoreStockCheckHistory(storeStockId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "장기재고 현황", notes = "장기재고 목록을 조회합니다")

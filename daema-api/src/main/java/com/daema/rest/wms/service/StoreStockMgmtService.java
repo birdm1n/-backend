@@ -15,6 +15,7 @@ import com.daema.rest.wms.dto.StoreStockMgmtDto;
 import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
 import com.daema.wms.domain.dto.response.DeviceStatusListDto;
+import com.daema.wms.domain.dto.response.StoreStockCheckListDto;
 import com.daema.wms.domain.dto.response.StoreStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
@@ -107,6 +108,13 @@ public class StoreStockMgmtService {
 		}else{
 			throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
 		}
+	}
+
+	public List<StoreStockCheckListDto> getStoreStockCheckHistory(Long storeStockId) {
+
+		List<StoreStockCheckListDto> storeStockCheckList = storeStockCheckRepository.getStoreStockCheckHistory(storeStockId);
+
+		return storeStockCheckList;
 	}
 
 	public ResponseDto<StoreStockResponseDto> getLongTimeStoreStockList(StoreStockRequestDto requestDto) {
