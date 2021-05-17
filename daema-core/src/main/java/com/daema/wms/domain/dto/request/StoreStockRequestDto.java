@@ -54,7 +54,7 @@ public class StoreStockRequestDto extends SearchParamDto {
     private WmsEnum.DeliveryStatus deliveryStatus;
 
     // 판정상태
-    private WmsEnum.JudgementStatus judgmentStatus;
+    private WmsEnum.JudgementStatus judgeStatus;
 
     // 판정메모
     private String judgeMemo;

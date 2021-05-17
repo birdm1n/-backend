@@ -12,7 +12,7 @@ public class DeviceJudgeDto {
 
 	private Long dvcId;
 	private String judgeMemo;
-	private WmsEnum.JudgementStatus judgmentStatus;
+	private WmsEnum.JudgementStatus judgeStatus;
 }
 
 

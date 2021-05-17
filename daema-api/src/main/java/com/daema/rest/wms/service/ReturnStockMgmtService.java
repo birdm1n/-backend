@@ -41,8 +41,8 @@ public class ReturnStockMgmtService {
 	private final ReturnStockCtrl returnStockCtrl;
 
 	public ReturnStockMgmtService(StockRepository stockRepository, ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
-			,DeviceStatusRepository deviceStatusRepository, MoveStockRepository deviceStockRepository
-			,AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl) {
+			, DeviceStatusRepository deviceStatusRepository, MoveStockRepository deviceStockRepository
+			, AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl) {
 		this.stockRepository = stockRepository;
 		this.returnStockRepository = returnStockRepository;
 		this.deviceRepository = deviceRepository;
@@ -99,19 +99,19 @@ class ReturnStockCtrl {
 	private final ReturnStockRepository returnStockRepository;
 	private final DeviceRepository deviceRepository;
 	private final DeviceStatusRepository deviceStatusRepository;
-	private final MoveStockRepository deviceStockRepository;
 	private final StoreStockMgmtService storeStockMgmtService;
+	private final StoreStockHistoryMgmtService storeStockHistoryMgmtService;
 	private final AuthenticationUtil authenticationUtil;
 
 	public ReturnStockCtrl(ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
-			, DeviceStatusRepository deviceStatusRepository, MoveStockRepository deviceStockRepository
-		   ,StoreStockMgmtService storeStockMgmtService
-			, AuthenticationUtil authenticationUtil) {
+			, DeviceStatusRepository deviceStatusRepository
+			, StoreStockMgmtService storeStockMgmtService
+			, StoreStockHistoryMgmtService storeStockHistoryMgmtService, AuthenticationUtil authenticationUtil) {
 		this.returnStockRepository = returnStockRepository;
 		this.deviceRepository = deviceRepository;
 		this.deviceStatusRepository = deviceStatusRepository;
-		this.deviceStockRepository = deviceStockRepository;
 		this.storeStockMgmtService = storeStockMgmtService;
+		this.storeStockHistoryMgmtService = storeStockHistoryMgmtService;
 		this.authenticationUtil = authenticationUtil;
 	}
 
@@ -193,8 +193,8 @@ class ReturnStockCtrl {
 							.build()
 			);
 
-			storeStockMgmtService.insertStoreStockHistory(storeStock);
-			storeStockMgmtService.arrangeStoreStockHistory(storeStock, false);
+			storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
+			storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
 
 			success = true;
 

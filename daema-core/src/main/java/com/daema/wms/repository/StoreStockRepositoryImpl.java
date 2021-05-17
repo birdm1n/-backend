@@ -405,7 +405,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 eqNextStockId(requestDto.getNextStockId()),
                 eqProvId(requestDto.getProvId()),
                 eqStatusStr(nextStock, requestDto.getStatusStr()),
-                eqJudgmentStatus(requestDto.getJudgmentStatus()),
+                eqJudgmentStatus(requestDto.getJudgeStatus()),
                 eqFullBarcode(requestDto.getFullBarcode()),
                 eqFaultyYn(requestDto.getProductFaultyYn()),
                 eqExtrrStatus(requestDto.getExtrrStatus()),

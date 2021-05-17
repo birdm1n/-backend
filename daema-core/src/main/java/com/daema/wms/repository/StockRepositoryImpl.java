@@ -139,7 +139,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         "       ,telecom " +
                         "       ,cd1.code_nm as telecom_name " +
                         "       ,cd2.code_nm as maker_name " +
-                        "  from goods " +
+                        "  from goods as goods " +
                         "  inner join goods_option go " +
                         "  on goods.goods_id = go.goods_id " +
                         "  inner join ( " +
@@ -239,7 +239,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
             sb.append(" and maker = ").append(requestDto.getMaker());
         }
         if(requestDto.getGoodsId() != null) {
-            sb.append(" and goods_id = ").append(requestDto.getGoodsId());
+            sb.append(" and goods.goods_id = ").append(requestDto.getGoodsId());
         }
         if(StringUtils.hasText(requestDto.getCapacity())){
             sb.append(" and go.capacity = '").append(requestDto.getCapacity()).append("'");

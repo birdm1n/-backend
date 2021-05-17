@@ -17,7 +17,6 @@ import com.daema.wms.domain.dto.request.StoreStockRequestDto;
 import com.daema.wms.domain.dto.response.DeviceStatusListDto;
 import com.daema.wms.domain.dto.response.StoreStockCheckListDto;
 import com.daema.wms.domain.dto.response.StoreStockResponseDto;
-import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -101,7 +100,7 @@ public class StoreStockMgmtService {
 									.seq(authenticationUtil.getMemberSeq())
 									.build())
 							.regiDateTime(LocalDateTime.now())
-					.build()
+							.build()
 			);
 
 			storeStock.updateStoreStockCheck(storeStock);
@@ -172,10 +171,10 @@ public class StoreStockMgmtService {
 		deviceJudgeRepository.save(
 				DeviceJudge.builder()
 						.dvcJudgeId(0L)
-						.judgeStatus(requestDto.getJudgmentStatus())
+						.judgeStatus(requestDto.getJudgeStatus())
 						.judgeMemo(requestDto.getJudgeMemo())
 						.device(device)
-				.build()
+						.build()
 		);
 	}
 
@@ -191,24 +190,13 @@ public class StoreStockMgmtService {
 
 		if(CommonUtil.isNotEmptyList(deviceStatusListDtoList)){
 			dataList.forEach(
-							stock -> {
-								stock.setDeviceStatusListDto(deviceStatusListDtoList.stream()
-										.filter(device -> stock.getDvcId().equals(device.getDvcId()))
-										.findAny().orElse(null));
-							}
-					);
+					stock -> {
+						stock.setDeviceStatusListDto(deviceStatusListDtoList.stream()
+								.filter(device -> stock.getDvcId().equals(device.getDvcId()))
+								.findAny().orElse(null));
+					}
+			);
 		}
-	}
-
-	@Transactional(propagation = Propagation.REQUIRED)
-	public void arrangeStoreStockHistory(StoreStock storeStock, boolean delFlag){
-		storeStockHistoryRepository.arrangeStoreStockHistory(storeStock, delFlag);
-	}
-
-	@Transactional(propagation = Propagation.REQUIRED)
-	public void insertStoreStockHistory(StoreStock storeStock){
-		storeStock.setHistoryStatus(WmsEnum.HistoryStatus.USE);
-		storeStockHistoryRepository.save(storeStock.toHistoryEntity(storeStock));
 	}
 }
 
