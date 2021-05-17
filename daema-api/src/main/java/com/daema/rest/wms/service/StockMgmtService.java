@@ -153,6 +153,11 @@ public class StockMgmtService {
 		long storeId = authenticationUtil.getStoreId();
 		return stockRepository.selectStockList(storeId, telecom);
     }
+
+	public List<SelectStockDto> otherStockList() {
+		long storeId = authenticationUtil.getStoreId();
+		return stockRepository.otherStockList(storeId);
+	}
 /*
 
 	@Transactional
