@@ -1,6 +1,6 @@
 package com.daema.wms.domain;
 
-import com.daema.base.domain.common.BaseEntity;
+import com.daema.base.domain.common.BaseUserInfoEntity;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "store_stock_history")
-public class StoreStockHistory extends BaseEntity {
+public class StoreStockHistory extends BaseUserInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
