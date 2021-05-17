@@ -8,9 +8,7 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.MoveStockAlarmDto;
-import com.daema.rest.wms.dto.request.SellMoveInsertReqDto;
-import com.daema.rest.wms.dto.request.StockMoveInsertReqDto;
-import com.daema.rest.wms.dto.request.StockTransInsertReqDto;
+import com.daema.rest.wms.dto.request.*;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
@@ -38,6 +36,7 @@ public class MoveStockMgmtService {
     private final OutStockRepository outStockRepository;
     private final DeviceRepository deviceRepository;
     private final StockRepository stockRepository;
+    private final InStockRepository inStockRepository;
     private final StoreStockHistoryMgmtService storeStockHistoryMgmtService;
 
     @Transactional(readOnly = true)
@@ -246,7 +245,7 @@ public class MoveStockMgmtService {
         delivery = deliveryRepository.save(delivery);
 
 
-        // 4. [이관] insert
+        // 4. [출고] insert
         OutStock outStock = OutStock
                 .builder()
                 .outStockType(WmsEnum.OutStockType.STOCK_TRNS)
@@ -268,6 +267,127 @@ public class MoveStockMgmtService {
         storeStock.setStockTypeId(outStock.getOutStockId());
         storeStock.setPrevStock(prevStock);
         storeStock.setNextStock(null);
+        // 6. [재고이력] insert, update
+        storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
+        storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
+
+        return ResponseCodeEnum.OK;
+    }
+
+    public ResponseCodeEnum insertSellTrans(SellTransInsertReqDto requestDto) {
+        long storeId = authenticationUtil.getStoreId();
+        String fullbarcode = requestDto.getFullBarcode();
+        Store store = Store.builder()
+                .storeId(storeId)
+                .build();
+        // 1. [기기] 정보 조회
+        Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullbarcode, store, "N");
+        if (device == null) return ResponseCodeEnum.NO_DEVICE;
+
+        // 2. [재고 ]조회
+        StoreStock storeStock = device.getStoreStock();
+        if (storeStock == null) return ResponseCodeEnum.NO_STORE_STOCK;
+
+        // 택배 타입인 경우 = 배송중
+        WmsEnum.DeliveryStatus deliveryStatus =
+                requestDto.getDeliveryType() == WmsEnum.DeliveryType.PS ? WmsEnum.DeliveryStatus.PROGRESS : WmsEnum.DeliveryStatus.NONE;
+
+        // 3. [배송] 정보 저장
+        Delivery delivery = Delivery.builder()
+                .deliveryType(requestDto.getDeliveryType())
+                .courier(requestDto.getCourier())
+                .invoiceNo(requestDto.getInvoiceNo())
+                .deliveryMemo(requestDto.getDeliveryMemo())
+                .deliveryStatus(deliveryStatus)
+                .build();
+        delivery = deliveryRepository.save(delivery);
+
+
+        // 4. [출고] insert
+        OutStock outStock = OutStock
+                .builder()
+                .outStockType(WmsEnum.OutStockType.SELL_TRNS)
+                .targetId(requestDto.getTransStoreId())
+                .device(device)
+                .delivery(delivery)
+                .store(store)
+                .build();
+
+        outStock = outStockRepository.save(outStock);
+
+        // 이전 보유처, 이동할 보유처 정보
+        Stock prevStock = storeStock.getNextStock(); //이전 보유처
+
+        // 5. [재고] update
+        // - 재고 테이블에 moveId
+        // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
+        storeStock.setStockType(WmsEnum.StockType.SELL_TRNS);
+        storeStock.setStockTypeId(outStock.getOutStockId());
+        storeStock.setPrevStock(prevStock);
+        storeStock.setNextStock(null);
+
+        // 6. [재고이력] insert, update
+        storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
+        storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
+
+        return ResponseCodeEnum.OK;
+    }
+
+    public ResponseCodeEnum insertFaultyTrans(FaultyTransInsertReqDto requestDto) {
+        long storeId = authenticationUtil.getStoreId();
+        String fullbarcode = requestDto.getFullBarcode();
+        Store store = Store.builder()
+                .storeId(storeId)
+                .build();
+        // 1. [기기] 정보 조회
+        Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullbarcode, store, "N");
+        if (device == null) return ResponseCodeEnum.NO_DEVICE;
+
+//      제공테이블 가져오기 작업
+//        InStock inStock = inStockRepository.findById()
+
+        // 2. [재고 ]조회
+        StoreStock storeStock = device.getStoreStock();
+        if (storeStock == null) return ResponseCodeEnum.NO_STORE_STOCK;
+
+        // 택배 타입인 경우 = 배송중
+        WmsEnum.DeliveryStatus deliveryStatus =
+                requestDto.getDeliveryType() == WmsEnum.DeliveryType.PS ? WmsEnum.DeliveryStatus.PROGRESS : WmsEnum.DeliveryStatus.NONE;
+
+        // 3. [배송] 정보 저장
+        Delivery delivery = Delivery.builder()
+                .deliveryType(requestDto.getDeliveryType())
+                .courier(requestDto.getCourier())
+                .invoiceNo(requestDto.getInvoiceNo())
+                .deliveryMemo(requestDto.getDeliveryMemo())
+                .deliveryStatus(deliveryStatus)
+                .build();
+        delivery = deliveryRepository.save(delivery);
+
+
+        // 4. [출고] insert
+        OutStock outStock = OutStock
+                .builder()
+                .outStockType(WmsEnum.OutStockType.SELL_TRNS)
+//                .targetId(requestDto.getTransStoreId())
+                .device(device)
+                .delivery(delivery)
+                .store(store)
+                .build();
+
+        outStock = outStockRepository.save(outStock);
+
+        // 이전 보유처, 이동할 보유처 정보
+        Stock prevStock = storeStock.getNextStock(); //이전 보유처
+
+        // 5. [재고] update
+        // - 재고 테이블에 moveId
+        // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
+        storeStock.setStockType(WmsEnum.StockType.SELL_TRNS);
+        storeStock.setStockTypeId(outStock.getOutStockId());
+        storeStock.setPrevStock(prevStock);
+        storeStock.setNextStock(null);
+
         // 6. [재고이력] insert, update
         storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
         storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
