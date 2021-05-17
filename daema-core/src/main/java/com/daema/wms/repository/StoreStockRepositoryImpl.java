@@ -405,7 +405,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 eqNextStockId(requestDto.getNextStockId()),
                 eqProvId(requestDto.getProvId()),
                 eqStatusStr(nextStock, requestDto.getStatusStr()),
-                eqJudgmentStatus(requestDto.getJudgeStatus()),
+                eqJudgeStatus(requestDto.getJudgeStatus()),
                 eqFullBarcode(requestDto.getFullBarcode()),
                 eqFaultyYn(requestDto.getProductFaultyYn()),
                 eqExtrrStatus(requestDto.getExtrrStatus()),
@@ -515,15 +515,15 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         }
     }
 
-    private BooleanExpression eqJudgmentStatus(WmsEnum.JudgementStatus judgmentStatus) {
-        if (judgmentStatus == null) {
+    private BooleanExpression eqJudgeStatus(WmsEnum.JudgementStatus judgeStatus) {
+        if (judgeStatus == null) {
             return null;
         }
 
-        if (WmsEnum.JudgementStatus.WAIT == judgmentStatus) {
+        if (WmsEnum.JudgementStatus.NONE == judgeStatus) {
             return deviceJudge.dvcJudgeId.isNull();
         } else {
-            return deviceJudge.judgeStatus.eq(judgmentStatus);
+            return deviceJudge.judgeStatus.eq(judgeStatus);
         }
     }
 

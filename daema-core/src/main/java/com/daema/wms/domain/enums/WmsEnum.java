@@ -162,6 +162,7 @@ public enum WmsEnum {
     }
 
     public enum JudgementStatus {
+        NONE("-"),
         WAIT("판정대기"),
         PROGRESS("판정진행중"),
         COMPL("판정완료"),

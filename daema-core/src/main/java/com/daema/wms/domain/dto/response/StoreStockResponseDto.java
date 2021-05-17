@@ -139,7 +139,7 @@ public class StoreStockResponseDto {
 
     public WmsEnum.JudgementStatus getJudgeStatus() {
 
-        WmsEnum.JudgementStatus tmpJudgeStatus = WmsEnum.JudgementStatus.WAIT;
+        WmsEnum.JudgementStatus tmpJudgeStatus = WmsEnum.JudgementStatus.NONE;
 
         if(judgeStatus != null){
             tmpJudgeStatus = judgeStatus;
@@ -156,7 +156,7 @@ public class StoreStockResponseDto {
     }
 
     public String getJudgeStatusMsg() {
-        return this.judgeStatus != null ? this.judgeStatus.getStatusMsg() : WmsEnum.JudgementStatus.WAIT.getStatusMsg();
+        return this.judgeStatus != null ? this.judgeStatus.getStatusMsg() : WmsEnum.JudgementStatus.NONE.getStatusMsg();
     }
 }
 
