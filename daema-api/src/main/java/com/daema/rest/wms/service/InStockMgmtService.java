@@ -27,6 +27,7 @@ import com.daema.wms.domain.dto.request.InStockRequestDto;
 import com.daema.wms.domain.dto.response.*;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class InStockMgmtService {
 
@@ -51,21 +53,9 @@ public class InStockMgmtService {
     private final DeviceStatusRepository deviceStatusRepository;
     private final CodeDetailRepository codeDetailRepository;
     private final StoreStockRepository storeStockRepository;
+    private final StoreStockHistoryRepository storeStockHistoryRepository;
     private final AuthenticationUtil authenticationUtil;
 
-    public InStockMgmtService(InStockRepository inStockRepository, DeviceRepository deviceRepository, PubNotiRepository pubNotiRepository, StockRepository stockRepository, GoodsRepository goodsRepository, GoodsOptionRepository goodsOptionRepository, InStockWaitRepository inStockWaitRepository, DeviceStatusRepository deviceStatusRepository, CodeDetailRepository codeDetailRepository, StoreStockRepository storeStockRepository, AuthenticationUtil authenticationUtil) {
-        this.inStockRepository = inStockRepository;
-        this.deviceRepository = deviceRepository;
-        this.pubNotiRepository = pubNotiRepository;
-        this.stockRepository = stockRepository;
-        this.goodsRepository = goodsRepository;
-        this.goodsOptionRepository = goodsOptionRepository;
-        this.inStockWaitRepository = inStockWaitRepository;
-        this.deviceStatusRepository = deviceStatusRepository;
-        this.codeDetailRepository = codeDetailRepository;
-        this.storeStockRepository = storeStockRepository;
-        this.authenticationUtil = authenticationUtil;
-    }
 
     @Transactional(readOnly = true)
     public InStockWaitResponseDto getWaitInStockList(WmsEnum.InStockStatus inStockStatus) {
@@ -340,12 +330,18 @@ public class InStockMgmtService {
             for (int i = 0; i < inStocks.size(); i++) {
                 InStock tmpInStock = inStocks.get(i);
                 storeStocks.get(i).setStockTypeId(tmpInStock.getInStockId());
+                storeStocks.get(i).setHistoryStatus(WmsEnum.HistoryStatus.USE);
             }
 
             // 4. 재고 insert
             storeStockRepository.saveAll(storeStocks);
 
-            // 5. 입고 대기 목록 삭제
+            // 5. 재고 히스토리 insert
+            for (StoreStock storeStock:storeStocks){
+                storeStockHistoryRepository.save(storeStock.toHistoryEntity(storeStock));
+            }
+
+            // 6. 입고 대기 목록 삭제
             List<InStockWait> inStockWaitList = inStockWaitRepository.findAllById(inStockWaitIds);
             if (CommonUtil.isNotEmptyList(inStockWaitList)) {
                 Optional.of(inStockWaitList)
