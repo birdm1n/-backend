@@ -32,13 +32,13 @@ public class StoreStockHistoryRepositoryImpl extends QuerydslRepositorySupport i
      * arrange : store_stock_id 중, 삭제가 아닌 건과 현재 type 과 typeId 를 제외하고 모두 WAIT 업데이트
      *
      * delete : arrange & store_stock_id 중, USE 를 가져와서 store_stock 반영
-     *
-     * @param storeStock
-     * @param delFlag
      * @Required StoreStock.stockType
      * @Required StoreStock.stockTypeId
      * @Required StoreStock.store
      * @Required StoreStock.device
+     *
+     * @param storeStock
+     * @param delFlag
      */
     @Override
     public void arrangeStoreStockHistory(StoreStock storeStock, boolean delFlag) {
@@ -73,7 +73,7 @@ public class StoreStockHistoryRepositoryImpl extends QuerydslRepositorySupport i
                     )
                     .execute();
 
-            //max wait -> use update 처리
+            //where is not del status : maxId  -> use update 처리
             updateHistory
                     .set(storeStockHistory.historyStatus, WmsEnum.HistoryStatus.USE)
                     .where(storeStockHistory.storeStockHistoryId.eq(
@@ -83,7 +83,7 @@ public class StoreStockHistoryRepositoryImpl extends QuerydslRepositorySupport i
                                     .where(
                                             storeStockHistory.store.eq(storeStock.getStore())
                                             .and(storeStockHistory.device.eq(storeStock.getDevice()))
-                                            .and(storeStockHistory.historyStatus.eq(WmsEnum.HistoryStatus.WAIT))
+                                            .and(storeStockHistory.historyStatus.ne(WmsEnum.HistoryStatus.DEL))
                                     )
                             )
                     )
