@@ -6,6 +6,8 @@ import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.dto.request.SellMoveInsertReqDto;
 import com.daema.rest.wms.dto.request.StockMoveInsertReqDto;
+import com.daema.rest.wms.dto.request.StockTransInsertReqDto;
+import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.rest.wms.service.MoveStockMgmtService;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -29,6 +31,12 @@ public class MoveStockMgmtController {
         return responseHandler.getResponseMessageAsRetrieveResult(moveStockMgmtService.getMoveAndTrnsList(movePathType), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
+    @ApiOperation(value = "이관처 선택 리스트 조회", notes = "이관할 관리점 정보를 가져온다.")
+    @GetMapping("/getTransStoreList")
+    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getTransStoreList() {
+        return responseHandler.getResponseMessageAsRetrieveResult(moveStockMgmtService.getTransStoreList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
+
     @ApiOperation(value = "판매이동 등록", notes = "판매이동 등록 기능을 수행합니다.")
     @PostMapping("/insertSellMove")
     public ResponseEntity<CommonResponse<Void>> insertSellMove(@RequestBody SellMoveInsertReqDto requestDto) {
@@ -44,6 +52,17 @@ public class MoveStockMgmtController {
     @PostMapping("/insertStockMove")
     public ResponseEntity<CommonResponse<Void>> insertStockMove(@RequestBody StockMoveInsertReqDto requestDto) {
         ResponseCodeEnum responseCodeEnum = moveStockMgmtService.insertStockMove(requestDto);
+
+        if (ResponseCodeEnum.OK != responseCodeEnum) {
+            return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
+        }
+        return responseHandler.ok();
+    }
+
+    @ApiOperation(value = "재고이관 등록", notes = "재고 이관 등록 기능을 수행합니다.")
+    @PostMapping("/insertStockTrans")
+    public ResponseEntity<CommonResponse<Void>> insertStockTrans(@RequestBody StockTransInsertReqDto requestDto) {
+        ResponseCodeEnum responseCodeEnum = moveStockMgmtService.insertStockTrans(requestDto);
 
         if (ResponseCodeEnum.OK != responseCodeEnum) {
             return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());

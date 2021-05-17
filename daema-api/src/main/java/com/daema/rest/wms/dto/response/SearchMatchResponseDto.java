@@ -25,6 +25,10 @@ public class SearchMatchResponseDto {
     private String capacity;
     private long goodsOptionId;
     private String colorName;
+    private long stockId;
+    private String stockName;
+    private long storeId;
+    private String storeName;
 
 
 }

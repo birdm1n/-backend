@@ -5,26 +5,25 @@ import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
-import com.daema.rest.wms.service.InStockMgmtService;
+import com.daema.rest.wms.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Api(value = "검색 필터 API", tags = "검색필터 API")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/api/Wms/Search")
 public class WmsSearchController {
     private final InStockMgmtService inStockMgmtService;
     private final GoodsMgmtService goodsMgmtService;
+    private final StockMgmtService stockMgmtService;
     private final ResponseHandler responseHandler;
 
-    public WmsSearchController(InStockMgmtService inStockMgmtService, GoodsMgmtService goodsMgmtService, ResponseHandler responseHandler) {
-        this.inStockMgmtService = inStockMgmtService;
-        this.goodsMgmtService = goodsMgmtService;
-        this.responseHandler = responseHandler;
-    }
+
 
     @ApiOperation(value = "관리점 기기 목록 조회", notes = "관리점이 보유하고 있는 기기목록을 조회")
     @GetMapping("/getDeviceList")
@@ -50,6 +49,12 @@ public class WmsSearchController {
     public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getColorList(@ApiParam(value = "상품 ID", required = true) @RequestParam long goodsId,
                                                                                @ApiParam(value = "용량", required = true) @RequestParam String capacity) {
         return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.getColorList(goodsId, capacity), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
+
+    @ApiOperation(value = "바코드로 기기의 현재 보유처 조회", notes = "바코드로 재고를 조회하여 현재 보유처 정보를 가져온다.")
+    @GetMapping("/getDeviceStock")
+    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getDeviceStock(@ApiParam(value = "기기 바코드", required = true) @RequestParam String fullBarcode) {
+        return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.getDeviceStock(fullBarcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
 

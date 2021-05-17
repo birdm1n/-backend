@@ -266,29 +266,18 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 SelectStockDto.class
                 , stock.stockId.as("stockId")
                 , stock.stockName.as("stockName")
-                , stock.stockType.as("stockType")
-                , new CaseBuilder()
-                        .when(stock.stockType.eq("O"))
-                        .then(openStore.storeId)
-                        .otherwise(store.storeId).as("storeId")
         ));
 
         return query.from(stock)
-                .leftJoin(openStore)
+                .innerJoin(store)
                 .on(
-                        stock.storeId.eq(openStore.openStoreId),
-                        stock.stockType.eq("O")
-                )
-                .leftJoin(store)
-                .on(
-                        stock.storeId.eq(store.storeId),
-                        (stock.stockType.eq("I").or(stock.stockType.eq("S")))
+                        stock.storeId.eq(store.storeId)
                 )
                 .where(
                         stock.regiStoreId.eq(storeId),
                         stock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                         stock.parentStockId.eq(0L),
-                        (openStore.telecom.eq(telecom).or(store.telecom.eq(telecom)))
+                        store.telecom.eq(telecom)
                 )
                 .fetch();
     }
@@ -300,64 +289,42 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 SelectStockDto.class
                 , stock.stockId.as("stockId")
                 , stock.stockName.as("stockName")
-                , stock.stockType.as("stockType")
-                , new CaseBuilder()
-                        .when(stock.stockType.eq("O"))
-                        .then(openStore.storeId)
-                        .otherwise(store.storeId).as("storeId")
+                , store.storeId.as("storeId")
         ));
 
         return query.from(stock)
-                .leftJoin(openStore)
+                .innerJoin(store)
                 .on(
-                        stock.storeId.eq(openStore.openStoreId),
-                        stock.stockType.eq("O")
-                )
-                .leftJoin(store)
-                .on(
-                        stock.storeId.eq(store.storeId),
-                        (stock.stockType.eq("I").or(stock.stockType.eq("S")))
+                        stock.storeId.eq(store.storeId)
                 )
                 .where(
                         stock.stockId.eq(stockId),
                         stock.regiStoreId.eq(storeId),
                         stock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                         stock.parentStockId.eq(0L),
-                        (openStore.telecom.eq(telecom).or(store.telecom.eq(telecom)))
+                        store.telecom.eq(telecom)
                 )
                 .fetchOne();
     }
 
+
     @Override
-    public List<SelectStockDto> otherStockList(long storeId) {
+    public List<SelectStockDto> innerStockList(long storeId) {
         JPQLQuery<SelectStockDto> query = getQuerydsl().createQuery();
         query.select(Projections.fields(
                 SelectStockDto.class
                 , stock.stockId.as("stockId")
                 , stock.stockName.as("stockName")
-                , stock.stockType.as("stockType")
-                , new CaseBuilder()
-                        .when(stock.stockType.eq("O"))
-                        .then(openStore.storeId)
-                        .otherwise(store.storeId).as("storeId")
         ));
 
         return query.from(stock)
-                .leftJoin(openStore)
-                .on(
-                        stock.storeId.eq(openStore.openStoreId),
-                        stock.stockType.eq("O")
-                )
-                .leftJoin(store)
-                .on(
-                        stock.storeId.eq(store.storeId),
-                        (stock.stockType.eq("I").or(stock.stockType.eq("S")))
-                )
                 .where(
-                        stock.regiStoreId.ne(storeId),
+                        stock.regiStoreId.eq(storeId),
+                        stock.storeId.ne(storeId),
                         stock.delYn.eq("N"),
                         stock.parentStockId.eq(0L)
                 )
                 .fetch();
     }
+
 }

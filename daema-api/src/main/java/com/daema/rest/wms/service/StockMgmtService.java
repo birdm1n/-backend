@@ -9,12 +9,16 @@ import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.StockMgmtDto;
+import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.rest.wms.dto.response.StockMgmtResponseDto;
+import com.daema.wms.domain.Device;
 import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.StockRequestDto;
 import com.daema.wms.domain.dto.response.SelectStockDto;
 import com.daema.wms.domain.dto.response.StockListDto;
+import com.daema.wms.repository.DeviceRepository;
 import com.daema.wms.repository.StockRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class StockMgmtService {
 
@@ -35,15 +40,10 @@ public class StockMgmtService {
 
 	private final MemberRepository memberRepository;
 
+	private final DeviceRepository deviceRepository;
+
 	private final AuthenticationUtil authenticationUtil;
 
-	public StockMgmtService(StockRepository stockRepository, StoreRepository storeRepository, MemberRepository memberRepository
-			,AuthenticationUtil authenticationUtil) {
-		this.stockRepository = stockRepository;
-		this.storeRepository = storeRepository;
-		this.memberRepository = memberRepository;
-		this.authenticationUtil = authenticationUtil;
-	}
 
 	public StockMgmtResponseDto getStockList(StockRequestDto requestDto) {
 
@@ -154,10 +154,33 @@ public class StockMgmtService {
 		return stockRepository.selectStockList(storeId, telecom);
     }
 
-	public List<SelectStockDto> otherStockList() {
+
+	public List<SelectStockDto> innerStockList() {
 		long storeId = authenticationUtil.getStoreId();
-		return stockRepository.otherStockList(storeId);
+		return stockRepository.innerStockList(storeId);
 	}
+
+	public SearchMatchResponseDto getDeviceStock(String fullBarcode) {
+		long storeId = authenticationUtil.getStoreId();
+		Store store = Store.builder().storeId(storeId).build();
+		//device 테이블에 중복된 기기가 있는지 확인
+		Device deviceEntity = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullBarcode, store, StatusEnum.FLAG_N.getStatusMsg());
+		if(deviceEntity == null){
+			throw new DataNotFoundException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+		}
+
+		Stock stockEntity = deviceEntity.getStoreStock().getNextStock(); //현재 보유처
+		
+		SearchMatchResponseDto responseDto = SearchMatchResponseDto
+				.builder()
+				.stockId(stockEntity.getStockId())
+				.stockName(stockEntity.getStockName())
+				.build();
+		
+		return responseDto;
+	}
+
+
 /*
 
 	@Transactional

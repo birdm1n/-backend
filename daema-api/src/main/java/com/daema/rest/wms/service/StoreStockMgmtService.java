@@ -36,20 +36,18 @@ public class StoreStockMgmtService {
 	private final MoveStockAlarmRepository moveStockAlarmRepository;
 	private final StoreStockRepository storeStockRepository;
 	private final StoreStockCheckRepository storeStockCheckRepository;
-	private final StoreStockHistoryRepository storeStockHistoryRepository;
 	private final DeviceJudgeRepository deviceJudgeRepository;
 
 	private final MoveStockMgmtService moveStockMgmtService;
 
 	private final AuthenticationUtil authenticationUtil;
 
-	public StoreStockMgmtService(DeviceMgmtService deviceMgmtService, MoveStockAlarmRepository moveStockAlarmRepository, StoreStockRepository storeStockRepository, StoreStockCheckRepository storeStockCheckRepository, StoreStockHistoryRepository storeStockHistoryRepository, MemberRepository memberRepository
+	public StoreStockMgmtService(DeviceMgmtService deviceMgmtService, MoveStockAlarmRepository moveStockAlarmRepository, StoreStockRepository storeStockRepository, StoreStockCheckRepository storeStockCheckRepository, MemberRepository memberRepository
 			, DeviceJudgeRepository deviceJudgeRepository, MoveStockMgmtService moveStockMgmtService, AuthenticationUtil authenticationUtil) {
 		this.deviceMgmtService = deviceMgmtService;
 		this.moveStockAlarmRepository = moveStockAlarmRepository;
 		this.storeStockRepository = storeStockRepository;
 		this.storeStockCheckRepository = storeStockCheckRepository;
-		this.storeStockHistoryRepository = storeStockHistoryRepository;
 		this.deviceJudgeRepository = deviceJudgeRepository;
 		this.moveStockMgmtService = moveStockMgmtService;
 		this.authenticationUtil = authenticationUtil;

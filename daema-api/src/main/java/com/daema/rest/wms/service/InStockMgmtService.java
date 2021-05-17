@@ -301,7 +301,6 @@ public class InStockMgmtService {
                                 .store(storeObj)
                                 .stockType(WmsEnum.StockType.IN_STOCK)
                                 .stockYn("Y")
-                                .prevStock(stockObj)
                                 .nextStock(stockObj)
                                 .build()
                 );

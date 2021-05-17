@@ -64,10 +64,10 @@ public class StockMgmtController {
         return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.selectStockList(telecom), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-    @ApiOperation(value = "자신의 보유처를 제외한 선택 리스트", notes = "자신의 보유처를 제외한 선택 리스트를 조회합니다")
-    @GetMapping("/otherStockList")
-    public ResponseEntity<CommonResponse<SelectStockDto>> otherStockList() {
-        return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.otherStockList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    @ApiOperation(value = "자신의 보유처를 제외한 이동할 보유처 리스트", notes = "자신의 보유처를 제외한 이동할 보유처 리스트를 조회합니다")
+    @GetMapping("/innerStockList")
+    public ResponseEntity<CommonResponse<SelectStockDto>> innerStockList() {
+        return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.innerStockList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
 }
