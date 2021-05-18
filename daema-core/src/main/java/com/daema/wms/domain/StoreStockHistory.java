@@ -4,6 +4,7 @@ import com.daema.base.domain.common.BaseUserInfoEntity;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -44,6 +45,10 @@ public class StoreStockHistory extends BaseUserInfoEntity {
     @Enumerated(EnumType.STRING)
     private WmsEnum.HistoryStatus historyStatus;
 
+    @Column(nullable = false, name = "stock_yn", columnDefinition = "char(1)")
+    @ColumnDefault("\"Y\"")
+    private String stockYn = "Y";
+
     /**
      * 이전 보유처
      */
@@ -60,7 +65,7 @@ public class StoreStockHistory extends BaseUserInfoEntity {
 
     @Builder
     public StoreStockHistory(Long storeStockHistoryId, StoreStock storeStock, Store store, WmsEnum.StockType stockType, Device device,
-                             Long stockTypeId, Stock prevStock, Stock nextStock, WmsEnum.HistoryStatus historyStatus) {
+                             Long stockTypeId, Stock prevStock, Stock nextStock, String stockYn, WmsEnum.HistoryStatus historyStatus) {
         this.storeStockHistoryId = storeStockHistoryId;
         this.storeStock = storeStock;
         this.store = store;
@@ -68,6 +73,7 @@ public class StoreStockHistory extends BaseUserInfoEntity {
         this.stockType = stockType;
         this.stockTypeId = stockTypeId;
         this.historyStatus = historyStatus;
+        this.stockYn = stockYn;
         this.prevStock = prevStock;
         this.nextStock = nextStock;
     }

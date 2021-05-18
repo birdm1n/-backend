@@ -112,6 +112,7 @@ public class StoreStockHistoryRepositoryImpl extends QuerydslRepositorySupport i
                         .set(qStoreStock.updDateTime, storeStockHistoryInfo.getUpdDateTime())
                         .set(qStoreStock.prevStock, storeStockHistoryInfo.getPrevStock())
                         .set(qStoreStock.nextStock, storeStockHistoryInfo.getNextStock())
+                        .set(qStoreStock.stockYn, storeStockHistoryInfo.getStockYn())
                         .where(qStoreStock.storeStockId.eq(storeStockHistoryInfo.getStoreStock().getStoreStockId()))
                         .execute();
 
