@@ -21,6 +21,7 @@ public class WmsSearchController {
     private final InStockMgmtService inStockMgmtService;
     private final GoodsMgmtService goodsMgmtService;
     private final StockMgmtService stockMgmtService;
+    private final ProviderMgmtService providerMgmtService;
     private final ResponseHandler responseHandler;
 
 
@@ -57,6 +58,10 @@ public class WmsSearchController {
         return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.getDeviceStock(fullBarcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-
+    @ApiOperation(value = "바코드로 기기의 공급처 조회", notes = "바코드로 입고를 조회하여 현재 공급처 정보를 가져온다.")
+    @GetMapping("/getDeviceProvInfo")
+    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getDeviceProvInfo(@ApiParam(value = "기기 바코드", required = true) @RequestParam String fullBarcode) {
+        return responseHandler.getResponseMessageAsRetrieveResult(providerMgmtService.getDeviceProvInfo(fullBarcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
 
 }

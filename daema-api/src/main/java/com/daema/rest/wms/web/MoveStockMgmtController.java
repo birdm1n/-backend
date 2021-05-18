@@ -7,6 +7,7 @@ import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.dto.request.*;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.rest.wms.service.MoveStockMgmtService;
+import com.daema.wms.domain.dto.request.MoveStockRequestDto;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import io.swagger.annotations.*;
@@ -25,8 +26,9 @@ public class MoveStockMgmtController {
 
     @ApiOperation(value = "재고이동/이관 목록 조회", notes = "재고이동/이관 목록을 조회합니다")
     @GetMapping("/getMoveAndTrnsList/{movePathType}")
-    public ResponseEntity<CommonResponse<ResponseDto<MoveStockResponseDto>>> getMoveAndTrnsList(@ApiParam(value = "조회 타입", required = true) WmsEnum.MovePathType movePathType) {
-        return responseHandler.getResponseMessageAsRetrieveResult(moveStockMgmtService.getMoveAndTrnsList(movePathType), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    public ResponseEntity<CommonResponse<ResponseDto<MoveStockResponseDto>>> getMoveAndTrnsList(@ApiParam(value = "조회 타입", required = true) @PathVariable WmsEnum.MovePathType movePathType,
+                                                                                                @ApiParam(value = "조회 DTO", required = true) MoveStockRequestDto moveStockRequestDto) {
+        return responseHandler.getResponseMessageAsRetrieveResult(moveStockMgmtService.getMoveAndTrnsList(movePathType, moveStockRequestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "이관처 선택 리스트 조회", notes = "이관할 관리점 정보를 가져온다.")

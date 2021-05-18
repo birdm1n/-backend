@@ -1,8 +1,6 @@
 package com.daema.rest.wms.service;
 
 import com.daema.base.domain.Member;
-import com.daema.base.enums.StatusEnum;
-import com.daema.base.enums.TypeEnum;
 import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
@@ -11,8 +9,9 @@ import com.daema.rest.wms.dto.MoveStockAlarmDto;
 import com.daema.rest.wms.dto.request.*;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.wms.domain.*;
+import com.daema.wms.domain.dto.request.MoveStockRequestDto;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
-import com.daema.wms.domain.dto.response.SelectStockDto;
+import com.daema.wms.domain.dto.response.TransResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -40,21 +39,24 @@ public class MoveStockMgmtService {
     private final StoreStockHistoryMgmtService storeStockHistoryMgmtService;
 
     @Transactional(readOnly = true)
-    public ResponseDto<MoveStockResponseDto> getMoveAndTrnsList(WmsEnum.MovePathType movePathType) {
-        long sotreId = authenticationUtil.getStoreId();
+    public ResponseDto<?> getMoveAndTrnsList(WmsEnum.MovePathType movePathType, MoveStockRequestDto moveStockRequestDto) {
+        long storeId = authenticationUtil.getStoreId();
+        moveStockRequestDto.setStoreId(storeId);
         // 이동 프로세스
         if (WmsEnum.MovePathType.SELL_MOVE == movePathType || WmsEnum.MovePathType.STOCK_MOVE == movePathType) {
-            Page<MoveStockResponseDto> resultPageDto = moveStockRepository.getMoveTypeList(movePathType);
+            Page<MoveStockResponseDto> responseDtoPage = moveStockRepository.getMoveTypeList(movePathType, moveStockRequestDto);
+            return new ResponseDto(responseDtoPage);
         }
 
         // 이관 프로세스
         if (WmsEnum.MovePathType.SELL_TRNS == movePathType ||
                 WmsEnum.MovePathType.STOCK_TRNS == movePathType ||
                 WmsEnum.MovePathType.FAULTY_TRNS == movePathType) {
-            Page<MoveStockResponseDto> resultPageDto = moveStockRepository.getTransTypeList(movePathType);
+            Page<TransResponseDto> responseDtoPage = moveStockRepository.getTransTypeList(movePathType, moveStockRequestDto);
+            return new ResponseDto(responseDtoPage);
         }
 
-        return null;
+        return new ResponseDto(null);
     }
 
     @Transactional
@@ -267,9 +269,14 @@ public class MoveStockMgmtService {
         storeStock.setStockTypeId(outStock.getOutStockId());
         storeStock.setPrevStock(prevStock);
         storeStock.setNextStock(null);
+        storeStock.setStockYn("N");
         // 6. [재고이력] insert, update
         storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
         storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
+
+        // 7. 이관시 기기 delYn => 'Y'
+        device.setDelYn("Y");
+
 
         return ResponseCodeEnum.OK;
     }
@@ -325,11 +332,13 @@ public class MoveStockMgmtService {
         storeStock.setStockTypeId(outStock.getOutStockId());
         storeStock.setPrevStock(prevStock);
         storeStock.setNextStock(null);
+        storeStock.setStockYn("N");
 
         // 6. [재고이력] insert, update
         storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
         storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
-
+        // 7. 이관시 기기 delYn => 'Y'
+        device.setDelYn("Y");
         return ResponseCodeEnum.OK;
     }
 
@@ -343,8 +352,6 @@ public class MoveStockMgmtService {
         Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullbarcode, store, "N");
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
-//      제공테이블 가져오기 작업
-//        InStock inStock = inStockRepository.findById()
 
         // 2. [재고 ]조회
         StoreStock storeStock = device.getStoreStock();
@@ -368,8 +375,8 @@ public class MoveStockMgmtService {
         // 4. [출고] insert
         OutStock outStock = OutStock
                 .builder()
-                .outStockType(WmsEnum.OutStockType.SELL_TRNS)
-//                .targetId(requestDto.getTransStoreId())
+                .outStockType(WmsEnum.OutStockType.FAULTY_TRNS)
+                .targetId(requestDto.getProvId())
                 .device(device)
                 .delivery(delivery)
                 .store(store)
@@ -383,15 +390,17 @@ public class MoveStockMgmtService {
         // 5. [재고] update
         // - 재고 테이블에 moveId
         // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
-        storeStock.setStockType(WmsEnum.StockType.SELL_TRNS);
+        storeStock.setStockType(WmsEnum.StockType.FAULTY_TRNS);
         storeStock.setStockTypeId(outStock.getOutStockId());
         storeStock.setPrevStock(prevStock);
         storeStock.setNextStock(null);
+        storeStock.setStockYn("N");
 
         // 6. [재고이력] insert, update
         storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
         storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
-
+        // 7. 이관시 기기 delYn => 'Y'
+        device.setDelYn("Y");
         return ResponseCodeEnum.OK;
     }
 }

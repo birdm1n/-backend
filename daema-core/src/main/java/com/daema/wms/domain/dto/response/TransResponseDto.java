@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MoveStockResponseDto {
+public class TransResponseDto {
 
-    private Long moveStockId;
+    private Long outStockId;
 
     // 통신사
     private String telecomName;

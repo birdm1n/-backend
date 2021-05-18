@@ -1,6 +1,7 @@
 package com.daema.rest.wms.service;
 
 import com.daema.base.enums.StatusEnum;
+import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
@@ -8,9 +9,15 @@ import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.wms.dto.ProviderMgmtDto;
+import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
+import com.daema.wms.domain.Device;
+import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.Provider;
 import com.daema.wms.domain.dto.request.ProviderRequestDto;
+import com.daema.wms.repository.DeviceRepository;
+import com.daema.wms.repository.InStockRepository;
 import com.daema.wms.repository.ProviderRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,17 +30,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class ProviderMgmtService {
 
 	private final ProviderRepository providerRepository;
+	private final DeviceRepository deviceRepository;
+	private final InStockRepository inStockRepository;
 
 	private final AuthenticationUtil authenticationUtil;
-
-	public ProviderMgmtService(ProviderRepository providerRepository, AuthenticationUtil authenticationUtil) {
-		this.providerRepository = providerRepository;
-		this.authenticationUtil = authenticationUtil;
-	}
 
 	public ResponseDto<ProviderMgmtDto> getProviderList(ProviderRequestDto requestDto) {
 
@@ -126,6 +131,29 @@ public class ProviderMgmtService {
 		}else{
 			throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
 		}
+	}
+
+	public SearchMatchResponseDto getDeviceProvInfo(String fullBarcode) {
+		long storeId = authenticationUtil.getStoreId();
+		Store store = Store
+				.builder()
+				.storeId(storeId)
+				.build();
+
+		Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullBarcode, store, "N");
+		if(device == null){
+			return null;
+		}
+
+		// [공급처] 정보 조회
+		InStock inStock = inStockRepository.findByStoreAndDeviceAndDelYn(store, device,"N");
+
+		Provider provider = inStock.getProvider();
+		return SearchMatchResponseDto
+				.builder()
+				.provId(provider.getProvId())
+				.provName(provider.getProvName())
+				.build();
 	}
 }
 

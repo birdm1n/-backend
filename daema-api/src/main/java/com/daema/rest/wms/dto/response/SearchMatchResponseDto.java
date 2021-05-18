@@ -15,20 +15,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchMatchResponseDto {
 
-    private int maker;
+    private Integer maker;
     private String makerName;
-    private int telecom;
+    private Integer telecom;
     private String telecomName;
-    private long goodsId;
+    private Long goodsId;
     private String goodsName;
     private String modelName;
     private String capacity;
-    private long goodsOptionId;
+    private Long goodsOptionId;
     private String colorName;
-    private long stockId;
+    private Long stockId;
     private String stockName;
-    private long storeId;
+    private Long storeId;
     private String storeName;
+    private Long provId;
+    private String provName;
 
 
 }

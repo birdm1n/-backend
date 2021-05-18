@@ -166,7 +166,7 @@ public class StockMgmtService {
 		//device 테이블에 중복된 기기가 있는지 확인
 		Device deviceEntity = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullBarcode, store, StatusEnum.FLAG_N.getStatusMsg());
 		if(deviceEntity == null){
-			throw new DataNotFoundException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+			return null;
 		}
 
 		Stock stockEntity = deviceEntity.getStoreStock().getNextStock(); //현재 보유처
