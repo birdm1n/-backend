@@ -1,7 +1,7 @@
 package com.daema.rest.base.service;
 
 import com.daema.commgmt.repository.PubNotiRawDataRepository;
-import com.daema.rest.base.excel.ExcelMeta;
+import com.daema.rest.base.excel.ExcelTemplate;
 import com.daema.rest.base.excel.ExcelVO;
 import com.daema.rest.common.Constants;
 import com.daema.rest.common.util.AuthenticationUtil;
@@ -56,6 +56,10 @@ public class ExcelDownloadService {
             fileName = "이동재고반품목록_";
             cls = ExcelVO.ReturnStockList.class;
             dataList = returnStockMgmtService.getReturnStockList(mapper.convertValue(modelMap, ReturnStockRequestDto.class)).getResultList();
+        }else if("insertReturnStockExcelException".equals(pageType)){
+            fileName = "이동재고반품_엑셀업로드_실패목록_";
+            cls = ExcelVO.BarcodeList.class;
+            dataList = (List) modelMap.get("failList");
         }
 
         return makeExcel();
@@ -75,7 +79,7 @@ public class ExcelDownloadService {
         int cnt = 0;
 
         for(Field field : cls.getDeclaredFields()){
-            headerInfo[cnt][0][0] = field.getDeclaredAnnotation(ExcelMeta.class).headerName();
+            headerInfo[cnt][0][0] = field.getDeclaredAnnotation(ExcelTemplate.class).columnName();
             headerInfo[cnt][1][0] = field.getType().toString();
             headerInfo[cnt][0][1] = field.getName();
             cnt++;
