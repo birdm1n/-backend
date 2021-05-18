@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ExcelMeta {
+public @interface ExcelTemplate {
 	//excel column name
-	String headerName() default "";
+	String columnName() default "";
 }
