@@ -26,6 +26,13 @@ public class OutStock extends BaseEntity {
     private WmsEnum.OutStockType outStockType;
 
     /**
+     * 이전 보유처
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prev_stock_id", referencedColumnName = "stock_id")
+    private Stock prevStock;
+
+    /**
      * 다음 보유처(이관처)
      * STOCK_TRNS : 다음 보유처(관리점(store))
      * FAULTY_TRNS : 다음 보유처(공급처(provider))
@@ -47,12 +54,12 @@ public class OutStock extends BaseEntity {
     private Store store;
 
     @Builder
-    public OutStock(Long outStockId, WmsEnum.OutStockType outStockType, Long targetId,
-                    Device device, Delivery delivery, Store store) {
+    public OutStock(Long outStockId, WmsEnum.OutStockType outStockType, Stock prevStock, Long targetId, Device device, Delivery delivery, Store store) {
         this.outStockId = outStockId;
         this.outStockType = outStockType;
-        this.device = device;
+        this.prevStock = prevStock;
         this.targetId = targetId;
+        this.device = device;
         this.delivery = delivery;
         this.store = store;
     }

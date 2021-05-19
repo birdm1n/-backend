@@ -96,4 +96,16 @@ public class InStockResponseDto {
     private LocalDateTime updDateTime;
     private Long updUserId;
     private String updUserName;
+
+    public String getInStockStatusMsg() {
+        return this.inStockStatus != null ? this.inStockStatus.getStatusMsg() : "";
+    }
+
+    public String getExtrrStatusMsg() {
+        return this.extrrStatus != null ? this.extrrStatus.getStatusMsg() : "";
+    }
+
+    public String getStatusStrMsg() {
+        return this.statusStr != null ? this.statusStr.getStatusMsg() : "";
+    }
 }

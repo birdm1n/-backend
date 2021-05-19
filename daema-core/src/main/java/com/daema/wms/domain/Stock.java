@@ -31,7 +31,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of="stockId")
-@ToString(exclude = {"prevMoveStockList", "nextMoveStockList", "prevStoreStockList", "nextStoreStockList"})
+@ToString(exclude = {"prevMoveStockList", "nextMoveStockList", "prevStoreStockList", "nextStoreStockList", "prevOutStockList"})
 @NoArgsConstructor
 @Entity
 @Table(name="stock")
@@ -98,6 +98,9 @@ public class Stock {
 
     @OneToMany(mappedBy = "nextStock")
     private List<StoreStock> nextStoreStockList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "prevStock")
+    private List<OutStock> prevOutStockList = new ArrayList<>();
 
     @Builder
     public Stock(long stockId, String stockName, long parentStockId, long storeId, String stockType, String chargerName

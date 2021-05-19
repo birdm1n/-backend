@@ -20,8 +20,20 @@ public class TransResponseDto {
     // 통신사
     private String telecomName;
 
+    // 재고구분
+    private WmsEnum.StockStatStr statusStr;
+    private String statusStrMsg;
+
     // 공급처
-//    private String provName;
+    private String provName;
+
+    // 현재 / 다음 보유처
+    private String prevStockName; // 이전 보유처
+    private String nextProvName; // 공급처
+    private String nextStoreName; // 이관처
+
+    //제조사
+    private String makerName;
 
     // 상품명_모델명
     private String goodsName;
@@ -48,14 +60,6 @@ public class TransResponseDto {
     private WmsEnum.DeviceExtrrStatus extrrStatus;
     private String extrrStatusMsg;
 
-    // 현재 / 다음 보유처
-    private String prevStockName;
-    private String nextStockName;
-
-    // 재고구분
-    private WmsEnum.StockStatStr statusStr;
-    private String statusStrMsg;
-
     // 고객명
     private String cusName;
 
@@ -65,14 +69,9 @@ public class TransResponseDto {
     // 배송메모
     private String deliveryMemo;
 
-    //제조사
-    private String makerName;
+    private WmsEnum.OutStockType outStockType;
+    private String outStockTypeMsg;
 
-    private WmsEnum.MoveStockType moveStockType;
-    private String moveStockTypeMsg;
-    
-    // 이동일
-    private LocalDateTime regiDateTime;
     private Long regiUserId;
     private String regiUserName;
     private LocalDateTime updDateTime;
@@ -85,6 +84,9 @@ public class TransResponseDto {
     // 경과일
     private Long diffInStockRegiDate;
 
+    // 이관일
+    private LocalDateTime regiDateTime;
+
     public Long getDiffInStockRegiDate() {
         return CommonUtil.diffDaysLocalDateTime(this.inStockRegiDateTime);
     }
@@ -93,8 +95,8 @@ public class TransResponseDto {
         return this.statusStr != null ? this.statusStr.getStatusMsg() : "";
     }
 
-    public String getMoveStockTypeMsg() {
-        return this.moveStockType != null ? this.moveStockType.getStatusMsg() : "";
+    public String getOutStockTypeMsg() {
+        return this.outStockType != null ? this.outStockType.getStatusMsg() : "";
     }
 
     public String getInStockStatusMsg() {

@@ -16,5 +16,9 @@ public interface CustomMoveStockRepository {
 
     Page<TransResponseDto> getTransTypeList(WmsEnum.MovePathType movePathType, MoveStockRequestDto moveStockRequestDto);
 
+    Page<TransResponseDto> getFaultyTransTypeList(WmsEnum.MovePathType movePathType, MoveStockRequestDto moveStockRequestDto);
+
     List<Store> getTransStoreList(long storeId);
+
+
 }

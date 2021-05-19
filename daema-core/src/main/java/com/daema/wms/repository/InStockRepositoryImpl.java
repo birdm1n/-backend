@@ -10,6 +10,7 @@ import com.daema.wms.domain.dto.request.InStockRequestDto;
 import com.daema.wms.domain.dto.response.InStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomInStockRepository;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
@@ -117,24 +118,11 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                         eqTelecom(requestDto.getTelecom()),
                         eqMaker(requestDto.getMaker())
                 )
-                .orderBy(inStock.regiDateTime.desc())
-                .fetch();
+                .orderBy(inStock.regiDateTime.desc());
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
-        List<InStockResponseDto> resultList = query.fetch();
-        for (InStockResponseDto dto: resultList){
-            if(dto.getInStockStatus() != null) {
-                dto.setInStockStatusMsg(dto.getInStockStatus().getStatusMsg());
-            }
-            if(dto.getExtrrStatus() != null) {
-                dto.setExtrrStatusMsg(dto.getExtrrStatus().getStatusMsg());
-            }
-            if(dto.getStatusStr() != null){
-                dto.setStatusStrMsg(dto.getStatusStr().getStatusMsg());
-            }
-        }
-        long total = query.fetchCount();
 
-        return new PageImpl<>(resultList, pageable, total);
+        QueryResults<InStockResponseDto> resultList = query.fetchResults();
+        return new PageImpl<>(resultList.getResults(), pageable, resultList.getTotal());
     }
 
 

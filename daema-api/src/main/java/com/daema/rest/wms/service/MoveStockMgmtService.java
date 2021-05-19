@@ -50,9 +50,13 @@ public class MoveStockMgmtService {
 
         // 이관 프로세스
         if (WmsEnum.MovePathType.SELL_TRNS == movePathType ||
-                WmsEnum.MovePathType.STOCK_TRNS == movePathType ||
-                WmsEnum.MovePathType.FAULTY_TRNS == movePathType) {
+                WmsEnum.MovePathType.STOCK_TRNS == movePathType) {
             Page<TransResponseDto> responseDtoPage = moveStockRepository.getTransTypeList(movePathType, moveStockRequestDto);
+            return new ResponseDto(responseDtoPage);
+        }
+        // 불량이관 프로세스
+        if(WmsEnum.MovePathType.FAULTY_TRNS == movePathType){
+            Page<TransResponseDto> responseDtoPage = moveStockRepository.getFaultyTransTypeList(movePathType, moveStockRequestDto);
             return new ResponseDto(responseDtoPage);
         }
 
@@ -246,6 +250,8 @@ public class MoveStockMgmtService {
                 .build();
         delivery = deliveryRepository.save(delivery);
 
+        // 이전 보유처, 이동할 보유처 정보
+        Stock prevStock = storeStock.getNextStock(); //이전 보유처
 
         // 4. [출고] insert
         OutStock outStock = OutStock
@@ -254,13 +260,11 @@ public class MoveStockMgmtService {
                 .targetId(requestDto.getTransStoreId())
                 .device(device)
                 .delivery(delivery)
+                .prevStock(prevStock)
                 .store(store)
                 .build();
 
         outStock = outStockRepository.save(outStock);
-
-        // 이전 보유처, 이동할 보유처 정보
-        Stock prevStock = storeStock.getNextStock(); //이전 보유처
 
         // 5. [재고] update
         // - 재고 테이블에 moveId
@@ -309,6 +313,8 @@ public class MoveStockMgmtService {
                 .build();
         delivery = deliveryRepository.save(delivery);
 
+        // 이전 보유처, 이동할 보유처 정보
+        Stock prevStock = storeStock.getNextStock(); //이전 보유처
 
         // 4. [출고] insert
         OutStock outStock = OutStock
@@ -317,13 +323,13 @@ public class MoveStockMgmtService {
                 .targetId(requestDto.getTransStoreId())
                 .device(device)
                 .delivery(delivery)
+                .prevStock(prevStock)
                 .store(store)
                 .build();
 
         outStock = outStockRepository.save(outStock);
 
-        // 이전 보유처, 이동할 보유처 정보
-        Stock prevStock = storeStock.getNextStock(); //이전 보유처
+
 
         // 5. [재고] update
         // - 재고 테이블에 moveId
@@ -371,6 +377,8 @@ public class MoveStockMgmtService {
                 .build();
         delivery = deliveryRepository.save(delivery);
 
+        // 이전 보유처, 이동할 보유처 정보
+        Stock prevStock = storeStock.getNextStock(); //이전 보유처
 
         // 4. [출고] insert
         OutStock outStock = OutStock
@@ -379,13 +387,11 @@ public class MoveStockMgmtService {
                 .targetId(requestDto.getProvId())
                 .device(device)
                 .delivery(delivery)
+                .prevStock(prevStock)
                 .store(store)
                 .build();
 
         outStock = outStockRepository.save(outStock);
-
-        // 이전 보유처, 이동할 보유처 정보
-        Stock prevStock = storeStock.getNextStock(); //이전 보유처
 
         // 5. [재고] update
         // - 재고 테이블에 moveId
