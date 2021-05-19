@@ -13,7 +13,9 @@ import com.daema.wms.domain.enums.WmsEnum;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(value = "재고이동/이관 API", tags = "재고이동/이관 API")
 @RestController
@@ -26,7 +28,7 @@ public class MoveStockMgmtController {
 
     @ApiOperation(value = "재고이동/이관 목록 조회", notes = "재고이동/이관 목록을 조회합니다")
     @GetMapping("/getMoveAndTrnsList/{movePathType}")
-    public ResponseEntity<CommonResponse<ResponseDto<MoveStockResponseDto>>> getMoveAndTrnsList(@ApiParam(value = "조회 타입", required = true) @PathVariable WmsEnum.MovePathType movePathType,
+    public ResponseEntity<CommonResponse<ResponseDto<?>>> getMoveAndTrnsList(@ApiParam(value = "조회 타입", required = true) @PathVariable WmsEnum.MovePathType movePathType,
                                                                                                 @ApiParam(value = "조회 DTO", required = true) MoveStockRequestDto moveStockRequestDto) {
         return responseHandler.getResponseMessageAsRetrieveResult(moveStockMgmtService.getMoveAndTrnsList(movePathType, moveStockRequestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
@@ -89,6 +91,16 @@ public class MoveStockMgmtController {
         if (ResponseCodeEnum.OK != responseCodeEnum) {
             return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
         }
+        return responseHandler.ok();
+    }
+
+    @ApiOperation(value = "판매이동 삭제", notes = "판매이동 데이터를 삭제합니다.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "이동재고 ID", required = true, example = "1", name = "moveStockId", paramType = "query", allowMultiple = true)
+    })
+    @PostMapping("/deleteMoveStock")
+    public ResponseEntity<CommonResponse<Void>> deleteMoveStock(@ApiIgnore @RequestBody ModelMap reqModel) {
+        moveStockMgmtService.deleteMoveStock(reqModel);
         return responseHandler.ok();
     }
 

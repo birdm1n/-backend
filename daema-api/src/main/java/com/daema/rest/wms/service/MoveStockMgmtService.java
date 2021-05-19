@@ -4,7 +4,10 @@ import com.daema.base.domain.Member;
 import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
+import com.daema.rest.common.enums.ServiceReturnMsgEnum;
+import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
+import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.wms.dto.MoveStockAlarmDto;
 import com.daema.rest.wms.dto.request.*;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
@@ -19,9 +22,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -35,6 +41,7 @@ public class MoveStockMgmtService {
     private final OutStockRepository outStockRepository;
     private final DeviceRepository deviceRepository;
     private final StockRepository stockRepository;
+    private final StoreStockRepository storeStockRepository;
     private final InStockRepository inStockRepository;
     private final StoreStockHistoryMgmtService storeStockHistoryMgmtService;
 
@@ -408,5 +415,29 @@ public class MoveStockMgmtService {
         // 7. 이관시 기기 delYn => 'Y'
         device.setDelYn("Y");
         return ResponseCodeEnum.OK;
+    }
+
+    public void deleteMoveStock(ModelMap reqModelMap) {
+        List<Number> delMoveStockIds = (List<Number>) reqModelMap.get("moveStockId");
+        if(CommonUtil.isNotEmptyList(delMoveStockIds)){
+            List<MoveStock> moveStockList = moveStockRepository.findAllById(
+                    delMoveStockIds.stream()
+                    .map(Number::longValue)
+                    .collect(Collectors.toList())
+            );
+            if (CommonUtil.isNotEmptyList(moveStockList)){
+                Optional.of(moveStockList).orElseGet(Collections::emptyList)
+                        .forEach(moveStock -> {
+                            StoreStock storeStock = storeStockRepository.findByStockTypeAndStockTypeIdAndStockYn(WmsEnum.StockType.SELL_MOVE, moveStock.getMoveStockId(), "Y");
+                            moveStock.setDelYn("Y");
+                            storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, true);
+                        });
+            }else {
+                throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+            }
+        } else {
+            throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+        }
+
     }
 }
