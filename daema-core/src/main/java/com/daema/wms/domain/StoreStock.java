@@ -129,6 +129,7 @@ public class StoreStock extends BaseEntity {
                 .historyStatus(storeStock.getHistoryStatus())
                 .prevStock(storeStock.getPrevStock())
                 .nextStock(storeStock.getNextStock())
+                .stockYn(storeStock.getStockYn())
                 .build();
     }
 }

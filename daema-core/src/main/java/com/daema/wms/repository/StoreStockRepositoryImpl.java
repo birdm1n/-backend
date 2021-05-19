@@ -7,6 +7,7 @@ import com.daema.base.enums.TypeEnum;
 import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.StoreStock;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
+import com.daema.wms.domain.dto.response.DeviceStatusListDto;
 import com.daema.wms.domain.dto.response.StoreStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomStoreStockRepository;
@@ -112,15 +113,18 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                         .otherwise(storeStock.checkDateTime1)
                         .as(compareCheckDateTime)
 
-                , deviceStatus.dvcStatusId.as("dvcStatusId")
-                , deviceStatus.inStockStatus.as("inStockStatus")
-                , deviceStatus.productFaultyYn.as("productFaultyYn")
-                , deviceStatus.productMissYn.as("productMissYn")
-                , deviceStatus.extrrStatus.as("extrrStatus")
-                , deviceStatus.ddctAmt.as("ddctAmt")
-                , deviceStatus.addDdctAmt.as("addDdctAmt")
-                , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
-                , deviceStatus.missProduct.as("missProduct")
+                , Projections.fields(
+                        DeviceStatusListDto.class
+                        , deviceStatus.dvcStatusId.as("dvcStatusId")
+                        , deviceStatus.inStockStatus.as("inStockStatus")
+                        , deviceStatus.productFaultyYn.as("productFaultyYn")
+                        , deviceStatus.productMissYn.as("productMissYn")
+                        , deviceStatus.extrrStatus.as("extrrStatus")
+                        , deviceStatus.ddctAmt.as("ddctAmt")
+                        , deviceStatus.addDdctAmt.as("addDdctAmt")
+                        , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+                        , deviceStatus.missProduct.as("missProduct")
+                ).as("deviceStatusListDto")
 
                 )
         )
@@ -236,15 +240,18 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , returnStock.returnStockAmt.as("returnStockAmt")
                 , returnStock.returnStockMemo.as("returnStockMemo")
 
-                , deviceStatus.dvcStatusId.as("dvcStatusId")
-                , deviceStatus.inStockStatus.as("inStockStatus")
-                , deviceStatus.productFaultyYn.as("productFaultyYn")
-                , deviceStatus.productMissYn.as("productMissYn")
-                , deviceStatus.extrrStatus.as("extrrStatus")
-                , deviceStatus.ddctAmt.as("ddctAmt")
-                , deviceStatus.addDdctAmt.as("addDdctAmt")
-                , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
-                , deviceStatus.missProduct.as("missProduct")
+                , Projections.fields(
+                        DeviceStatusListDto.class
+                        , deviceStatus.dvcStatusId.as("dvcStatusId")
+                        , deviceStatus.inStockStatus.as("inStockStatus")
+                        , deviceStatus.productFaultyYn.as("productFaultyYn")
+                        , deviceStatus.productMissYn.as("productMissYn")
+                        , deviceStatus.extrrStatus.as("extrrStatus")
+                        , deviceStatus.ddctAmt.as("ddctAmt")
+                        , deviceStatus.addDdctAmt.as("addDdctAmt")
+                        , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+                        , deviceStatus.missProduct.as("missProduct")
+                ).as("deviceStatusListDto")
                 )
         )
 
@@ -374,15 +381,19 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , deviceJudge.judgeMemo.as("judgeMemo")
                 , deviceJudge.judgeStatus.as("judgeStatus")
 
-                , deviceStatus.dvcStatusId.as("dvcStatusId")
-                , deviceStatus.inStockStatus.as("inStockStatus")
-                , deviceStatus.productFaultyYn.as("productFaultyYn")
-                , deviceStatus.productMissYn.as("productMissYn")
-                , deviceStatus.extrrStatus.as("extrrStatus")
-                , deviceStatus.ddctAmt.as("ddctAmt")
-                , deviceStatus.addDdctAmt.as("addDdctAmt")
-                , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
-                , deviceStatus.missProduct.as("missProduct")
+
+                , Projections.fields(
+                        DeviceStatusListDto.class
+                        , deviceStatus.dvcStatusId.as("dvcStatusId")
+                        , deviceStatus.inStockStatus.as("inStockStatus")
+                        , deviceStatus.productFaultyYn.as("productFaultyYn")
+                        , deviceStatus.productMissYn.as("productMissYn")
+                        , deviceStatus.extrrStatus.as("extrrStatus")
+                        , deviceStatus.ddctAmt.as("ddctAmt")
+                        , deviceStatus.addDdctAmt.as("addDdctAmt")
+                        , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+                        , deviceStatus.missProduct.as("missProduct")
+                ).as("deviceStatusListDto")
                 )
         )
 

@@ -7,14 +7,14 @@ import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
+import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.io.file.FileUpload;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
-import com.daema.rest.wms.dto.DeviceStatusDto;
-import com.daema.rest.wms.dto.ReturnStockDto;
 import com.daema.rest.wms.dto.StoreStockMgmtDto;
-import com.daema.rest.wms.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.*;
+import com.daema.wms.domain.dto.request.DeviceStatusDto;
+import com.daema.wms.domain.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
 import com.daema.wms.domain.dto.response.ReturnStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -54,7 +55,7 @@ public class ReturnStockMgmtService {
 		this.fileUpload = fileUpload;
 	}
 
-	public ResponseDto<ReturnStockDto> getReturnStockList(ReturnStockRequestDto requestDto) {
+	public ResponseDto<ReturnStockResponseDto> getReturnStockList(ReturnStockRequestDto requestDto) {
 
 		requestDto.setStoreId(authenticationUtil.getStoreId());
 
@@ -65,7 +66,7 @@ public class ReturnStockMgmtService {
 
 	public Set<Long> insertReturnStock(List<ReturnStockReqDto> returnStockDtoList) {
 
-		Set<Long> failBarcode = new HashSet<>();
+		Set<Long> failDvcId = new HashSet<>();
 
 		if (CommonUtil.isNotEmptyList(returnStockDtoList)) {
 
@@ -77,10 +78,10 @@ public class ReturnStockMgmtService {
 				for (ReturnStockReqDto returnStockDto : returnStockDtoList) {
 					try {
 						if(!returnStockCtrl.save(returnStockDto, stock)){
-							failBarcode.add(returnStockDto.getDvcId());
+							failDvcId.add(returnStockDto.getDvcId());
 						}
 					}catch (Exception e){
-						failBarcode.add(returnStockDto.getDvcId());
+						failDvcId.add(returnStockDto.getDvcId());
 						log.error(e.getMessage());
 					}
 				}
@@ -91,25 +92,52 @@ public class ReturnStockMgmtService {
 			throw new DataNotFoundException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
 		}
 
-		return failBarcode;
+		return failDvcId;
 	}
 
 	public Set<String> insertReturnStockExcel(MultipartHttpServletRequest mRequest) {
 
 		Set<String> failBarcode = new HashSet<>();
 
-		Map<String, Object> excelMap = fileUpload.uploadExcelAndParser(mRequest.getFile("excelFile"));
-		List<HashMap<String, String>> barcodeList = (List<HashMap<String, String>>) excelMap.get("rows");
+		try{
+			Map<String, Object> excelMap = fileUpload.uploadExcelAndParser(mRequest.getFile("excelFile"));
 
-		if(CommonUtil.isNotEmptyList(barcodeList)){
+			if(excelMap != null) {
+				LinkedHashMap<String, String> headerMap = (LinkedHashMap<String, String>) excelMap.get("headers");
+				List<HashMap<String, String>> barcodeList = (List<HashMap<String, String>>) excelMap.get("rows");
 
+				if (CommonUtil.isNotEmptyList(barcodeList)) {
+					String key = headerMap.keySet().iterator().next();
+
+					List<String> barcodeDataList = barcodeList.stream()
+							.map(data -> data.get(headerMap.get(key)))
+							.collect(Collectors.toList());
+
+					List<ReturnStockReqDto> returnStockDtoList = returnStockRepository.makeReturnStockInfoFromBarcode(barcodeDataList, authenticationUtil.getStoreId());
+
+					Set<Long> failDvcId = insertReturnStock(returnStockDtoList);
+
+					failDvcId.forEach(
+							dvcId -> {
+								failBarcode.add(
+										returnStockDtoList.stream()
+										.filter(returnStockDto -> returnStockDto.getDvcId() == dvcId)
+										.findAny()
+										.map(ReturnStockReqDto::getFullBarcode)
+										.get()
+								);
+							}
+					);
+				}else{
+					throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+				}
+			}
+		}catch (Exception e){
+			throw new ProcessErrorException(e.getMessage());
 		}
-
 
 		return failBarcode;
 	}
-
-
 }
 
 @Service
@@ -173,8 +201,8 @@ class ReturnStockCtrl {
 							.missProduct(deviceStatusDto.getMissProduct())
 							.ddctAmt(deviceStatusDto.getDdctAmt())
 							.addDdctAmt(deviceStatusDto.getAddDdctAmt())
-							.inStockStatus(returnStockDto.getReturnStockStatus())
-							.ddctReleaseAmtYn(returnStockDto.getReturnDeviceStatus().getDdctReleaseAmtYn())
+							.inStockStatus(deviceStatusDto.getInStockStatus())
+							.ddctReleaseAmtYn(deviceStatusDto.getDdctReleaseAmtYn())
 							.device(device)
 							.build()
 			);

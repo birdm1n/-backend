@@ -10,6 +10,7 @@ import com.daema.rest.wms.dto.InStockMgmtDto;
 import com.daema.rest.wms.dto.StockMgmtDto;
 import com.daema.rest.wms.dto.response.DeviceResponseDto;
 import com.daema.wms.domain.Device;
+import com.daema.wms.domain.Stock;
 import com.daema.wms.repository.DeviceRepository;
 import com.daema.wms.repository.DeviceStatusRepository;
 import com.daema.wms.repository.InStockRepository;
@@ -61,7 +62,9 @@ public class DeviceMgmtService {
 		device.getGoodsOption().getGoods().setOptionList(null);
 		deviceResponseDto.setGoodsMgmtDto(GoodsMgmtDto.from(device.getGoodsOption().getGoods()));
 
-		deviceResponseDto.setStockMgmtDto(StockMgmtDto.from(device.getInStocks().get(0).getStock()));
+		Stock stock = device.getStoreStock().getNextStock() != null ? device.getStoreStock().getNextStock() : device.getStoreStock().getPrevStock();
+
+		deviceResponseDto.setStockMgmtDto(StockMgmtDto.from(stock));
 
 		return deviceResponseDto;
 	}

@@ -4,12 +4,12 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.rest.wms.dto.ReturnStockDto;
-import com.daema.rest.wms.dto.request.ReturnStockReqDto;
 import com.daema.rest.wms.dto.response.DeviceResponseDto;
 import com.daema.rest.wms.service.DeviceMgmtService;
 import com.daema.rest.wms.service.ReturnStockMgmtService;
+import com.daema.wms.domain.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
+import com.daema.wms.domain.dto.response.ReturnStockResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -38,7 +38,7 @@ public class ReturnStockMgmtController {
 
     @ApiOperation(value = "이동재고반품 목록 조회", notes = "이동재고반품 목록을 조회합니다")
     @GetMapping("/getReturnStockList")
-    public ResponseEntity<CommonResponse<ResponseDto<ReturnStockDto>>> getReturnStockList(ReturnStockRequestDto requestDto) {
+    public ResponseEntity<CommonResponse<ResponseDto<ReturnStockResponseDto>>> getReturnStockList(ReturnStockRequestDto requestDto) {
         return responseHandler.getResponseMessageAsRetrieveResult(returnStockMgmtService.getReturnStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
