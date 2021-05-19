@@ -1,5 +1,6 @@
 package com.daema.rest.base.web;
 
+import com.daema.base.enums.TypeEnum;
 import com.daema.rest.base.service.ExcelDownloadService;
 import com.daema.rest.common.Constants;
 import com.daema.rest.common.handler.ResponseHandler;
@@ -58,6 +59,31 @@ public class DownloadController {
         try {
             mv.setViewName(Constants.EXCEL_DOWNLOAD_VIEW);
             mv.addObject("xlsMap", excelDownloadService.init(modelMap, "sample"));
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mv;
+    }
+
+    /**
+     * excel template file download
+     */
+    @GetMapping("/file/excel/template/{templateFileName}")
+    public ModelAndView excelTemplateDownload(@PathVariable String templateFileName){
+
+        ModelAndView mv = new ModelAndView();
+
+        try {
+
+            String filePath = Constants.XLS_TEMPLATE_PATH;
+            String fileName = templateFileName.concat(".").concat(TypeEnum.XLSX.getStatusMsg());
+
+            File downloadFile = new File(filePath + fileName);
+
+            mv.setViewName(Constants.FILE_DOWNLOAD_VIEW);
+            mv.addObject("fileName", fileName);
+            mv.addObject("downloadFile", downloadFile);
         }catch (Exception e) {
             e.printStackTrace();
         }

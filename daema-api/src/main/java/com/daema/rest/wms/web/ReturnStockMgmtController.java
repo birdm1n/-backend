@@ -15,6 +15,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Set;
@@ -51,5 +54,12 @@ public class ReturnStockMgmtController {
     @GetMapping("/getDeviceInfo")
     public ResponseEntity<CommonResponse<ResponseDto<DeviceResponseDto>>> getDeviceInfo(@ApiParam(value = "기기고유번호", required = true) @RequestParam String fullBarcode) {
         return responseHandler.getResponseMessageAsRetrieveResult(deviceMgmtService.getDeviceInfoFromFullBarcode(fullBarcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
+
+    @ApiOperation(value = "이동재고반품 등록 엑셀 업로드", notes = "엑셀 업로드로 신규 이동재고반품 처리를 합니다.", produces = "multipart/form-data")
+    @PostMapping("/insertReturnStockExcel")
+    public ResponseEntity<CommonResponse<Set<String>>> insertReturnStockExcel(@ApiParam(value = "엑셀파일", required = true, name = "excelFile") @RequestPart MultipartFile excelFile, @ApiIgnore MultipartHttpServletRequest mRequest) {
+        Set<String> fails = returnStockMgmtService.insertReturnStockExcel(mRequest);
+        return responseHandler.ok(fails);
     }
 }

@@ -7,6 +7,7 @@ import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
+import com.daema.rest.common.io.file.FileUpload;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.wms.dto.DeviceStatusDto;
@@ -22,11 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -39,10 +39,11 @@ public class ReturnStockMgmtService {
 	private final MoveStockRepository deviceStockRepository;
 	private final AuthenticationUtil authenticationUtil;
 	private final ReturnStockCtrl returnStockCtrl;
+	private final FileUpload fileUpload;
 
 	public ReturnStockMgmtService(StockRepository stockRepository, ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
 			, DeviceStatusRepository deviceStatusRepository, MoveStockRepository deviceStockRepository
-			, AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl) {
+			, AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl, FileUpload fileUpload) {
 		this.stockRepository = stockRepository;
 		this.returnStockRepository = returnStockRepository;
 		this.deviceRepository = deviceRepository;
@@ -50,6 +51,7 @@ public class ReturnStockMgmtService {
 		this.deviceStockRepository = deviceStockRepository;
 		this.authenticationUtil = authenticationUtil;
 		this.returnStockCtrl = returnStockCtrl;
+		this.fileUpload = fileUpload;
 	}
 
 	public ResponseDto<ReturnStockDto> getReturnStockList(ReturnStockRequestDto requestDto) {
@@ -91,6 +93,23 @@ public class ReturnStockMgmtService {
 
 		return failBarcode;
 	}
+
+	public Set<String> insertReturnStockExcel(MultipartHttpServletRequest mRequest) {
+
+		Set<String> failBarcode = new HashSet<>();
+
+		Map<String, Object> excelMap = fileUpload.uploadExcelAndParser(mRequest.getFile("excelFile"));
+		List<HashMap<String, String>> barcodeList = (List<HashMap<String, String>>) excelMap.get("rows");
+
+		if(CommonUtil.isNotEmptyList(barcodeList)){
+
+		}
+
+
+		return failBarcode;
+	}
+
+
 }
 
 @Service
@@ -122,16 +141,27 @@ class ReturnStockCtrl {
 
 		LocalDateTime regiDatetime = LocalDateTime.now();
 		Device device = deviceRepository.findById(returnStockDto.getDvcId()).orElseGet(null);
-		List<ReturnStock> returnStocks = returnStockRepository.findByDeviceAndStore(
-				Device.builder()
-						.dvcId(returnStockDto.getDvcId())
-						.build(),
-				Store.builder()
-						.storeId(authenticationUtil.getStoreId())
-						.build()
-		);
 
 		if (device != null) {
+
+			List<ReturnStock> returnStocks = returnStockRepository.findByDeviceAndStore(
+					device,
+					Store.builder()
+							.storeId(authenticationUtil.getStoreId())
+							.build()
+			);
+
+			List<DeviceStatus> deviceStatuses = deviceStatusRepository.findByDevice(device);
+
+			//기존 기기 상태 이력 업데이트
+			if(CommonUtil.isNotEmptyList(deviceStatuses)){
+				deviceStatuses.forEach(
+						deviceStatus -> {
+							deviceStatus.updateDelYn(deviceStatus, StatusEnum.FLAG_Y.getStatusMsg());
+						}
+				);
+			}
+
 			DeviceStatusDto deviceStatusDto = returnStockDto.getReturnDeviceStatus();
 
 			DeviceStatus deviceStatus = deviceStatusRepository.save(
@@ -144,6 +174,7 @@ class ReturnStockCtrl {
 							.ddctAmt(deviceStatusDto.getDdctAmt())
 							.addDdctAmt(deviceStatusDto.getAddDdctAmt())
 							.inStockStatus(returnStockDto.getReturnStockStatus())
+							.ddctReleaseAmtYn(returnStockDto.getReturnDeviceStatus().getDdctReleaseAmtYn())
 							.device(device)
 							.build()
 			);
@@ -162,7 +193,6 @@ class ReturnStockCtrl {
 							.returnStockId(0L)
 							.returnStockAmt(returnStockDto.getReturnStockAmt())
 							.returnStockMemo(returnStockDto.getReturnStockMemo())
-							.ddctReleaseAmtYn(returnStockDto.getReturnDeviceStatus().getDdctReleaseAmtYn())
 							.device(device)
 							.prevStock(Stock.builder()
 									.stockId(returnStockDto.getPrevStockId())

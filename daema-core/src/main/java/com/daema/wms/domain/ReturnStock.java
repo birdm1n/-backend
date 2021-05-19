@@ -34,14 +34,6 @@ public class ReturnStock {
     private String returnStockMemo;
 
 
-    /**
-     * 출고가 차감 YN
-     */
-    @Nullable
-    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1)")
-    @ColumnDefault("\"N\"")
-    private String ddctReleaseAmtYn = "N";
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regi_user_id", referencedColumnName = "seq")
     private Member regiUserId;
@@ -82,14 +74,13 @@ public class ReturnStock {
 
     @Builder
     public ReturnStock(Long returnStockId, Integer returnStockAmt
-            , String returnStockMemo, String ddctReleaseAmtYn, Device device, DeviceStatus returnDeviceStatus
+            , String returnStockMemo, Device device, DeviceStatus returnDeviceStatus
             ,Stock prevStock, Stock nextStock, Store store
             ,Member regiUserId ,LocalDateTime regiDateTime
     ,String delYn){
         this.returnStockId = returnStockId;
         this.returnStockAmt = returnStockAmt;
         this.returnStockMemo = returnStockMemo;
-        this.ddctReleaseAmtYn = ddctReleaseAmtYn;
         this.device = device;
         this.returnDeviceStatus = returnDeviceStatus;
         this.prevStock = prevStock;

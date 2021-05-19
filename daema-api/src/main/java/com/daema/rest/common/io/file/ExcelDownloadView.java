@@ -1,5 +1,6 @@
 package com.daema.rest.common.io.file;
 
+import com.daema.base.enums.TypeEnum;
 import com.daema.rest.base.service.ExcelDownloadService;
 import com.daema.rest.common.Constants;
 import com.daema.rest.common.util.ExcelUtil;
@@ -62,7 +63,7 @@ public class ExcelDownloadView extends AbstractView {
                 docName = URLEncoder.encode(excelFileName, "UTF-8").replaceAll("\\+", "%20");
             }
 
-            response.setHeader("Content-Disposition", "attachment; filename=" + docName + ".xlsx");
+            response.setHeader("Content-Disposition", "attachment; filename=".concat(docName).concat(".").concat(TypeEnum.XLSX.getStatusMsg()));
             response.setContentLength(excelByteData.length);
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Pragma", "no-cache");

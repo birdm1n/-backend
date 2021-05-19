@@ -106,12 +106,22 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , returnStock.returnStockId.as("returnStockId")
                 , returnStock.returnStockAmt.as("returnStockAmt")
                 , returnStock.returnStockMemo.as("returnStockMemo")
-                , returnStock.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
                 , new CaseBuilder()
                         .when(storeStock.checkDateTime1.before(storeStock.checkDateTime2))
                         .then(storeStock.checkDateTime2)
                         .otherwise(storeStock.checkDateTime1)
                         .as(compareCheckDateTime)
+
+                , deviceStatus.dvcStatusId.as("dvcStatusId")
+                , deviceStatus.inStockStatus.as("inStockStatus")
+                , deviceStatus.productFaultyYn.as("productFaultyYn")
+                , deviceStatus.productMissYn.as("productMissYn")
+                , deviceStatus.extrrStatus.as("extrrStatus")
+                , deviceStatus.ddctAmt.as("ddctAmt")
+                , deviceStatus.addDdctAmt.as("addDdctAmt")
+                , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+                , deviceStatus.missProduct.as("missProduct")
+
                 )
         )
 
@@ -119,6 +129,10 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 .innerJoin(storeStock.device, device).on(
                 storeStock.device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                         .and(storeStock.stockYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+        )
+                .innerJoin(device.deviceStatusList, deviceStatus).on(
+                device.dvcId.eq(deviceStatus.device.dvcId)
+                        .and(deviceStatus.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
         )
                 .innerJoin(storeStock.store, store).on(
                 store.storeId.eq(requestDto.getStoreId())
@@ -221,7 +235,16 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , returnStock.returnStockId.as("returnStockId")
                 , returnStock.returnStockAmt.as("returnStockAmt")
                 , returnStock.returnStockMemo.as("returnStockMemo")
-                , returnStock.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+
+                , deviceStatus.dvcStatusId.as("dvcStatusId")
+                , deviceStatus.inStockStatus.as("inStockStatus")
+                , deviceStatus.productFaultyYn.as("productFaultyYn")
+                , deviceStatus.productMissYn.as("productMissYn")
+                , deviceStatus.extrrStatus.as("extrrStatus")
+                , deviceStatus.ddctAmt.as("ddctAmt")
+                , deviceStatus.addDdctAmt.as("addDdctAmt")
+                , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+                , deviceStatus.missProduct.as("missProduct")
                 )
         )
 
@@ -235,6 +258,10 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 .innerJoin(storeStock.device, device).on(
                 storeStock.device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                         .and(storeStock.stockYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+        )
+                .innerJoin(device.deviceStatusList, deviceStatus).on(
+                device.dvcId.eq(deviceStatus.device.dvcId)
+                        .and(deviceStatus.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
         )
                 .innerJoin(moveStock).on(
                 storeStock.stockTypeId.eq(moveStock.moveStockId)
@@ -340,7 +367,6 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , returnStock.returnStockId.as("returnStockId")
                 , returnStock.returnStockAmt.as("returnStockAmt")
                 , returnStock.returnStockMemo.as("returnStockMemo")
-                , returnStock.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
 
                 , delivery.deliveryType.as("deliveryType")
                 , delivery.deliveryStatus.as("deliveryStatus")
@@ -348,6 +374,15 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , deviceJudge.judgeMemo.as("judgeMemo")
                 , deviceJudge.judgeStatus.as("judgeStatus")
 
+                , deviceStatus.dvcStatusId.as("dvcStatusId")
+                , deviceStatus.inStockStatus.as("inStockStatus")
+                , deviceStatus.productFaultyYn.as("productFaultyYn")
+                , deviceStatus.productMissYn.as("productMissYn")
+                , deviceStatus.extrrStatus.as("extrrStatus")
+                , deviceStatus.ddctAmt.as("ddctAmt")
+                , deviceStatus.addDdctAmt.as("addDdctAmt")
+                , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+                , deviceStatus.missProduct.as("missProduct")
                 )
         )
 
@@ -359,6 +394,11 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 //이관 후, 기기 삭제 또는 내 재고 상태가 아닐 수 있음
                 //storeStock.device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 //.and(storeStock.stockYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+
+                .innerJoin(device.deviceStatusList, deviceStatus).on(
+                device.dvcId.eq(deviceStatus.device.dvcId)
+                        .and(deviceStatus.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
+        )
 
                 .innerJoin(outStock).on(
                 storeStock.stockTypeId.eq(outStock.outStockId)

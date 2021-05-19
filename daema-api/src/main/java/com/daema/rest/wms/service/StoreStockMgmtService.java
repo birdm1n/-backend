@@ -2,6 +2,7 @@ package com.daema.rest.wms.service;
 
 import com.daema.base.domain.Member;
 import com.daema.base.enums.StatusEnum;
+import com.daema.base.enums.TypeEnum;
 import com.daema.base.repository.MemberRepository;
 import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
@@ -14,20 +15,19 @@ import com.daema.rest.wms.dto.MoveStockAlarmDto;
 import com.daema.rest.wms.dto.StoreStockMgmtDto;
 import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
-import com.daema.wms.domain.dto.response.DeviceStatusListDto;
 import com.daema.wms.domain.dto.response.StoreStockCheckListDto;
 import com.daema.wms.domain.dto.response.StoreStockResponseDto;
-import com.daema.wms.repository.*;
+import com.daema.wms.repository.DeviceJudgeRepository;
+import com.daema.wms.repository.MoveStockAlarmRepository;
+import com.daema.wms.repository.StoreStockCheckRepository;
+import com.daema.wms.repository.StoreStockRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class StoreStockMgmtService {
@@ -53,13 +53,19 @@ public class StoreStockMgmtService {
 		this.authenticationUtil = authenticationUtil;
 	}
 
-	public ResponseDto<StoreStockResponseDto> getStoreStockList(StoreStockRequestDto requestDto) {
+	public ResponseDto<StoreStockResponseDto> getStoreStockList(StoreStockRequestDto requestDto, TypeEnum.StoreStockPageType pageType) {
 
 		requestDto.setStoreId(authenticationUtil.getStoreId());
 
-		Page<StoreStockResponseDto> dataList = storeStockRepository.getStoreStockList(requestDto);
+		Page<StoreStockResponseDto> dataList = null;
 
-		setDeviceStatusInfo(dataList.getContent());
+		if(TypeEnum.StoreStockPageType.STORE_STOCK == pageType){
+			dataList = storeStockRepository.getStoreStockList(requestDto);
+		}else if(TypeEnum.StoreStockPageType.LONG_TIME_STORE_STOCK == pageType){
+			dataList = storeStockRepository.getLongTimeStoreStockList(requestDto);
+		}else if(TypeEnum.StoreStockPageType.FAULTY_STORE_STOCK == pageType){
+			dataList = storeStockRepository.getFaultyStoreStockList(requestDto);
+		}
 
 		return new ResponseDto(dataList);
 	}
@@ -114,17 +120,6 @@ public class StoreStockMgmtService {
 		return storeStockCheckList;
 	}
 
-	public ResponseDto<StoreStockResponseDto> getLongTimeStoreStockList(StoreStockRequestDto requestDto) {
-
-		requestDto.setStoreId(authenticationUtil.getStoreId());
-
-		Page<StoreStockResponseDto> dataList = storeStockRepository.getLongTimeStoreStockList(requestDto);
-
-		setDeviceStatusInfo(dataList.getContent());
-
-		return new ResponseDto(dataList);
-	}
-
 	public MoveStockAlarmDto getLongTimeStoreStockAlarm(){
 
 		Store store = Store.builder().storeId(authenticationUtil.getStoreId()).build();
@@ -139,17 +134,6 @@ public class StoreStockMgmtService {
 		requestDto.setMemberSeq(authenticationUtil.getMemberSeq());
 
 		moveStockMgmtService.setLongTimeStoreStockAlarm(requestDto);
-	}
-
-	public ResponseDto<StoreStockResponseDto> getFaultyStoreStockList(StoreStockRequestDto requestDto) {
-
-		requestDto.setStoreId(authenticationUtil.getStoreId());
-
-		Page<StoreStockResponseDto> dataList = storeStockRepository.getFaultyStoreStockList(requestDto);
-
-		setDeviceStatusInfo(dataList.getContent());
-
-		return new ResponseDto(dataList);
 	}
 
 	public void updateJudgementStatus(DeviceJudgeDto requestDto){
@@ -174,27 +158,6 @@ public class StoreStockMgmtService {
 						.device(device)
 						.build()
 		);
-	}
-
-	//기기 최종 상태 가져오기
-	private void setDeviceStatusInfo(List<StoreStockResponseDto> dataList){
-		List<Long> dvcIds = Optional.ofNullable(dataList)
-				.orElseGet(Collections::emptyList)
-				.stream()
-				.map(StoreStockResponseDto::getDvcId)
-				.collect(Collectors.toList());
-
-		List<DeviceStatusListDto> deviceStatusListDtoList = deviceMgmtService.getLastDeviceStatusInfo(dvcIds);
-
-		if(CommonUtil.isNotEmptyList(deviceStatusListDtoList)){
-			dataList.forEach(
-					stock -> {
-						stock.setDeviceStatusListDto(deviceStatusListDtoList.stream()
-								.filter(device -> stock.getDvcId().equals(device.getDvcId()))
-								.findAny().orElse(null));
-					}
-			);
-		}
 	}
 }
 

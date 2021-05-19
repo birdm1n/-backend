@@ -10,13 +10,10 @@ import com.daema.rest.wms.dto.InStockMgmtDto;
 import com.daema.rest.wms.dto.StockMgmtDto;
 import com.daema.rest.wms.dto.response.DeviceResponseDto;
 import com.daema.wms.domain.Device;
-import com.daema.wms.domain.dto.response.DeviceStatusListDto;
 import com.daema.wms.repository.DeviceRepository;
 import com.daema.wms.repository.DeviceStatusRepository;
 import com.daema.wms.repository.InStockRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class DeviceMgmtService {
@@ -73,14 +70,5 @@ public class DeviceMgmtService {
 		return deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullBarcode
 				, Store.builder().storeId(authenticationUtil.getStoreId()).build()
 				, StatusEnum.FLAG_N.getStatusMsg());
-	}
-
-	/**
-	 * 기기별 최종 상태값 가져옴
-	 * @param dvcIds
-	 * @return
-	 */
-	public List<DeviceStatusListDto> getLastDeviceStatusInfo(List<Long> dvcIds){
-		return deviceStatusRepository.getLastDeviceStatusInfo(dvcIds);
 	}
 }
