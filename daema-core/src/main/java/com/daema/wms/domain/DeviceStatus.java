@@ -68,4 +68,8 @@ public class DeviceStatus extends BaseEntity {
     @OneToOne(mappedBy = "returnDeviceStatus", fetch = FetchType.LAZY)
     private ReturnStock returnStock;
 
+    public void updateDelYn(DeviceStatus deviceStatus, String delYn){
+        deviceStatus.setDelYn(delYn);
+    }
+
 }

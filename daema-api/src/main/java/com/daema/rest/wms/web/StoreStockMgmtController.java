@@ -1,5 +1,6 @@
 package com.daema.rest.wms.web;
 
+import com.daema.base.enums.TypeEnum;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
@@ -35,7 +36,7 @@ public class StoreStockMgmtController {
     @ApiOperation(value = "재고 현황", notes = "재고 목록을 조회합니다")
     @GetMapping("/getStoreStockList")
     public ResponseEntity<CommonResponse<ResponseDto<StoreStockResponseDto>>> getStoreStockList(StoreStockRequestDto requestDto) {
-        return responseHandler.getResponseMessageAsRetrieveResult(storeStockMgmtService.getStoreStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+        return responseHandler.getResponseMessageAsRetrieveResult(storeStockMgmtService.getStoreStockList(requestDto, TypeEnum.StoreStockPageType.STORE_STOCK), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "재고 확인", notes = "재고 확인 처리를 합니다.")
@@ -54,7 +55,7 @@ public class StoreStockMgmtController {
     @ApiOperation(value = "장기재고 현황", notes = "장기재고 목록을 조회합니다")
     @GetMapping("/getLongTimeStoreStockList")
     public ResponseEntity<CommonResponse<ResponseDto<StoreStockResponseDto>>> getLongTimeStoreStockList(StoreStockRequestDto requestDto) {
-        return responseHandler.getResponseMessageAsRetrieveResult(storeStockMgmtService.getLongTimeStoreStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+        return responseHandler.getResponseMessageAsRetrieveResult(storeStockMgmtService.getStoreStockList(requestDto, TypeEnum.StoreStockPageType.LONG_TIME_STORE_STOCK), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "장기 재고 알람 정보 조회", notes = "장기 재고 알람 값을 조회 합니다.")
@@ -73,7 +74,7 @@ public class StoreStockMgmtController {
     @ApiOperation(value = "불량기기 현황", notes = "불량기기 목록을 조회합니다")
     @GetMapping("/getFaultyStoreStockList")
     public ResponseEntity<CommonResponse<ResponseDto<StoreStockResponseDto>>> getFaultyStoreStockList(StoreStockRequestDto requestDto) {
-        return responseHandler.getResponseMessageAsRetrieveResult(storeStockMgmtService.getFaultyStoreStockList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+        return responseHandler.getResponseMessageAsRetrieveResult(storeStockMgmtService.getStoreStockList(requestDto, TypeEnum.StoreStockPageType.FAULTY_STORE_STOCK), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "판정 상태 변경", notes = "판정 상태 값을 변경 합니다.")

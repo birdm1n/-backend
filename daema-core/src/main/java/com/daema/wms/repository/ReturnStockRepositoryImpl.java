@@ -7,6 +7,8 @@ import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
 import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.ReturnStock;
+import com.daema.wms.domain.dto.request.DeviceStatusDto;
+import com.daema.wms.domain.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
 import com.daema.wms.domain.dto.response.ReturnStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -14,6 +16,7 @@ import com.daema.wms.repository.custom.CustomReturnStockRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,6 +33,8 @@ import static com.daema.wms.domain.QDevice.device;
 import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
 import static com.daema.wms.domain.QInStock.inStock;
 import static com.daema.wms.domain.QReturnStock.returnStock;
+import static com.daema.wms.domain.QStoreStock.storeStock;
+
 
 public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport implements CustomReturnStockRepository {
 
@@ -94,8 +99,8 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 .innerJoin(returnStock.prevStock, prevStock)
                 .innerJoin(returnStock.nextStock, nextStock)
                 .innerJoin(returnStock.store, store).on(
-                        store.storeId.eq(requestDto.getStoreId())
-                )
+                store.storeId.eq(requestDto.getStoreId())
+        )
                 .innerJoin(inStock).on(inStock.device.dvcId.eq(returnStock.device.dvcId))
                 .innerJoin(device.goodsOption, goodsOption)
                 .innerJoin(goodsOption.goods, goods)
@@ -134,6 +139,58 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         return new PageImpl<>(resultList, pageable, total);
     }
 
+    @Override
+    public List<ReturnStockReqDto> makeReturnStockInfoFromBarcode(List<String> barcodeDataList, Long storeId) {
+
+        JPQLQuery<ReturnStockReqDto> query = getQuerydsl().createQuery();
+        QStock prevStock = new QStock("prevStock");
+        QStock nextStock = new QStock("nextStock");
+
+        query.select(Projections.fields(
+                ReturnStockReqDto.class
+
+                , device.dvcId.as("dvcId")
+                , device.fullBarcode.as("fullBarcode")
+
+                , Expressions.asNumber(0).as("returnStockAmt")
+
+                , new CaseBuilder()
+                        .when(nextStock.isNotNull())
+                        .then(nextStock.stockId)
+                        .otherwise(prevStock.stockId).as("prevStockId")
+
+                , Projections.fields(
+                        DeviceStatusDto.class
+                        , Expressions.asNumber(0L).as("dvcStatusId")
+                        , Expressions.asString("N").as("productFaultyYn")
+                        , Expressions.asEnum(WmsEnum.DeviceExtrrStatus.T).as("extrrStatus")
+                        , Expressions.asString("N").as("productMissYn")
+                        //, Expressions.asSimple(null).as("missProduct")
+                        , Expressions.asNumber(0).as("ddctAmt")
+                        , Expressions.asNumber(0).as("addDdctAmt")
+                        , Expressions.asString("N").as("ddctReleaseAmtYn")
+                        , Expressions.asEnum(WmsEnum.InStockStatus.NORMAL).as("inStockStatus")
+                ).as("returnDeviceStatus")
+                )
+        )
+                .from(device)
+                .innerJoin(storeStock)
+                .on(
+                        device.dvcId.eq(storeStock.device.dvcId)
+                                .and(device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
+                                .and(storeStock.store.storeId.eq(storeId))
+                )
+                .leftJoin(storeStock.prevStock, prevStock)
+                .leftJoin(storeStock.nextStock, nextStock)
+                .where(
+                        device.fullBarcode.in(barcodeDataList)
+                );
+
+        List<ReturnStockReqDto> resultList = query.fetch();
+
+        return resultList;
+    }
+
     private BooleanExpression eqTelecom(Integer telecom) {
         if (telecom == null) {
             return null;
@@ -147,72 +204,77 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         }
         return goods.maker.eq(maker);
     }
+
     private BooleanExpression eqNextStockId(Long nextStockId) {
-        if(nextStockId == null){
+        if (nextStockId == null) {
             return null;
         }
         return returnStock.nextStock.stockId.eq(nextStockId);
     }
+
     private BooleanExpression eqGoodsId(Long goodsId) {
-        if(goodsId == null){
+        if (goodsId == null) {
             return null;
         }
         return goods.goodsId.eq(goodsId);
     }
+
     private BooleanExpression eqReturnStockStatus(WmsEnum.InStockStatus returnStockStatus) {
-        if (returnStockStatus == null){
+        if (returnStockStatus == null) {
             return null;
         }
         return deviceStatus.inStockStatus.eq(returnStockStatus);
     }
+
     private BooleanExpression eqCapacity(String capacity) {
-        if(StringUtils.isEmpty(capacity)){
+        if (StringUtils.isEmpty(capacity)) {
             return null;
         }
         return goodsOption.capacity.eq(capacity);
     }
+
     private BooleanExpression eqColorName(String colorName) {
-        if(StringUtils.isEmpty(colorName)){
+        if (StringUtils.isEmpty(colorName)) {
             return null;
         }
         return goodsOption.colorName.eq(colorName);
     }
 
     private BooleanExpression eqFullBarcode(String fullBarcode) {
-        if(StringUtils.isEmpty(fullBarcode)){
+        if (StringUtils.isEmpty(fullBarcode)) {
             return null;
         }
         return device.fullBarcode.contains(fullBarcode);
     }
 
     private BooleanExpression eqExtrrStatus(WmsEnum.DeviceExtrrStatus extrrStatus) {
-        if(extrrStatus == null){
+        if (extrrStatus == null) {
             return null;
         }
         return deviceStatus.extrrStatus.eq(extrrStatus);
     }
 
     private BooleanExpression eqFaultyYn(String productFaultyYn) {
-        if(StringUtils.isEmpty(productFaultyYn)){
+        if (StringUtils.isEmpty(productFaultyYn)) {
             return null;
         }
         return deviceStatus.productFaultyYn.eq(productFaultyYn);
     }
 
     private BooleanExpression eqStatusStr(WmsEnum.StockStatStr statusStr) {
-        if(statusStr == null){
+        if (statusStr == null) {
             return null;
         }
 
-        if(WmsEnum.StockStatStr.I == statusStr){
+        if (WmsEnum.StockStatStr.I == statusStr) {
             return returnStock.nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode());
-        }else{
+        } else {
             return returnStock.nextStock.stockType.ne(TypeEnum.STOCK_TYPE_I.getStatusCode());
         }
     }
 
-    private BooleanExpression betweenReturnStockRegDt(String startDt, String endDt){
-        if(StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)){
+    private BooleanExpression betweenReturnStockRegDt(String startDt, String endDt) {
+        if (StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)) {
             return null;
         }
         return returnStock.regiDateTime.between(
@@ -221,8 +283,8 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         );
     }
 
-    private BooleanExpression betweenInStockRegDt(String startDt, String endDt){
-        if(StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)){
+    private BooleanExpression betweenInStockRegDt(String startDt, String endDt) {
+        if (StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)) {
             return null;
         }
         return inStock.regiDateTime.between(

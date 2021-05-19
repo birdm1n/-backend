@@ -1,5 +1,6 @@
 package com.daema.rest.base.service;
 
+import com.daema.base.enums.TypeEnum;
 import com.daema.commgmt.repository.PubNotiRawDataRepository;
 import com.daema.rest.base.excel.ExcelTemplate;
 import com.daema.rest.base.excel.ExcelVO;
@@ -7,8 +8,10 @@ import com.daema.rest.common.Constants;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.common.util.DateUtil;
-import com.daema.rest.wms.service.ReturnStockMgmtService;
+import com.daema.rest.wms.service.*;
+import com.daema.wms.domain.dto.request.InStockRequestDto;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
+import com.daema.wms.domain.dto.request.StoreStockRequestDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTimeUtils;
@@ -29,6 +32,8 @@ public class ExcelDownloadService {
 
     private final PubNotiRawDataRepository pubNotiRawDataRepository;
     private final ReturnStockMgmtService returnStockMgmtService;
+    private final InStockMgmtService inStockMgmtService;
+    private final StoreStockMgmtService storeStockMgmtService;
 
     private final AuthenticationUtil authenticationUtil;
 
@@ -36,30 +41,72 @@ public class ExcelDownloadService {
     private Class<?> cls;
     private List dataList;
 
-    public ExcelDownloadService(PubNotiRawDataRepository pubNotiRawDataRepository, ReturnStockMgmtService returnStockMgmtService, AuthenticationUtil authenticationUtil) {
+    public ExcelDownloadService(PubNotiRawDataRepository pubNotiRawDataRepository, ReturnStockMgmtService returnStockMgmtService, InStockMgmtService inStockMgmtService, StoreStockMgmtService storeStockMgmtService, AuthenticationUtil authenticationUtil) {
         this.pubNotiRawDataRepository = pubNotiRawDataRepository;
         this.returnStockMgmtService = returnStockMgmtService;
+        this.inStockMgmtService = inStockMgmtService;
+        this.storeStockMgmtService = storeStockMgmtService;
 
         this.authenticationUtil = authenticationUtil;
     }
 
-    public HashMap<String, Object> init(ModelMap modelMap, String pageType){
+    public HashMap<String, Object> init(ModelMap modelMap, String pageType) {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        if("sample".equals(pageType)){
+        if ("sample".equals(pageType)) {
             fileName = "공시지원금목록_";
             cls = ExcelVO.PubNotiRawData.class;
             dataList = pubNotiRawDataRepository.searchPubNotiRawData();
-
-        }else if("getReturnStockListExcel".equals(pageType)){
-            fileName = "이동재고반품목록_";
+        } else if ("getInStockListExcel".equals(pageType)) {
+            fileName = "입고현황_";
+            cls = ExcelVO.InStockList.class;
+            dataList = inStockMgmtService.getInStockList(mapper.convertValue(modelMap, InStockRequestDto.class)).getResultList();
+        } else if ("getReturnStockListExcel".equals(pageType)) {
+            fileName = "이동재고반품_";
             cls = ExcelVO.ReturnStockList.class;
             dataList = returnStockMgmtService.getReturnStockList(mapper.convertValue(modelMap, ReturnStockRequestDto.class)).getResultList();
-        }else if("insertReturnStockExcelException".equals(pageType)){
+        } else if ("insertReturnStockExcelException".equals(pageType)) {
             fileName = "이동재고반품_엑셀업로드_실패목록_";
             cls = ExcelVO.BarcodeList.class;
             dataList = (List) modelMap.get("failList");
+        } else if ("getStoreStockListExcel".equals(pageType)
+                || "getLongTimeStoreStockListExcel".equals(pageType)
+                || "getFaultyStoreStockListExcel".equals(pageType)) {
+
+            TypeEnum.StoreStockPageType storeStockPageType = null;
+
+            if ("getFaultyStoreStockListExcel".equals(pageType)) {
+                fileName = "불량기기현황_";
+                cls = ExcelVO.FaultyStoreStockList.class;
+                storeStockPageType = TypeEnum.StoreStockPageType.FAULTY_STORE_STOCK;
+            } else if ("getLongTimeStoreStockListExcel".equals(pageType)) {
+                fileName = "장기재고_";
+                cls = ExcelVO.LongTimeStoreStockList.class;
+                storeStockPageType = TypeEnum.StoreStockPageType.LONG_TIME_STORE_STOCK;
+            } else {
+                fileName = "재고현황_";
+                cls = ExcelVO.StoreStockList.class;
+                storeStockPageType = TypeEnum.StoreStockPageType.STORE_STOCK;
+            }
+
+            dataList = storeStockMgmtService.getStoreStockList(mapper.convertValue(modelMap, StoreStockRequestDto.class), storeStockPageType).getResultList();
+
+        } else if ("getMove......ListExcel".equals(pageType)) {
+            //TODO 이동/이관 엑셀 다운로드 추가 필요
+            //fileName = "이동현황_";
+            //cls = ExcelVO.MoveMgmtList.class;
+            //dataList = returnStockMgmtService.getReturnStockList(mapper.convertValue(modelMap, ReturnStockRequestDto.class)).getResultList();
+        } else if ("getMoveMgmtListExcel".equals(pageType)) {
+            //TODO 이동현황 엑셀 다운로드 추가 필요
+            fileName = "이동현황_";
+            cls = ExcelVO.MoveMgmtList.class;
+            //dataList = returnStockMgmtService.getReturnStockList(mapper.convertValue(modelMap, ReturnStockRequestDto.class)).getResultList();
+        } else if ("getDeviceCurrentListExcel".equals(pageType)) {
+            //TODO 기기현황 엑셀 다운로드 추가 필요
+            fileName = "기기현황_";
+            cls = ExcelVO.DeviceCurrentList.class;
+            //dataList = deviceMgmtService.getReturnStockList(mapper.convertValue(modelMap, ReturnStockRequestDto.class)).getResultList();
         }
 
         return makeExcel();
@@ -67,10 +114,11 @@ public class ExcelDownloadService {
 
     /**
      * ExcelVO inner Class 의 정보를 기반으로 header 와 query 맵핑 처리
+     *
      * @param cls
      * @return
      */
-    private String[][][] makeHeaderInfo(Class<?> cls){
+    private String[][][] makeHeaderInfo(Class<?> cls) {
 
         int fieldLen = cls.getDeclaredFields().length;
 
@@ -78,7 +126,7 @@ public class ExcelDownloadService {
 
         int cnt = 0;
 
-        for(Field field : cls.getDeclaredFields()){
+        for (Field field : cls.getDeclaredFields()) {
             headerInfo[cnt][0][0] = field.getDeclaredAnnotation(ExcelTemplate.class).columnName();
             headerInfo[cnt][1][0] = field.getType().toString();
             headerInfo[cnt][0][1] = field.getName();
@@ -88,14 +136,15 @@ public class ExcelDownloadService {
         return headerInfo;
     }
 
-    private void convertDataList(HashMap<String, Object> xlsMap, List dataList){
+    private void convertDataList(HashMap<String, Object> xlsMap, List dataList) {
         List<LinkedHashMap<String, Object>> convertDataList = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
 
-        if(CommonUtil.isNotEmptyList(dataList)){
+        if (CommonUtil.isNotEmptyList(dataList)) {
             dataList.forEach(
                     data -> convertDataList.add(
-                            mapper.convertValue(data, new TypeReference<LinkedHashMap<String, Object>>() {})
+                            mapper.convertValue(data, new TypeReference<LinkedHashMap<String, Object>>() {
+                            })
                     )
             );
         }
@@ -134,14 +183,14 @@ public class ExcelDownloadService {
                 .concat(File.separator).concat(authenticationUtil.getMemberSeq() + "")
                 .concat(File.separator);
 
-        try{
+        try {
             //파일경로 셋팅
             File dir = new File(saveFilePath);
-            if(!dir.exists()){
+            if (!dir.exists()) {
                 dir.mkdirs();
             }
 
-            try (OutputStream os = new FileOutputStream(saveFilePath.concat(File.separator).concat(excelFileName).concat(".xlsx"))) {
+            try (OutputStream os = new FileOutputStream(saveFilePath.concat(File.separator).concat(excelFileName).concat(".").concat(TypeEnum.XLSX.getStatusMsg()))) {
                 os.write(excelData);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -152,7 +201,7 @@ public class ExcelDownloadService {
             Thread.sleep(500);
             new File(templateFile).delete();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -12,12 +12,12 @@ import org.apache.poi.xssf.eventusermodel.XSSFSheetXMLHandler;
 import org.apache.poi.xssf.eventusermodel.XSSFSheetXMLHandler.SheetContentsHandler;
 import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.*;
+import org.apache.xmlbeans.XmlOptionsBean;
+import org.apache.xmlbeans.impl.common.SAXHelper;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -32,16 +32,20 @@ public class ExcelUtil {
     private String[][][] mHeader;
     private List<LinkedHashMap<String, Object>> mData;
 
+    public ExcelUtil() {
+    }
+
     public ExcelUtil(String[][][] header, List<LinkedHashMap<String, Object>> data) {
         mHeader = header;
         mData = data;
     }
 
-    public byte[] makeExcel(String templateFile) throws Exception {
+    public byte[] makeExcel(String templateFile) {
 
         byte[] bytes = new byte[0];
 
         try (XSSFWorkbook wb = new XSSFWorkbook()) {
+
             // Step 1. Create a template file. Setup sheets and workbook-level
             // objects such as
             // cell styles, number formats, etc.
@@ -80,7 +84,7 @@ public class ExcelUtil {
      * Create a library of cell styles.
      */
     private Map<String, XSSFCellStyle> createStyles(XSSFWorkbook wb) {
-        Map<String, XSSFCellStyle> styles = new HashMap<String, XSSFCellStyle>();
+        Map<String, XSSFCellStyle> styles = new HashMap<>();
         XSSFDataFormat fmt = wb.createDataFormat();
 
         XSSFCellStyle style1 = wb.createCellStyle();
@@ -209,8 +213,7 @@ public class ExcelUtil {
     }
 
     /**
-     * Writes spreadsheet data in a Writer. (YK: in future it may evolve in a
-     * full-featured API for streaming data in Excel)
+     * Writes spreadsheet data in a Writer
      */
     public class SpreadsheetWriter {
         private final Writer _out;
@@ -282,124 +285,102 @@ public class ExcelUtil {
     }
 
 
-    //read
-    private List<LinkedHashMap<String, String>> excelDataList = new ArrayList<>();
+    //excel read
+    private LinkedHashMap<String, String> headers = new LinkedHashMap<>();
+    private List<HashMap<String, String>> rows = new ArrayList();
 
-    public ExcelUtil() {
-
+    public LinkedHashMap<String, String> getHeaders() {
+        return headers;
     }
 
-    public List<LinkedHashMap<String, String>> readXlsSheet(String filename, int column_cnt) {
+    public List<HashMap<String, String>> getRows() {
+        return rows;
+    }
 
-        try {
-            /** Parsing 설정 부분 **/
-            //bulkInsertFile = File 객체 or FileInputStream (ex : new File(파일경로) 등으로 넣을 수 있음)
-            //OPCPackage 파일을 읽거나 쓸수있는 상태의 컨테이너를 생성함
-            OPCPackage opc = OPCPackage.open(filename);
-            //opc 컨테이너 XSSF형식으로 읽어옴. 이 Reader는 적은 메모리로 sax parsing
+    public void readXlsSheet(File file) {
+
+        SheetToListHandler sheetToListHandler = new SheetToListHandler();
+
+        try (OPCPackage opc = OPCPackage.open(file)) {
             XSSFReader xssfReader = new XSSFReader(opc);
-            //XSSFReader 에서 sheet 별 collection으로 분할해서 가져옴.
             XSSFReader.SheetIterator itr = (XSSFReader.SheetIterator) xssfReader.getSheetsData();
 
-            //통합문서 내의 모든 Sheet에서 공유되는 스타일 테이블
             StylesTable styles = xssfReader.getStylesTable();
             ReadOnlySharedStringsTable strings = new ReadOnlySharedStringsTable(opc);
-
-            //데이터를 파싱 List 객체...
-            List<String[]> dataList = new ArrayList<String[]>();
 
             // Sheet 수 만큼 Loop
             while (itr.hasNext()) {
                 InputStream sheetStream = itr.next();
                 InputSource sheetSource = new InputSource(sheetStream);
 
-                //엑셀 data를 가져와서 SheetContentsHandler(Interface) 재정의
-                Sheet2ListHandler sheet2ListHandler = new Sheet2ListHandler(dataList, column_cnt);
+                ContentHandler handler = new XSSFSheetXMLHandler(styles, strings, sheetToListHandler, false);
 
-                //new XSSFSheetXMLHandler(StylesTable styles, ReadOnlySharedStringsTable strings, SheetContentsHandler sheet2ListHandler, boolean formulasNotResults)
-                //Sheet의 행(row) 및 Cell 이벤트 생성.
-                ContentHandler handler = new XSSFSheetXMLHandler(styles, strings, sheet2ListHandler, false);
-
-                //sax parser를 생성
-                SAXParserFactory saxFactory = SAXParserFactory.newInstance();
-                SAXParser saxParser = saxFactory.newSAXParser();
-                //sax parser 방식 xmlReader 생성
-                XMLReader sheetParser = saxParser.getXMLReader();
-                //xml reader에 row와 cell 이벤트를 생성하는 핸들러를 설정
-                sheetParser.setContentHandler(handler);
-                //위에서 Sheet 별로 생성한 inputSource를 parsing
-                //이 과정에서 handler는 row와 cell 이벤트를 생성하고 생성된 이벤트는 sheet2ListHandler 가 받아서 처리
-                sheetParser.parse(sheetSource);
-
+                XMLReader xmlReader = SAXHelper.newXMLReader(new XmlOptionsBean());
+                xmlReader.setContentHandler(handler);
+                xmlReader.parse(sheetSource);
                 sheetStream.close();
             }
-
-            opc.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return excelDataList;
     }
 
-    public class Sheet2ListHandler implements SheetContentsHandler {
+    public class SheetToListHandler implements SheetContentsHandler {
 
-        //collection 객체
-        private List<String[]> rows;
-        //collection 에 추가될 객체 startRow에서 초기화
-        private String[] row;
-        //collection 내 객체를 String[] 로 잡았기 때문에 배열의 길이를 생성시 받도록 설계
-        private int columnCnt;
-        //cell 이벤트 처리 시 해당 cell의 데이터가 배열 어디에 저장되야 할지 가리키는 pointer
-        private int currColNum = 0;
+        private LinkedHashMap<String, String> rowMap = new LinkedHashMap<>();
 
-        //외부 collection 과 배열 size를 받기 위해 추가
-        public Sheet2ListHandler(
-                List<String[]> rows
-                , int columnsCnt
-        ) {
-            this.rows = rows;
-            this.columnCnt = columnsCnt;
-        }
-
-        //Row의 시작 부분에서 발생하는 이벤트를 처리하는 method
-        public void startRow(int rowNum) {
-            this.row = new String[columnCnt];
-            currColNum = 0;
+        public SheetToListHandler() {
         }
 
         @Override
-        public void endRow(int rowNum) {
-            //cell 이벤트에서 담아놓은 row String[]를 collection에 추가
-            //데이터가 없는 row는 collection에 추가하지 않도록 조건 추가
-            boolean addFlag = false;
-            for (String data : row) {
-                if (!"".equals(data))
-                    addFlag = true;
-            }
-            if (addFlag) rows.add(row);
+        public void startRow(int rowNum) {
         }
 
         @Override
         public void cell(String cellReference, String formattedValue, XSSFComment comment) {
-            //cell 이벤트 발생 시 해당 cell의 주소와 값을 받아옴.
-            row[currColNum++] = formattedValue == null ? "" : formattedValue;
+            int iRow = (new CellReference(cellReference)).getRow();
 
-            rowMap.put(String.valueOf(currColNum), formattedValue);
+            if(iRow == 0){
+                headers.put(cellReference.replaceAll("[0-9]",""), formattedValue);
+            }else{
+                rowMap.put(headers.get(cellReference.replaceAll("[0-9]","")), formattedValue);
+            }
+        }
 
-            if (currColNum == columnCnt) {
-                excelDataList.add(rowMap);
-
+        @Override
+        public void endRow(int rowNum) {
+            if(rowNum > 0){
+                rows.add(rowMap);
                 rowMap = new LinkedHashMap<>();
             }
         }
 
-        private LinkedHashMap<String, String> rowMap = new LinkedHashMap<>();
+        @Override
+        public void headerFooter(String text, boolean isHeader, String tagName) {
+        }
 
-        public void headerFooter(String paramString1, boolean paramBoolean,
-                                 String paramString2) {
-            //sheet의 첫 row와 마지막 row를 처리하는 method
+        @Override
+        public void endSheet() {
+
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

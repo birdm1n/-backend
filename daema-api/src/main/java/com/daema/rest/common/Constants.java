@@ -35,7 +35,9 @@ public class Constants {
     public static final String USER_JOIN_URL = "/user/sign-up";
 
     public static final String XLS_ROOT_PATH = File.separator.concat("excel");
+    public static final String XLS_UPLOAD_PATH = XLS_ROOT_PATH.concat(File.separator).concat("upload");
     public static final String XLS_DOWNLOAD_PATH = XLS_ROOT_PATH.concat(File.separator).concat("download");
+    public static final String XLS_TEMPLATE_PATH = XLS_ROOT_PATH.concat(File.separator).concat("template");
     public static final String XLS_TMP_PATH = XLS_ROOT_PATH.concat(File.separator).concat("tmp");
 
     public static final String FILE_DOWNLOAD_VIEW = "fileDownloadView";

@@ -7,13 +7,14 @@ import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
+import com.daema.rest.common.exception.ProcessErrorException;
+import com.daema.rest.common.io.file.FileUpload;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
-import com.daema.rest.wms.dto.DeviceStatusDto;
-import com.daema.rest.wms.dto.ReturnStockDto;
 import com.daema.rest.wms.dto.StoreStockMgmtDto;
-import com.daema.rest.wms.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.*;
+import com.daema.wms.domain.dto.request.DeviceStatusDto;
+import com.daema.wms.domain.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
 import com.daema.wms.domain.dto.response.ReturnStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -22,11 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -39,10 +40,11 @@ public class ReturnStockMgmtService {
 	private final MoveStockRepository deviceStockRepository;
 	private final AuthenticationUtil authenticationUtil;
 	private final ReturnStockCtrl returnStockCtrl;
+	private final FileUpload fileUpload;
 
 	public ReturnStockMgmtService(StockRepository stockRepository, ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
 			, DeviceStatusRepository deviceStatusRepository, MoveStockRepository deviceStockRepository
-			, AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl) {
+			, AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl, FileUpload fileUpload) {
 		this.stockRepository = stockRepository;
 		this.returnStockRepository = returnStockRepository;
 		this.deviceRepository = deviceRepository;
@@ -50,9 +52,10 @@ public class ReturnStockMgmtService {
 		this.deviceStockRepository = deviceStockRepository;
 		this.authenticationUtil = authenticationUtil;
 		this.returnStockCtrl = returnStockCtrl;
+		this.fileUpload = fileUpload;
 	}
 
-	public ResponseDto<ReturnStockDto> getReturnStockList(ReturnStockRequestDto requestDto) {
+	public ResponseDto<ReturnStockResponseDto> getReturnStockList(ReturnStockRequestDto requestDto) {
 
 		requestDto.setStoreId(authenticationUtil.getStoreId());
 
@@ -63,7 +66,7 @@ public class ReturnStockMgmtService {
 
 	public Set<Long> insertReturnStock(List<ReturnStockReqDto> returnStockDtoList) {
 
-		Set<Long> failBarcode = new HashSet<>();
+		Set<Long> failDvcId = new HashSet<>();
 
 		if (CommonUtil.isNotEmptyList(returnStockDtoList)) {
 
@@ -75,10 +78,10 @@ public class ReturnStockMgmtService {
 				for (ReturnStockReqDto returnStockDto : returnStockDtoList) {
 					try {
 						if(!returnStockCtrl.save(returnStockDto, stock)){
-							failBarcode.add(returnStockDto.getDvcId());
+							failDvcId.add(returnStockDto.getDvcId());
 						}
 					}catch (Exception e){
-						failBarcode.add(returnStockDto.getDvcId());
+						failDvcId.add(returnStockDto.getDvcId());
 						log.error(e.getMessage());
 					}
 				}
@@ -87,6 +90,50 @@ public class ReturnStockMgmtService {
 			}
 		} else {
 			throw new DataNotFoundException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+		}
+
+		return failDvcId;
+	}
+
+	public Set<String> insertReturnStockExcel(MultipartHttpServletRequest mRequest) {
+
+		Set<String> failBarcode = new HashSet<>();
+
+		try{
+			Map<String, Object> excelMap = fileUpload.uploadExcelAndParser(mRequest.getFile("excelFile"));
+
+			if(excelMap != null) {
+				LinkedHashMap<String, String> headerMap = (LinkedHashMap<String, String>) excelMap.get("headers");
+				List<HashMap<String, String>> barcodeList = (List<HashMap<String, String>>) excelMap.get("rows");
+
+				if (CommonUtil.isNotEmptyList(barcodeList)) {
+					String key = headerMap.keySet().iterator().next();
+
+					List<String> barcodeDataList = barcodeList.stream()
+							.map(data -> data.get(headerMap.get(key)))
+							.collect(Collectors.toList());
+
+					List<ReturnStockReqDto> returnStockDtoList = returnStockRepository.makeReturnStockInfoFromBarcode(barcodeDataList, authenticationUtil.getStoreId());
+
+					Set<Long> failDvcId = insertReturnStock(returnStockDtoList);
+
+					failDvcId.forEach(
+							dvcId -> {
+								failBarcode.add(
+										returnStockDtoList.stream()
+										.filter(returnStockDto -> returnStockDto.getDvcId() == dvcId)
+										.findAny()
+										.map(ReturnStockReqDto::getFullBarcode)
+										.get()
+								);
+							}
+					);
+				}else{
+					throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+				}
+			}
+		}catch (Exception e){
+			throw new ProcessErrorException(e.getMessage());
 		}
 
 		return failBarcode;
@@ -122,16 +169,27 @@ class ReturnStockCtrl {
 
 		LocalDateTime regiDatetime = LocalDateTime.now();
 		Device device = deviceRepository.findById(returnStockDto.getDvcId()).orElseGet(null);
-		List<ReturnStock> returnStocks = returnStockRepository.findByDeviceAndStore(
-				Device.builder()
-						.dvcId(returnStockDto.getDvcId())
-						.build(),
-				Store.builder()
-						.storeId(authenticationUtil.getStoreId())
-						.build()
-		);
 
 		if (device != null) {
+
+			List<ReturnStock> returnStocks = returnStockRepository.findByDeviceAndStore(
+					device,
+					Store.builder()
+							.storeId(authenticationUtil.getStoreId())
+							.build()
+			);
+
+			List<DeviceStatus> deviceStatuses = deviceStatusRepository.findByDevice(device);
+
+			//기존 기기 상태 이력 업데이트
+			if(CommonUtil.isNotEmptyList(deviceStatuses)){
+				deviceStatuses.forEach(
+						deviceStatus -> {
+							deviceStatus.updateDelYn(deviceStatus, StatusEnum.FLAG_Y.getStatusMsg());
+						}
+				);
+			}
+
 			DeviceStatusDto deviceStatusDto = returnStockDto.getReturnDeviceStatus();
 
 			DeviceStatus deviceStatus = deviceStatusRepository.save(
@@ -143,7 +201,8 @@ class ReturnStockCtrl {
 							.missProduct(deviceStatusDto.getMissProduct())
 							.ddctAmt(deviceStatusDto.getDdctAmt())
 							.addDdctAmt(deviceStatusDto.getAddDdctAmt())
-							.inStockStatus(returnStockDto.getReturnStockStatus())
+							.inStockStatus(deviceStatusDto.getInStockStatus())
+							.ddctReleaseAmtYn(deviceStatusDto.getDdctReleaseAmtYn())
 							.device(device)
 							.build()
 			);
@@ -162,7 +221,6 @@ class ReturnStockCtrl {
 							.returnStockId(0L)
 							.returnStockAmt(returnStockDto.getReturnStockAmt())
 							.returnStockMemo(returnStockDto.getReturnStockMemo())
-							.ddctReleaseAmtYn(returnStockDto.getReturnDeviceStatus().getDdctReleaseAmtYn())
 							.device(device)
 							.prevStock(Stock.builder()
 									.stockId(returnStockDto.getPrevStockId())
