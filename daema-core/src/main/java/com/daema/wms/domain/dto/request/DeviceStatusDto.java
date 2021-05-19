@@ -1,4 +1,4 @@
-package com.daema.rest.wms.dto;
+package com.daema.wms.domain.dto.request;
 
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
@@ -18,6 +18,7 @@ public class DeviceStatusDto {
 	private Integer ddctAmt;
 	private Integer addDdctAmt;
 	private String ddctReleaseAmtYn;
+	private WmsEnum.InStockStatus inStockStatus;
 }
 
 
