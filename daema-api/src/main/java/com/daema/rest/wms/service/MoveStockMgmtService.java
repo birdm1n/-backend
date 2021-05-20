@@ -440,4 +440,18 @@ public class MoveStockMgmtService {
         }
 
     }
+
+    public ResponseCodeEnum updateSellMove(SellMoveUpdateReqDto requestDto) {
+        MoveStock moveStock = moveStockRepository.findById(requestDto.getMoveStockId()).orElse(null);
+        Delivery delivery = moveStock.getDelivery();
+        delivery.setCusName(requestDto.getCusName());
+        delivery.setCusPhone(requestDto.getCusPhone());
+        delivery.setZipCode(requestDto.getZipCode());
+        delivery.setAddr1(requestDto.getAddr1());
+        delivery.setAddr2(requestDto.getAddr2());
+        delivery.setDeliveryMemo(requestDto.getDeliveryMemo());
+
+
+        return ResponseCodeEnum.OK;
+    }
 }
