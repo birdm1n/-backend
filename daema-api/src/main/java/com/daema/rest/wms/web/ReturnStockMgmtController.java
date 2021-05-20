@@ -45,7 +45,7 @@ public class ReturnStockMgmtController {
     @ApiOperation(value = "이동재고반품 등록", notes = "신규 이동재고반품 처리를 합니다.")
     @PostMapping("/insertReturnStock")
     public ResponseEntity<CommonResponse<Set<Long>>> insertReturnStock(@ApiParam(value = "신규 이동재고반품", required = true) @RequestBody List<ReturnStockReqDto> returnStockDtoList) {
-        Set<Long> fails = returnStockMgmtService.insertReturnStock(returnStockDtoList);
+        Set<String> fails = returnStockMgmtService.insertReturnStock(returnStockDtoList);
 
         return responseHandler.ok(fails);
     }

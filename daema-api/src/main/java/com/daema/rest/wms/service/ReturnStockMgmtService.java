@@ -64,9 +64,9 @@ public class ReturnStockMgmtService {
 		return new ResponseDto(dataList);
 	}
 
-	public Set<Long> insertReturnStock(List<ReturnStockReqDto> returnStockDtoList) {
+	public Set<String> insertReturnStock(List<ReturnStockReqDto> returnStockDtoList) {
 
-		Set<Long> failDvcId = new HashSet<>();
+		Set<String> failBarcode = new HashSet<>();
 
 		if (CommonUtil.isNotEmptyList(returnStockDtoList)) {
 
@@ -78,10 +78,10 @@ public class ReturnStockMgmtService {
 				for (ReturnStockReqDto returnStockDto : returnStockDtoList) {
 					try {
 						if(!returnStockCtrl.save(returnStockDto, stock)){
-							failDvcId.add(returnStockDto.getDvcId());
+							failBarcode.add(returnStockDto.getFullBarcode());
 						}
 					}catch (Exception e){
-						failDvcId.add(returnStockDto.getDvcId());
+						failBarcode.add(returnStockDto.getFullBarcode());
 						log.error(e.getMessage());
 					}
 				}
@@ -92,7 +92,7 @@ public class ReturnStockMgmtService {
 			throw new DataNotFoundException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
 		}
 
-		return failDvcId;
+		return failBarcode;
 	}
 
 	public Set<String> insertReturnStockExcel(MultipartHttpServletRequest mRequest) {
@@ -109,25 +109,29 @@ public class ReturnStockMgmtService {
 				if (CommonUtil.isNotEmptyList(barcodeList)) {
 					String key = headerMap.keySet().iterator().next();
 
-					List<String> barcodeDataList = barcodeList.stream()
+					//엑셀에서 추출한 바코드 리스트
+					List<String> excelBarcodeList = barcodeList.stream()
 							.map(data -> data.get(headerMap.get(key)))
 							.collect(Collectors.toList());
 
-					List<ReturnStockReqDto> returnStockDtoList = returnStockRepository.makeReturnStockInfoFromBarcode(barcodeDataList, authenticationUtil.getStoreId());
+					//바코드 기준으로 반품 할 데이터 조회 및 생성
+					List<ReturnStockReqDto> returnStockDtoList = returnStockRepository.makeReturnStockInfoFromBarcode(excelBarcodeList, authenticationUtil.getStoreId());
 
-					Set<Long> failDvcId = insertReturnStock(returnStockDtoList);
+					//반품 처리
+					//failBarcode = insertReturnStock(returnStockDtoList);
 
-					failDvcId.forEach(
-							dvcId -> {
-								failBarcode.add(
-										returnStockDtoList.stream()
-										.filter(returnStockDto -> returnStockDto.getDvcId() == dvcId)
-										.findAny()
-										.map(ReturnStockReqDto::getFullBarcode)
-										.get()
-								);
-							}
+					//DB 조회 된 바코드 리스트 추출
+					Set<String> dbBarcode = returnStockDtoList.stream()
+							.map(ReturnStockReqDto::getFullBarcode)
+							.collect(Collectors.toSet());
+
+					//엑셀 바코드 중 DB 에 없는 건은 failBarcode 에 add
+					failBarcode.addAll(
+							excelBarcodeList.stream()
+									.filter(excelBarcode -> !dbBarcode.contains(excelBarcode))
+							.collect(Collectors.toSet())
 					);
+
 				}else{
 					throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
 				}
