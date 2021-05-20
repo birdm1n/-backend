@@ -69,7 +69,7 @@ public class ExcelDownloadService {
             fileName = "이동재고반품_";
             cls = ExcelVO.ReturnStockList.class;
             dataList = returnStockMgmtService.getReturnStockList(mapper.convertValue(modelMap, ReturnStockRequestDto.class)).getResultList();
-        } else if ("/download/excel/insertReturnStockExcelException".equals(pageType)) {
+        } else if ("insertReturnStockExcelException".equals(pageType)) {
             fileName = "이동재고반품_엑셀업로드_실패목록_";
             cls = ExcelVO.BarcodeList.class;
             dataList = (List) modelMap.get("failList");
