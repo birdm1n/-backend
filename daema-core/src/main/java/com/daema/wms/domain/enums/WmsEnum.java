@@ -131,6 +131,23 @@ public enum WmsEnum {
         }
     }
 
+    //재고관리_페이지 구분
+    public enum StoreStockPathType {
+        STORE_STOCK("재고현황"),
+        LONG_TIME_STORE_STOCK("장기재고"),
+        FAULTY_STORE_STOCK("불량기기현황"),
+        ;
+
+        private final String statusMsg;
+
+        StoreStockPathType(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
+
     public enum DeliveryType {
         PS("택배"),
         QUICK("퀵"),

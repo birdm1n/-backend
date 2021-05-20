@@ -17,6 +17,7 @@ import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
 import com.daema.wms.domain.dto.response.StoreStockCheckListDto;
 import com.daema.wms.domain.dto.response.StoreStockResponseDto;
+import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.DeviceJudgeRepository;
 import com.daema.wms.repository.MoveStockAlarmRepository;
 import com.daema.wms.repository.StoreStockCheckRepository;
@@ -53,17 +54,17 @@ public class StoreStockMgmtService {
 		this.authenticationUtil = authenticationUtil;
 	}
 
-	public ResponseDto<StoreStockResponseDto> getStoreStockList(StoreStockRequestDto requestDto, TypeEnum.StoreStockPageType pageType) {
+	public ResponseDto<StoreStockResponseDto> getStoreStockList(StoreStockRequestDto requestDto, WmsEnum.StoreStockPathType pathType) {
 
 		requestDto.setStoreId(authenticationUtil.getStoreId());
 
 		Page<StoreStockResponseDto> dataList = null;
 
-		if(TypeEnum.StoreStockPageType.STORE_STOCK == pageType){
+		if(WmsEnum.StoreStockPathType.STORE_STOCK == pathType){
 			dataList = storeStockRepository.getStoreStockList(requestDto);
-		}else if(TypeEnum.StoreStockPageType.LONG_TIME_STORE_STOCK == pageType){
+		}else if(WmsEnum.StoreStockPathType.LONG_TIME_STORE_STOCK == pathType){
 			dataList = storeStockRepository.getLongTimeStoreStockList(requestDto);
-		}else if(TypeEnum.StoreStockPageType.FAULTY_STORE_STOCK == pageType){
+		}else if(WmsEnum.StoreStockPathType.FAULTY_STORE_STOCK == pathType){
 			dataList = storeStockRepository.getFaultyStoreStockList(requestDto);
 		}
 

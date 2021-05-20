@@ -33,21 +33,4 @@ public enum TypeEnum {
         return this.statusMsg;
     }
 
-
-    //재고관리_페이지 구분
-    public enum StoreStockPageType {
-        STORE_STOCK("storeStock"),
-        LONG_TIME_STORE_STOCK("longTimeStoreStock"),
-        FAULTY_STORE_STOCK("faultyStoreStock"),
-        ;
-
-        private final String statusMsg;
-
-        StoreStockPageType(String statusMsg) {
-            this.statusMsg = statusMsg;
-        }
-        public String getStatusMsg() {
-            return this.statusMsg;
-        }
-    }
 }

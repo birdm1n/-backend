@@ -30,21 +30,21 @@ public class FileUpload {
      *         headers : LinkedHashMap<String, String> : { A : colName, B : colName2, C : colName3 }
      *         rows    : List<HashMap<String, String>> List<{ A : data1, B : data2, C : data3 }>
      */
-    public Map<String, Object> uploadExcelAndParser(MultipartFile mFile) {
+    public Map<String, Object> uploadExcelAndParser(MultipartFile mFile, Long memberSeq) {
 
         Map<String, Object> parserMap = null;
 
         if(mFile != null
                 && StringUtils.hasText(mFile.getName())){
 
-            String filePath = Constants.XLS_UPLOAD_PATH.concat(File.separator);
+            String filePath = Constants.XLS_UPLOAD_PATH.concat(File.separator).concat(DateUtil.getTodayYYYYMM()).concat(File.separator);
 
             String profile = System.getProperty("spring.profiles.active");
 
             if(profile != null &&
                     !"prod".equals(profile)) {
 
-                filePath = "C:".concat(Constants.XLS_UPLOAD_PATH.concat(File.separator));
+                filePath = "C:".concat(Constants.XLS_UPLOAD_PATH.concat(File.separator)).concat(DateUtil.getTodayYYYYMM()).concat(File.separator);
             }
 
             try{
@@ -58,7 +58,7 @@ public class FileUpload {
                 String originalFileName = mFile.getOriginalFilename();
                 String tmpFileName   = DateUtil.getCurrentDateTimeMilli() + "_";
                 String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
-                String uploadFile = filePath.concat(tmpFileName).concat(".").concat(fileExtension);
+                String uploadFile = filePath.concat(tmpFileName).concat("_".concat(String.valueOf(memberSeq))).concat(".").concat(fileExtension);
 
                 File excelFile = new File(uploadFile);
 

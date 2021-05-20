@@ -100,7 +100,7 @@ public class ReturnStockMgmtService {
 		Set<String> failBarcode = new HashSet<>();
 
 		try{
-			Map<String, Object> excelMap = fileUpload.uploadExcelAndParser(mRequest.getFile("excelFile"));
+			Map<String, Object> excelMap = fileUpload.uploadExcelAndParser(mRequest.getFile("excelFile"), authenticationUtil.getMemberSeq());
 
 			if(excelMap != null) {
 				LinkedHashMap<String, String> headerMap = (LinkedHashMap<String, String>) excelMap.get("headers");

@@ -8,10 +8,13 @@ import com.daema.rest.common.Constants;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.common.util.DateUtil;
-import com.daema.rest.wms.service.*;
+import com.daema.rest.wms.service.InStockMgmtService;
+import com.daema.rest.wms.service.ReturnStockMgmtService;
+import com.daema.rest.wms.service.StoreStockMgmtService;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
+import com.daema.wms.domain.enums.WmsEnum;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTimeUtils;
@@ -66,7 +69,7 @@ public class ExcelDownloadService {
             fileName = "이동재고반품_";
             cls = ExcelVO.ReturnStockList.class;
             dataList = returnStockMgmtService.getReturnStockList(mapper.convertValue(modelMap, ReturnStockRequestDto.class)).getResultList();
-        } else if ("insertReturnStockExcelException".equals(pageType)) {
+        } else if ("/download/excel/insertReturnStockExcelException".equals(pageType)) {
             fileName = "이동재고반품_엑셀업로드_실패목록_";
             cls = ExcelVO.BarcodeList.class;
             dataList = (List) modelMap.get("failList");
@@ -74,23 +77,23 @@ public class ExcelDownloadService {
                 || "getLongTimeStoreStockListExcel".equals(pageType)
                 || "getFaultyStoreStockListExcel".equals(pageType)) {
 
-            TypeEnum.StoreStockPageType storeStockPageType = null;
+            WmsEnum.StoreStockPathType storeStockPathType = null;
 
             if ("getFaultyStoreStockListExcel".equals(pageType)) {
                 fileName = "불량기기현황_";
                 cls = ExcelVO.FaultyStoreStockList.class;
-                storeStockPageType = TypeEnum.StoreStockPageType.FAULTY_STORE_STOCK;
+                storeStockPathType = WmsEnum.StoreStockPathType.FAULTY_STORE_STOCK;
             } else if ("getLongTimeStoreStockListExcel".equals(pageType)) {
                 fileName = "장기재고_";
                 cls = ExcelVO.LongTimeStoreStockList.class;
-                storeStockPageType = TypeEnum.StoreStockPageType.LONG_TIME_STORE_STOCK;
+                storeStockPathType = WmsEnum.StoreStockPathType.LONG_TIME_STORE_STOCK;
             } else {
                 fileName = "재고현황_";
                 cls = ExcelVO.StoreStockList.class;
-                storeStockPageType = TypeEnum.StoreStockPageType.STORE_STOCK;
+                storeStockPathType = WmsEnum.StoreStockPathType.STORE_STOCK;
             }
 
-            dataList = storeStockMgmtService.getStoreStockList(mapper.convertValue(modelMap, StoreStockRequestDto.class), storeStockPageType).getResultList();
+            dataList = storeStockMgmtService.getStoreStockList(mapper.convertValue(modelMap, StoreStockRequestDto.class), storeStockPathType).getResultList();
 
         } else if ("getMove......ListExcel".equals(pageType)) {
             //TODO 이동/이관 엑셀 다운로드 추가 필요
