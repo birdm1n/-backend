@@ -9,9 +9,11 @@ import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.common.util.DateUtil;
 import com.daema.rest.wms.service.InStockMgmtService;
+import com.daema.rest.wms.service.MoveStockMgmtService;
 import com.daema.rest.wms.service.ReturnStockMgmtService;
 import com.daema.rest.wms.service.StoreStockMgmtService;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
+import com.daema.wms.domain.dto.request.MoveStockRequestDto;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
 import com.daema.wms.domain.dto.request.StoreStockRequestDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -34,8 +36,9 @@ import java.util.List;
 public class ExcelDownloadService {
 
     private final PubNotiRawDataRepository pubNotiRawDataRepository;
-    private final ReturnStockMgmtService returnStockMgmtService;
     private final InStockMgmtService inStockMgmtService;
+    private final MoveStockMgmtService moveStockMgmtService;
+    private final ReturnStockMgmtService returnStockMgmtService;
     private final StoreStockMgmtService storeStockMgmtService;
 
     private final AuthenticationUtil authenticationUtil;
@@ -44,10 +47,11 @@ public class ExcelDownloadService {
     private Class<?> cls;
     private List dataList;
 
-    public ExcelDownloadService(PubNotiRawDataRepository pubNotiRawDataRepository, ReturnStockMgmtService returnStockMgmtService, InStockMgmtService inStockMgmtService, StoreStockMgmtService storeStockMgmtService, AuthenticationUtil authenticationUtil) {
+    public ExcelDownloadService(PubNotiRawDataRepository pubNotiRawDataRepository, ReturnStockMgmtService returnStockMgmtService, InStockMgmtService inStockMgmtService, MoveStockMgmtService moveStockMgmtService, StoreStockMgmtService storeStockMgmtService, AuthenticationUtil authenticationUtil) {
         this.pubNotiRawDataRepository = pubNotiRawDataRepository;
         this.returnStockMgmtService = returnStockMgmtService;
         this.inStockMgmtService = inStockMgmtService;
+        this.moveStockMgmtService = moveStockMgmtService;
         this.storeStockMgmtService = storeStockMgmtService;
 
         this.authenticationUtil = authenticationUtil;
@@ -78,28 +82,59 @@ public class ExcelDownloadService {
                 || "getFaultyStoreStockListExcel".equals(pageType)) {
 
             WmsEnum.StoreStockPathType storeStockPathType = null;
+            dataList = new ArrayList();
 
-            if ("getFaultyStoreStockListExcel".equals(pageType)) {
-                fileName = "불량기기현황_";
-                cls = ExcelVO.FaultyStoreStockList.class;
-                storeStockPathType = WmsEnum.StoreStockPathType.FAULTY_STORE_STOCK;
+            if ("getStoreStockListExcel".equals(pageType)) {
+                fileName = "재고현황_";
+                cls = ExcelVO.StoreStockList.class;
+                storeStockPathType = WmsEnum.StoreStockPathType.STORE_STOCK;
             } else if ("getLongTimeStoreStockListExcel".equals(pageType)) {
                 fileName = "장기재고_";
                 cls = ExcelVO.LongTimeStoreStockList.class;
                 storeStockPathType = WmsEnum.StoreStockPathType.LONG_TIME_STORE_STOCK;
-            } else {
-                fileName = "재고현황_";
-                cls = ExcelVO.StoreStockList.class;
-                storeStockPathType = WmsEnum.StoreStockPathType.STORE_STOCK;
+            } else if ("getFaultyStoreStockListExcel".equals(pageType)) {
+                fileName = "불량기기현황_";
+                cls = ExcelVO.FaultyStoreStockList.class;
+                storeStockPathType = WmsEnum.StoreStockPathType.FAULTY_STORE_STOCK;
             }
 
-            dataList = storeStockMgmtService.getStoreStockList(mapper.convertValue(modelMap, StoreStockRequestDto.class), storeStockPathType).getResultList();
+            if(storeStockPathType != null) {
+                dataList = storeStockMgmtService.getStoreStockList(mapper.convertValue(modelMap, StoreStockRequestDto.class), storeStockPathType).getResultList();
+            }
+        } else if ("SELL_MOVEExcel".equals(pageType)
+                || "STOCK_MOVEExcel".equals(pageType)
+                || "STOCK_TRNSExcel".equals(pageType)
+                || "FAULTY_TRNSExcel".equals(pageType)
+                || "SELL_TRNSExcel".equals(pageType)) {
 
-        } else if ("getMove......ListExcel".equals(pageType)) {
-            //TODO 이동/이관 엑셀 다운로드 추가 필요
-            //fileName = "이동현황_";
-            //cls = ExcelVO.MoveMgmtList.class;
-            //dataList = returnStockMgmtService.getReturnStockList(mapper.convertValue(modelMap, ReturnStockRequestDto.class)).getResultList();
+            WmsEnum.MovePathType movePathType = null;
+            dataList = new ArrayList();
+
+            if ("SELL_MOVEExcel".equals(pageType)) {
+                fileName = "판매이동_";
+                cls = ExcelVO.SellMoveList.class;
+                movePathType = WmsEnum.MovePathType.SELL_MOVE;
+            } else if ("STOCK_MOVEExcel".equals(pageType)) {
+                fileName = "재고이동_";
+                cls = ExcelVO.StockMoveList.class;
+                movePathType = WmsEnum.MovePathType.STOCK_MOVE;
+            } else if ("STOCK_TRNSExcel".equals(pageType)) {
+                fileName = "재고이관_";
+                cls = ExcelVO.StoreTransList.class;
+                movePathType = WmsEnum.MovePathType.STOCK_TRNS;
+            } else if ("FAULTY_TRNSExcel".equals(pageType)) {
+                fileName = "불량이관_";
+                cls = ExcelVO.FaultyTransList.class;
+                movePathType = WmsEnum.MovePathType.FAULTY_TRNS;
+            } else if ("SELL_TRNSExcel".equals(pageType)) {
+                fileName = "판매이관_";
+                cls = ExcelVO.SellTransList.class;
+                movePathType = WmsEnum.MovePathType.SELL_TRNS;
+            }
+
+            if(movePathType != null) {
+                dataList = moveStockMgmtService.getMoveAndTrnsList(movePathType, mapper.convertValue(modelMap, MoveStockRequestDto.class)).getResultList();
+            }
         } else if ("getMoveMgmtListExcel".equals(pageType)) {
             //TODO 이동현황 엑셀 다운로드 추가 필요
             fileName = "이동현황_";

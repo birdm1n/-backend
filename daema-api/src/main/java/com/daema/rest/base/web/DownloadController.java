@@ -79,7 +79,15 @@ public class DownloadController {
             String filePath = Constants.XLS_TEMPLATE_PATH;
             String fileName = templateFileName.concat(".").concat(TypeEnum.XLSX.getStatusMsg());
 
-            File downloadFile = new File(filePath + fileName);
+            String profile = System.getProperty("spring.profiles.active");
+
+            if(profile != null &&
+                    !"prod".equals(profile)) {
+
+                filePath = "C:".concat(Constants.XLS_TEMPLATE_PATH.concat(File.separator));
+            }
+
+            File downloadFile = new File(filePath.concat(File.separator).concat(fileName));
 
             mv.setViewName(Constants.FILE_DOWNLOAD_VIEW);
             mv.addObject("fileName", fileName);
