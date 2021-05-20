@@ -103,7 +103,7 @@ public class DownloadController {
      * excel download
      */
     @PostMapping(value = "/excel/{pageType}")
-    public ModelAndView excelDownload(@RequestBody ModelMap modelMap, @PathVariable String pageType) {
+    public ModelAndView excelDownload(@PathVariable String pageType, @RequestBody ModelMap modelMap) {
 
         ModelAndView mv = new ModelAndView();
 

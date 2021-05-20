@@ -29,13 +29,13 @@ public class ExcelUtil {
     //download
     private final String XML_ENCODING = "UTF-8";
 
-    private String[][][] mHeader;
+    private List<String[]> mHeader;
     private List<LinkedHashMap<String, Object>> mData;
 
     public ExcelUtil() {
     }
 
-    public ExcelUtil(String[][][] header, List<LinkedHashMap<String, Object>> data) {
+    public ExcelUtil(List<String[]> header, List<LinkedHashMap<String, Object>> data) {
         mHeader = header;
         mData = data;
     }
@@ -127,8 +127,8 @@ public class ExcelUtil {
         sw.insertRow(0);
         int styleIndex = styles.get("header").getIndex();
 
-        for (int i = 0; i < mHeader.length; i++) {
-            sw.createCell(i, mHeader[i][0][0], styleIndex);
+        for (int i = 0; i < mHeader.size(); i++) {
+            sw.createCell(i, mHeader.get(i)[0], styleIndex);
         }
         sw.endRow();
 
@@ -136,35 +136,35 @@ public class ExcelUtil {
         for (int rownum = 1; rownum < mData.size() + 1; rownum++) {
             sw.insertRow(rownum);
 
-            for (int i = 0; i < mHeader.length; i++) {
+            for (int i = 0; i < mHeader.size(); i++) {
 
-                if("class java.time.LocalDate".equals(mHeader[i][1][0])){
+                if("class java.time.LocalDate".equals(mHeader.get(i)[1])){
 
-                    String[] tmp = String.valueOf(mData.get(rownum - 1).get(mHeader[i][0][1])).split(",");
+                    String[] tmpLocalDate = String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2])).split(",");
 
                     sw.createCell(i,
-                            tmp.length > 1 ?
-                                tmp[0].split("=")[1]
-                                .concat(CommonUtil.appendLeft(tmp[3].split("=")[1], "0", 2))
-                                .concat(CommonUtil.appendLeft(tmp[2].split("=")[1], "0", 2))
+                            tmpLocalDate.length > 1 ?
+                                    tmpLocalDate[0].split("=")[1]
+                                .concat(CommonUtil.appendLeft(tmpLocalDate[3].split("=")[1], "0", 2))
+                                .concat(CommonUtil.appendLeft(tmpLocalDate[2].split("=")[1], "0", 2))
                                     : null
                     );
-                }else if("class java.time.LocalDateTime".equals(mHeader[i][1][0])){
+                }else if("class java.time.LocalDateTime".equals(mHeader.get(i)[1])){
 
-                    String[] tmp = String.valueOf(mData.get(rownum - 1).get(mHeader[i][0][1])).split(",");
+                    String[] tmpLocalDateTime = String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2])).split(",");
 
                     sw.createCell(i,
-                            tmp.length > 1 ?
-                                tmp[1].split("=")[1]
-                                .concat(CommonUtil.appendLeft(tmp[5].split("=")[1], "0", 2))
-                                .concat(CommonUtil.appendLeft(tmp[2].split("=")[1], "0", 2))
-                                .concat(CommonUtil.appendLeft(tmp[3].split("=")[1], "0", 2))
-                                .concat(CommonUtil.appendLeft(tmp[4].split("=")[1], "0", 2))
-                                .concat(CommonUtil.appendLeft(tmp[7].split("=")[1], "0", 2))
+                            tmpLocalDateTime.length > 1 ?
+                                    tmpLocalDateTime[1].split("=")[1]
+                                .concat(CommonUtil.appendLeft(tmpLocalDateTime[5].split("=")[1], "0", 2))
+                                .concat(CommonUtil.appendLeft(tmpLocalDateTime[2].split("=")[1], "0", 2))
+                                .concat(CommonUtil.appendLeft(tmpLocalDateTime[3].split("=")[1], "0", 2))
+                                .concat(CommonUtil.appendLeft(tmpLocalDateTime[4].split("=")[1], "0", 2))
+                                .concat(CommonUtil.appendLeft(tmpLocalDateTime[7].split("=")[1], "0", 2))
                                     : null
                     );
                 }else {
-                    sw.createCell(i, String.valueOf(mData.get(rownum - 1).get(mHeader[i][0][1])));
+                    sw.createCell(i, String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2])));
                 }
             }
 

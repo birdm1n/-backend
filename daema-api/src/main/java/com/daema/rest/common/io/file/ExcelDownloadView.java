@@ -36,7 +36,7 @@ public class ExcelDownloadView extends AbstractView {
 
             //xls 정보 세팅
             String excelFileName = (String) xlsMap.get("excelFileName");
-            String[][][] headerList = (String[][][]) xlsMap.get("headerList");
+            List<String[]> headerList = (List<String[]>) xlsMap.get("headerList");
             List<LinkedHashMap<String, Object>> dataList = (List<LinkedHashMap<String, Object>>) xlsMap.get("dataList");
 
             //더미 tmp 파일

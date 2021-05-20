@@ -43,7 +43,7 @@ public class FileDownloadView extends AbstractView {
         response.setContentType(getContentType());
         response.setContentLength((int) file.length());
         String userAgent = request.getHeader("User-Agent");
-        boolean br = userAgent.indexOf("Chrome") > -1;
+        boolean br = userAgent.contains("Chrome");
 
         String fileName = null;
         fileName = (String) model.get("fileName");
