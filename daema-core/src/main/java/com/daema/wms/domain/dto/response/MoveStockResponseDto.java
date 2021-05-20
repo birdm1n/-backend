@@ -61,6 +61,11 @@ public class MoveStockResponseDto {
 
     // 고객 전화번호
     private String cusPhone;
+
+    private String zipCode;
+    private String addr1;
+    private String addr2;
+
     
     // 배송메모
     private String deliveryMemo;

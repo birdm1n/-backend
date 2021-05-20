@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "deliveryId")
-@ToString
+@ToString(exclude = {"outStock", "moveStock"})
 @NoArgsConstructor
 @Entity
 @Table(name = "delivery")

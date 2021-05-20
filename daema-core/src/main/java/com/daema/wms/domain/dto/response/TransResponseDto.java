@@ -86,9 +86,15 @@ public class TransResponseDto {
 
     // 이관일
     private LocalDateTime regiDateTime;
+    //이관 경과일
+    private Long diffRegiDateTime;
 
     public Long getDiffInStockRegiDate() {
         return CommonUtil.diffDaysLocalDateTime(this.inStockRegiDateTime);
+    }
+
+    public Long getDiffRegiDateTime() {
+        return CommonUtil.diffDaysLocalDateTime(this.regiDateTime);
     }
 
     public String getStatusStrMsg() {

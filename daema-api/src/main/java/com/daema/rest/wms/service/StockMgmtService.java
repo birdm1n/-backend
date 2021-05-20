@@ -148,18 +148,18 @@ public class StockMgmtService {
 			throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
 		}
 	}
-
+	@Transactional(readOnly = true)
     public List<SelectStockDto> selectStockList(Integer telecom) {
 		long storeId = authenticationUtil.getStoreId();
 		return stockRepository.selectStockList(storeId, telecom);
     }
 
-
+	@Transactional(readOnly = true)
 	public List<SelectStockDto> innerStockList() {
 		long storeId = authenticationUtil.getStoreId();
 		return stockRepository.innerStockList(storeId);
 	}
-
+	@Transactional(readOnly = true)
 	public SearchMatchResponseDto getDeviceStock(String fullBarcode) {
 		long storeId = authenticationUtil.getStoreId();
 		Store store = Store.builder().storeId(storeId).build();
@@ -170,13 +170,14 @@ public class StockMgmtService {
 		}
 
 		Stock stockEntity = deviceEntity.getStoreStock().getNextStock(); //현재 보유처
-		
-		SearchMatchResponseDto responseDto = SearchMatchResponseDto
-				.builder()
-				.stockId(stockEntity.getStockId())
-				.stockName(stockEntity.getStockName())
-				.build();
-		
+		SearchMatchResponseDto responseDto = null;
+		if (stockEntity != null) {
+			responseDto = SearchMatchResponseDto
+					.builder()
+					.stockId(stockEntity.getStockId())
+					.stockName(stockEntity.getStockName())
+					.build();
+		}
 		return responseDto;
 	}
 

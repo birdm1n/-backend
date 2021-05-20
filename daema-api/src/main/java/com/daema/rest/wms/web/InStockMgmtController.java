@@ -16,9 +16,12 @@ import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Set;
 
 @Api(value = "입고/입고현황 API", tags = "입고/입고현황 API")
 @RestController
@@ -82,5 +85,13 @@ public class InStockMgmtController {
         inStockMgmtService.updateInStock(requestDto);
         return responseHandler.ok();
     }
+
+    @ApiOperation(value = "입고대기 등록 엑셀 업로드", notes = "엑셀 업로드로 신규 입고대기 처리를 합니다.", produces = "multipart/form-data")
+    @PostMapping("/insertInStockWaitExcel")
+    public ResponseEntity<CommonResponse<Set<String>>> insertInStockWaitExcel(@ApiParam(value = "엑셀파일", required = true, name = "excelFile") @RequestPart MultipartFile excelFile, @ApiIgnore MultipartHttpServletRequest mRequest) {
+        Set<String> fails = inStockMgmtService.insertInStockWaitExcel(mRequest);
+        return responseHandler.ok(fails);
+    }
+
 
 }
