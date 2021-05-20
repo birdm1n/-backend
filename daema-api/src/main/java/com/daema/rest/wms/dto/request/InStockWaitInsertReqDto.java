@@ -3,12 +3,14 @@ package com.daema.rest.wms.dto.request;
 import com.daema.wms.domain.enums.WmsEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class InStockWaitInsertReqDto {
 
     @ApiModelProperty(value = "공급처 ID",  required = true)
@@ -33,7 +35,7 @@ public class InStockWaitInsertReqDto {
     private WmsEnum.DeviceExtrrStatus extrrStatus;
 
     @ApiModelProperty(value = "제품상태")
-    private String productFaultyYn ;
+    private String productFaultyYn = "N";
 
     @ApiModelProperty(value = "차감비")
     private int ddctAmt;

@@ -6,6 +6,7 @@ import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.dto.request.InStockInsertReqDto;
 import com.daema.rest.wms.dto.request.InStockUpdateReqDto;
+import com.daema.rest.wms.dto.request.InStockWaitInsertExcelReqDto;
 import com.daema.rest.wms.dto.request.InStockWaitInsertReqDto;
 import com.daema.rest.wms.service.InStockMgmtService;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
@@ -86,10 +87,13 @@ public class InStockMgmtController {
         return responseHandler.ok();
     }
 
+    // request
     @ApiOperation(value = "입고대기 등록 엑셀 업로드", notes = "엑셀 업로드로 신규 입고대기 처리를 합니다.", produces = "multipart/form-data")
     @PostMapping("/insertInStockWaitExcel")
-    public ResponseEntity<CommonResponse<Set<String>>> insertInStockWaitExcel(@ApiParam(value = "엑셀파일", required = true, name = "excelFile") @RequestPart MultipartFile excelFile, @ApiIgnore MultipartHttpServletRequest mRequest) {
-        Set<String> fails = inStockMgmtService.insertInStockWaitExcel(mRequest);
+    public ResponseEntity<CommonResponse<Set<String>>> insertInStockWaitExcel(@ApiParam(value = "엑셀파일", required = true, name = "excelFile") @RequestPart MultipartFile excelFile,
+                                                                              @ApiParam(value = "입고대기 데이터 ", required = true) InStockWaitInsertExcelReqDto requestDto,
+                                                                              @ApiIgnore MultipartHttpServletRequest mRequest) {
+        Set<String> fails = inStockMgmtService.insertInStockWaitExcel(requestDto, mRequest);
         return responseHandler.ok(fails);
     }
 

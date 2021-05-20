@@ -21,6 +21,7 @@ import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.wms.dto.request.InStockInsertReqDto;
 import com.daema.rest.wms.dto.request.InStockUpdateReqDto;
+import com.daema.rest.wms.dto.request.InStockWaitInsertExcelReqDto;
 import com.daema.rest.wms.dto.request.InStockWaitInsertReqDto;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.wms.domain.*;
@@ -107,8 +108,8 @@ public class InStockMgmtService {
         if (requestDto.getCapacity() == null) return ResponseCodeEnum.NO_CAPACITY;
 
         Goods goodsEntity = goodsRepository.findById(requestDto.getGoodsId()).orElse(null);
-        GoodsOption goodsOptionEntity = goodsOptionRepository.findTopByGoodsAndCapacityAndColorNameAndDelYn( goodsEntity, requestDto.getCapacity() ,requestDto.getColorName(), "N");
-        if(goodsOptionEntity == null) return ResponseCodeEnum.NO_CAPACITY_COLOR;
+        GoodsOption goodsOptionEntity = goodsOptionRepository.findTopByGoodsAndCapacityAndColorNameAndDelYn(goodsEntity, requestDto.getCapacity(), requestDto.getColorName(), "N");
+        if (goodsOptionEntity == null) return ResponseCodeEnum.NO_CAPACITY_COLOR;
 
         CodeDetail telecom = codeDetailRepository.findById(goodsEntity.getNetworkAttribute().getTelecom()).orElse(null);
         CodeDetail maker = codeDetailRepository.findById(goodsEntity.getMaker()).orElse(null);
@@ -337,7 +338,7 @@ public class InStockMgmtService {
             storeStockRepository.saveAll(storeStocks);
 
             // 5. 재고 히스토리 insert
-            for (StoreStock storeStock:storeStocks){
+            for (StoreStock storeStock : storeStocks) {
                 storeStockHistoryRepository.save(storeStock.toHistoryEntity(storeStock));
             }
 
@@ -402,46 +403,47 @@ public class InStockMgmtService {
         deviceStatus.setMissProduct(requestDto.getMissProduct());
     }
 
-    public Set<String> insertInStockWaitExcel(MultipartHttpServletRequest mRequest) {
+    public Set<String> insertInStockWaitExcel(InStockWaitInsertExcelReqDto requestDto, MultipartHttpServletRequest mRequest) {
 
         Set<String> failBarcode = new HashSet<>();
 
-//        try{
-//            Map<String, Object> excelMap = fileUpload.uploadExcelAndParser(mRequest.getFile("excelFile"), authenticationUtil.getMemberSeq());
-//
-//            if(excelMap != null) {
-//                LinkedHashMap<String, String> headerMap = (LinkedHashMap<String, String>) excelMap.get("headers");
-//                List<HashMap<String, String>> barcodeList = (List<HashMap<String, String>>) excelMap.get("rows");
-//
-//                if (CommonUtil.isNotEmptyList(barcodeList)) {
-//                    String key = headerMap.keySet().iterator().next();
-//
-//                    List<String> barcodeDataList = barcodeList.stream()
-//                            .map(data -> data.get(headerMap.get(key)))
-//                            .collect(Collectors.toList());
-//
-//                    List<ReturnStockReqDto> returnStockDtoList = returnStockRepository.makeReturnStockInfoFromBarcode(barcodeDataList, authenticationUtil.getStoreId());
-//
-//                    Set<Long> failDvcId = insertReturnStock(returnStockDtoList);
-//
-//                    failDvcId.forEach(
-//                            dvcId -> {
-//                                failBarcode.add(
-//                                        returnStockDtoList.stream()
-//                                                .filter(returnStockDto -> returnStockDto.getDvcId() == dvcId)
-//                                                .findAny()
-//                                                .map(ReturnStockReqDto::getFullBarcode)
-//                                                .get()
-//                                );
-//                            }
-//                    );
-//                }else{
-//                    throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
-//                }
-//            }
-//        }catch (Exception e){
-//            throw new ProcessErrorException(e.getMessage());
-//        }
+        try {
+            Map<String, Object> excelMap = fileUpload.uploadExcelAndParser(mRequest.getFile("excelFile"), authenticationUtil.getMemberSeq());
+
+            if (excelMap != null) {
+                LinkedHashMap<String, String> headerMap = (LinkedHashMap<String, String>) excelMap.get("headers");
+                List<HashMap<String, String>> barcodeList = (List<HashMap<String, String>>) excelMap.get("rows");
+
+                if (CommonUtil.isNotEmptyList(barcodeList)) {
+                    String key = headerMap.keySet().iterator().next();
+
+                    List<String> excelBarcodeList = barcodeList.stream()
+                            .map(data -> data.get(headerMap.get(key)))
+                            .collect(Collectors.toList());
+
+
+                    for (String excelBarcode : excelBarcodeList) {
+                        InStockWaitInsertReqDto inStockWaitInsertReqDto = InStockWaitInsertReqDto.builder()
+                                .fullBarcode(excelBarcode)
+                                .provId(requestDto.getProvId())
+                                .telecom(requestDto.getTelecom())
+                                .stockId(requestDto.getStockId())
+                                .barcodeType(WmsEnum.BarcodeType.S)
+                                .inStockStatus(requestDto.getInStockStatus())
+                                .build();
+
+                        ResponseCodeEnum responseCodeEnum = insertWaitInStock(inStockWaitInsertReqDto);
+                        //엑셀 바코드 중 입고대기 데이터에 추가되지 않는 바코드는  failBarcode 에 add
+                        if (ResponseCodeEnum.OK != responseCodeEnum) failBarcode.add(excelBarcode);
+
+                    }
+                } else {
+                    throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+                }
+            }
+        } catch (Exception e) {
+            throw new ProcessErrorException(e.getMessage());
+        }
 
         return failBarcode;
     }

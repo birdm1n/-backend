@@ -56,6 +56,8 @@ public class MoveStockResponseDto {
     private WmsEnum.StockStatStr statusStr;
     private String statusStrMsg;
 
+    // 배송타입
+    private WmsEnum.DeliveryType deliveryType;
     // 고객명
     private String cusName;
 

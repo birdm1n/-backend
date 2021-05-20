@@ -1,5 +1,6 @@
 package com.daema.wms.repository;
 
+import com.daema.base.domain.QCodeDetail;
 import com.daema.base.enums.StatusEnum;
 import com.daema.wms.domain.InStockWait;
 import com.daema.wms.domain.dto.response.InStockWaitGroupDto;
@@ -15,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static com.daema.wms.domain.QInStockWait.inStockWait;
+import static com.daema.wms.domain.QProvider.provider;
 
 public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport implements CustomInStockWaitRepository {
 

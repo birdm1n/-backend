@@ -71,6 +71,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                         , nextStock.stockName.as("nextStockName")
                         , inStock.statusStr.as("statusStr")
                         , inStock.regiDateTime.as("inStockRegiDateTime")
+                        , delivery.deliveryType.as("deliveryType")
                         , delivery.cusName.as("cusName")
                         , delivery.cusPhone.as("cusPhone")
                         , delivery.zipCode.as("zipCode")
