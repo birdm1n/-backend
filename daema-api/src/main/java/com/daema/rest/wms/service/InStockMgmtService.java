@@ -16,6 +16,7 @@ import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
+import com.daema.rest.common.io.file.FileUpload;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.wms.dto.request.InStockInsertReqDto;
@@ -24,6 +25,7 @@ import com.daema.rest.wms.dto.request.InStockWaitInsertReqDto;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.wms.domain.*;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
+import com.daema.wms.domain.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.dto.response.*;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
@@ -32,11 +34,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -54,6 +54,7 @@ public class InStockMgmtService {
     private final CodeDetailRepository codeDetailRepository;
     private final StoreStockRepository storeStockRepository;
     private final StoreStockHistoryRepository storeStockHistoryRepository;
+    private final FileUpload fileUpload;
     private final AuthenticationUtil authenticationUtil;
 
 
@@ -399,5 +400,49 @@ public class InStockMgmtService {
         deviceStatus.setAddDdctAmt(requestDto.getAddDdctAmt());
         deviceStatus.setProductMissYn(requestDto.getProductMissYn());
         deviceStatus.setMissProduct(requestDto.getMissProduct());
+    }
+
+    public Set<String> insertInStockWaitExcel(MultipartHttpServletRequest mRequest) {
+
+        Set<String> failBarcode = new HashSet<>();
+
+//        try{
+//            Map<String, Object> excelMap = fileUpload.uploadExcelAndParser(mRequest.getFile("excelFile"), authenticationUtil.getMemberSeq());
+//
+//            if(excelMap != null) {
+//                LinkedHashMap<String, String> headerMap = (LinkedHashMap<String, String>) excelMap.get("headers");
+//                List<HashMap<String, String>> barcodeList = (List<HashMap<String, String>>) excelMap.get("rows");
+//
+//                if (CommonUtil.isNotEmptyList(barcodeList)) {
+//                    String key = headerMap.keySet().iterator().next();
+//
+//                    List<String> barcodeDataList = barcodeList.stream()
+//                            .map(data -> data.get(headerMap.get(key)))
+//                            .collect(Collectors.toList());
+//
+//                    List<ReturnStockReqDto> returnStockDtoList = returnStockRepository.makeReturnStockInfoFromBarcode(barcodeDataList, authenticationUtil.getStoreId());
+//
+//                    Set<Long> failDvcId = insertReturnStock(returnStockDtoList);
+//
+//                    failDvcId.forEach(
+//                            dvcId -> {
+//                                failBarcode.add(
+//                                        returnStockDtoList.stream()
+//                                                .filter(returnStockDto -> returnStockDto.getDvcId() == dvcId)
+//                                                .findAny()
+//                                                .map(ReturnStockReqDto::getFullBarcode)
+//                                                .get()
+//                                );
+//                            }
+//                    );
+//                }else{
+//                    throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
+//                }
+//            }
+//        }catch (Exception e){
+//            throw new ProcessErrorException(e.getMessage());
+//        }
+
+        return failBarcode;
     }
 }

@@ -124,7 +124,8 @@ public class MoveStockMgmtService {
         storeStock.setStockType(WmsEnum.StockType.SELL_MOVE);
         storeStock.setStockTypeId(moveStock.getMoveStockId());
 
-
+        storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
+        storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
         return ResponseCodeEnum.OK;
     }
     @Transactional
@@ -292,6 +293,7 @@ public class MoveStockMgmtService {
         return ResponseCodeEnum.OK;
     }
 
+    @Transactional
     public ResponseCodeEnum insertSellTrans(SellTransInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
         String fullbarcode = requestDto.getFullBarcode();
@@ -355,6 +357,7 @@ public class MoveStockMgmtService {
         return ResponseCodeEnum.OK;
     }
 
+    @Transactional
     public ResponseCodeEnum insertFaultyTrans(FaultyTransInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
         String fullbarcode = requestDto.getFullBarcode();
@@ -416,7 +419,7 @@ public class MoveStockMgmtService {
         device.setDelYn("Y");
         return ResponseCodeEnum.OK;
     }
-
+    @Transactional
     public void deleteMoveStock(ModelMap reqModelMap) {
         List<Number> delMoveStockIds = (List<Number>) reqModelMap.get("moveStockId");
         if(CommonUtil.isNotEmptyList(delMoveStockIds)){
@@ -440,7 +443,7 @@ public class MoveStockMgmtService {
         }
 
     }
-
+    @Transactional
     public ResponseCodeEnum updateSellMove(SellMoveUpdateReqDto requestDto) {
         MoveStock moveStock = moveStockRepository.findById(requestDto.getMoveStockId()).orElse(null);
         Delivery delivery = moveStock.getDelivery();
@@ -450,7 +453,6 @@ public class MoveStockMgmtService {
         delivery.setAddr1(requestDto.getAddr1());
         delivery.setAddr2(requestDto.getAddr2());
         delivery.setDeliveryMemo(requestDto.getDeliveryMemo());
-
 
         return ResponseCodeEnum.OK;
     }

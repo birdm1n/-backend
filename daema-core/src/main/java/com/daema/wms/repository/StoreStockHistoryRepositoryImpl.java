@@ -1,8 +1,10 @@
 package com.daema.wms.repository;
 
 import com.daema.wms.domain.QStoreStock;
+import com.daema.wms.domain.QStoreStockHistory;
 import com.daema.wms.domain.StoreStock;
 import com.daema.wms.domain.StoreStockHistory;
+import com.daema.wms.domain.dto.response.StoreStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomStoreStockHistoryRepository;
 import com.querydsl.core.types.Ops;
@@ -73,19 +75,22 @@ public class StoreStockHistoryRepositoryImpl extends QuerydslRepositorySupport i
                     )
                     .execute();
 
+            JPAUpdateClause updateHistory2 = new JPAUpdateClause(em, storeStockHistory);
+
+            JPQLQuery<Number> historyMax = getQuerydsl().createQuery();
+
+            Long maxHistoryId = historyMax.select(storeStockHistory.storeStockHistoryId.max())
+                    .from(storeStockHistory)
+                    .where(
+                            storeStockHistory.store.eq(storeStock.getStore())
+                                    .and(storeStockHistory.device.eq(storeStock.getDevice()))
+                                    .and(storeStockHistory.historyStatus.ne(WmsEnum.HistoryStatus.DEL))
+                    ).fetchFirst();
+
             //where is not del status : maxId  -> use update 처리
-            updateHistory
+            updateHistory2
                     .set(storeStockHistory.historyStatus, WmsEnum.HistoryStatus.USE)
-                    .where(storeStockHistory.storeStockHistoryId.eq(
-                            JPAExpressions
-                                    .select(storeStockHistory.storeStockHistoryId.max())
-                                    .from(storeStockHistory)
-                                    .where(
-                                            storeStockHistory.store.eq(storeStock.getStore())
-                                            .and(storeStockHistory.device.eq(storeStock.getDevice()))
-                                            .and(storeStockHistory.historyStatus.ne(WmsEnum.HistoryStatus.DEL))
-                                    )
-                            )
+                    .where(storeStockHistory.storeStockHistoryId.eq(maxHistoryId)
                     )
                     .execute();
 
