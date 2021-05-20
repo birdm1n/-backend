@@ -104,4 +104,15 @@ public class MoveStockMgmtController {
         return responseHandler.ok();
     }
 
+    @ApiOperation(value = "판매이동 수정", notes = "판매이동 수정 기능을 수행합니다.")
+    @PostMapping("/updateSellMove")
+    public ResponseEntity<CommonResponse<Void>> updateSellMove(@RequestBody SellMoveUpdateReqDto requestDto) {
+        ResponseCodeEnum responseCodeEnum = moveStockMgmtService.updateSellMove(requestDto);
+
+        if (ResponseCodeEnum.OK != responseCodeEnum) {
+            return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
+        }
+        return responseHandler.ok();
+    }
+
 }
