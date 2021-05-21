@@ -1,5 +1,7 @@
 package com.daema.rest.base.excel;
 
+import com.daema.wms.domain.dto.response.DeviceStatusListDto;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -109,8 +111,8 @@ public class ExcelVO {
 		private String diffInStockRegiDate;
 		@ExcelTemplate(columnName = "출고일")
 		private LocalDateTime moveRegiDateTime;
-		/*	@ExcelTemplate(columnName = "출고일-경과일")
-            private String diffMoveRegiDate;*/
+		@ExcelTemplate(columnName = "출고일-경과일")
+		private String diffMoveRegiDate;
 		@ExcelTemplate(columnName = "재고구분")
 		private String statusStrMsg;
 		@ExcelTemplate(columnName = "기기명")
@@ -147,6 +149,8 @@ public class ExcelVO {
 		private String diffInStockRegiDate;
 		@ExcelTemplate(columnName = "출고일")
 		private LocalDateTime moveRegiDateTime;
+		@ExcelTemplate(columnName = "출고일-경과일")
+		private String diffMoveRegiDate;
 		@ExcelTemplate(columnName = "재고구분")
 		private String statusStrMsg;
 		@ExcelTemplate(columnName = "이전보유처")
@@ -193,6 +197,8 @@ public class ExcelVO {
 		private String diffInStockRegiDate;
 		@ExcelTemplate(columnName = "출고일")
 		private LocalDateTime moveRegiDateTime;
+		@ExcelTemplate(columnName = "출고일-경과일")
+		private String diffMoveRegiDate;
 		@ExcelTemplate(columnName = "재고구분")
 		private String statusStrMsg;
 		@ExcelTemplate(columnName = "이전보유처")
@@ -225,10 +231,14 @@ public class ExcelVO {
 	public static class FaultyTransList  {
 		@ExcelTemplate(columnName = "통신사")
 		private String telecomName;
-		@ExcelTemplate(columnName = "입고일(경과일)")
+		@ExcelTemplate(columnName = "입고일")
 		private LocalDateTime inStockRegiDateTime;
-		@ExcelTemplate(columnName = "출고일(경과일)")
+		@ExcelTemplate(columnName = "입고일-경과일")
 		private String diffInStockRegiDate;
+		@ExcelTemplate(columnName = "출고일")
+		private LocalDateTime moveRegiDateTime;
+		@ExcelTemplate(columnName = "출고일-경과일")
+		private String diffMoveRegiDate;
 		@ExcelTemplate(columnName = "재고구분")
 		private String statusStrMsg;
 		@ExcelTemplate(columnName = "보유처")
@@ -261,10 +271,14 @@ public class ExcelVO {
 	public static class SellTransList  {
 		@ExcelTemplate(columnName = "통신사")
 		private String telecomName;
-		@ExcelTemplate(columnName = "입고일(경과일)")
+		@ExcelTemplate(columnName = "입고일")
 		private LocalDateTime inStockRegiDateTime;
+		@ExcelTemplate(columnName = "입고일-경과일")
+		private String diffInStockRegiDate;
 		@ExcelTemplate(columnName = "출고일")
-		private LocalDateTime regiDateTime;
+		private LocalDateTime moveRegiDateTime;
+		@ExcelTemplate(columnName = "출고일-경과일")
+		private String diffMoveRegiDate;
 		@ExcelTemplate(columnName = "재고구분")
 		private String statusStrMsg;
 		@ExcelTemplate(columnName = "이전보유처")
@@ -416,10 +430,12 @@ public class ExcelVO {
 		private String colorName;
 		@ExcelTemplate(columnName = "기기일련번호")
 		private String fullBarcode;
+		/*
 		@ExcelTemplate(columnName = "고객명")
 		private String regiUserName;
-		/*@ExcelTemplate(columnName = "전화번호")
-		private String*/
+		@ExcelTemplate(columnName = "전화번호")
+		private String
+		*/
 		@ExcelTemplate(columnName = "반품비")
 		private String returnStockAmt;
 		@ExcelTemplate(columnName = "추가차감비")
@@ -463,11 +479,11 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 		@ExcelTemplate(columnName = "입고상태")
-		private String inStockStatusMsg;
+		private DeviceStatusListDto inStockStatusMsg;
 		@ExcelTemplate(columnName = "제품상태")
-		private String productFaultyYn;
+		private DeviceStatusListDto productFaultyYn;
 		@ExcelTemplate(columnName = "외장상태")
-		private String extrrStatusMsg;
+		private DeviceStatusListDto extrrStatusMsg;
 	}
 
 	//장기재고
@@ -503,11 +519,11 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 		@ExcelTemplate(columnName = "입고상태")
-		private String inStockStatusMsg;
+		private DeviceStatusListDto inStockStatusMsg;
 		@ExcelTemplate(columnName = "제품상태")
-		private String productFaultyYn;
+		private DeviceStatusListDto productFaultyYn;
 		@ExcelTemplate(columnName = "외장상태")
-		private String extrrStatusMsg;
+		private DeviceStatusListDto extrrStatusMsg;
 	}
 
 	//불량기기현황

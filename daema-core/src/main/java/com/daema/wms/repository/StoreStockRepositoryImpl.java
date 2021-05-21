@@ -457,6 +457,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 eqProvId(requestDto.getProvId()),
                 eqStatusStr(nextStock, requestDto.getStatusStr()),
                 eqJudgeStatus(requestDto.getJudgeStatus()),
+                eqDeliveryStatus(requestDto.getDeliveryStatus()),
                 eqFullBarcode(requestDto.getFullBarcode()),
                 eqFaultyYn(requestDto.getProductFaultyYn()),
                 eqExtrrStatus(requestDto.getExtrrStatus()),
@@ -563,6 +564,18 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
             return nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode());
         } else {
             return nextStock.stockType.ne(TypeEnum.STOCK_TYPE_I.getStatusCode());
+        }
+    }
+
+    private BooleanExpression eqDeliveryStatus(WmsEnum.DeliveryStatus deliveryStatus) {
+        if (deliveryStatus == null) {
+            return null;
+        }
+
+        if (WmsEnum.DeliveryStatus.NONE == deliveryStatus) {
+            return delivery.deliveryStatus.isNull();
+        } else {
+            return delivery.deliveryStatus.eq(deliveryStatus);
         }
     }
 

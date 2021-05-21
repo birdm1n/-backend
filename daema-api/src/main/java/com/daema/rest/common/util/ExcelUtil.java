@@ -18,6 +18,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
+import java.beans.Introspector;
 import java.io.*;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -132,6 +133,8 @@ public class ExcelUtil {
         }
         sw.endRow();
 
+        String dtoClassName = "";
+
         // write data rows
         for (int rownum = 1; rownum < mData.size() + 1; rownum++) {
             sw.insertRow(rownum);
@@ -163,7 +166,29 @@ public class ExcelUtil {
                                 .concat(CommonUtil.appendLeft(tmpLocalDateTime[7].split("=")[1], "0", 2))
                                     : null
                     );
-                }else {
+                }else if(mHeader.get(i)[1].contains("Dto")){
+
+                    dtoClassName = mHeader.get(i)[1].split("\\.")[mHeader.get(i)[1].split("\\.").length - 1];
+
+                    //제품상태
+                    if("productFaultyYn".equals(mHeader.get(i)[2])){
+
+                        String data = String.valueOf(
+                                ((HashMap<String, String>) mData.get(rownum - 1).get(Introspector.decapitalize(dtoClassName)))
+                                        .get(mHeader.get(i)[2]));
+
+                        sw.createCell(i, "Y".equals(data) ? "불량" : "N".equals(data) ? "정상" : "-");
+
+                    }else {
+
+                        dtoClassName = mHeader.get(i)[1].split("\\.")[mHeader.get(i)[1].split("\\.").length - 1];
+
+                        sw.createCell(i,
+                                String.valueOf(
+                                        ((HashMap<String, String>) mData.get(rownum - 1).get(Introspector.decapitalize(dtoClassName)))
+                                                .get(mHeader.get(i)[2])));
+                    }
+                }else{
                     sw.createCell(i, String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2])));
                 }
             }

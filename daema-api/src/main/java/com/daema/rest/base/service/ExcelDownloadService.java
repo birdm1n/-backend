@@ -60,11 +60,10 @@ public class ExcelDownloadService {
 
     public HashMap<String, Object> init(ModelMap modelMap, String pageType) {
 
-        modelMap.remove("apiName");
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
         mapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         if ("sample".equals(pageType)) {
             fileName = "공시지원금목록_";
