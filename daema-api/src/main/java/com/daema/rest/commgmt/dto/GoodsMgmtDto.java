@@ -22,7 +22,6 @@ public class GoodsMgmtDto {
 	private int maker;
 	private int telecom;
 	private int network;
-	private String capacity;
 	private String originKey;
 	private String useYn;
 	private String matchingYn;

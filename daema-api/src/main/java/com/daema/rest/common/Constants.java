@@ -34,7 +34,10 @@ public class Constants {
     public static final String BIZ_JOIN_URL = "/store/sign-up";
     public static final String USER_JOIN_URL = "/user/sign-up";
 
-    public static final String XLS_ROOT_PATH = File.separator.concat("excel");
+    public static final String DEVICE_HOME_PATH = File.separator.concat("home").concat(File.separator).concat("centos");
+
+    public static final String XLS_ROOT_PATH = DEVICE_HOME_PATH.concat(File.separator).concat("excel");
+
     public static final String XLS_UPLOAD_PATH = XLS_ROOT_PATH.concat(File.separator).concat("upload");
     public static final String XLS_DOWNLOAD_PATH = XLS_ROOT_PATH.concat(File.separator).concat("download");
     public static final String XLS_TEMPLATE_PATH = XLS_ROOT_PATH.concat(File.separator).concat("template");
