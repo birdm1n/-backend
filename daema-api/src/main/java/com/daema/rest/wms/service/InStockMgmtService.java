@@ -430,6 +430,10 @@ public class InStockMgmtService {
                                 .stockId(requestDto.getStockId())
                                 .barcodeType(WmsEnum.BarcodeType.S)
                                 .inStockStatus(requestDto.getInStockStatus())
+                                .ddctReleaseAmtYn("N")
+                                .extrrStatus(WmsEnum.DeviceExtrrStatus.T)
+                                .productFaultyYn("N")
+                                .productMissYn("N")
                                 .build();
 
                         ResponseCodeEnum responseCodeEnum = insertWaitInStock(inStockWaitInsertReqDto);

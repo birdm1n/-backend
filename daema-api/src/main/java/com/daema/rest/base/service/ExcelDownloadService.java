@@ -8,14 +8,8 @@ import com.daema.rest.common.Constants;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.common.util.DateUtil;
-import com.daema.rest.wms.service.InStockMgmtService;
-import com.daema.rest.wms.service.MoveStockMgmtService;
-import com.daema.rest.wms.service.ReturnStockMgmtService;
-import com.daema.rest.wms.service.StoreStockMgmtService;
-import com.daema.wms.domain.dto.request.InStockRequestDto;
-import com.daema.wms.domain.dto.request.MoveStockRequestDto;
-import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
-import com.daema.wms.domain.dto.request.StoreStockRequestDto;
+import com.daema.rest.wms.service.*;
+import com.daema.wms.domain.dto.request.*;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -41,20 +35,20 @@ public class ExcelDownloadService {
     private final MoveStockMgmtService moveStockMgmtService;
     private final ReturnStockMgmtService returnStockMgmtService;
     private final StoreStockMgmtService storeStockMgmtService;
-
+    private final DeviceCurrentMgmtService deviceCurrentMgmtService;
     private final AuthenticationUtil authenticationUtil;
 
     private String fileName;
     private Class<?> cls;
     private List dataList;
 
-    public ExcelDownloadService(PubNotiRawDataRepository pubNotiRawDataRepository, ReturnStockMgmtService returnStockMgmtService, InStockMgmtService inStockMgmtService, MoveStockMgmtService moveStockMgmtService, StoreStockMgmtService storeStockMgmtService, AuthenticationUtil authenticationUtil) {
+    public ExcelDownloadService(PubNotiRawDataRepository pubNotiRawDataRepository, ReturnStockMgmtService returnStockMgmtService, InStockMgmtService inStockMgmtService, MoveStockMgmtService moveStockMgmtService, StoreStockMgmtService storeStockMgmtService, DeviceCurrentMgmtService deviceCurrentMgmtService, AuthenticationUtil authenticationUtil) {
         this.pubNotiRawDataRepository = pubNotiRawDataRepository;
         this.returnStockMgmtService = returnStockMgmtService;
         this.inStockMgmtService = inStockMgmtService;
         this.moveStockMgmtService = moveStockMgmtService;
         this.storeStockMgmtService = storeStockMgmtService;
-
+        this.deviceCurrentMgmtService = deviceCurrentMgmtService;
         this.authenticationUtil = authenticationUtil;
     }
 
@@ -75,6 +69,23 @@ public class ExcelDownloadService {
             dataList = inStockMgmtService.getInStockList(
                     mapper.convertValue(modelMap, InStockRequestDto.class)
             ).getResultList();
+        } else if ("insertInStockWaitExcelException".equals(pageType)) {
+            fileName = "입고대기_엑셀업로드_실패목록_";
+            cls = ExcelVO.BarcodeList.class;
+
+            if(modelMap.get("failList") != null){
+                List<String> failList = (List) modelMap.get("failList");
+                List<HashMap<String, Object>> mapList = new ArrayList<>();
+                failList.forEach(
+                        fail -> {
+                            HashMap<String, Object> map = new HashMap();
+                            map.put("fullBarcode", fail);
+                            mapList.add(map);
+                        }
+                );
+
+                dataList = mapList;
+            }
         } else if ("getReturnStockListExcel".equals(pageType)) {
             fileName = "이동재고반품_";
             cls = ExcelVO.ReturnStockList.class;
@@ -164,12 +175,12 @@ public class ExcelDownloadService {
             //TODO 이동현황 엑셀 다운로드 추가 필요
             fileName = "이동현황_";
             cls = ExcelVO.MoveMgmtList.class;
-            //dataList = returnStockMgmtService.getReturnStockList(mapper.convertValue(modelMap, ReturnStockRequestDto.class)).getResultList();
+            dataList = moveStockMgmtService.getMoveMgmtList(mapper.convertValue(modelMap, MoveMgmtRequestDto.class)).getResultList();
         } else if ("getDeviceCurrentListExcel".equals(pageType)) {
             //TODO 기기현황 엑셀 다운로드 추가 필요
             fileName = "기기현황_";
             cls = ExcelVO.DeviceCurrentList.class;
-            //dataList = deviceMgmtService.getReturnStockList(mapper.convertValue(modelMap, ReturnStockRequestDto.class)).getResultList();
+            dataList = deviceCurrentMgmtService.getDeviceCurrentPage(mapper.convertValue(modelMap, DeviceCurrentRequestDto.class)).getResultList();
         }
 
         return makeExcel();

@@ -86,14 +86,14 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                 , updMember.username.as("updUserName")
         ))
                 .from(inStock)
+                .innerJoin(inStock.store, store).on(
+                    store.storeId.eq(requestDto.getStoreId())
+                )
                 .innerJoin(inStock.regiUserId, regMember)
                 .innerJoin(inStock.updUserId, updMember)
                 .innerJoin(inStock.device, device)
                 .innerJoin(inStock.inDeviceStatus, deviceStatus)
                 .innerJoin(inStock.stock, stock)
-                .innerJoin(inStock.store, store).on(
-                    store.storeId.eq(requestDto.getStoreId())
-                )
                 .innerJoin(inStock.provider, provider)
                 .innerJoin(device.goodsOption, goodsOption)
                 .innerJoin(goodsOption.goods, goods)

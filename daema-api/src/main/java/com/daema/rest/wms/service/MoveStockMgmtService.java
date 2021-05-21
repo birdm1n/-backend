@@ -12,7 +12,9 @@ import com.daema.rest.wms.dto.MoveStockAlarmDto;
 import com.daema.rest.wms.dto.request.*;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.wms.domain.*;
+import com.daema.wms.domain.dto.request.MoveMgmtRequestDto;
 import com.daema.wms.domain.dto.request.MoveStockRequestDto;
+import com.daema.wms.domain.dto.response.MoveMgmtResponseDto;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
 import com.daema.wms.domain.dto.response.TransResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
@@ -455,5 +457,13 @@ public class MoveStockMgmtService {
         delivery.setDeliveryMemo(requestDto.getDeliveryMemo());
 
         return ResponseCodeEnum.OK;
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseDto<MoveMgmtResponseDto> getMoveMgmtList(MoveMgmtRequestDto requestDto) {
+        requestDto.setStoreId(authenticationUtil.getStoreId());
+
+        Page<MoveMgmtResponseDto> responseDtoPage = moveStockRepository.getMoveMgmtList(requestDto);
+        return new ResponseDto(responseDtoPage);
     }
 }

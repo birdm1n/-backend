@@ -7,7 +7,9 @@ import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.dto.request.*;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.rest.wms.service.MoveStockMgmtService;
+import com.daema.wms.domain.dto.request.MoveMgmtRequestDto;
 import com.daema.wms.domain.dto.request.MoveStockRequestDto;
+import com.daema.wms.domain.dto.response.MoveMgmtResponseDto;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import io.swagger.annotations.*;
@@ -115,4 +117,9 @@ public class MoveStockMgmtController {
         return responseHandler.ok();
     }
 
+    @ApiOperation(value = "이동현황", notes = "이동현황 목록을 조회합니다")
+    @GetMapping("/getMoveMgmtList")
+    public ResponseEntity<CommonResponse<ResponseDto<MoveMgmtResponseDto>>> getMoveMgmtList(MoveMgmtRequestDto requestDto ) {
+        return responseHandler.getResponseMessageAsRetrieveResult(moveStockMgmtService.getMoveMgmtList(requestDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
 }

@@ -2,7 +2,9 @@ package com.daema.wms.repository.custom;
 
 
 import com.daema.commgmt.domain.Store;
+import com.daema.wms.domain.dto.request.MoveMgmtRequestDto;
 import com.daema.wms.domain.dto.request.MoveStockRequestDto;
+import com.daema.wms.domain.dto.response.MoveMgmtResponseDto;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
 import com.daema.wms.domain.dto.response.SelectStockDto;
 import com.daema.wms.domain.dto.response.TransResponseDto;
@@ -21,4 +23,5 @@ public interface CustomMoveStockRepository {
     List<Store> getTransStoreList(long storeId);
 
 
+    Page<MoveMgmtResponseDto> getMoveMgmtList(MoveMgmtRequestDto requestDto);
 }

@@ -116,7 +116,9 @@ public class InStockWaitDto {
                 .stockId(entity.getStockId())
                 .stockName(entity.getStockName())
                 .statusStr(entity.getStatusStr())
-                .statusStrMsg(entity.getStatusStr().getStatusMsg())
+                .statusStrMsg(
+                        entity.getStatusStr().getStatusMsg() != null ? entity.getStatusStr().getStatusMsg():""
+                )
                 .maker(entity.getMaker())
                 .makerName(entity.getMakerName())
                 .goodsId(entity.getGoodsId())
@@ -133,7 +135,9 @@ public class InStockWaitDto {
                 .productFaultyYn(entity.getProductFaultyYn())
                 .productMissYn(entity.getProductMissYn())
                 .extrrStatus(entity.getExtrrStatus())
-                .extrrStatusMsg(entity.getExtrrStatus().getStatusMsg())
+                .extrrStatusMsg(
+                        entity.getExtrrStatus() != null ? entity.getExtrrStatus().getStatusMsg() : ""
+                )
                 .regiDateTime(entity.getRegiDateTime())
                 .regiUserId(entity.getRegiUserId().getSeq())
                 .regiUserName(entity.getRegiUserId().getUsername())
