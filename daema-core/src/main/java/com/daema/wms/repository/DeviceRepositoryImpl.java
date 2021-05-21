@@ -293,7 +293,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
         if (name == null) {
             return null;
         }
-        return goods.networkAttribute.telecom.in(name);
+        return goods.networkAttribute.telecom.eq(name);
     }
 
     private BooleanExpression eqMaker(Integer maker) {

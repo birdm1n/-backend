@@ -189,7 +189,14 @@ public class ExcelUtil {
                                                 .get(mHeader.get(i)[2])));
                     }
                 }else{
-                    sw.createCell(i, String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2])));
+                    if("productFaultyYn".equals(mHeader.get(i)[2])) {
+
+                        String data = String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2]));
+
+                        sw.createCell(i, "Y".equals(data) ? "불량" : "N".equals(data) ? "정상" : "-");
+                    }else {
+                        sw.createCell(i, String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2])));
+                    }
                 }
             }
 
