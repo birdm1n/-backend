@@ -91,7 +91,7 @@ public class ExcelDownloadService {
                 failList.forEach(
                         fail -> {
                             HashMap<String, Object> map = new HashMap();
-                            map.put("기기일련번호", fail);
+                            map.put("fullBarcode", fail);
                             mapList.add(map);
                         }
                 );
