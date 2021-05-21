@@ -118,7 +118,7 @@ public class ReturnStockMgmtService {
 					List<ReturnStockReqDto> returnStockDtoList = returnStockRepository.makeReturnStockInfoFromBarcode(excelBarcodeList, authenticationUtil.getStoreId());
 
 					//반품 처리
-					//failBarcode = insertReturnStock(returnStockDtoList);
+					failBarcode = insertReturnStock(returnStockDtoList);
 
 					//DB 조회 된 바코드 리스트 추출
 					Set<String> dbBarcode = returnStockDtoList.stream()

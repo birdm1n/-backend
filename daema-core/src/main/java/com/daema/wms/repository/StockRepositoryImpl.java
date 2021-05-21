@@ -8,7 +8,6 @@ import com.daema.wms.domain.dto.response.StockDeviceListDto;
 import com.daema.wms.domain.dto.response.StockListDto;
 import com.daema.wms.repository.custom.CustomStockRepository;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.util.StringUtils;
@@ -19,7 +18,6 @@ import javax.persistence.Query;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.daema.commgmt.domain.QOpenStore.openStore;
 import static com.daema.commgmt.domain.QStore.store;
 import static com.daema.wms.domain.QStock.stock;
 
@@ -245,7 +243,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
             sb.append(" and go.capacity = '").append(requestDto.getCapacity()).append("'");
         }
         if(StringUtils.hasText(requestDto.getColorName())){
-            sb.append(" and go.color_name = '").append(requestDto.getCapacity()).append("'");
+            sb.append(" and go.color_name = '").append(requestDto.getColorName()).append("'");
         }
         if(StringUtils.hasText(requestDto.getFullBarcode())){
             sb.append(" and full_barcode like '%").append(requestDto.getFullBarcode()).append("%'");
