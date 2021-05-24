@@ -165,7 +165,10 @@ public class DataHandleService {
                     responseDto.setStoreList(retrieveStoreList());
                 }
                 if (initData.contains("provList")) {
-                    responseDto.setProvList(retrieveProvList());
+                    responseDto.setProvList(retrieveProvList(false));
+                }
+                if (initData.contains("provListAll")) {
+                    responseDto.setProvList(retrieveProvList(true));
                 }
             }
 
@@ -187,9 +190,14 @@ public class DataHandleService {
         return storeList.stream().map(SaleStoreMgmtDto::ofInitData).collect(Collectors.toList());
     }
 
-    private List<ProviderMgmtDto> retrieveProvList(){
+    private List<ProviderMgmtDto> retrieveProvList(boolean fullFlag){
         long storeId = authenticationUtil.getStoreId();
-        List<Provider> provList = providerRepository.findByStoreIdAndUseYnAndDelYnOrderByProvName(storeId, StatusEnum.FLAG_Y.getStatusMsg(), StatusEnum.FLAG_N.getStatusMsg());
+        List<Provider> provList = null;
+        if(fullFlag) {
+            provList = providerRepository.findByStoreIdAndUseYnAndDelYnOrderByProvName(storeId, StatusEnum.FLAG_Y.getStatusMsg(), StatusEnum.FLAG_N.getStatusMsg());
+        }else{
+            provList = providerRepository.findByStoreIdAndUseYnOrderByProvName(storeId, StatusEnum.FLAG_Y.getStatusMsg());
+        }
         return provList.stream().map(ProviderMgmtDto::ofInitData).collect(Collectors.toList());
     }
 
