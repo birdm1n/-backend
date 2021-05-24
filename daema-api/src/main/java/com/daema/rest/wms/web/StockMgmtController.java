@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 @Api(value = "보유처 관리 API", tags = "보유처 관리 API")
@@ -51,8 +52,8 @@ public class StockMgmtController {
 
     @ApiOperation(value = "보유처 삭제", notes = "보유처을 삭제합니다")
     @PostMapping("/deleteStock")
-    public ResponseEntity<CommonResponse<Void>> deleteStock(@ApiParam(value = "보유처ID", required = true) @RequestBody Long stockId) {
-        stockMgmtService.deleteStock(stockId);
+    public ResponseEntity<CommonResponse<Void>> deleteStock(@ApiParam(value = "보유처ID", required = true) @RequestBody ModelMap modelMap) {
+        stockMgmtService.deleteStock(Long.parseLong(String.valueOf(modelMap.get("stockId"))));
 
         return responseHandler.ok();
     }
