@@ -186,9 +186,10 @@ public class DataHandleService {
         List<Store> storeList = storeRepository.findByUseYnOrderByStoreName(StatusEnum.FLAG_Y.getStatusMsg());
         return storeList.stream().map(SaleStoreMgmtDto::ofInitData).collect(Collectors.toList());
     }
+
     private List<ProviderMgmtDto> retrieveProvList(){
         long storeId = authenticationUtil.getStoreId();
-        List<Provider> provList = providerRepository.findByStoreIdAndUseYnOrderByProvName(storeId, StatusEnum.FLAG_Y.getStatusMsg());
+        List<Provider> provList = providerRepository.findByStoreIdAndUseYnAndDelYnOrderByProvName(storeId, StatusEnum.FLAG_Y.getStatusMsg(), StatusEnum.FLAG_N.getStatusMsg());
         return provList.stream().map(ProviderMgmtDto::ofInitData).collect(Collectors.toList());
     }
 
