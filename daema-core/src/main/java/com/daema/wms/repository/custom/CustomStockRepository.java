@@ -14,4 +14,7 @@ public interface CustomStockRepository {
     SelectStockDto getStock(Long storeId, Integer telecom, Long stockId);
 
     List<SelectStockDto> innerStockList(long storeId);
+
+    /* 상점에 기기보유 여부 확인 */
+    Long stockHasDevice(Long stockId, Long regiStoreId);
 }

@@ -10,5 +10,5 @@ public interface CustomStoreRepository {
 	
 	Page<Store> getSearchPage(ComMgmtRequestDto requestDto);
 	Store findStoreInfo(long parentStoreId, long storeId);
-	List<Store> findBySaleStore(long parentStoreId, OrderSpecifier orderSpecifier);
+	List<Store> findBySaleStore(long parentStoreId, OrderSpecifier orderSpecifier, Integer[] telecom);
 }

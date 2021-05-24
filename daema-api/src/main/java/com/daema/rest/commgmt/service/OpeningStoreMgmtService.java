@@ -202,7 +202,7 @@ public class OpeningStoreMgmtService {
         List<OpenStoreListDto> openStoreList = openStoreRepository.getOpenStoreList(requestDto);
 
         //영업점 전체 목록
-        List<Store> saleStoreList = storeRepository.findBySaleStore(targetStoreId, QStore.store.storeName.asc());
+        List<Store> saleStoreList = storeRepository.findBySaleStore(targetStoreId, QStore.store.storeName.asc(), requestDto.getTelecom());
 
         //개통점, 영업점 맵핑 목록
         List<OpenStoreSaleStoreMap> mapList = openStoreSaleStoreMapRepository.getMappingList(targetStoreId);

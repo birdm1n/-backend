@@ -49,15 +49,14 @@ public class StockMgmtController {
         return responseHandler.ok();
     }
 
-    /*
     @ApiOperation(value = "보유처 삭제", notes = "보유처을 삭제합니다")
     @PostMapping("/deleteStock")
-    public ResponseEntity<CommonResponse<Void>> deleteStock(@ApiParam(value = "보유처 정보", required = true) @RequestBody StockMgmtDto stockMgmtDto) {
-        stockMgmtService.deleteStock(stockMgmtDto);
+    public ResponseEntity<CommonResponse<Void>> deleteStock(@ApiParam(value = "보유처ID", required = true) @RequestBody Long stockId) {
+        stockMgmtService.deleteStock(stockId);
 
         return responseHandler.ok();
     }
-    */
+
     @ApiOperation(value = "보유처 선택 리스트", notes = "보유처의 선택 리스트를 조회합니다")
     @GetMapping("/selectStockList/{telecom}")
     public ResponseEntity<CommonResponse<SelectStockDto>> selectStockList(@ApiParam(value = "통신사 번호", required = true) @PathVariable(value = "telecom") Integer telecom ) {

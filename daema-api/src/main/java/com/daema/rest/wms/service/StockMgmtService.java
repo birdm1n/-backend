@@ -2,7 +2,6 @@ package com.daema.rest.wms.service;
 
 import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
-import com.daema.base.repository.MemberRepository;
 import com.daema.commgmt.domain.Store;
 import com.daema.commgmt.repository.StoreRepository;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
@@ -37,8 +36,6 @@ public class StockMgmtService {
 	private final StockRepository stockRepository;
 
 	private final StoreRepository storeRepository;
-
-	private final MemberRepository memberRepository;
 
 	private final DeviceRepository deviceRepository;
 
@@ -182,39 +179,29 @@ public class StockMgmtService {
 	}
 
 
-/*
-
 	@Transactional
-	public void deleteStock(StockMgmtDto stockMgmtDto) {
+	public void deleteStock(Long stockId) {
 
-		//TODO
-		//하위 창고의 del_yn 체크
-		//하위 창고에 기기 존재 여부 체크. 기기 테이블 나온 뒤 작업 가능
+		Long hasDeviceCnt = stockRepository.stockHasDevice(stockId, authenticationUtil.getStoreId());
 
-		Stock stock = stockRepository.findById(stockMgmtDto.getStockId()).orElse(null);
-		long storeId = authenticationUtil.getStoreId();
+		if(hasDeviceCnt <= 0){
 
-		if(stock != null
-				&& stock.getRegiStoreId() == storeId) {
-			stock.setDelYn(StatusEnum.FLAG_Y.getStatusMsg());
+			Stock stock = stockRepository.findById(stockId).orElse(null);
+			long storeId = authenticationUtil.getStoreId();
 
-			List<Member> membersList = memberRepository.findByOrgId(orgnzt.getOrgId());
+			if(stock != null
+					&& stock.getRegiStoreId() == storeId) {
 
-			if(CommonUtil.isNotEmptyList(membersList)) {
-				Stock orgnztBasicData = stockRepository.findByStoreIdAndOrgName(orgnzt.getStoreId(), Constants.ORGANIZATION_DEFAULT_GROUP_NAME);
+				stock.updateDelYn(stock, StatusEnum.FLAG_Y.getStatusMsg(), authenticationUtil.getMemberSeq());
 
-				if (orgnztBasicData != null) {
-					Optional.ofNullable(membersList).orElseGet(Collections::emptyList).forEach(members -> {
-						members.updateStockId(members, orgnztBasicData.getOrgId());
-					});
-				}
+			}else{
+				throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
 			}
+
 		}else{
-			throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+			throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_EMPTY.name());
 		}
 	}
-*/
-
 }
 
 

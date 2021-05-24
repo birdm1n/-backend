@@ -161,7 +161,7 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements Cu
     }
 
     @Override
-    public List<Store> findBySaleStore(long parentStoreId, OrderSpecifier orderSpecifier) {
+    public List<Store> findBySaleStore(long parentStoreId, OrderSpecifier orderSpecifier, Integer[] telecoms) {
 
         JPQLQuery<Store> query = from(store);
 
@@ -172,8 +172,34 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements Cu
                                 .and(storeMap.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg())))
                 );
 
+        if(telecoms != null
+                && !Arrays.stream(telecoms).anyMatch(telecom -> telecom == 0)){
+            query.where(store.telecom.in(telecoms));
+        }
+
         query.orderBy(orderSpecifier);
 
         return query.fetch();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

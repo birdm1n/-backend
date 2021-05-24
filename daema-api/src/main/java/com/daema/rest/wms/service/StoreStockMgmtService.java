@@ -2,7 +2,6 @@ package com.daema.rest.wms.service;
 
 import com.daema.base.domain.Member;
 import com.daema.base.enums.StatusEnum;
-import com.daema.base.enums.TypeEnum;
 import com.daema.base.repository.MemberRepository;
 import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
@@ -126,6 +125,19 @@ public class StoreStockMgmtService {
 		Store store = Store.builder().storeId(authenticationUtil.getStoreId()).build();
 
 		MoveStockAlarm moveStockAlarm = moveStockAlarmRepository.findByStore(store);
+
+		//회원가입시 자동 생성처리 했으나, null 인 경우 대비해서 디폴트 값 처리
+		//SaleStoreMgmtService.java > insertStoreAndUserAndStoreMap
+		//moveStockMgmtService.setLongTimeStoreStockAlarm(moveStockAlarmDto);
+		if(moveStockAlarm == null){
+			moveStockAlarm = MoveStockAlarm.builder()
+					.resellDay(30)
+					.undeliveredDay(15)
+					.store(Store.builder()
+							.storeId(authenticationUtil.getStoreId())
+							.build())
+					.build();
+		}
 
 		return MoveStockAlarmDto.from(moveStockAlarm);
 	}
