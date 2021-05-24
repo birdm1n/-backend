@@ -35,7 +35,7 @@ public class BoardControllerTest {
 
     @Test
     void REST테스트_게시판_조회() throws Exception{
-
+        // 테스트용 ghg
         this.REST테스트_게시판_신규등록();
 
         RestTemplate restTemplate = new RestTemplate();
