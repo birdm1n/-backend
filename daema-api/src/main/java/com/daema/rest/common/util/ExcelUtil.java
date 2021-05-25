@@ -133,76 +133,74 @@ public class ExcelUtil {
         }
         sw.endRow();
 
-        String dtoClassName = "";
+        int mDataCnt = mData.size() + 1;
+        int mHeaderCnt = mHeader.size();
 
         // write data rows
-        for (int rownum = 1; rownum < mData.size() + 1; rownum++) {
-            sw.insertRow(rownum);
+        for (int rowNum = 1; rowNum < mDataCnt; rowNum++) {
+            sw.insertRow(rowNum);
 
-            for (int i = 0; i < mHeader.size(); i++) {
+            for (int colNum = 0; colNum < mHeaderCnt; colNum++) {
 
-                if("class java.time.LocalDate".equals(mHeader.get(i)[1])){
-
-                    String[] tmpLocalDate = String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2])).split(",");
-
-                    sw.createCell(i,
-                            tmpLocalDate.length > 1 ?
-                                    tmpLocalDate[0].split("=")[1]
-                                .concat(CommonUtil.appendLeft(tmpLocalDate[3].split("=")[1], "0", 2))
-                                .concat(CommonUtil.appendLeft(tmpLocalDate[2].split("=")[1], "0", 2))
-                                    : null
-                    );
-                }else if("class java.time.LocalDateTime".equals(mHeader.get(i)[1])){
-
-                    String[] tmpLocalDateTime = String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2])).split(",");
-
-                    sw.createCell(i,
-                            tmpLocalDateTime.length > 1 ?
-                                    tmpLocalDateTime[1].split("=")[1]
-                                .concat(CommonUtil.appendLeft(tmpLocalDateTime[5].split("=")[1], "0", 2))
-                                .concat(CommonUtil.appendLeft(tmpLocalDateTime[2].split("=")[1], "0", 2))
-                                .concat(CommonUtil.appendLeft(tmpLocalDateTime[3].split("=")[1], "0", 2))
-                                .concat(CommonUtil.appendLeft(tmpLocalDateTime[4].split("=")[1], "0", 2))
-                                .concat(CommonUtil.appendLeft(tmpLocalDateTime[7].split("=")[1], "0", 2))
-                                    : null
-                    );
-                }else if(mHeader.get(i)[1].contains("Dto")){
-
-                    dtoClassName = mHeader.get(i)[1].split("\\.")[mHeader.get(i)[1].split("\\.").length - 1];
-
-                    //제품상태
-                    if("productFaultyYn".equals(mHeader.get(i)[2])){
-
-                        String data = String.valueOf(
-                                ((HashMap<String, String>) mData.get(rownum - 1).get(Introspector.decapitalize(dtoClassName)))
-                                        .get(mHeader.get(i)[2]));
-
-                        sw.createCell(i, "Y".equals(data) ? "불량" : "N".equals(data) ? "정상" : "-");
-
-                    }else {
-
-                        dtoClassName = mHeader.get(i)[1].split("\\.")[mHeader.get(i)[1].split("\\.").length - 1];
-
-                        sw.createCell(i,
-                                String.valueOf(
-                                        ((HashMap<String, String>) mData.get(rownum - 1).get(Introspector.decapitalize(dtoClassName)))
-                                                .get(mHeader.get(i)[2])));
-                    }
-                }else{
-                    if("productFaultyYn".equals(mHeader.get(i)[2])) {
-
-                        String data = String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2]));
-
-                        sw.createCell(i, "Y".equals(data) ? "불량" : "N".equals(data) ? "정상" : "-");
-                    }else {
-                        sw.createCell(i, String.valueOf(mData.get(rownum - 1).get(mHeader.get(i)[2])));
-                    }
-                }
+                parseCellData(sw, rowNum, colNum, mHeader.get(colNum)[1], mHeader.get(colNum)[2], mData.get(rowNum - 1).get(mHeader.get(colNum)[2]));
             }
 
             sw.endRow();
         }
         sw.endSheet();
+    }
+
+    private void parseCellData(SpreadsheetWriter sw, int rowNum, int colNum, String dataType, String dataName, Object cellData) throws Exception {
+
+        String strCellData = "";
+
+        if("class java.time.LocalDate".equals(dataType)
+            || "class java.time.LocalDateTime".equals(dataType)){
+
+            HashMap<String, Object> tmpDateData = ((HashMap<String, Object>) (cellData));
+
+            if(cellData != null) {
+                strCellData = String.valueOf(tmpDateData.get("year"))
+                        .concat(lpadDate(String.valueOf(tmpDateData.get("monthValue"))))
+                        .concat(lpadDate(String.valueOf(tmpDateData.get("dayOfMonth"))));
+
+                if("class java.time.LocalDateTime".equals(dataType)){
+
+                    strCellData = strCellData.concat(lpadDate(String.valueOf(tmpDateData.get("hour"))))
+                            .concat(lpadDate(String.valueOf(tmpDateData.get("minute"))))
+                            .concat(lpadDate(String.valueOf(tmpDateData.get("second"))));
+                }
+
+            }
+        }else if(dataType.contains("Dto")){
+
+            String dtoClassName = dataType.split("\\.")[dataType.split("\\.").length - 1];
+            String data = String.valueOf(((HashMap<String, String>) mData.get(rowNum - 1).get(Introspector.decapitalize(dtoClassName))).get(dataName));
+
+            strCellData = data;
+
+            //제품상태
+            if("productFaultyYn".equals(dataName)){
+                strCellData = convertFaultyYn(data);
+            }
+        }else{
+
+            strCellData = String.valueOf(cellData);
+
+            if("productFaultyYn".equals(dataName)) {
+                strCellData = convertFaultyYn(String.valueOf(cellData));
+            }
+        }
+
+        sw.createCell(colNum, strCellData);
+    }
+
+    private String lpadDate(String data){
+        return  CommonUtil.appendLeft(data, "0", 2);
+    }
+
+    private String convertFaultyYn(String data){
+        return "Y".equals(data) ? "불량" : "N".equals(data) ? "정상" : "-";
     }
 
     /**
@@ -249,7 +247,7 @@ public class ExcelUtil {
      */
     public class SpreadsheetWriter {
         private final Writer _out;
-        private int _rownum;
+        private int _rowNum;
 
         public SpreadsheetWriter(Writer out) {
             _out = out;
@@ -269,11 +267,11 @@ public class ExcelUtil {
         /**
          * Insert a new row
          *
-         * @param rownum 0-based row number
+         * @param rowNum 0-based row number
          */
-        public void insertRow(int rownum) throws IOException {
-            _out.write("<row r=\"" + (rownum + 1) + "\">\n");
-            this._rownum = rownum;
+        public void insertRow(int rowNum) throws IOException {
+            _out.write("<row r=\"" + (rowNum + 1) + "\">\n");
+            this._rowNum = rowNum;
         }
 
         /**
@@ -284,7 +282,7 @@ public class ExcelUtil {
         }
 
         public void createCell(int columnIndex, String value, int styleIndex) throws IOException {
-            String ref = new CellReference(_rownum, columnIndex).formatAsString();
+            String ref = new CellReference(_rowNum, columnIndex).formatAsString();
             _out.write("<c r=\"" + ref + "\" t=\"inlineStr\"");
             if (styleIndex != -1)
                 _out.write(" s=\"" + styleIndex + "\"");
@@ -298,7 +296,7 @@ public class ExcelUtil {
         }
 
         public void createCell(int columnIndex, double value, int styleIndex) throws IOException {
-            String ref = new CellReference(_rownum, columnIndex).formatAsString();
+            String ref = new CellReference(_rowNum, columnIndex).formatAsString();
             _out.write("<c r=\"" + ref + "\" t=\"n\"");
             if (styleIndex != -1)
                 _out.write(" s=\"" + styleIndex + "\"");
