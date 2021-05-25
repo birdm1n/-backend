@@ -21,6 +21,9 @@ public class StoreStockRequestDto extends SearchParamDto {
     private String storeStockCheckDate;
 
     // 현재 보유처
+    private Long prevStockId;
+
+    // 다음 보유처
     private Long nextStockId;
 
     // 재고구분

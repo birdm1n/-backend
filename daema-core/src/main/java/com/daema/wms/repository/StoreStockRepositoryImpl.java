@@ -327,7 +327,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
     public Page<StoreStockResponseDto> getFaultyStoreStockList(StoreStockRequestDto requestDto) {
         JPQLQuery<StoreStockResponseDto> query = getQuerydsl().createQuery();
 
-        QStock nextStock = new QStock("nextStock");
+        QStock prevStock = new QStock("prevStock");
 
         QCodeDetail maker = new QCodeDetail("maker");
         QCodeDetail telecom = new QCodeDetail("telecom");
@@ -351,10 +351,10 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , provider.provId.as("provId")
                 , provider.provName.as("provName")
 
-                , nextStock.stockId.as("stockId")
-                , nextStock.stockName.as("stockName")
+                , prevStock.stockId.as("stockId")
+                , prevStock.stockName.as("stockName")
                 , new CaseBuilder()
-                        .when(nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()))
+                        .when(prevStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()))
                         .then(WmsEnum.StockStatStr.I.getStatusMsg())
                         .otherwise(WmsEnum.StockStatStr.M.getStatusMsg()).as("statusStr")
 
@@ -425,7 +425,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         )
 
                 //현재보유처
-                .innerJoin(storeStock.prevStock, nextStock)
+                .innerJoin(storeStock.prevStock, prevStock)
 
                 //공급처
                 .innerJoin(provider).on(
@@ -453,9 +453,9 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
 
         query.where(
                 betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
-                eqNextStockId(requestDto.getNextStockId()),
+                eqPrevStockId(requestDto.getPrevStockId()),
                 eqProvId(requestDto.getProvId()),
-                eqStatusStr(nextStock, requestDto.getStatusStr()),
+                eqStatusStr(prevStock, requestDto.getStatusStr()),
                 eqJudgeStatus(requestDto.getJudgeStatus()),
                 eqDeliveryStatus(requestDto.getDeliveryStatus()),
                 eqFullBarcode(requestDto.getFullBarcode()),
@@ -490,6 +490,13 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
             return null;
         }
         return goods.maker.eq(maker);
+    }
+
+    private BooleanExpression eqPrevStockId(Long prevStockId) {
+        if (prevStockId == null) {
+            return null;
+        }
+        return storeStock.prevStock.stockId.eq(prevStockId);
     }
 
     private BooleanExpression eqNextStockId(Long nextStockId) {
@@ -555,15 +562,15 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         return deviceStatus.productFaultyYn.eq(productFaultyYn);
     }
 
-    private BooleanExpression eqStatusStr(QStock nextStock, WmsEnum.StockStatStr statusStr) {
+    private BooleanExpression eqStatusStr(QStock stock, WmsEnum.StockStatStr statusStr) {
         if (statusStr == null) {
             return null;
         }
 
         if (WmsEnum.StockStatStr.I == statusStr) {
-            return nextStock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode());
+            return stock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode());
         } else {
-            return nextStock.stockType.ne(TypeEnum.STOCK_TYPE_I.getStatusCode());
+            return stock.stockType.ne(TypeEnum.STOCK_TYPE_I.getStatusCode());
         }
     }
 

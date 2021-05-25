@@ -4,6 +4,8 @@ import com.daema.base.enums.StatusEnum;
 import com.daema.base.repository.CodeDetailRepository;
 import com.daema.commgmt.domain.Store;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
+import com.daema.rest.common.enums.ServiceReturnMsgEnum;
+import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.DeviceDto;
 import com.daema.rest.wms.dto.InStockMgmtDto;
@@ -41,30 +43,34 @@ public class DeviceMgmtService {
 
 		DeviceResponseDto deviceResponseDto = new DeviceResponseDto();
 
-		device.getGoodsOption().getGoods().setMakerName(
-				codeDetailRepository.findById(device.getGoodsOption().getGoods().getMaker()).get().getCodeNm()
-		);
+		if(device != null) {
+			device.getGoodsOption().getGoods().setMakerName(
+					codeDetailRepository.findById(device.getGoodsOption().getGoods().getMaker()).get().getCodeNm()
+			);
 
-		device.getGoodsOption().getGoods().setNetworkName(
-				codeDetailRepository.findById(device.getGoodsOption().getGoods().getNetworkAttribute().network).get().getCodeNm()
-		);
+			device.getGoodsOption().getGoods().setNetworkName(
+					codeDetailRepository.findById(device.getGoodsOption().getGoods().getNetworkAttribute().network).get().getCodeNm()
+			);
 
-		device.getGoodsOption().getGoods().setTelecomName(
-				codeDetailRepository.findById(device.getGoodsOption().getGoods().getNetworkAttribute().telecom).get().getCodeNm()
-		);
+			device.getGoodsOption().getGoods().setTelecomName(
+					codeDetailRepository.findById(device.getGoodsOption().getGoods().getNetworkAttribute().telecom).get().getCodeNm()
+			);
 
-		deviceResponseDto.setDeviceDto(DeviceDto.from(device));
+			deviceResponseDto.setDeviceDto(DeviceDto.from(device));
 
-		device.getInStocks().get(0).setRegiUserId(null);
-		device.getInStocks().get(0).setUpdUserId(null);
-		deviceResponseDto.setInStockMgmtDto(InStockMgmtDto.from(device.getInStocks().get(0)));
+			device.getInStocks().get(0).setRegiUserId(null);
+			device.getInStocks().get(0).setUpdUserId(null);
+			deviceResponseDto.setInStockMgmtDto(InStockMgmtDto.from(device.getInStocks().get(0)));
 
-		device.getGoodsOption().getGoods().setOptionList(null);
-		deviceResponseDto.setGoodsMgmtDto(GoodsMgmtDto.from(device.getGoodsOption().getGoods()));
+			device.getGoodsOption().getGoods().setOptionList(null);
+			deviceResponseDto.setGoodsMgmtDto(GoodsMgmtDto.from(device.getGoodsOption().getGoods()));
 
-		Stock stock = device.getStoreStock().getNextStock() != null ? device.getStoreStock().getNextStock() : device.getStoreStock().getPrevStock();
+			Stock stock = device.getStoreStock().getNextStock() != null ? device.getStoreStock().getNextStock() : device.getStoreStock().getPrevStock();
 
-		deviceResponseDto.setStockMgmtDto(StockMgmtDto.from(stock));
+			deviceResponseDto.setStockMgmtDto(StockMgmtDto.from(stock));
+		}else{
+			throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+		}
 
 		return deviceResponseDto;
 	}
