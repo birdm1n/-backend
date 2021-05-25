@@ -194,9 +194,9 @@ public class DataHandleService {
         long storeId = authenticationUtil.getStoreId();
         List<Provider> provList = null;
         if(fullFlag) {
-            provList = providerRepository.findByStoreIdAndUseYnAndDelYnOrderByProvName(storeId, StatusEnum.FLAG_Y.getStatusMsg(), StatusEnum.FLAG_N.getStatusMsg());
+            provList = providerRepository.findByStoreIdAndDelYnOrderByProvName(storeId, StatusEnum.FLAG_N.getStatusMsg());
         }else{
-            provList = providerRepository.findByStoreIdAndUseYnOrderByProvName(storeId, StatusEnum.FLAG_Y.getStatusMsg());
+            provList = providerRepository.findByStoreIdAndUseYnAndDelYnOrderByProvName(storeId, StatusEnum.FLAG_Y.getStatusMsg(), StatusEnum.FLAG_N.getStatusMsg());
         }
         return provList.stream().map(ProviderMgmtDto::ofInitData).collect(Collectors.toList());
     }
