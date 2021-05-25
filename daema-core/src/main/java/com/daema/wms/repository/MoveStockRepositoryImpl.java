@@ -3,8 +3,10 @@ package com.daema.wms.repository;
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.QMember;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.commgmt.domain.QStore;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.MoveStock;
+import com.daema.wms.domain.QDelivery;
 import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.dto.request.MoveMgmtRequestDto;
 import com.daema.wms.domain.dto.request.MoveStockRequestDto;
@@ -16,6 +18,7 @@ import com.daema.wms.repository.custom.CustomMoveStockRepository;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,6 +39,7 @@ import static com.daema.wms.domain.QMoveStock.moveStock;
 import static com.daema.wms.domain.QOutStock.outStock;
 import static com.daema.wms.domain.QProvider.provider;
 import static com.daema.wms.domain.QReturnStock.returnStock;
+import static com.daema.wms.domain.QStoreStockHistory.storeStockHistory;
 
 public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implements CustomMoveStockRepository {
     public MoveStockRepositoryImpl() {
@@ -325,21 +329,35 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
 
         QCodeDetail telecom = new QCodeDetail("telecom");
         QCodeDetail maker = new QCodeDetail("maker");
+        QStore trnsStore = new QStore("trnsStore");
+        QDelivery moveDelivery = new QDelivery("moveDelivery");
+        QDelivery outDelivery = new QDelivery("outDelivery");
 
 
         query.select(Projections.fields(
                 MoveMgmtResponseDto.class
-                , moveStock.moveStockId.as("moveStockId")
+                , storeStockHistory.stockTypeId.as("stockTypeId")
+                , storeStockHistory.stockType.as("stockType") // 재고구분
+                , storeStockHistory.regiDateTime.as("moveRegiDateTime")  // 이동일
                 , telecom.codeNm.as("telecomName")
                 , inStock.regiDateTime.as("inStockRegiDateTime") //입고일
-                , moveStock.regiDateTime.as("moveRegiDateTime")  // 이동일
-                , prevStock.stockId.as("prevStockId")
+                , inStock.statusStr.as("statusStr")
                 , prevStock.stockName.as("prevStockName")
-                , nextStock.stockId.as("nextStockId")
                 , nextStock.stockName.as("nextStockName")
-                , moveStock.moveStockType.as("moveStockType") // 재고구분
+                , new CaseBuilder()
+                        .when(storeStockHistory.stockType.eq(WmsEnum.StockType.FAULTY_TRNS))
+                        .then(provider.provName)
+                        .otherwise("")
+                        .as("transProvName") // 공급처
+                , new CaseBuilder()
+                        .when(storeStockHistory.stockType.in(WmsEnum.StockType.SELL_TRNS, WmsEnum.StockType.STOCK_TRNS))
+                        .then(trnsStore.storeName)
+                        .otherwise("")
+                        .as("transStoreName")  // 이동처
                 , returnStock.returnStockAmt.as("returnStockAmt") // 반품비 ////****
                 , device.dvcId.as("dvcId")
+                , device.fullBarcode.as("fullBarcode")
+                , device.inStockAmt.as("inStockAmt")
                 , maker.codeNm.as("makerName")
                 , goods.goodsId.as("goodsId")
                 , goods.goodsName.as("goodsName")
@@ -348,9 +366,6 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                 , goodsOption.goodsOptionId.as("goodsOptionId")
                 , goodsOption.colorName.as("colorName")
                 , goodsOption.commonBarcode.as("commonBarcode")
-                , device.fullBarcode.as("fullBarcode")
-                , device.inStockAmt.as("inStockAmt")
-                , inStock.statusStr.as("statusStr")
                 , deviceStatus.inStockStatus.as("inStockStatus") // 입고상태 : 정상, 개봉
                 , deviceStatus.productFaultyYn.as("productFaultyYn") // 제품상태 : N(-), Y(불량)
                 , deviceStatus.extrrStatus.as("extrrStatus") // 외장상태 : T : 상, M : 중, B : 하, F:파손
@@ -358,22 +373,27 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                 , deviceStatus.missProduct.as("missProduct")
                 , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
                 , deviceStatus.addDdctAmt.as("addDdctAmt")
-                , delivery.deliveryType.as("deliveryType") // 배송방법 : 택배,퀵,직접전달
-                , delivery.deliveryStatus.as("deliveryStatus") //배송상태 : 배송중
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.deliveryType)
+                        .otherwise(outDelivery.deliveryType).as("deliveryType")
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.deliveryStatus)
+                        .otherwise(outDelivery.deliveryStatus).as("deliveryStatus")
                 , regMember.seq.as("regiUserId")
                 , regMember.username.as("regiUserName")
+                , updMember.seq.as("updUserId")
+                , updMember.username.as("updUserName")
         ))
-                .from(moveStock)
-                .innerJoin(moveStock.store, store).on
+                .from(storeStockHistory)
+                .innerJoin(storeStockHistory.store, store).on
                 (
                         store.storeId.eq(requestDto.getStoreId())
                 )
-                .innerJoin(moveStock.regiUserId, regMember)
-                .innerJoin(moveStock.updUserId, updMember)
-                .innerJoin(moveStock.prevStock, prevStock)
-                .innerJoin(moveStock.nextStock, nextStock)
-                .innerJoin(moveStock.delivery, delivery)
-                .innerJoin(moveStock.device, device)
+                .innerJoin(storeStockHistory.regiUserId, regMember)
+                .innerJoin(storeStockHistory.updUserId, updMember)
+                .innerJoin(storeStockHistory.device, device)
                 .innerJoin(device.inStocks, inStock).on
                 (
                         inStock.delYn.eq("N")
@@ -392,6 +412,26 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                 (
                         goods.networkAttribute.telecom.eq(telecom.codeSeq)
                 )
+                .leftJoin(storeStockHistory.prevStock, prevStock)
+                .leftJoin(storeStockHistory.nextStock, nextStock)
+                .leftJoin(moveStock).on
+                (
+                        storeStockHistory.stockTypeId.eq(moveStock.moveStockId)
+                )
+                .leftJoin(moveStock.delivery, moveDelivery)
+                .leftJoin(outStock).on
+                (
+                        storeStockHistory.stockTypeId.eq(outStock.outStockId)
+                )
+                .leftJoin(outStock.delivery, outDelivery)
+                .leftJoin(trnsStore).on  // SELL_TRNS, STOCK_TRNS 인 경우 필요
+                (
+                        outStock.targetId.eq(trnsStore.storeId)
+                )
+                .leftJoin(provider).on // FAULTY_TRNS 인 경우 필요
+                (
+                        outStock.targetId.eq(provider.provId)
+                )
                 .leftJoin(device.returnStockList, returnStock).on
                 (
                         returnStock.delYn.eq("N")
@@ -399,38 +439,50 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                 .where(
                         eqTelecom(requestDto.getTelecom()),
                         betweenInstockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
-                        betweenMoveStockRegDt(requestDto.getMoveRegiDate(), requestDto.getMoveRegiDate()),
-                        eqPrevStockId(requestDto.getPrevStockId()),//
-                        eqNextStockId(requestDto.getNextStockId()),
-                        eqMoveStockType(requestDto.getMoveStockType()),
+                        betweenMoveStockRegDt(requestDto.getMoveRegiDate(), requestDto.getMoveRegiDate()), //출고일 (이동, 이관일)
+                        eqPrevStockId(requestDto.getStockId()),
+                        eqNextStockId(requestDto.getStockId()),
+                        eqStockType(requestDto.getMoveStockType()),
                         eqMaker(requestDto.getMaker()),
+                        eqGoodsId(requestDto.getGoodsId()),
                         eqCapacity(requestDto.getCapacity()),
                         eqColorName(requestDto.getColorName()),
                         eqInStockStatus(requestDto.getInStockStatus()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
                         eqExtrrStatus(requestDto.getExtrrStatus()),
-                        eqDeliveryType(requestDto.getDeliveryType()),
-                        eqDeliveryStatus(requestDto.getDeliveryStatus())
+                        eqMoveOrOutDeliveryType(requestDto.getDeliveryType(), moveDelivery, outDelivery),
+                        eqMoveOrOutDeliveryStatus(requestDto.getDeliveryStatus(), moveDelivery, outDelivery),
+                        containsFullBarcode(requestDto.getFullBarcode()),
+                        storeStockHistory.stockType.in
+                                (WmsEnum.StockType.SELL_MOVE
+                                        , WmsEnum.StockType.STOCK_MOVE
+                                        , WmsEnum.StockType.STOCK_TRNS
+                                        , WmsEnum.StockType.FAULTY_TRNS
+                                        , WmsEnum.StockType.SELL_TRNS),
+                        storeStockHistory.historyStatus.ne(WmsEnum.HistoryStatus.DEL)
                 )
-                .orderBy(moveStock.regiDateTime.desc());
+                .orderBy(storeStockHistory.regiDateTime.desc());
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
         QueryResults<MoveMgmtResponseDto> resultList = query.fetchResults();
         return new PageImpl<>(resultList.getResults(), pageable, resultList.getTotal());
     }
 
-    private BooleanExpression eqDeliveryStatus(WmsEnum.DeliveryStatus deliveryStatus) {
-        if (deliveryStatus == null) {
-            return null;
-        }
-        return delivery.deliveryStatus.eq(deliveryStatus);
-    }
-
-    private BooleanExpression eqDeliveryType(WmsEnum.DeliveryType deliveryType) {
+    private BooleanExpression eqMoveOrOutDeliveryType(WmsEnum.DeliveryType deliveryType, QDelivery moveDlvr, QDelivery outDlvr) {
         if (deliveryType == null) {
             return null;
         }
 
-        return delivery.deliveryType.eq(deliveryType);
+        return (moveDlvr.deliveryType.eq(deliveryType).or
+                (outDlvr.deliveryType.eq(deliveryType)));
+    }
+
+    private BooleanExpression eqMoveOrOutDeliveryStatus(WmsEnum.DeliveryStatus deliveryStatus, QDelivery moveDlvr, QDelivery outDlvr) {
+        if (deliveryStatus == null) {
+            return null;
+        }
+
+        return (moveDlvr.deliveryStatus.eq(deliveryStatus).or(
+                outDlvr.deliveryStatus.eq(deliveryStatus)));
     }
 
 
@@ -438,21 +490,21 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
         if (prevstockId == null) {
             return null;
         }
-        return inStock.stock.stockId.eq(prevstockId);
+        return storeStockHistory.prevStock.stockId.eq(prevstockId);
     }
 
     private BooleanExpression eqNextStockId(Long nextstockId) {
         if (nextstockId == null) {
             return null;
         }
-        return inStock.stock.stockId.eq(nextstockId);
+        return storeStockHistory.nextStock.stockId.eq(nextstockId);
     }
 
-    private BooleanExpression eqMoveStockType(WmsEnum.MoveStockType moveStockType) {
-        if (moveStockType == null) {
+    private BooleanExpression eqStockType(WmsEnum.StockType stockType) {
+        if (stockType == null) {
             return null;
         }
-        return moveStock.moveStockType.eq(moveStockType);
+        return storeStockHistory.stockType.eq(stockType);
     }
 
     private BooleanExpression containsFullBarcode(String fullBarcode) {
@@ -525,7 +577,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
         if (StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)) {
             return null;
         }
-        return moveStock.regiDateTime.between(
+        return storeStockHistory.regiDateTime.between(
                 RetrieveClauseBuilder.stringToLocalDateTime(startDt, "s"),
                 RetrieveClauseBuilder.stringToLocalDateTime(endDt, "e")
         );

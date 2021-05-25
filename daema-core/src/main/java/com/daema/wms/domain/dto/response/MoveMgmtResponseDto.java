@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MoveMgmtResponseDto { // 이동현황
 
+    private Long stockTypeId;
 
-    private Long moveStockId;
 
     // 통신사
     private int telecom;
@@ -27,16 +27,20 @@ public class MoveMgmtResponseDto { // 이동현황
 
 
     // 이전 보유처
-    private Long prevStockId;
     private String prevStockName;
 
     // 현재 보유처
-    private Long nextStockId;
     private String nextStockName;
 
+    // 불량이관일 경우
+    private String transProvName;
+
+    // SELL_TRNS, STOCK_TRNS 인 경우 필요
+    private String transStoreName;
+
     // 재고구분
-    private WmsEnum.MoveStockType moveStockType;
-    private String moveStockTypeMsg;
+    private WmsEnum.StockType stockType;
+    private String stockTypeMsg;
 
     //제조사
     private int maker;
@@ -78,14 +82,13 @@ public class MoveMgmtResponseDto { // 이동현황
     //배송방법
     private WmsEnum.DeliveryType deliveryType;
     private String deliveryTypeMsg;
-
-    //배송상태
-    private WmsEnum.DeliveryStatus deliveryStatus;
-    private String deliveryStatusMsg;
     public String getDeliveryTypeMsg() {
         return this.deliveryType != null ? this.deliveryType.getStatusMsg():"";
     }
 
+    //배송상태
+    private WmsEnum.DeliveryStatus deliveryStatus;
+    private String deliveryStatusMsg;
     public String getDeliveryStatusMsg() {
         return this.deliveryStatus != null ? this.deliveryStatus.getStatusMsg():"";
     }
@@ -113,6 +116,10 @@ public class MoveMgmtResponseDto { // 이동현황
     //재고구분
     private WmsEnum.StockStatStr statusStr;
 
+    public String getStockTypeMsg() {
+        return this.stockType != null ? this.stockType.getStatusMsg() : "";
+    }
+
     public Long getDiffInStockRegiDate() {
         return CommonUtil.diffDaysLocalDateTime(this.inStockRegiDateTime);
     }
@@ -123,9 +130,6 @@ public class MoveMgmtResponseDto { // 이동현황
         return this.statusStr != null ? this.statusStr.getStatusMsg() : "";
     }
 
-    public String getMoveStockTypeMsg() {
-        return this.moveStockType != null ? this.moveStockType.getStatusMsg() : "";
-    }
 
     public String getInStockStatusMsg() {
         return this.inStockStatus != null ? this.inStockStatus.getStatusMsg() : "";
@@ -134,6 +138,5 @@ public class MoveMgmtResponseDto { // 이동현황
     public String getExtrrStatusMsg() {
         return this.extrrStatus != null ? this.extrrStatus.getStatusMsg() : "";
     }
-
 
 }

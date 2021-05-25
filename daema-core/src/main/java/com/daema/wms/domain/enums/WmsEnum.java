@@ -78,7 +78,7 @@ public enum WmsEnum {
 
     public enum OutStockType {
         STOCK_TRNS("재고이관"),
-        FAULTY_TRNS("불량이관"),
+        FAULTY_TRNS("착하"),
         SELL_TRNS("판매이관"),
 
         ;
@@ -98,7 +98,7 @@ public enum WmsEnum {
         SELL_MOVE("판매이동"),
         STOCK_MOVE("재고이동"),
         STOCK_TRNS("재고이관"),
-        FAULTY_TRNS("불량이관"),
+        FAULTY_TRNS("착하"),
         SELL_TRNS("판매이관"),
         RETURN_STOCK("반품"),
         ;
@@ -117,7 +117,7 @@ public enum WmsEnum {
         SELL_MOVE("판매이동"),
         STOCK_MOVE("재고이동"),
         STOCK_TRNS("재고이관"),
-        FAULTY_TRNS("불량이관"),
+        FAULTY_TRNS("착하"),
         SELL_TRNS("판매이관"),
         ;
 

@@ -1,5 +1,6 @@
 package com.daema.wms.domain.dto.response;
 
+import com.daema.base.util.CommonUtil;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -96,6 +97,13 @@ public class InStockResponseDto {
     private LocalDateTime updDateTime;
     private Long updUserId;
     private String updUserName;
+
+    // 경과일
+    private Long diffRegiDate;
+
+    public Long getDiffRegiDate() {
+        return CommonUtil.diffDaysLocalDateTime(this.regiDateTime);
+    }
 
     public String getInStockStatusMsg() {
         return this.inStockStatus != null ? this.inStockStatus.getStatusMsg() : "";
