@@ -425,7 +425,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         )
 
                 //현재보유처
-                .innerJoin(storeStock.nextStock, nextStock)
+                .innerJoin(storeStock.prevStock, nextStock)
 
                 //공급처
                 .innerJoin(provider).on(
