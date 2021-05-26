@@ -1,4 +1,4 @@
-package com.daema.wms.domain.dto.request;
+package com.daema.wms.domain.dto.response;
 
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DeviceStatusDto {
+public class DeviceStatusResDto {
 
 	private Long dvcStatusId;
 	private String productFaultyYn;

@@ -21,7 +21,7 @@ import java.util.List;
 
 @Api(value = "상품 관리 API", tags = "상품 관리 API")
 @RestController
-@RequestMapping("/v1/api/GoodsManagement/GoodsMgmt")
+@RequestMapping(value = {"/v1/api/GoodsManagement/GoodsMgmt", "/api/GoodsManagement/GoodsMgmt" })
 public class GoodsMgmtController {
 
     private final GoodsMgmtService goodsMgmtService;

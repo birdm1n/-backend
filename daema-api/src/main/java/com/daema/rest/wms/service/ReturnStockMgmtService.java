@@ -11,14 +11,16 @@ import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.io.file.FileUpload;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
+import com.daema.rest.wms.dto.DeviceStatusDto;
 import com.daema.rest.wms.dto.StoreStockMgmtDto;
+import com.daema.rest.wms.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.*;
-import com.daema.wms.domain.dto.request.DeviceStatusDto;
-import com.daema.wms.domain.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
+import com.daema.wms.domain.dto.response.ReturnStockResDto;
 import com.daema.wms.domain.dto.response.ReturnStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -37,19 +39,19 @@ public class ReturnStockMgmtService {
 	private final ReturnStockRepository returnStockRepository;
 	private final DeviceRepository deviceRepository;
 	private final DeviceStatusRepository deviceStatusRepository;
-	private final MoveStockRepository deviceStockRepository;
+	private final MoveStockRepository moveStockRepository;
 	private final AuthenticationUtil authenticationUtil;
 	private final ReturnStockCtrl returnStockCtrl;
 	private final FileUpload fileUpload;
 
 	public ReturnStockMgmtService(StockRepository stockRepository, ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
-			, DeviceStatusRepository deviceStatusRepository, MoveStockRepository deviceStockRepository
-			, AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl, FileUpload fileUpload) {
+			, DeviceStatusRepository deviceStatusRepository
+			, MoveStockRepository moveStockRepository, AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl, FileUpload fileUpload) {
 		this.stockRepository = stockRepository;
 		this.returnStockRepository = returnStockRepository;
 		this.deviceRepository = deviceRepository;
 		this.deviceStatusRepository = deviceStatusRepository;
-		this.deviceStockRepository = deviceStockRepository;
+		this.moveStockRepository = moveStockRepository;
 		this.authenticationUtil = authenticationUtil;
 		this.returnStockCtrl = returnStockCtrl;
 		this.fileUpload = fileUpload;
@@ -115,14 +117,26 @@ public class ReturnStockMgmtService {
 							.collect(Collectors.toList());
 
 					//바코드 기준으로 반품 할 데이터 조회 및 생성
-					List<ReturnStockReqDto> returnStockDtoList = returnStockRepository.makeReturnStockInfoFromBarcode(excelBarcodeList, authenticationUtil.getStoreId());
+					List<ReturnStockResDto> returnStockDtoList = returnStockRepository.makeReturnStockInfoFromBarcode(excelBarcodeList, authenticationUtil.getStoreId());
+
+					//api request 와 db response 를 공통으로 사용하기 위해 res to req 변환 처리
+					List<ReturnStockReqDto> convertDataList = new ArrayList<>();
+					ObjectMapper mapper = new ObjectMapper();
+
+					if (CommonUtil.isNotEmptyList(returnStockDtoList)) {
+						returnStockDtoList.forEach(
+								data -> convertDataList.add(
+										mapper.convertValue(data, ReturnStockReqDto.class)
+								)
+						);
+					}
 
 					//반품 처리
-					failBarcode = insertReturnStock(returnStockDtoList);
+					failBarcode = insertReturnStock(convertDataList);
 
 					//DB 조회 된 바코드 리스트 추출
 					Set<String> dbBarcode = returnStockDtoList.stream()
-							.map(ReturnStockReqDto::getFullBarcode)
+							.map(ReturnStockResDto::getFullBarcode)
 							.collect(Collectors.toSet());
 
 					//엑셀 바코드 중 DB 에 없는 건은 failBarcode 에 add

@@ -1,4 +1,4 @@
-package com.daema.wms.domain.dto.request;
+package com.daema.wms.domain.dto.response;
 
 import lombok.*;
 
@@ -7,12 +7,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReturnStockReqDto {
+public class ReturnStockResDto {
 
 	private Long dvcId;
 	private Integer returnStockAmt;
 	private String returnStockMemo;
-	private DeviceStatusDto returnDeviceStatus;
+	private DeviceStatusResDto returnDeviceStatus;
 	private Long prevStockId;
 	private String fullBarcode;
 

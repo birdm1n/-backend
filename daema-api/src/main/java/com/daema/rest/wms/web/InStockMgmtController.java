@@ -26,7 +26,7 @@ import java.util.Set;
 
 @Api(value = "입고/입고현황 API", tags = "입고/입고현황 API")
 @RestController
-@RequestMapping("/v1/api/DeviceManagement/InStockMgmt")
+@RequestMapping(value = {"/v1/api/DeviceManagement/InStockMgmt", "/api/DeviceManagement/InStockMgmt" })
 public class InStockMgmtController {
     private final InStockMgmtService inStockMgmtService;
     private final ResponseHandler responseHandler;

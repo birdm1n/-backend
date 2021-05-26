@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(value = "Sample API", tags = "Sample API")
 @RestController
-@RequestMapping("/v1/api/sample")
+@RequestMapping(value = {"/v1/api/sample", "/api/sample" })
 public class BoardController {
 
     private final BoardService boardService;

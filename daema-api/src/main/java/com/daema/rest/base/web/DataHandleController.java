@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/dataHandle")
+@RequestMapping(value = { "/dataHandle", "/api/dataHandle" })
 public class DataHandleController {
 
     private final DataHandleService dataHandleService;

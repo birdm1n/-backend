@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(value = "보유처 관리 API", tags = "보유처 관리 API")
 @RestController
-@RequestMapping("/v1/api/StockManagement/StockMgmt")
+@RequestMapping(value = {"/v1/api/StockManagement/StockMgmt", "/api/StockManagement/StockMgmt" })
 public class StockMgmtController {
 
     private final StockMgmtService stockMgmtService;

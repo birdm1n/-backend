@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Api(value = "영업점 관리 API", tags = "영업점 관리 API")
 @RestController
-@RequestMapping("/v1/api/BusinessManManagement/SaleStoreMgmt")
+@RequestMapping(value = {"/v1/api/BusinessManManagement/SaleStoreMgmt", "/api/BusinessManManagement/SaleStoreMgmt" })
 public class SaleStoreMgmtController {
 
     private final SaleStoreMgmtService saleStoreMgmtService;

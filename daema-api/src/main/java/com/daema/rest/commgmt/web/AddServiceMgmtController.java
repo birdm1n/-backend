@@ -17,7 +17,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Api(value = "부가서비스 관리 API", tags = "부가서비스 관리 API")
 @RestController
-@RequestMapping("/v1/api/AddServiceManagement/AddServiceMgmt")
+@RequestMapping(value = {"/v1/api/AddServiceManagement/AddServiceMgmt", "/api/AddServiceManagement/AddServiceMgmt" })
 public class AddServiceMgmtController {
 
     private final AddServiceMgmtService addServiceMgmtService;

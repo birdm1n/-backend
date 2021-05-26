@@ -4,8 +4,6 @@ import com.daema.base.enums.StatusEnum;
 import com.daema.base.repository.CodeDetailRepository;
 import com.daema.commgmt.domain.Store;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
-import com.daema.rest.common.enums.ServiceReturnMsgEnum;
-import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.DeviceDto;
 import com.daema.rest.wms.dto.InStockMgmtDto;
@@ -69,7 +67,7 @@ public class DeviceMgmtService {
 
 			deviceResponseDto.setStockMgmtDto(StockMgmtDto.from(stock));
 		}else{
-			throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+			deviceResponseDto = null;
 		}
 
 		return deviceResponseDto;

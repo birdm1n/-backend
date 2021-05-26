@@ -4,10 +4,10 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
+import com.daema.rest.wms.dto.request.ReturnStockReqDto;
 import com.daema.rest.wms.dto.response.DeviceResponseDto;
 import com.daema.rest.wms.service.DeviceMgmtService;
 import com.daema.rest.wms.service.ReturnStockMgmtService;
-import com.daema.wms.domain.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
 import com.daema.wms.domain.dto.response.ReturnStockResponseDto;
 import io.swagger.annotations.Api;
@@ -24,7 +24,7 @@ import java.util.Set;
 
 @Api(value = "이동재고반품 API", tags = "이동재고반품 API")
 @RestController
-@RequestMapping("/v1/api/DeviceManagement/ReturnStockMgmt")
+@RequestMapping(value = {"/v1/api/DeviceManagement/ReturnStockMgmt", "/api/DeviceManagement/ReturnStockMgmt"})
 public class ReturnStockMgmtController {
     private final ReturnStockMgmtService returnStockMgmtService;
     private final DeviceMgmtService deviceMgmtService;

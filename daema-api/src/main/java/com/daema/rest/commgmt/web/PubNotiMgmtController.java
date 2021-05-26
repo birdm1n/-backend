@@ -19,7 +19,7 @@ import java.util.List;
 
 @Api(value = "공시지원금 관리 API", tags = "공시지원금 관리 API")
 @RestController
-@RequestMapping("/v1/api/PubNotiManagement/PubNotiMgmt")
+@RequestMapping(value = {"/v1/api/PubNotiManagement/PubNotiMgmt", "/api/PubNotiManagement/PubNotiMgmt" })
 public class PubNotiMgmtController {
 
     private final PubNotiMgmtService pubNotiMgmtService;
