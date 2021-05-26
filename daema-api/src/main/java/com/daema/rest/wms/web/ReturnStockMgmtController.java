@@ -24,7 +24,7 @@ import java.util.Set;
 
 @Api(value = "이동재고반품 API", tags = "이동재고반품 API")
 @RestController
-@RequestMapping("/v1/api/DeviceManagement/ReturnStockMgmt")
+@RequestMapping(value = {"/v1/api/DeviceManagement/ReturnStockMgmt", "/api/DeviceManagement/ReturnStockMgmt"})
 public class ReturnStockMgmtController {
     private final ReturnStockMgmtService returnStockMgmtService;
     private final DeviceMgmtService deviceMgmtService;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(value = "기기/기기현황 API", tags = "기기/기기현황 API")
 @RestController
-@RequestMapping("/v1/api/DeviceManagement/DeviceCurrentMgmt")
+@RequestMapping(value = {"/v1/api/DeviceManagement/DeviceCurrentMgmt", "/api/DeviceManagement/DeviceCurrentMgmt" })
 public class DeviceCurrentMgmtController {
 
     private final DeviceCurrentMgmtService deviceCurrentMgmtService;

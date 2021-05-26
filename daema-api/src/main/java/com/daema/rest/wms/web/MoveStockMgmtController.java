@@ -10,7 +10,6 @@ import com.daema.rest.wms.service.MoveStockMgmtService;
 import com.daema.wms.domain.dto.request.MoveMgmtRequestDto;
 import com.daema.wms.domain.dto.request.MoveStockRequestDto;
 import com.daema.wms.domain.dto.response.MoveMgmtResponseDto;
-import com.daema.wms.domain.dto.response.MoveStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(value = "재고이동/이관 API", tags = "재고이동/이관 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/api/DeviceManagement/MoveStockMgmt")
+@RequestMapping(value = {"/v1/api/DeviceManagement/MoveStockMgmt", "/api/DeviceManagement/MoveStockMgmt" })
 public class MoveStockMgmtController {
     private final MoveStockMgmtService moveStockMgmtService;
     private final ResponseHandler responseHandler;

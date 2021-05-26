@@ -22,7 +22,7 @@ import java.util.List;
 
 @Api(value = "재고 관리 API", tags = "재고 관리 API")
 @RestController
-@RequestMapping("/v1/api/StoreStockManagement/StoreStockMgmt")
+@RequestMapping(value = {"/v1/api/StoreStockManagement/StoreStockMgmt", "/api/StoreStockManagement/StoreStockMgmt" })
 public class StoreStockMgmtController {
 
     private final StoreStockMgmtService storeStockMgmtService;

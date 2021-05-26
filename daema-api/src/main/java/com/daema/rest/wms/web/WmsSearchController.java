@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "검색 필터 API", tags = "검색필터 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/api/Wms/Search")
+@RequestMapping(value = {"/v1/api/Wms/Search", "/api/Wms/Search" })
 public class WmsSearchController {
     private final InStockMgmtService inStockMgmtService;
     private final GoodsMgmtService goodsMgmtService;

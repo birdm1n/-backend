@@ -20,7 +20,7 @@ import java.util.List;
 
 @Api(value = "개통점 관리 API", tags = "개통점 관리 API")
 @RestController
-@RequestMapping("/v1/api/BusinessManManagement/OpeningStoreMgmt")
+@RequestMapping(value = {"/v1/api/BusinessManManagement/OpeningStoreMgmt", "/api/BusinessManManagement/OpeningStoreMgmt" })
 public class OpeningStoreMgmtController {
 
     private final OpeningStoreMgmtService openingStoreMgmtService;

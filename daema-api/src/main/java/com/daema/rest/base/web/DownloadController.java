@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 
 @RestController
-@RequestMapping("/download")
+@RequestMapping(value = {"/download", "/api/download" })
 public class DownloadController {
 
     private final ExcelDownloadService excelDownloadService;

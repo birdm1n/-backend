@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/oauth")
+@RequestMapping(value = {"/oauth", "/api/oauth" })
 public class OauthController {
 
     private final AuthService authService;

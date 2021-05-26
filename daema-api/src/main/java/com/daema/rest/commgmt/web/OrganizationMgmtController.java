@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Api(value = "조직 관리 API", tags = "조직 관리 API")
 @RestController
-@RequestMapping("/v1/api/OrganizationManagement/OrganizationMgmt")
+@RequestMapping(value = {"/v1/api/OrganizationManagement/OrganizationMgmt", "/api/OrganizationManagement/OrganizationMgmt" })
 public class OrganizationMgmtController {
 
     private final OrganizationMgmtService organizationMgmtService;
