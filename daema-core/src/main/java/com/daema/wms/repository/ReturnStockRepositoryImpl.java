@@ -7,9 +7,9 @@ import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
 import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.ReturnStock;
-import com.daema.wms.domain.dto.request.DeviceStatusDto;
-import com.daema.wms.domain.dto.request.ReturnStockReqDto;
 import com.daema.wms.domain.dto.request.ReturnStockRequestDto;
+import com.daema.wms.domain.dto.response.DeviceStatusResDto;
+import com.daema.wms.domain.dto.response.ReturnStockResDto;
 import com.daema.wms.domain.dto.response.ReturnStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomReturnStockRepository;
@@ -140,14 +140,14 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     @Override
-    public List<ReturnStockReqDto> makeReturnStockInfoFromBarcode(List<String> barcodeDataList, Long storeId) {
+    public List<ReturnStockResDto> makeReturnStockInfoFromBarcode(List<String> barcodeDataList, Long storeId) {
 
-        JPQLQuery<ReturnStockReqDto> query = getQuerydsl().createQuery();
+        JPQLQuery<ReturnStockResDto> query = getQuerydsl().createQuery();
         QStock prevStock = new QStock("prevStock");
         QStock nextStock = new QStock("nextStock");
 
         query.select(Projections.fields(
-                ReturnStockReqDto.class
+                ReturnStockResDto.class
 
                 , device.dvcId.as("dvcId")
                 , device.fullBarcode.as("fullBarcode")
@@ -160,7 +160,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                         .otherwise(prevStock.stockId).as("prevStockId")
 
                 , Projections.fields(
-                        DeviceStatusDto.class
+                        DeviceStatusResDto.class
                         , Expressions.asNumber(0L).as("dvcStatusId")
                         , Expressions.asString("N").as("productFaultyYn")
                         , Expressions.asEnum(WmsEnum.DeviceExtrrStatus.T).as("extrrStatus")
@@ -186,7 +186,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                         device.fullBarcode.in(barcodeDataList)
                 );
 
-        List<ReturnStockReqDto> resultList = query.fetch();
+        List<ReturnStockResDto> resultList = query.fetch();
 
         return resultList;
     }

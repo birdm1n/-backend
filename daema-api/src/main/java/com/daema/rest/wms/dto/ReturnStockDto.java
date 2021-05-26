@@ -1,6 +1,5 @@
 package com.daema.rest.wms.dto;
 
-import com.daema.wms.domain.dto.request.DeviceStatusDto;
 import lombok.*;
 
 @Getter
