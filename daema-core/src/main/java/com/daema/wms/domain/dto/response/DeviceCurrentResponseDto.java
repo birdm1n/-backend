@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 public class DeviceCurrentResponseDto {
 
     //통신사
-    private int telecom;
     private String telecomName;
 
     private Long dvcId;
@@ -24,8 +23,8 @@ public class DeviceCurrentResponseDto {
     //입고일
     private LocalDateTime inStockRegiDate;
 
-    //이동일
-    private LocalDateTime moveStockRegiDate;
+    //출고일
+    private LocalDateTime moveRegiDate;
 
     //입고 경과일
     private Long diffInStockRegiDate;
@@ -35,14 +34,12 @@ public class DeviceCurrentResponseDto {
     }
 
     //이동 경과일
-    private Long diffMoveStockRegiDate;
+    private Long diffMoveRegiDate;
 
-    public Long getDiffMoveStockRegiDate() {
-        return CommonUtil.diffDaysLocalDateTime(this.moveStockRegiDate);
+    public Long getDiffMoveRegiDate() {
+        return CommonUtil.diffDaysLocalDateTime(this.moveRegiDate);
     }
 
-    // 공급처
-    private Long provId;
 
     // 이전보유처
     private String prevStockName;
@@ -51,13 +48,13 @@ public class DeviceCurrentResponseDto {
     private String nextStockName;
 
     //재고구분
-    private WmsEnum.StockStatStr statusStr;
-    private String statusStrMsg;
+    private WmsEnum.StockType stockType;
+    private String stockTypeMsg;
+
     //제조사
-    private int maker;
     private String makerName;
+
     //기기명
-    private Long goodsId;
     private String goodsName;
 
     //모델명
@@ -119,8 +116,8 @@ public class DeviceCurrentResponseDto {
         return this.extrrStatus != null ? this.extrrStatus.getStatusMsg() : "";
     }
 
-    public String getStatusStrMsg() {
-        return this.statusStr != null ? this.statusStr.getStatusMsg() : "";
+    public String getStockTypeMsg() {
+        return this.stockType != null ? this.stockType.getStatusMsg() : "";
     }
 
     public String getDeliveryTypeMsg() {
