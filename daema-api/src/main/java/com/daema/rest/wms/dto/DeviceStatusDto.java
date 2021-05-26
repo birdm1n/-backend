@@ -1,4 +1,4 @@
-package com.daema.wms.domain.dto.request;
+package com.daema.rest.wms.dto;
 
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
