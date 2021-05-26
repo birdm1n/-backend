@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class ProviderRequestDto extends SearchParamDto {
 
+    private Long provId;
     private String provName;
 
 }

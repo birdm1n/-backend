@@ -56,7 +56,7 @@ public class ProviderRepositoryImpl extends QuerydslRepositorySupport implements
         query.where(
                 provider.storeId.eq(requestDto.getStoreId())
                 ,provider.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
-                ,containsProvName(requestDto.getProvName())
+                ,eqProvId(requestDto.getProvId())
                 ,containsChargerName(requestDto.getChargerName())
                 ,containsChargerPhone(requestDto.getChargerPhone())
                 ,containsChargerEmail(requestDto.getChargerEmail())
@@ -74,11 +74,11 @@ public class ProviderRepositoryImpl extends QuerydslRepositorySupport implements
         return new PageImpl<>(resultList, pageable, total);
     }
 
-    private BooleanExpression containsProvName(String name) {
-        if (StringUtils.isEmpty(name)) {
+    private BooleanExpression eqProvId(Long provId) {
+        if (provId == null) {
             return null;
         }
-        return provider.provName.in(name);
+        return provider.provId.eq(provId);
     }
 
     private BooleanExpression containsChargerName(String name) {
