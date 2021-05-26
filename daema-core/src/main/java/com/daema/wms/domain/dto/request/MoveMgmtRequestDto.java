@@ -28,7 +28,7 @@ public class MoveMgmtRequestDto extends SearchParamDto { //이동현황
     private Long stockId;
 
     // 재고구분
-    private WmsEnum.StockType moveStockType;
+    private WmsEnum.StockType stockType;
 
     //제조사
     private Integer maker;

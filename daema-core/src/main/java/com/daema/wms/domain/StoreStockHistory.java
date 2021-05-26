@@ -22,7 +22,7 @@ public class StoreStockHistory extends BaseUserInfoEntity {
     @Column(name = "store_stock_history_id")
     private Long storeStockHistoryId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_stock_id")
     private StoreStock storeStock;
 
