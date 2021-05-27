@@ -5,6 +5,7 @@ public enum ServiceReturnMsgEnum {
     FALSE,
     IS_NOT_PRESENT,
     ILLEGAL_ARGUMENT,
+    INVALID_ARGUMENT,
     UNAUTHORIZED,
     IS_NOT_EMPTY
     ;

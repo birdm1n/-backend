@@ -5,7 +5,7 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.commgmt.dto.ChargeMgmtDto;
 import com.daema.rest.commgmt.dto.ChargeRegReqDto;
 import com.daema.rest.commgmt.service.ChargeMgmtService;
-import com.daema.rest.common.Constants;
+import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;

@@ -17,7 +17,8 @@ import com.daema.commgmt.repository.StoreRepository;
 import com.daema.rest.base.dto.CodeDetailDto;
 import com.daema.rest.base.dto.RetrieveInitDataResponseDto;
 import com.daema.rest.commgmt.dto.SaleStoreMgmtDto;
-import com.daema.rest.common.Constants;
+import com.daema.rest.common.consts.Constants;
+import com.daema.rest.common.consts.PropertiesValue;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.JwtUtil;
 import com.daema.rest.common.util.RedisUtil;
@@ -61,13 +62,13 @@ public class DataHandleService {
     private final static long JOIN_URL_TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 24 * 365 * 10;
 
     public DataHandleService(FuncMgmtRepository funcMgmtRepository, PubNotiRawDataRepository pubNotiRawDataRepository
-                             ,StoreRepository storeRepository, CodeDetailRepository codeDetailRepository
-                             ,MemberRepository memberRepository
-                             ,ProviderRepository providerRepository
-            ,OrganizationRepository organizationRepository
-            ,DeviceRepository deviceRepository
-            ,JwtUtil jwtUtil, RedisUtil redisUtil
-            ,RequestMappingHandlerMapping handlerMapping, AuthenticationUtil authenticationUtil) {
+            , StoreRepository storeRepository, CodeDetailRepository codeDetailRepository
+            , MemberRepository memberRepository
+            , ProviderRepository providerRepository
+            , OrganizationRepository organizationRepository
+            , DeviceRepository deviceRepository
+            , JwtUtil jwtUtil, RedisUtil redisUtil
+            , RequestMappingHandlerMapping handlerMapping, AuthenticationUtil authenticationUtil) {
         this.funcMgmtRepository = funcMgmtRepository;
         this.pubNotiRawDataRepository = pubNotiRawDataRepository;
         this.storeRepository = storeRepository;
@@ -86,7 +87,7 @@ public class DataHandleService {
     @Transactional
     public void extractApiFunc() {
 
-       if(authenticationUtil.isAdmin()) {
+        if (authenticationUtil.isAdmin()) {
 
             Map<RequestMappingInfo, HandlerMethod> mappings = handlerMapping.getHandlerMethods();
             Set<RequestMappingInfo> keys = mappings.keySet();
@@ -94,7 +95,10 @@ public class DataHandleService {
 
             List<FuncMgmt> javaList = new ArrayList<>();
             String[] nickname;
+            FuncMgmt funcMgmt;
             HashMap<String, FuncMgmt> map = new HashMap<>();
+
+            String profile = PropertiesValue.profilesActive;
 
             while (iterator.hasNext()) {
                 RequestMappingInfo key = iterator.next();
@@ -106,15 +110,28 @@ public class DataHandleService {
                     if (StringUtils.hasText(annotation.nickname())) {
                         nickname = annotation.nickname().split("\\|\\|");
 
-                        FuncMgmt funcMgmt = FuncMgmt.builder()
-                                .funcId(nickname[0].concat("_".concat(method.getMethod().getName())))
-                                .groupId(Integer.parseInt(nickname[0]))
-                                .groupName(nickname[1])
-                                .title(annotation.value())
-                                .role(nickname[2])
-                                .urlPath(key.getPatternsCondition().getPatterns().iterator().next())
-                                .orderNum(Integer.parseInt(nickname[3]))
-                                .build();
+                        if (profile != null &&
+                                !"prod".equals(profile)) {
+                            funcMgmt = FuncMgmt.builder()
+                                    .funcId(nickname[0].concat("_".concat(method.getMethod().getName())))
+                                    .groupId(Integer.parseInt(nickname[0]))
+                                    .groupName(nickname[1])
+                                    .title(annotation.value())
+                                    .role(nickname[2])
+                                    .urlPath(String.valueOf(key.getPatternsCondition().getPatterns().toArray()[0]))
+                                    .orderNum(Integer.parseInt(nickname[3]))
+                                    .build();
+                        }else{
+                            funcMgmt = FuncMgmt.builder()
+                                    .funcId(nickname[0].concat("_".concat(method.getMethod().getName())))
+                                    .groupId(Integer.parseInt(nickname[0]))
+                                    .groupName(nickname[1])
+                                    .title(annotation.value())
+                                    .role(nickname[2])
+                                    .urlPath(String.valueOf(key.getPatternsCondition().getPatterns().toArray()[1]))
+                                    .orderNum(Integer.parseInt(nickname[3]))
+                                    .build();
+                        }
 
                         javaList.add(funcMgmt);
 
@@ -132,29 +149,29 @@ public class DataHandleService {
 
             funcMgmtRepository.saveAll(javaList);
             funcMgmtRepository.deleteAll(deleteList);
-        }else{
+        } else {
             throw new AuthorizationServiceException("UnAuthorization User");
         }
     }
 
     @Transactional
-    public void migrationSmartChoiceData(){
-        if(authenticationUtil.isAdmin()
-            && pubNotiRawDataRepository.existsByDeadLineYn(StatusEnum.FLAG_N.getStatusMsg())) {
+    public void migrationSmartChoiceData() {
+        if (authenticationUtil.isAdmin()
+                && pubNotiRawDataRepository.existsByDeadLineYn(StatusEnum.FLAG_N.getStatusMsg())) {
 
             long memberSeq = authenticationUtil.getMemberSeq();
 
             pubNotiRawDataRepository.migrationSmartChoiceData(memberSeq);
-        }else{
+        } else {
             throw new AuthorizationServiceException("UnAuthorization User");
         }
     }
 
-    public RetrieveInitDataResponseDto retrieveInitData(ModelMap reqModel){
+    public RetrieveInitDataResponseDto retrieveInitData(ModelMap reqModel) {
 
         RetrieveInitDataResponseDto responseDto = new RetrieveInitDataResponseDto();
 
-        if(!authenticationUtil.hasRole(UserRole.ROLE_ANONYMOUS.name())) {
+        if (!authenticationUtil.hasRole(UserRole.ROLE_ANONYMOUS.name())) {
 
             if (reqModel.containsKey("initData")
                     && reqModel.get("initData") != null) {
@@ -177,31 +194,31 @@ public class DataHandleService {
 
                 responseDto.setCodeList(retrieveCodeList(reqModel));
             }
-        }else{
+        } else {
             throw new AuthorizationServiceException("UnAuthorization User");
         }
 
         return responseDto;
     }
 
-    private List<SaleStoreMgmtDto> retrieveStoreList(){
+    private List<SaleStoreMgmtDto> retrieveStoreList() {
 
         List<Store> storeList = storeRepository.findByUseYnOrderByStoreName(StatusEnum.FLAG_Y.getStatusMsg());
         return storeList.stream().map(SaleStoreMgmtDto::ofInitData).collect(Collectors.toList());
     }
 
-    private List<ProviderMgmtDto> retrieveProvList(boolean fullFlag){
+    private List<ProviderMgmtDto> retrieveProvList(boolean fullFlag) {
         long storeId = authenticationUtil.getStoreId();
         List<Provider> provList = null;
-        if(fullFlag) {
+        if (fullFlag) {
             provList = providerRepository.findByStoreIdAndDelYnOrderByProvName(storeId, StatusEnum.FLAG_N.getStatusMsg());
-        }else{
+        } else {
             provList = providerRepository.findByStoreIdAndUseYnAndDelYnOrderByProvName(storeId, StatusEnum.FLAG_Y.getStatusMsg(), StatusEnum.FLAG_N.getStatusMsg());
         }
         return provList.stream().map(ProviderMgmtDto::ofInitData).collect(Collectors.toList());
     }
 
-    private Map<String, List<CodeDetailDto>> retrieveCodeList(ModelMap reqModel){
+    private Map<String, List<CodeDetailDto>> retrieveCodeList(ModelMap reqModel) {
         List<CodeDetail> codeDetailList = codeDetailRepository.findAllByCodeIdInAndUseYnOrderByCodeIdAscOrderNumAsc(
                 (List<String>) reqModel.get("code"), StatusEnum.FLAG_Y.getStatusMsg()
         );
@@ -212,31 +229,31 @@ public class DataHandleService {
                 .collect(Collectors.groupingBy(CodeDetailDto::getCodeId));
     }
 
-    public Object existsData(ModelMap reqModel, HttpServletRequest request){
+    public Object existsData(ModelMap reqModel, HttpServletRequest request) {
 
         //회원가입시(비로그인) 데이터 조회 가능 함. 하단 조건 생략
         //if(!authenticationUtil.hasRole(UserRole.ROLE_ANONYMOUS.name())) {
 
         Object retVal = "";
 
-        if(reqModel.get("storeName") != null){
+        if (reqModel.get("storeName") != null) {
             retVal = Optional.ofNullable(storeRepository.findByStoreName((String) reqModel.get("storeName")))
                     .orElseGet(Store::new).getStoreName();
-        }else if(reqModel.get("userName") != null){
+        } else if (reqModel.get("userName") != null) {
             retVal = Optional.ofNullable(memberRepository.findByUsername((String) reqModel.get("userName")))
                     .orElseGet(Member::new).getUsername();
-        }else if(reqModel.get("bizNo") != null){
+        } else if (reqModel.get("bizNo") != null) {
             retVal = Optional.ofNullable(storeRepository.findByBizNoAndUseYn((String) reqModel.get("bizNo"), StatusEnum.FLAG_Y.getStatusMsg()))
                     .orElseGet(Store::new).getBizNo();
-        }else if(reqModel.get("storeMapBizNo") != null) {
+        } else if (reqModel.get("storeMapBizNo") != null) {
             retVal = storeRepository.findByBizNoAndUseYn((String) reqModel.get("storeMapBizNo"), StatusEnum.FLAG_Y.getStatusMsg());
-        }else if(reqModel.get("userInsToken") != null) {
+        } else if (reqModel.get("userInsToken") != null) {
             HashMap<String, Object> retMap = new HashMap<>();
 
             //가입 링크를 통한 사용자 등록 프로세스
             String accessToken = jwtUtil.getAccessTokenFromHeader(request, JwtUtil.AUTHORIZATION);
 
-            if(StringUtils.hasText(accessToken)){
+            if (StringUtils.hasText(accessToken)) {
 
                 Long storeId = (Long) jwtUtil.getClaim(accessToken, "sId", Long.class);
                 Long orgId = (Long) jwtUtil.getClaim(accessToken, "gId", Long.class);
@@ -256,10 +273,10 @@ public class DataHandleService {
         return retVal;
     }
 
-    public String generatorJoinPath(ModelMap reqModel){
+    public String generatorJoinPath(ModelMap reqModel) {
         String returnUrl = "";
 
-        if(!authenticationUtil.hasRole(UserRole.ROLE_ANONYMOUS.name())) {
+        if (!authenticationUtil.hasRole(UserRole.ROLE_ANONYMOUS.name())) {
             String joinType = String.valueOf(reqModel.get("type"));
 
             HashMap<Object, Object> hashMap = new HashMap<>();
@@ -275,14 +292,14 @@ public class DataHandleService {
 
                 returnUrl = Constants.USER_JOIN_URL.concat("?at=").concat(jwtUtil.doGenerateTokenFromMap(hashMap, JOIN_URL_TOKEN_VALIDATION_SECOND));
             }
-        }else{
+        } else {
             throw new AuthorizationServiceException("UnAuthorization User");
         }
 
         return returnUrl;
     }
 
-    public List<DeviceHistoryResponseDto> retrieveDeviceHistory(Long dvcId){
+    public List<DeviceHistoryResponseDto> retrieveDeviceHistory(Long dvcId) {
         return deviceRepository.getDeviceHistory(dvcId, authenticationUtil.getStoreId());
     }
 }

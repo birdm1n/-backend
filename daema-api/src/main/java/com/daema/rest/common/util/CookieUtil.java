@@ -38,7 +38,10 @@ public class CookieUtil {
 
         int maxAge = value == null ? 0 : (int)JwtUtil.TOKEN_VALIDATION_SECOND;
 
-        String profile = System.getProperty("spring.profiles.active");
+        // TODO 운영 도메인, 인증서 나오기 전까지 secure 적용 불가
+        // 크롬 브라우저 옵션 변경으로 가능하나, 개별 사용자의 로컬 설정이 필요
+        /*
+        String profile = PropertiesValue.profilesActive;
 
         if(!"prod".equals(profile)) {
             return ResponseCookie.from(cookieName, value)
@@ -55,6 +58,13 @@ public class CookieUtil {
                     .path("/")
                     .build().toString();
         }
+        */
+
+        return ResponseCookie.from(cookieName, value)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(maxAge)
+                .build().toString();
     }
 
 }

@@ -2,7 +2,8 @@ package com.daema.rest.base.web;
 
 import com.daema.base.enums.TypeEnum;
 import com.daema.rest.base.service.ExcelDownloadService;
-import com.daema.rest.common.Constants;
+import com.daema.rest.common.consts.Constants;
+import com.daema.rest.common.consts.PropertiesValue;
 import com.daema.rest.common.handler.ResponseHandler;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -79,7 +80,7 @@ public class DownloadController {
             String filePath = Constants.XLS_TEMPLATE_PATH;
             String fileName = templateFileName.concat(".").concat(TypeEnum.XLSX.getStatusMsg());
 
-            String profile = System.getProperty("spring.profiles.active");
+            String profile = PropertiesValue.profilesActive;
 
             if(profile != null &&
                     !"prod".equals(profile)) {

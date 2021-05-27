@@ -1,6 +1,7 @@
 package com.daema.rest.config;
 
-import com.daema.rest.common.Constants;
+import com.daema.rest.common.consts.Constants;
+import com.daema.rest.common.consts.PropertiesValue;
 import com.daema.rest.common.filter.JwtRequestFilter;
 import com.daema.rest.common.handler.CustomAccessDeniedHandler;
 import com.daema.rest.common.handler.CustomAuthenticationEntryPoint;
@@ -78,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        String profile = System.getProperty("spring.profiles.active");
+        String profile = PropertiesValue.profilesActive;
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();

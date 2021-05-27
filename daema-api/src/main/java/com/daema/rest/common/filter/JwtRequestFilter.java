@@ -4,7 +4,8 @@ import com.daema.base.domain.Member;
 import com.daema.rest.base.dto.SecurityMember;
 import com.daema.rest.base.service.MyUserDetailsService;
 import com.daema.rest.commgmt.service.RoleFuncMgmtService;
-import com.daema.rest.common.Constants;
+import com.daema.rest.common.consts.Constants;
+import com.daema.rest.common.consts.PropertiesValue;
 import com.daema.rest.common.util.CookieUtil;
 import com.daema.rest.common.util.JwtUtil;
 import com.daema.rest.common.util.RedisUtil;
@@ -64,7 +65,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 jwt = jwtToken.getValue();
                 username = jwtUtil.getUsername(jwt);
             }else{
-                String profile = System.getProperty("spring.profiles.active");
+                String profile = PropertiesValue.profilesActive;
 
                 if(profile != null &&
                         !"prod".equals(profile)) {

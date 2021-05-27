@@ -1,6 +1,7 @@
 package com.daema.rest.common.io.file;
 
-import com.daema.rest.common.Constants;
+import com.daema.rest.common.consts.Constants;
+import com.daema.rest.common.consts.PropertiesValue;
 import com.daema.rest.common.util.DateUtil;
 import com.daema.rest.common.util.ExcelUtil;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,7 @@ public class FileUpload {
 
             String filePath = Constants.XLS_UPLOAD_PATH.concat(File.separator).concat(DateUtil.getTodayYYYYMM()).concat(File.separator);
 
-            String profile = System.getProperty("spring.profiles.active");
+            String profile = PropertiesValue.profilesActive;
 
             if(profile != null &&
                     !"prod".equals(profile)) {

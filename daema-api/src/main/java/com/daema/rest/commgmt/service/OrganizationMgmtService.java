@@ -17,7 +17,7 @@ import com.daema.rest.commgmt.dto.FuncRoleMgmtDto;
 import com.daema.rest.commgmt.dto.OrganizationMemberDto;
 import com.daema.rest.commgmt.dto.OrganizationMgmtDto;
 import com.daema.rest.commgmt.dto.response.OrganizationMgmtResponseDto;
-import com.daema.rest.common.Constants;
+import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;

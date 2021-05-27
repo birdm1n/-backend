@@ -6,7 +6,7 @@ import com.daema.rest.commgmt.dto.OpeningStoreMgmtDto;
 import com.daema.rest.commgmt.dto.response.OpeningStoreSaleStoreResponseDto;
 import com.daema.rest.commgmt.dto.response.OpeningStoreUserResponseDto;
 import com.daema.rest.commgmt.service.OpeningStoreMgmtService;
-import com.daema.rest.common.Constants;
+import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;

@@ -1,6 +1,7 @@
 package com.daema.rest.config;
 
-import com.daema.rest.common.Constants;
+import com.daema.rest.common.consts.Constants;
+import com.daema.rest.common.consts.PropertiesValue;
 import com.daema.rest.common.handler.AccessFuncInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -22,7 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        String profile = System.getProperty("spring.profiles.active");
+        String profile = PropertiesValue.profilesActive;
         if(profile != null &&
                 !"prod".equals(profile)) {
             registry.addMapping("/**")

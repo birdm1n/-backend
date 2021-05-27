@@ -1,14 +1,14 @@
 package com.daema.rest.commgmt.web;
 
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
-import com.daema.rest.common.Constants;
 import com.daema.rest.commgmt.dto.OrganizationMemberDto;
 import com.daema.rest.commgmt.dto.OrganizationMgmtDto;
 import com.daema.rest.commgmt.dto.response.OrganizationMgmtResponseDto;
+import com.daema.rest.commgmt.service.OrganizationMgmtService;
+import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.rest.commgmt.service.OrganizationMgmtService;
 import io.swagger.annotations.*;
 import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;

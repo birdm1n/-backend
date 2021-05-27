@@ -1,4 +1,4 @@
-package com.daema.rest.common;
+package com.daema.rest.common.consts;
 
 import java.io.File;
 
@@ -19,11 +19,14 @@ public class Constants {
 
     public static final String[] SECURITY_PERMIT_ALL = {
             "/user/signup", "/user/login", "/user/invalidate", "/user/verify/**",
-            "/dataHandle/**", "/oauth/**", "/**/joinStore", "/**/insertUser"
+            "/dataHandle/**", "/oauth/**", "/**/joinStore", "/**/insertUser",
+
+            "/api/user/signup", "/api/user/login", "/api/user/invalidate", "/api/user/verify/**",
+            "/api/dataHandle/**", "/api/oauth/**"
     };
 
     public static final String[] SECURITY_EXCLUDE_URLS = {
-            "/user/invalidate"
+            "/user/invalidate", "/api/user/invalidate"
     };
 
     public static final String[] SECURITY_WEB_IGNORE_URLS = {
@@ -45,4 +48,5 @@ public class Constants {
 
     public static final String FILE_DOWNLOAD_VIEW = "fileDownloadView";
     public static final String EXCEL_DOWNLOAD_VIEW = "excelDownloadView";
+
 }

@@ -4,7 +4,7 @@ import com.daema.base.enums.TypeEnum;
 import com.daema.commgmt.repository.PubNotiRawDataRepository;
 import com.daema.rest.base.excel.ExcelTemplate;
 import com.daema.rest.base.excel.ExcelVO;
-import com.daema.rest.common.Constants;
+import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.rest.common.util.DateUtil;
