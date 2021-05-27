@@ -117,7 +117,7 @@ public class SaleStoreMgmtService {
 		}
 
 		//사용자 추가 및 롤 등록
-		long memberSeq = organizationMgmtService.insertUser(memberDto, request);
+		long memberSeq = organizationMgmtService.insertUser(memberDto, request, false);
 
 		//롤과 기능 맵핑 등록
 		List<FuncMgmt> funcList = funcMgmtRepository.findAllByRoleContainingOrderByGroupIdAscRoleAscOrderNumAsc(UserRole.ROLE_MANAGER.name());

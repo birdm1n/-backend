@@ -193,8 +193,15 @@ public class OrganizationMgmtService {
         }
     }
 
+    /**
+     *
+     * @param orgnztMemberDto
+     * @param request
+     * @param getToken : token 을 이용해서 store, org 정보 가져올지 여부
+     * @return
+     */
     @Transactional(propagation = Propagation.REQUIRED)
-    public long insertUser(OrganizationMemberDto orgnztMemberDto, HttpServletRequest request) {
+    public long insertUser(OrganizationMemberDto orgnztMemberDto, HttpServletRequest request, boolean getToken) {
 
         if(String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode())
                 .equals(orgnztMemberDto.getUserStatus())){
@@ -206,7 +213,8 @@ public class OrganizationMgmtService {
         //가입 링크를 통한 사용자 등록 프로세스
         String accessToken = jwtUtil.getAccessTokenFromHeader(request, JwtUtil.AUTHORIZATION);
 
-        if(StringUtils.hasText(accessToken)){
+        if(StringUtils.hasText(accessToken)
+                && getToken){
 
             Long storeId = (Long) jwtUtil.getClaim(accessToken, "sId", Long.class);
             Long orgId = (Long) jwtUtil.getClaim(accessToken, "gId", Long.class);

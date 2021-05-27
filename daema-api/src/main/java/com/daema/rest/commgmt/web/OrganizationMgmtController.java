@@ -65,7 +65,7 @@ public class OrganizationMgmtController {
     @ApiOperation(value = "사용자 등록", notes = "신규 사용자를 등록합니다", nickname = Constants.API_USER + "||1")
     @PostMapping("/insertUser")
     public ResponseEntity<CommonResponse<Void>> insertUser(@ApiParam(value = "사용자 정보", required = true) @RequestBody OrganizationMemberDto organizationMemberDto, HttpServletRequest request) {
-        organizationMgmtService.insertUser(organizationMemberDto, request);
+        organizationMgmtService.insertUser(organizationMemberDto, request, true);
         return responseHandler.ok();
     }
 
