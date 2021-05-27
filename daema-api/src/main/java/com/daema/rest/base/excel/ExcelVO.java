@@ -198,13 +198,13 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "출고일")
 		private LocalDateTime regiDateTime;
 		@ExcelTemplate(columnName = "출고일-경과일")
-		private String diffRegiDateTime;
+		private String diffRegiDate;
 		@ExcelTemplate(columnName = "재고구분")
 		private String outStockTypeMsg;
 		@ExcelTemplate(columnName = "이전보유처")
 		private String prevStockName;
-		@ExcelTemplate(columnName = "현재보유처")
-		private String nextStockName;
+//		@ExcelTemplate(columnName = "현재보유처")
+//		private String nextStockName;
 		@ExcelTemplate(columnName = "제조사")
 		private String makerName;
 		@ExcelTemplate(columnName = "기기명")
@@ -238,13 +238,13 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "출고일")
 		private LocalDateTime regiDateTime;
 		@ExcelTemplate(columnName = "출고일-경과일")
-		private String diffRegiDateTime;
+		private String diffRegiDate;
 		@ExcelTemplate(columnName = "재고구분")
 		private String outStockTypeMsg;
 		@ExcelTemplate(columnName = "보유처")
 		private String prevStockName;
 		@ExcelTemplate(columnName = "공급처")
-		private String provName;
+		private String nextProvName;
 		@ExcelTemplate(columnName = "제조사")
 		private String makerName;
 		@ExcelTemplate(columnName = "기기명")
@@ -278,13 +278,13 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "출고일")
 		private LocalDateTime regiDateTime;
 		@ExcelTemplate(columnName = "출고일-경과일")
-		private String diffRegiDateTime;
+		private String diffRegiDate;
 		@ExcelTemplate(columnName = "재고구분")
 		private String outStockTypeMsg;
 		@ExcelTemplate(columnName = "이전보유처")
-		private String provName;
-		@ExcelTemplate(columnName = "현재보유처")
-		private String nextStoreName;
+		private String prevStockName;
+//		@ExcelTemplate(columnName = "현재보유처")
+//		private String nextStoreName;
 		@ExcelTemplate(columnName = "제조사")
 		private String makerName;
 		@ExcelTemplate(columnName = "기기명")

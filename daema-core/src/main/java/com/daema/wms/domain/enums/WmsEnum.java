@@ -63,7 +63,7 @@ public enum WmsEnum {
 
     public enum MoveStockType {
         SELL_MOVE("판매이동"),
-        STOCK_MOVE("재고이동"),
+        STOCK_MOVE("이동재고"),
 
         ;
         private final String statusMsg;
@@ -96,7 +96,7 @@ public enum WmsEnum {
         UNKNOWN("UNKNOWN"),
         IN_STOCK("입고"),
         SELL_MOVE("판매이동"),
-        STOCK_MOVE("재고이동"),
+        STOCK_MOVE("이동재고"),
         STOCK_TRNS("재고이관"),
         FAULTY_TRNS("착하"),
         SELL_TRNS("판매이관"),
@@ -115,7 +115,7 @@ public enum WmsEnum {
 
     public enum MovePathType {
         SELL_MOVE("판매이동"),
-        STOCK_MOVE("재고이동"),
+        STOCK_MOVE("이동재고"),
         STOCK_TRNS("재고이관"),
         FAULTY_TRNS("착하"),
         SELL_TRNS("판매이관"),
