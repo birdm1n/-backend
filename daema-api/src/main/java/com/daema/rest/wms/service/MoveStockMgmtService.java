@@ -45,6 +45,7 @@ public class MoveStockMgmtService {
     private final StockRepository stockRepository;
     private final StoreStockRepository storeStockRepository;
     private final InStockRepository inStockRepository;
+    private final StoreStockHistoryRepository storeStockHistoryRepository;
     private final StoreStockHistoryMgmtService storeStockHistoryMgmtService;
 
     @Transactional(readOnly = true)
@@ -433,7 +434,15 @@ public class MoveStockMgmtService {
             if (CommonUtil.isNotEmptyList(moveStockList)){
                 Optional.of(moveStockList).orElseGet(Collections::emptyList)
                         .forEach(moveStock -> {
-                            StoreStock storeStock = storeStockRepository.findByStockTypeAndStockTypeIdAndStockYn(WmsEnum.StockType.SELL_MOVE, moveStock.getMoveStockId(), "Y");
+                            StoreStockHistory storeStockHistory = storeStockHistoryRepository.findByStockTypeAndStockTypeId(WmsEnum.StockType.SELL_MOVE, moveStock.getMoveStockId());
+                            StoreStock storeStock = StoreStock
+                                    .builder()
+                                    .storeStockId(storeStockHistory.getStoreStock().getStoreStockId())
+                                    .stockType(WmsEnum.StockType.SELL_MOVE)
+                                    .stockTypeId(moveStock.getMoveStockId())
+                                    .store(moveStock.getStore())
+                                    .device(moveStock.getDevice())
+                                    .build();
                             moveStock.setDelYn("Y");
                             storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, true);
                         });

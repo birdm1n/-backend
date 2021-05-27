@@ -22,11 +22,10 @@ public class DeviceCurrentRequestDto extends SearchParamDto {
     private Long nextStockId;
 
     // 재고구분
-    private WmsEnum.StockStatStr statusStr;
+    private WmsEnum.StockType stockType;
 
     //통신사
     private Integer telecom;
-
 
     //기기명
     private Long goodsId;

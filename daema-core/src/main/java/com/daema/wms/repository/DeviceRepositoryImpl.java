@@ -3,8 +3,8 @@ package com.daema.wms.repository;
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.base.enums.StatusEnum;
-import com.daema.commgmt.domain.attr.NetworkAttribute;
 import com.daema.wms.domain.Device;
+import com.daema.wms.domain.QDelivery;
 import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.dto.request.DeviceCurrentRequestDto;
 import com.daema.wms.domain.dto.response.DeviceCurrentResponseDto;
@@ -24,7 +24,6 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +31,6 @@ import static com.daema.base.domain.QMember.member;
 import static com.daema.commgmt.domain.QGoods.goods;
 import static com.daema.commgmt.domain.QGoodsOption.goodsOption;
 import static com.daema.commgmt.domain.QStore.store;
-import static com.daema.wms.domain.QDelivery.delivery;
 import static com.daema.wms.domain.QDevice.device;
 import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
 import static com.daema.wms.domain.QInStock.inStock;
@@ -40,7 +38,6 @@ import static com.daema.wms.domain.QMoveStock.moveStock;
 import static com.daema.wms.domain.QOutStock.outStock;
 import static com.daema.wms.domain.QProvider.provider;
 import static com.daema.wms.domain.QReturnStock.returnStock;
-import static com.daema.wms.domain.QStock.stock;
 import static com.daema.wms.domain.QStoreStock.storeStock;
 
 public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements CustomDeviceRepository {
@@ -162,19 +159,17 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
         QCodeDetail maker = new QCodeDetail("maker");
         QStock prevStock = new QStock("prevStock");
         QStock nextStock = new QStock("nextStock");
+        QDelivery moveDelivery = new QDelivery("moveDelivery");
+        QDelivery outDelivery = new QDelivery("outDelivery");
 
         query.select(Projections.fields(
                 DeviceCurrentResponseDto.class
                 , device.dvcId.as("dvcId")
                 , inStock.regiDateTime.as("inStockRegiDate")
-                , moveStock.regiDateTime.as("moveStockRegiDate")
-                , provider.provId.as("provId")
-                , prevStock.stockId.as("prevStockId")
+                , storeStock.stockType.as("stockType")
+                , storeStock.updDateTime.as("moveRegiDate") // storeStocke은 각 상태값들이 update기준으로 상태가 변경되기 때문에 출고일을 잡는다.
                 , prevStock.stockName.as("prevStockName")
-                , nextStock.stockId.as("nextStockId")
                 , nextStock.stockName.as("nextStockName")
-                , inStock.statusStr.as("statusStr")
-                , goods.goodsId.as("goodsId")
                 , goods.goodsName.as("goodsName")
                 , goods.modelName.as("modelName")
                 , goodsOption.capacity.as("capacity")
@@ -188,40 +183,31 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 , deviceStatus.missProduct.as("missProduct")
                 , deviceStatus.ddctAmt.as("ddctAmt")
                 , deviceStatus.addDdctAmt.as("addDdctAmt")
-                , returnStock.returnStockAmt.as("returnStockAmt")
                 , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+                , returnStock.returnStockAmt.as("returnStockAmt")
                 , maker.codeNm.as("makerName")
                 , telecom.codeNm.as("telecomName")
-                , delivery.deliveryType.as("deliveryType")
-                , delivery.deliveryStatus.as("deliveryStatus")
-
-
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.deliveryType)
+                        .otherwise(outDelivery.deliveryType).as("deliveryType")
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.deliveryStatus)
+                        .otherwise(outDelivery.deliveryStatus).as("deliveryStatus")
         ))
                 .from(device)
                 .innerJoin(device.store, store).on
                 (
                         store.storeId.eq(requestDto.getStoreId())
                 )
-                .innerJoin(device.inStocks, inStock).on
-                (
-                        inStock.delYn.eq("N")
-                )
+                .innerJoin(device.inStocks, inStock)
                 .innerJoin(device.deviceStatusList, deviceStatus).on
                 (
                         deviceStatus.delYn.eq("N")
                 )
-                .innerJoin(inStock.provider, provider)
                 .innerJoin(device.goodsOption, goodsOption)
                 .innerJoin(goodsOption.goods, goods)
-                .innerJoin(device.storeStock, storeStock)
-                .innerJoin(storeStock.prevStock, prevStock)
-                .innerJoin(storeStock.nextStock, nextStock)
-                .leftJoin(device.moveStockList, moveStock).on
-                (
-                        moveStock.delYn.eq("N")
-                )
-                .innerJoin(moveStock.delivery, delivery)
-                .leftJoin(deviceStatus.returnStock, returnStock)
                 .innerJoin(maker).on
                 (
                         goods.maker.eq(maker.codeSeq)
@@ -230,24 +216,41 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 (
                         goods.networkAttribute.telecom.eq(telecom.codeSeq)
                 )
+                .innerJoin(device.storeStock, storeStock)
+                .leftJoin(storeStock.prevStock, prevStock)
+                .leftJoin(storeStock.nextStock, nextStock)
+                .leftJoin(moveStock).on
+                (
+                        storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE),
+                        storeStock.stockTypeId.eq(moveStock.moveStockId)
+                )
+                .leftJoin(moveStock.delivery, moveDelivery)
+                .leftJoin(outStock).on
+                (
+                        storeStock.stockType.in(WmsEnum.StockType.SELL_TRNS, WmsEnum.StockType.STOCK_TRNS, WmsEnum.StockType.FAULTY_TRNS),
+                        storeStock.stockTypeId.eq(outStock.outStockId)
+                )
+                .leftJoin(outStock.delivery, outDelivery)
+                .leftJoin(device.returnStockList, returnStock).on
+                (
+                        returnStock.delYn.eq("N")
+                )
                 .where(
                         eqMaker(requestDto.getMaker()),
                         eqTelecom(requestDto.getTelecom()),
                         eqProvId(requestDto.getProvId()),
                         eqNextStockId(requestDto.getNextStockId()),
                         eqInStockStatus(requestDto.getInStockStatus()),
-                        eqStatusStr(requestDto.getStatusStr()),
-                        eqMaker(requestDto.getMaker()),
+                        eqStockType(requestDto.getStockType()),
                         eqGoodsId(requestDto.getGoodsId()),
                         eqModelName(requestDto.getModelName()),
                         eqCapacity(requestDto.getCapacity()),
                         eqColorName(requestDto.getColorName()),
                         containsFullBarcode(requestDto.getFullBarcode()),
-                        eqInStockStatus(requestDto.getInStockStatus()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
                         eqExtrrStatus(requestDto.getExtrrStatus()),
-                        eqDeliveryType(requestDto.getDeliveryType()),
-                        eqDeliveryStatus(requestDto.getDeliveryStatus()),
+                        eqMoveOrOutDeliveryType(requestDto.getDeliveryType(), moveDelivery, outDelivery),
+                        eqMoveOrOutDeliveryStatus(requestDto.getDeliveryStatus(), moveDelivery, outDelivery),
                         betweenMoveStockRegDt(requestDto.getMoveStockRegiDate(), requestDto.getMoveStockRegiDate()),
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate())
                 )
@@ -367,26 +370,44 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
         return deviceStatus.productFaultyYn.eq(productFaultyYn);
     }
 
-    private BooleanExpression eqStatusStr(WmsEnum.StockStatStr statusStr) {
-        if (statusStr == null) {
+    private BooleanExpression eqStockType(WmsEnum.StockType stockType) {
+        if (stockType == null) {
             return null;
         }
-        return inStock.statusStr.eq(statusStr);
+        return storeStock.stockType.eq(stockType);
     }
 
-    private BooleanExpression eqDeliveryType(WmsEnum.DeliveryType DeliveryType) {
-        if (DeliveryType == null) {
+    private BooleanExpression eqMoveOrOutDeliveryType(WmsEnum.DeliveryType deliveryType, QDelivery moveDlvr, QDelivery outDlvr) {
+        if (deliveryType == null) {
             return null;
         }
-        return delivery.deliveryType.eq(DeliveryType);
+
+        return (moveDlvr.deliveryType.eq(deliveryType).or
+                (outDlvr.deliveryType.eq(deliveryType)));
     }
 
-    private BooleanExpression eqDeliveryStatus(WmsEnum.DeliveryStatus deliveryStatus) {
+    private BooleanExpression eqMoveOrOutDeliveryStatus(WmsEnum.DeliveryStatus deliveryStatus, QDelivery moveDlvr, QDelivery outDlvr) {
         if (deliveryStatus == null) {
             return null;
         }
-        return delivery.deliveryStatus.eq(deliveryStatus);
+
+        return (moveDlvr.deliveryStatus.eq(deliveryStatus).or(
+                outDlvr.deliveryStatus.eq(deliveryStatus)));
     }
+
+//    private BooleanExpression eqDeliveryType(WmsEnum.DeliveryType DeliveryType) {
+//        if (DeliveryType == null) {
+//            return null;
+//        }
+//        return delivery.deliveryType.eq(DeliveryType);
+//    }
+//
+//    private BooleanExpression eqDeliveryStatus(WmsEnum.DeliveryStatus deliveryStatus) {
+//        if (deliveryStatus == null) {
+//            return null;
+//        }
+//        return delivery.deliveryStatus.eq(deliveryStatus);
+//    }
 }
 
 

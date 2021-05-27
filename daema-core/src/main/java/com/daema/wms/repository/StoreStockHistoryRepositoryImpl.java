@@ -1,15 +1,12 @@
 package com.daema.wms.repository;
 
 import com.daema.wms.domain.QStoreStock;
-import com.daema.wms.domain.QStoreStockHistory;
 import com.daema.wms.domain.StoreStock;
 import com.daema.wms.domain.StoreStockHistory;
-import com.daema.wms.domain.dto.response.StoreStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomStoreStockHistoryRepository;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAUpdateClause;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -101,7 +98,8 @@ public class StoreStockHistoryRepositoryImpl extends QuerydslRepositorySupport i
                     .where(
                             storeStockHistory.storeStock.eq(storeStock)
                                     .and(storeStockHistory.historyStatus.eq(WmsEnum.HistoryStatus.USE))
-                    );
+                    )
+                    .orderBy(storeStockHistory.storeStockHistoryId.desc());
 
             StoreStockHistory storeStockHistoryInfo = query.fetchFirst();
 

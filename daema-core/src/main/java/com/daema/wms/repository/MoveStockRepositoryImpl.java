@@ -442,7 +442,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                         betweenMoveStockRegDt(requestDto.getMoveRegiDate(), requestDto.getMoveRegiDate()), //출고일 (이동, 이관일)
                         eqPrevStockId(requestDto.getStockId()),
                         eqNextStockId(requestDto.getStockId()),
-                        eqStockType(requestDto.getMoveStockType()),
+                        eqStockType(requestDto.getStockType()),
                         eqMaker(requestDto.getMaker()),
                         eqGoodsId(requestDto.getGoodsId()),
                         eqCapacity(requestDto.getCapacity()),
