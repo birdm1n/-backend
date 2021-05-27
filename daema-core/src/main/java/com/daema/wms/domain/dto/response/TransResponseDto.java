@@ -19,8 +19,11 @@ public class TransResponseDto {
 
     // 통신사
     private String telecomName;
-
+    
     // 재고구분
+    private WmsEnum.OutStockType outStockType;
+    private String outStockTypeMsg;
+    
     private WmsEnum.StockStatStr statusStr;
     private String statusStrMsg;
 
@@ -68,9 +71,6 @@ public class TransResponseDto {
     
     // 배송메모
     private String deliveryMemo;
-
-    private WmsEnum.OutStockType outStockType;
-    private String outStockTypeMsg;
 
     private Long regiUserId;
     private String regiUserName;

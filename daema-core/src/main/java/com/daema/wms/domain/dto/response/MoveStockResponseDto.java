@@ -78,8 +78,6 @@ public class MoveStockResponseDto {
     private WmsEnum.MoveStockType moveStockType;
     private String moveStockTypeMsg;
     
-    // 이동일
-    private LocalDateTime regiDateTime;
     private Long regiUserId;
     private String regiUserName;
     private LocalDateTime updDateTime;
@@ -88,12 +86,17 @@ public class MoveStockResponseDto {
 
     // 입고일
     private LocalDateTime inStockRegiDateTime;
-    
-    // 경과일
+    // 입고 경과일
     private Long diffInStockRegiDate;
-
     public Long getDiffInStockRegiDate() {
         return CommonUtil.diffDaysLocalDateTime(this.inStockRegiDateTime);
+    }
+    // 출고일
+    private LocalDateTime regiDateTime;
+    // 출고경과일
+    private LocalDateTime diffRegiDate;
+    public Long getDiffRegiDate() {
+        return CommonUtil.diffDaysLocalDateTime(this.regiDateTime);
     }
 
     public String getStatusStrMsg() {

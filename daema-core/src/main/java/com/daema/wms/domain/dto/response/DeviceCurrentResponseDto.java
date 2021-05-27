@@ -87,7 +87,7 @@ public class DeviceCurrentResponseDto {
     private String deliveryTypeMsg;
     //    //배송상태
     private WmsEnum.DeliveryStatus deliveryStatus;
-
+    private String deliveryStatusMsg;
 
     //구성품누락
     private String productMissYn;

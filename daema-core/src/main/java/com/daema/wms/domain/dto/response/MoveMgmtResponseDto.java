@@ -113,7 +113,7 @@ public class MoveMgmtResponseDto { // 이동현황
     private String ddctReleaseAmtYn;
     // 누락제품
     private String missProduct;
-    //재고구분
+
     private WmsEnum.StockStatStr statusStr;
 
     public String getStockTypeMsg() {

@@ -13,7 +13,7 @@ public class DeviceCurrentRequestDto extends SearchParamDto {
     private String inStockRegiDate;
 
     //이동일
-    private String moveStockRegiDate;
+    private String moveRegiDate;
 
     // 공급처
     private Long provId;

@@ -251,7 +251,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                         eqExtrrStatus(requestDto.getExtrrStatus()),
                         eqMoveOrOutDeliveryType(requestDto.getDeliveryType(), moveDelivery, outDelivery),
                         eqMoveOrOutDeliveryStatus(requestDto.getDeliveryStatus(), moveDelivery, outDelivery),
-                        betweenMoveStockRegDt(requestDto.getMoveStockRegiDate(), requestDto.getMoveStockRegiDate()),
+                        betweenMoveStockRegDt(requestDto.getMoveRegiDate(), requestDto.getMoveRegiDate()),
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate())
                 )
                 .orderBy(device.regiDateTime.desc());
