@@ -39,6 +39,7 @@ import static com.daema.wms.domain.QOutStock.outStock;
 import static com.daema.wms.domain.QProvider.provider;
 import static com.daema.wms.domain.QReturnStock.returnStock;
 import static com.daema.wms.domain.QStoreStock.storeStock;
+import static com.daema.wms.domain.QDelivery.delivery;
 
 public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements CustomDeviceRepository {
 
@@ -59,6 +60,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 , inStock.regiDateTime.as("regiDateTime")
                 , inStock.store.storeName.as("storeName")
                 , inStock.regiUserId.name.as("regiUserName")
+                , inStock.inStockMemo.as("memo")
                 )
         )
                 .from(device)
@@ -83,6 +85,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 , moveStock.regiDateTime.as("regiDateTime")
                 , moveStock.store.storeName.as("storeName")
                 , moveStock.regiUserId.name.as("regiUserName")
+                , delivery.deliveryMemo.as("memo")
                 )
         )
                 .from(device)
@@ -91,7 +94,9 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .innerJoin(moveStock.store, store)
                 .on(moveStock.device.dvcId.eq(dvcId).and(moveStock.store.storeId.eq(storeId)))
                 .innerJoin(moveStock.regiUserId, member)
-                .on(moveStock.device.dvcId.eq(dvcId).and(moveStock.regiUserId.seq.eq(member.seq)));
+                .on(moveStock.device.dvcId.eq(dvcId).and(moveStock.regiUserId.seq.eq(member.seq)))
+                .innerJoin(moveStock.delivery, delivery)
+        ;
 
         historyList.addAll(moveStockQuery.fetch());
 
@@ -110,6 +115,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 , outStock.regiDateTime.as("regiDateTime")
                 , outStock.store.storeName.as("storeName")
                 , outStock.regiUserId.name.as("regiUserName")
+                , delivery.deliveryMemo.as("memo")
                 )
         )
                 .from(device)
@@ -118,7 +124,9 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .innerJoin(outStock.store, store)
                 .on(outStock.device.dvcId.eq(dvcId).and(outStock.store.storeId.eq(storeId)))
                 .innerJoin(outStock.regiUserId, member)
-                .on(outStock.device.dvcId.eq(dvcId).and(outStock.regiUserId.seq.eq(member.seq)));
+                .on(outStock.device.dvcId.eq(dvcId).and(outStock.regiUserId.seq.eq(member.seq)))
+                .innerJoin(outStock.delivery, delivery)
+        ;
 
         historyList.addAll(outStockQuery.fetch());
 
@@ -129,6 +137,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 , returnStock.regiDateTime.as("regiDateTime")
                 , returnStock.store.storeName.as("storeName")
                 , returnStock.regiUserId.name.as("regiUserName")
+                , returnStock.returnStockMemo.as("memo")
                 )
         )
                 .from(device)
