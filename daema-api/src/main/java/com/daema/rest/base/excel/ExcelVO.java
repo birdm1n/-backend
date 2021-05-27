@@ -110,11 +110,11 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "입고일-경과일")
 		private String diffInStockRegiDate;
 		@ExcelTemplate(columnName = "출고일")
-		private LocalDateTime moveRegiDateTime;
+		private LocalDateTime regiDateTime;
 		@ExcelTemplate(columnName = "출고일-경과일")
-		private String diffMoveRegiDate;
+		private String diffRegiDate;
 		@ExcelTemplate(columnName = "재고구분")
-		private String statusStrMsg;
+		private String moveStockTypeMsg;
 		@ExcelTemplate(columnName = "기기명")
 		private String goodsName;
 		@ExcelTemplate(columnName = "모델명")
@@ -148,11 +148,11 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "입고일-경과일")
 		private String diffInStockRegiDate;
 		@ExcelTemplate(columnName = "출고일")
-		private LocalDateTime moveRegiDateTime;
+		private LocalDateTime regiDateTime;
 		@ExcelTemplate(columnName = "출고일-경과일")
-		private String diffMoveRegiDate;
+		private String diffRegiDate;
 		@ExcelTemplate(columnName = "재고구분")
-		private String statusStrMsg;
+		private String moveStockTypeMsg;
 		@ExcelTemplate(columnName = "이전보유처")
 		private String prevStockName;
 		@ExcelTemplate(columnName = "현재보유처")
@@ -196,11 +196,11 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "입고일-경과일")
 		private String diffInStockRegiDate;
 		@ExcelTemplate(columnName = "출고일")
-		private LocalDateTime moveRegiDateTime;
+		private LocalDateTime regiDateTime;
 		@ExcelTemplate(columnName = "출고일-경과일")
-		private String diffMoveRegiDate;
+		private String diffRegiDateTime;
 		@ExcelTemplate(columnName = "재고구분")
-		private String statusStrMsg;
+		private String outStockTypeMsg;
 		@ExcelTemplate(columnName = "이전보유처")
 		private String prevStockName;
 		@ExcelTemplate(columnName = "현재보유처")
@@ -236,11 +236,11 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "입고일-경과일")
 		private String diffInStockRegiDate;
 		@ExcelTemplate(columnName = "출고일")
-		private LocalDateTime moveRegiDateTime;
+		private LocalDateTime regiDateTime;
 		@ExcelTemplate(columnName = "출고일-경과일")
-		private String diffMoveRegiDate;
+		private String diffRegiDateTime;
 		@ExcelTemplate(columnName = "재고구분")
-		private String statusStrMsg;
+		private String outStockTypeMsg;
 		@ExcelTemplate(columnName = "보유처")
 		private String prevStockName;
 		@ExcelTemplate(columnName = "공급처")
@@ -276,11 +276,11 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "입고일-경과일")
 		private String diffInStockRegiDate;
 		@ExcelTemplate(columnName = "출고일")
-		private LocalDateTime moveRegiDateTime;
+		private LocalDateTime regiDateTime;
 		@ExcelTemplate(columnName = "출고일-경과일")
-		private String diffMoveRegiDate;
+		private String diffRegiDateTime;
 		@ExcelTemplate(columnName = "재고구분")
-		private String statusStrMsg;
+		private String outStockTypeMsg;
 		@ExcelTemplate(columnName = "이전보유처")
 		private String provName;
 		@ExcelTemplate(columnName = "현재보유처")
@@ -311,7 +311,6 @@ public class ExcelVO {
 	public static class MoveMgmtList {
 		@ExcelTemplate(columnName = "통신사")
 		private String telecomName;
-
 		@ExcelTemplate(columnName = "입고일")
 		private LocalDateTime inStockRegiDateTime;
 		@ExcelTemplate(columnName = "입고일-경과일")
@@ -319,15 +318,15 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "출고일")
 		private LocalDateTime moveRegiDateTime;
 		@ExcelTemplate(columnName = "출고일-경과일")
-		private String diffMoveRegiDate;
+		private String diffMoveRegiDateTime;
 		@ExcelTemplate(columnName = "이전보유처")
 		private String prevStockName;
 		@ExcelTemplate(columnName = "현재보유처")
 		private String nextStockName;
 		@ExcelTemplate(columnName = "재고구분")
-		private String moveStockType;
+		private String stockTypeMsg;
 		@ExcelTemplate(columnName = "제조사")
-		private String statusStr;
+		private String makerName;
 		@ExcelTemplate(columnName = "기기명")
 		private String goodsName;
 		@ExcelTemplate(columnName = "모델명")
@@ -346,8 +345,6 @@ public class ExcelVO {
 		private String productFaultyYn;
 		@ExcelTemplate(columnName = "외장상태")
 		private String extrrStatusMsg;
-		@ExcelTemplate(columnName = "상품누락여부")
-		private String productMissYn;
 		@ExcelTemplate(columnName = "배송방법")
 		private String deliveryTypeMsg;
 		@ExcelTemplate(columnName = "배송상태")
@@ -364,15 +361,15 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "입고일-경과일")
 		private String diffInStockRegiDate;
 		@ExcelTemplate(columnName = "출고일")
-		private LocalDateTime moveStockRegiDate;
+		private LocalDateTime moveRegiDate;
 		@ExcelTemplate(columnName = "출고일-경과일")
-		private String diffMoveStockRegiDate;
+		private String diffMoveRegiDate;
 		@ExcelTemplate(columnName = "보유처 Before")
 		private String prevStockName;
 		@ExcelTemplate(columnName = "보유처 After")
 		private String nextStockName;
 		@ExcelTemplate(columnName = "재고구분")
-		private String statusStrMsg;
+		private String stockTypeMsg;
 		@ExcelTemplate(columnName = "제조사")
 		private String makerName;
 		@ExcelTemplate(columnName = "기기명")
@@ -388,15 +385,15 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 		@ExcelTemplate(columnName = "입고상태")
-		private String inStockStatus;
+		private String inStockStatusMsg;
 		@ExcelTemplate(columnName = "제품상태")
 		private String productFaultyYn;
 		@ExcelTemplate(columnName = "외장상태")
-		private String extrrStatus;
+		private String extrrStatusMsg;
 		@ExcelTemplate(columnName = "배송방법")
 		private String deliveryTypeMsg;
 		@ExcelTemplate(columnName = "배송상태")
-		private String deliverStatusMsg;
+		private String deliveryStatusMsg;
 
 	}
 
