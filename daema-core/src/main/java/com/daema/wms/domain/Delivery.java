@@ -58,10 +58,10 @@ public class Delivery extends BaseEntity {
     @Column(name = "zip_code")
     private String zipCode;
 
-    @Column(name = "addr1")
+    @Column(name = "delivery_addr", columnDefinition = "varchar(255) comment '주소'")
     private String addr1;
 
-    @Column(name = "addr2")
+    @Column(name = "delivery_addr_detail", columnDefinition = "varchar(255) comment '주소상세'")
     private String addr2;
 
     @Builder
