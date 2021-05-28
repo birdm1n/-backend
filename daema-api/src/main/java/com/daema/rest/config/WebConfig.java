@@ -2,8 +2,12 @@ package com.daema.rest.config;
 
 import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.consts.PropertiesValue;
+import com.daema.rest.common.filter.HtmlCharacterEscapes;
 import com.daema.rest.common.handler.AccessFuncInterceptor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -12,9 +16,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     private final AccessFuncInterceptor accessFuncInterceptor;
-
-    public WebConfig(AccessFuncInterceptor accessFuncInterceptor){
+    private final ObjectMapper objectMapper;
+    public WebConfig(AccessFuncInterceptor accessFuncInterceptor, ObjectMapper objectMapper){
         this.accessFuncInterceptor = accessFuncInterceptor;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -39,4 +44,12 @@ public class WebConfig implements WebMvcConfigurer {
             .excludePathPatterns(Constants.SECURITY_EXCLUDE_URLS)
             .excludePathPatterns(Constants.SECURITY_WEB_IGNORE_URLS);
     }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter jsonEscapeConverter() {
+        ObjectMapper copy = objectMapper.copy();
+        copy.getFactory().setCharacterEscapes(new HtmlCharacterEscapes());
+        return new MappingJackson2HttpMessageConverter(copy);
+    }
+
 }

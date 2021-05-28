@@ -21,6 +21,12 @@ public class SocialData {
     private String email;
     private String type;
 
+    @Column(columnDefinition = "varchar(255) comment '이름'")
+    private String testComment;
+
+    @Column( columnDefinition = "BIGINT UNSIGNED comment '이름'")
+    private Long unsignedTest;
+
     @OneToOne(mappedBy = "social")
     private Member member;
 
