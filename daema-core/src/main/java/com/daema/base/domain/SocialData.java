@@ -18,7 +18,7 @@ public class SocialData {
     @Column(name = "social_data_id", columnDefinition = "BIGINT UNSIGNED comment '소셜 데이터 아이디'")
     private Long socialDataId;
 
-    @Column(name = "social_date", columnDefinition = "varchar(255) comment '소셜 데이터'")
+    @Column(name = "social_data", columnDefinition = "varchar(255) comment '소셜 데이터'")
     private String socialData;
 
     @Column(name = "social_email", columnDefinition = "varchar(255) comment '이메일'")
@@ -31,7 +31,6 @@ public class SocialData {
     private Member member;
 
     public SocialData(String socialData, String socialEmail, String socialType) {
-        this.socialDataId = socialDataId;
         this.socialData = socialData;
         this.socialEmail = socialEmail;
         this.socialType = socialType;

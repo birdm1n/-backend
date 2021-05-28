@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ProviderMgmtDto {
 
-	private long provId;
+	private Long provId;
 	private String provName;
 	private String chargerName;
 	private String chargerEmail;
@@ -27,9 +27,9 @@ public class ProviderMgmtDto {
 	private LocalDateTime regiDateTime;
 	private Long updUserId;
 	private LocalDateTime updDateTime;
-	private long regiUserId;
+	private Long regiUserId;
 	private String name;
-	private long storeId;
+	private Long storeId;
 
 	public static ProviderMgmtDto from (Provider provider) {
 		return ProviderMgmtDto.builder()

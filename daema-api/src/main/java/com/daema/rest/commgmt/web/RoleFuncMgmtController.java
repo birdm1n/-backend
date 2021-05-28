@@ -7,6 +7,8 @@ import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
+import com.daema.rest.common.util.AuthenticationUtil;
+import com.daema.rest.common.util.CommonUtil;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
@@ -21,11 +23,13 @@ import java.util.List;
 public class RoleFuncMgmtController {
 
     private final RoleFuncMgmtService roleFuncMgmtService;
+    private final AuthenticationUtil authenticationUtil;
 
     private final ResponseHandler responseHandler;
 
-    public RoleFuncMgmtController(RoleFuncMgmtService roleFuncMgmtService, ResponseHandler responseHandler) {
+    public RoleFuncMgmtController(RoleFuncMgmtService roleFuncMgmtService, AuthenticationUtil authenticationUtil, ResponseHandler responseHandler) {
         this.roleFuncMgmtService = roleFuncMgmtService;
+        this.authenticationUtil = authenticationUtil;
         this.responseHandler = responseHandler;
     }
 
@@ -68,14 +72,23 @@ public class RoleFuncMgmtController {
     @ApiImplicitParams({
             @ApiImplicitParam(value = "역할 ID", required = true, example = "1", name = "roleId", paramType = "query", allowMultiple = true),
             @ApiImplicitParam(value = "기능 ID", required = true, example = "1", name = "funcId", paramType = "query", allowMultiple = true),
+            @ApiImplicitParam(value = "관리점 ID", required = true, example = "1", name = "storeId", paramType = "query", allowMultiple = true),
             @ApiImplicitParam(value = "맵핑 상태", required = true, example = "N", name = "mapYn", paramType = "query", allowMultiple = true)
     })
     @PostMapping("/setFuncRoleMapInfo")
     public ResponseEntity<CommonResponse<Void>> setFuncRoleMapInfo(@ApiIgnore @RequestBody List<ModelMap> reqModel) {
 
-        roleFuncMgmtService.setFuncRoleMapInfo(reqModel);
+        if(CommonUtil.isNotEmptyList(reqModel)
+                && reqModel.get(0).get("storeId") != null){
 
-        return responseHandler.ok();
+            Long storeId = authenticationUtil.getTargetStoreId(Long.parseLong(String.valueOf(reqModel.get(0).get("storeId"))));
+
+            roleFuncMgmtService.setFuncRoleMapInfo(reqModel, storeId);
+            return responseHandler.ok();
+        }else{
+            return responseHandler.fail(ResponseCodeEnum.NODATA.getResultMsg());
+        }
+
     }
 }
 

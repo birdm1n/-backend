@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 public abstract class PubNotiBase {
 
     @NotNull
-    @Column(name = "support_amt", columnDefinition = "int is not null comment '지원 금액'")
+    @Column(name = "support_amt", columnDefinition = "int comment '지원 금액'")
     protected int supportAmt;
 
     @NotNull
-    @Column(name = "release_amt", columnDefinition = "int is not null comment '출고가 금액'")
+    @Column(name = "release_amt", columnDefinition = "int comment '출고가 금액'")
     protected int releaseAmt;
 
     @NotNull

@@ -37,6 +37,7 @@ public class FuncRoleMapRepositoryImpl extends QuerydslRepositorySupport impleme
                 FuncRoleMap.class
                 ,funcRoleMap.funcId
                 ,funcRoleMap.roleId
+                ,funcRoleMap.storeId
                 )
         );
 
@@ -44,7 +45,8 @@ public class FuncRoleMapRepositoryImpl extends QuerydslRepositorySupport impleme
         BooleanBuilder on = new BooleanBuilder();
         on.and(roleMgmt.storeId.eq(storeId)
                 .and(roleMgmt.roleId.eq(funcRoleMap.roleId))
-                .and(roleMgmt.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())));
+                .and(roleMgmt.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
+                .and(funcRoleMap.storeId.eq(storeId)));
 
         BooleanBuilder on2 = new BooleanBuilder();
         on2.and(roleMgmt.necessaryYn.eq(StatusEnum.FLAG_Y.getStatusMsg())

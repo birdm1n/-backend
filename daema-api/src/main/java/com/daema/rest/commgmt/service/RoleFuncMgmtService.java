@@ -149,7 +149,7 @@ public class RoleFuncMgmtService {
                 for (RoleMgmt roleMgmt : roleList) {
                     filterRoleInfos.add(
                             new String[]{String.valueOf(roleMgmt.getRoleId())
-                                    , mapList.contains(new FuncRoleMap(funcMgmt.getFuncId(), roleMgmt.getRoleId())) ? StatusEnum.FLAG_Y.getStatusMsg() : StatusEnum.FLAG_N.getStatusMsg() }
+                                    , mapList.contains(new FuncRoleMap(funcMgmt.getFuncId(), roleMgmt.getRoleId(), targetStoreId)) ? StatusEnum.FLAG_Y.getStatusMsg() : StatusEnum.FLAG_N.getStatusMsg() }
                     );
                 }
             } else {
@@ -172,7 +172,7 @@ public class RoleFuncMgmtService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void setFuncRoleMapInfo (List<ModelMap> reqModelMap){
+    public void setFuncRoleMapInfo (List<ModelMap> reqModelMap, Long storeId){
 
         if (CommonUtil.isNotEmptyList(reqModelMap)) {
             List<FuncRoleMap> saveMaps = new ArrayList<>();
@@ -181,9 +181,9 @@ public class RoleFuncMgmtService {
             for(ModelMap reqMap : reqModelMap){
                 try {
                     if (StatusEnum.FLAG_Y.getStatusMsg().equals(String.valueOf(reqMap.get("mapYn")))) {
-                        setCDList(saveMaps, reqMap);
+                        setCDList(saveMaps, reqMap, storeId);
                     } else {
-                        setCDList(deleteMaps, reqMap);
+                        setCDList(deleteMaps, reqMap, storeId);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -202,17 +202,18 @@ public class RoleFuncMgmtService {
         }
     }
 
-    private void setCDList(List<FuncRoleMap> list, ModelMap reqMap){
+    private void setCDList(List<FuncRoleMap> list, ModelMap reqMap, Long storeId){
         list.add(
                 new FuncRoleMap(
                         String.valueOf(reqMap.get("funcId"))
                         ,Integer.parseInt(reqMap.get("roleId") + "")
+                        ,storeId
                 )
         );
     }
 
-    public List<String> getMemberEnableUrlPathList(long memberSeq){
-        return funcMgmtRepository.getMemberEnableUrlPathList(memberSeq);
+    public List<String> getMemberEnableUrlPathList(long memberSeq, long storeId){
+        return funcMgmtRepository.getMemberEnableUrlPathList(memberSeq, storeId);
     }
 }
 

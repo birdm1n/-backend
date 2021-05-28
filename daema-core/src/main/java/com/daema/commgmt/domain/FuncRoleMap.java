@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of={"funcId", "roleId"})
+@EqualsAndHashCode(of={"funcId", "roleId", "storeId"})
 @IdClass(FuncRoleMapPK.class)
 @ToString
 @Entity
@@ -21,12 +21,17 @@ public class FuncRoleMap {
     private String funcId;
 
     @Id
-    @Column(name = "role_id", columnDefinition = "INT comment '룰 아이디'")
+    @Column(name = "role_id", columnDefinition = "INT comment '역할 아이디'")
     private int roleId;
 
+    @Id
+    @Column(name = "store_id", columnDefinition = "BIGINT UNSIGNED comment '상점 아이디'")
+    private Long storeId;
+
     @Builder
-    public FuncRoleMap(String funcId, int roleId){
+    public FuncRoleMap(String funcId, int roleId, Long storeId){
         this.funcId = funcId;
         this.roleId = roleId;
+        this.storeId = storeId;
     }
 }

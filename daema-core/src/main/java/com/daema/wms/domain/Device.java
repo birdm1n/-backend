@@ -26,8 +26,8 @@ import java.util.List;
                         @ColumnResult(name="model_name", type = String.class),
                         @ColumnResult(name="capacity", type = String.class),
                         @ColumnResult(name="color_name", type = String.class),
-                        @ColumnResult(name="maker", type = Long.class),
-                        @ColumnResult(name="telecom", type = Long.class),
+                        @ColumnResult(name="maker_code_id", type = Long.class),
+                        @ColumnResult(name="telecom_code_id", type = Long.class),
                         @ColumnResult(name="telecom_name", type = String.class),
                         @ColumnResult(name="maker_name", type = String.class)
                 })
@@ -53,8 +53,14 @@ public class Device extends BaseEntity {
     @Column(name = "barcode_type", columnDefinition = "varchar(255) comment '바코드 타입'")
     private WmsEnum.BarcodeType barcodeType;
 
-    @Column(name = "full_barcode", columnDefinition = "varchar(255) comment '전체 바코드'")
+    @Column(name = "raw_barcode", columnDefinition = "varchar(255) comment '원시 바코드'")
+    private String rawBarcode;
+
+    @Column(name = "full_barcode", columnDefinition = "varchar(255) comment '원시, 가공 바코드'")
     private String fullBarcode;
+
+    @Column(name = "serial_no", columnDefinition = "varchar(255) comment '시리얼_ex : 뒷 7자리'")
+    private String serialNo;
 
     @Column(name = "in_stock_amt", columnDefinition = "INT comment '입고 단가'" )
     private int inStockAmt;

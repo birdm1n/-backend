@@ -29,7 +29,7 @@ public class GoodsRegReq extends GoodsBase{
      * 6 - 승인
      * 9 - 반려
      */
-    @Column(name = "req_status", columnDefinition = "int  is not null comment '요청 상태'")
+    @Column(name = "req_status", nullable = false, columnDefinition = "INT comment '요청 상태' default 1")
     @ColumnDefault("1")
     private int reqStatus;
 

@@ -26,7 +26,7 @@ public class Charge extends ChargeBase{
      * 스마트초이스 연동(S)과 요청 승인(R) 구분
      * 코드 + pk : S123, R123
      */
-    @Column(name = "origin_key", length = 8, columnDefinition = "varchar(255) comment '출처 키'")
+    @Column(name = "origin_key", columnDefinition = "varchar(255) comment '출처 키'")
     private String originKey;
 
     @Nullable

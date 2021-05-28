@@ -34,16 +34,16 @@ public class PubNoti extends PubNotiBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pub_noti_id", columnDefinition = "BIGINT unsigned comment '공시 알림 아이디'")
-    private long pubNotiId;
+    private Long pubNotiId;
 
     @Column(name = "regi_user_id", columnDefinition = "BIGINT unsigned comment '등록 유저 아이디'")
-    private long regiUserId;
+    private Long regiUserId;
 
     @Column(name = "charge_id", columnDefinition = "BIGINT unsigned comment '요금 아이디'")
-    private long chargeId;
+    private Long chargeId;
 
     @Column(name = "goods_id", columnDefinition = "BIGINT unsigned comment '상품 아이디'")
-    private long goodsId;
+    private Long goodsId;
 
     /**
      * 스마트초이스 연동과 관리자 직접 등록(A) 구분

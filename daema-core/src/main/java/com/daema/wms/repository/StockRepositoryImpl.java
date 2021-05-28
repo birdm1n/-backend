@@ -148,10 +148,10 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "       ,model_name " +
                 "       ,go.capacity " +
                 "       ,go.color_name " +
-                "       ,maker " +
-                "       ,telecom " +
-                "       ,cd1.code_nm as telecom_name " +
-                "       ,cd2.code_nm as maker_name " +
+                "       ,maker_code_id " +
+                "       ,telecom_code_id " +
+                "       ,cd1.code_name as telecom_name " +
+                "       ,cd2.code_name as maker_name " +
                 "  from goods as goods " +
                 "  inner join goods_option go " +
                 "  on goods.goods_id = go.goods_id " +
@@ -160,7 +160,9 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "           , ss_sd.stock_id " +
                 "           , stock_name " +
                 "           , hierarchy " +
+                "           , raw_barcode " +
                 "           , full_barcode " +
+                "           , serial_no " +
                 "           , ifnull(in_stock_amt, 0) as in_stock_amt " +
                 "           , goods_option_id " +
                 "        from device as dv " +
@@ -240,19 +242,19 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "  ) as stock_dv " +
                 "  on go.goods_option_id = stock_dv.goods_option_id " +
                 "  inner join code_detail cd1 " +
-                "     on goods.telecom = cd1.code_seq " +
+                "     on goods.telecom_code_id = cd1.code_id " +
                 "  inner join code_detail cd2 " +
-                "     on goods.maker = cd2.code_seq " +
+                "     on goods.maker_code_id = cd2.code_id " +
                 "          where 1 = 1 ");
 
         if (requestDto.getStockId() != null) {
             sb.append(" and stock_id = ").append(requestDto.getStockId());
         }
         if (requestDto.getTelecom() != null) {
-            sb.append(" and telecom = ").append(requestDto.getTelecom());
+            sb.append(" and telecom_code_id = ").append(requestDto.getTelecom());
         }
         if (requestDto.getMaker() != null) {
-            sb.append(" and maker = ").append(requestDto.getMaker());
+            sb.append(" and maker_code_id = ").append(requestDto.getMaker());
         }
         if (requestDto.getGoodsId() != null) {
             sb.append(" and goods.goods_id = ").append(requestDto.getGoodsId());
@@ -264,10 +266,14 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
             sb.append(" and go.color_name = '").append(requestDto.getColorName()).append("'");
         }
         if (StringUtils.hasText(requestDto.getFullBarcode())) {
-            sb.append(" and full_barcode like '%").append(requestDto.getFullBarcode()).append("%'");
+            sb.append(" and (")
+                    .append("raw_barcode like '%").append(requestDto.getFullBarcode()).append("%'")
+                    .append("or full_barcode like '%").append(requestDto.getFullBarcode()).append("%'")
+                    .append("or serial_no like '%").append(requestDto.getFullBarcode()).append("%'")
+                    .append(") ");
         }
 
-        sb.append(" order by hierarchy, goods_name, cd1.code_nm, cd2.code_nm ");
+        sb.append(" order by hierarchy, goods_name, cd1.code_name, cd2.code_name ");
 
         Query query = em.createNativeQuery(sb.toString(), "StockDeviceList")
                 .setParameter("regi_store_id", requestDto.getStoreId());

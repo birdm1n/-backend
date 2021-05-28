@@ -27,7 +27,7 @@ public class CodeDetail {
     @Column(name = "code_name", columnDefinition = "varchar(255) comment '코드 이름'")
     private String codeNm;
 
-    @Column(name = "code_group_desc", columnDefinition = "varchar(255) comment '코드 그룹 설명'")
+    @Column(name = "code_desc", columnDefinition = "varchar(255) comment '코드 설명'")
     private String codeDesc;
 
     @Column(name = "use_yn", columnDefinition ="char(1) comment '사용 여부'")

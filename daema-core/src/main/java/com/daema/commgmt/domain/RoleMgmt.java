@@ -16,10 +16,10 @@ public class RoleMgmt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id" , columnDefinition = "int comment '룰 아이디'")
+    @Column(name = "role_id" , columnDefinition = "int comment '역할 아이디'")
     private int roleId;
 
-    @Column(name = "role_name" , columnDefinition = "varchar(255) comment '룰 이름'")
+    @Column(name = "role_name" , columnDefinition = "varchar(255) comment '역할 이름'")
     private String roleName;
 
     @Column(nullable = false, name = "necessary_yn", columnDefinition ="char(1) comment'필수 여부'")

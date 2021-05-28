@@ -18,18 +18,18 @@ import java.time.LocalDateTime;
 public abstract class ChargeBase {
 
     @NotBlank
-    @Column(name = "charge_name", columnDefinition = "varchar(255) is not null comment '요금 명'")
+    @Column(name = "charge_name", columnDefinition = "varchar(255) comment '요금 명'")
     protected String chargeName;
 
     @NotBlank
-    @Column(name = "charge_code", length = 20, columnDefinition = "varchar(255)  is not null comment '요금 코드'")
+    @Column(name = "charge_code", length = 20, columnDefinition = "varchar(255) comment '요금 코드'")
     protected String chargeCode;
 
     @Column(name = "category", length = 100, columnDefinition = "varchar(255) comment '카테고리'")
     protected String category;
 
     @NotNull
-    @Column(name = "charge_amt", columnDefinition = "INT is not null comment '요금 금액'" )
+    @Column(name = "charge_amt", columnDefinition = "INT comment '요금 금액'" )
     protected int chargeAmt;
 
     @Embedded

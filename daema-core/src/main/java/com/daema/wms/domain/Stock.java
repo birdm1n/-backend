@@ -46,7 +46,7 @@ public class Stock {
     private long stockId;
 
     @NotBlank
-    @Column(length = 50, name = "stock_name", columnDefinition = "varchar(255) is not null comment '재고 명'")
+    @Column(name = "stock_name", columnDefinition = "varchar(255) comment '재고 명'")
     private String stockName;
 
     @Column(name = "parent_stock_id", columnDefinition = "varchar(255) comment '부모 출고 아이디'")
@@ -71,16 +71,16 @@ public class Stock {
     @Column(name = "charger_name", columnDefinition = "varchar(255) comment '담당자 명'")
     private String chargerName;
 
-    @Column(length = 15, name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
+    @Column( name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
     private String chargerPhone;
 
-    @Column(length = 4, name = "charger_phone1", columnDefinition = "varchar(255) comment '담당자 연락처1'")
+    @Column(name = "charger_phone1", columnDefinition = "varchar(255) comment '담당자 연락처1'")
     private String chargerPhone1;
 
-    @Column(length = 4, name = "charger_phone2", columnDefinition = "varchar(255) comment '담당자 연락처2'")
+    @Column(name = "charger_phone2", columnDefinition = "varchar(255) comment '담당자 연락처2'")
     private String chargerPhone2;
 
-    @Column(length = 4, name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처3'")
+    @Column(name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처3'")
     private String chargerPhone3;
 
     @Column(nullable = false, name = "del_yn", columnDefinition ="char(1) comment '삭제 여부'")

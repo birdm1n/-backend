@@ -2,7 +2,6 @@ package com.daema.commgmt.domain;
 
 import com.daema.commgmt.domain.attr.NetworkAttribute;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,8 +28,7 @@ public class ChargeRegReq extends ChargeBase {
      * 6 - 승인
      * 9 - 반려
      */
-    @Column(name = "req_status", columnDefinition = "INT  is not null comment '요청 상태'")
-    @ColumnDefault("1")
+    @Column(name = "req_status", nullable = false, columnDefinition = "INT comment '요청 상태' default 1")
     private int reqStatus;
 
     @Transient

@@ -94,12 +94,12 @@ spring:
             revision_type_field_name: rev_type  #  rev_type 컬럼명 커스텀                        (기본값 : REVTYPE)
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.0.19:3306/daema?characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://192.168.0.19:3306/cmmt_test?characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: daema
     password: eoak123#@!
     sql-script-encoding: UTF-8
-    schema: classpath:./db/mysql/schema.sql
-    data: classpath:./db/mysql/data.sql
+#    schema: classpath:./db/mysql/schema.sql
+#    data: classpath:./db/mysql/data.sql
     initialization-mode: always
     continue-on-error: true #table, data exists exception ignore
   mail:

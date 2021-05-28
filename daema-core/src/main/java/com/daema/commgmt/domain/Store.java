@@ -22,11 +22,11 @@ public class Store {
     private long storeId;
 
     @NotBlank
-    @Column(length = 50, unique = true, name = "store_name", columnDefinition = "varchar(255) is not null comment '관리점 이름'")
+    @Column(unique = true, name = "store_name", columnDefinition = "varchar(255) comment '관리점 이름'")
     private String storeName;
 
     @NotNull
-    @Column(name = "telecom", columnDefinition = "int comment '통신사'")
+    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사'")
     private int telecom;
 
     @Transient
@@ -45,25 +45,25 @@ public class Store {
     @Column(name = "charger_email", columnDefinition = "varchar(255) comment '담당자 이메일'")
     private String chargerEmail;
 
-    @Column(length = 15, name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
+    @Column( name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
     private String chargerPhone;
 
-    @Column(length = 4, name = "charger_phone1", columnDefinition = "varchar(255) comment '담당자 연락처2'")
+    @Column(name = "charger_phone1", columnDefinition = "varchar(255) comment '담당자 연락처2'")
     private String chargerPhone1;
 
-    @Column(length = 4, name = "charger_phone2", columnDefinition = "varchar(255) comment '담당자 연락처3'")
+    @Column(name = "charger_phone2", columnDefinition = "varchar(255) comment '담당자 연락처3'")
     private String chargerPhone2;
 
-    @Column(length = 4, name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처4'")
+    @Column(name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처4'")
     private String chargerPhone3;
 
-    @Column(length = 7, name = "return_zip_code", columnDefinition = "varchar(255)  is not null comment '반품 우편번호 코드'")
+    @Column(name = "return_zip_code", nullable = false, columnDefinition = "varchar(255) comment '반품 우편번호 코드'")
     private String returnZipCode;
 
-    @Column(length = 100, name = "return_addr", columnDefinition = "varchar(255) is not null comment '반품 주소'")
+    @Column(name = "return_addr", nullable = false, columnDefinition = "varchar(255) comment '반품 주소'")
     private String returnAddr;
 
-    @Column(length = 100, name = "return_addr_detail", columnDefinition = "varchar(255) is not null comment '반품 주소 상세'")
+    @Column(name = "return_addr_detail", nullable = false, columnDefinition = "varchar(255) comment '반품 주소 상세'")
     private String returnAddrDetail;
 
     @Column(nullable = false, name = "use_yn", columnDefinition ="char(1) comment '사용 여부'")

@@ -46,8 +46,8 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                         "  from open_store as os" +
                         " inner join code_detail as cd " +
                 "            on store_id = :storeId " +
-                "               and os.telecom = cd.code_seq " +
-                "               and code_id = 'TELECOM' " +
+                "               and os.telecom_code_id = cd.code_id " +
+                "               and code_group = 'TELECOM' " +
                 "               and cd.use_yn = 'Y' " +
                         " where del_yn = 'N' " +
                         "   and store_id = :storeId ");
@@ -65,8 +65,8 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                         "       and os.del_yn = 'N' " +
                         "       and os.use_yn = 'Y' " +
                         " inner join code_detail as cd " +
-                        "    on os.telecom = cd.code_seq " +
-                        "       and code_id = 'TELECOM' " +
+                        "    on os.telecom_code_id = cd.code_id " +
+                        "       and code_group = 'TELECOM' " +
                         "       and cd.use_yn = 'Y' ");
 
         whereClause(sb, requestDto);
@@ -103,16 +103,16 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.return_addr_detail " +
                     "       , os.return_zip_code " +
                     "       , os.store_id " +
-                    "       , os.telecom " +
+                    "       , os.telecom_code_id as telecom " +
                     "       , os.use_yn " +
                     "       , os.del_yn " +
-                    "       , cd.code_nm as telecomName " +
+                    "       , cd.code_name as telecomName " +
                     "       , :storeId as req_store_id " +
                     "  from open_store as os " +
                     " inner join code_detail as cd " +
                     "            on store_id = :storeId " +
-                    "               and os.telecom = cd.code_seq " +
-                    "               and code_id = 'TELECOM' " +
+                    "               and os.telecom_code_id = cd.code_id " +
+                    "               and code_group = 'telecom' " +
                     "               and cd.use_yn = 'Y' " +
                     " where store_id = :storeId " +
                     "   and del_yn = 'N' " +
@@ -120,7 +120,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
 
             if(requestDto.getTelecom() != null
                     && !Arrays.stream(requestDto.getTelecom()).anyMatch(telecom -> telecom == 0)){
-                sb.append(" and os.telecom in ( :telecom ) ");
+                sb.append(" and os.telecom_code_id in ( :telecom ) ");
             }
 
             sb.append(
@@ -140,10 +140,10 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.return_addr_detail " +
                     "       , os.return_zip_code " +
                     "       , os.store_id " +
-                    "       , os.telecom " +
+                    "       , os.telecom_code_id as telecom " +
                     "       , os.use_yn " +
                     "       , os.del_yn " +
-                    "       , cd.code_nm as telecomName " +
+                    "       , cd.code_name as telecomName " +
                     "       , :storeId as req_store_id " +
                     "  from open_store as os " +
                     " inner join open_store_sale_store_map osssm " +
@@ -153,13 +153,13 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       and os.use_yn = 'Y' " +
                     "       and osssm.use_yn = 'Y' " +
                     " inner join code_detail as cd " +
-                    "    on os.telecom = cd.code_seq " +
-                    "       and code_id = 'TELECOM' " +
+                    "    on os.telecom_code_id = cd.code_id " +
+                    "       and code_group = 'TELECOM' " +
                     "       and cd.use_yn = 'Y' ");
 
             if(requestDto.getTelecom() != null
                     && !Arrays.stream(requestDto.getTelecom()).anyMatch(telecom -> telecom == 0)){
-                sb.append(" where os.telecom in ( :telecom ) ");
+                sb.append(" where os.telecom_code_id in ( :telecom ) ");
             }
 
             sb.append(" order by open_store_name ");
@@ -178,16 +178,16 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.return_addr_detail " +
                     "       , os.return_zip_code " +
                     "       , os.store_id " +
-                    "       , os.telecom " +
+                    "       , os.telecom_code_id as telecom " +
                     "       , os.use_yn " +
                     "       , os.del_yn " +
-                    "       , cd.code_nm as telecomName " +
+                    "       , cd.code_name as telecomName " +
                     "       , :storeId as req_store_id " +
                     "  from open_store as os " +
                     " inner join code_detail as cd " +
                     "            on store_id = :storeId " +
-                    "               and os.telecom = cd.code_seq " +
-                    "               and code_id = 'TELECOM' " +
+                    "               and os.telecom_code_id = cd.code_id " +
+                    "               and code_group = 'TELECOM' " +
                     "               and cd.use_yn = 'Y' " +
                     " where store_id = :storeId " +
                     "   and del_yn = 'N' ");
@@ -209,10 +209,10 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.return_addr_detail " +
                     "       , os.return_zip_code " +
                     "       , os.store_id " +
-                    "       , os.telecom " +
+                    "       , os.telecom_code_id as telecom " +
                     "       , os.use_yn " +
                     "       , os.del_yn " +
-                    "       , cd.code_nm as telecomName " +
+                    "       , cd.code_name as telecomName " +
                     "       , :storeId as req_store_id " +
                     "  from open_store as os " +
                     " inner join open_store_sale_store_map osssm " +
@@ -221,8 +221,8 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       and os.del_yn = 'N' " +
                     "       and os.use_yn = 'Y' " +
                     " inner join code_detail as cd " +
-                    "    on os.telecom = cd.code_seq " +
-                    "       and code_id = 'TELECOM' " +
+                    "    on os.telecom_code_id = cd.code_id " +
+                    "       and code_group = 'TELECOM' " +
                     "       and cd.use_yn = 'Y' ");
 
             whereClause(sb, requestDto);
@@ -263,7 +263,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
         }
         if(requestDto.getTelecom() != null
                 && !Arrays.stream(requestDto.getTelecom()).anyMatch(telecom -> telecom == 0)){
-            sb.append(" and os.telecom in (" + Arrays.toString(requestDto.getTelecom()).replace("[", "").replace("]", "") + ")");
+            sb.append(" and os.telecom_code_id in (" + Arrays.toString(requestDto.getTelecom()).replace("[", "").replace("]", "") + ")");
         }
         if(StringUtils.hasText(requestDto.getChargerPhone())){
             sb.append(" and os.charger_phone like '%" + requestDto.getChargerPhone() + "%'");

@@ -20,18 +20,18 @@ public class PubNotiCodeMapData extends PubNotiBase {
 
     @Id
     @Column(name = "pub_noti_raw_data_id", columnDefinition = "BIGINT unsigned comment '공시 알림 원본 데이터 아이디'")
-    private long pubNotiRawDataId;
+    private Long pubNotiRawDataId;
 
     @Column(name = "charge_id", columnDefinition = "BIGINT unsigned comment '요금 아이디'")
-    private long chargeId;
+    private Long chargeId;
 
     @Column(name = "goods_id", columnDefinition = "BIGINT unsigned comment '상품 아이디'")
-    private long goodsId;
+    private Long goodsId;
 
     @Column(name = "deadline_date", columnDefinition = "DATETIME(6) comment '마감 날짜'")
     private LocalDate deadLineDate;
 
-    @Column(name = "deadline_yn", columnDefinition ="char(1) comment'마감 여부'")
+    @Column(name = "deadline_yn", columnDefinition ="char(1) comment '마감 여부'")
     @ColumnDefault("\"N\"")
     private String deadLineYn;
 

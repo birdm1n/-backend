@@ -140,7 +140,7 @@ public class SaleStoreMgmtService {
 		);
 
 		if(CommonUtil.isNotEmptyList(roleFuncList)) {
-			roleFuncMgmtService.setFuncRoleMapInfo(roleFuncList);
+			roleFuncMgmtService.setFuncRoleMapInfo(roleFuncList, resultStoreId);
 		}
 
 		//내 창고 생성

@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 public abstract class AddServiceBase {
 
     @NotNull
-    @Column(name = "telecom",  columnDefinition = "INT comment '통신사'")
+    @Column(name = "telecom_code_id",  columnDefinition = "INT comment '통신사'")
     protected int telecom;
 
     @NotBlank
-    @Column(name = "add_svc_name", length = 30, columnDefinition = "varchar(255) comment '부가 서비스 이름'")
+    @Column(name = "add_svc_name", columnDefinition = "varchar(255) comment '부가 서비스 이름'")
     protected String addSvcName;
 
     @NotNull

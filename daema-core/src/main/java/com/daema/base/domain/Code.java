@@ -18,10 +18,10 @@ import java.time.LocalDateTime;
 public class Code {
 
     @Id
-    @Column(name = "code_group", length = 15, columnDefinition = "varchar(255) comment '코드 아이디'")
+    @Column(name = "code_group", columnDefinition = "varchar(255) comment '코드 아이디'")
     private String codeId;
 
-    @Column(name = "code_group_name", length = 20, columnDefinition = "varchar(255) comment '코드 아이디 이름'")
+    @Column(name = "code_group_name", columnDefinition = "varchar(255) comment '코드 아이디 이름'")
     private String codeIdNm;
 
     @Column(name = "code_group_desc", columnDefinition = "varchar(255) comment '코드 아이디 설명'")

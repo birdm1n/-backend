@@ -47,14 +47,13 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
     private void insertNewGoods(){
 
         StringBuilder sb = new StringBuilder();
-        sb.append("insert into goods (capacity, goods_name, maker, model_name, network, telecom" +
+        sb.append("insert into goods (goods_name, maker_code_id, model_name, network_code_id, telecom_code_id" +
                 "  ,regi_datetime, del_yn, matching_yn, origin_key, use_yn) " +
-                "  select null " +
-                "         ,data.goods_name " +
-                "         ,(select code_seq from code_detail cd where cd.code_desc = data.maker_name) as maker " +
+                "  select data.goods_name " +
+                "         ,(select code_id from code_detail cd where cd.code_desc = data.maker_name and code_group = 'MAKER' ) as maker " +
                 "         ,data.model_name " +
-                "         ,(select code_seq from code_detail cd2 where cd2.code_desc = data.network_name) as network " +
-                "         ,(select code_seq from code_detail cd3 where cd3.code_desc = data.telecom_name) as telecom " +
+                "         ,(select code_id from code_detail cd2 where cd2.code_desc = data.network_name and code_group = 'NETWORK' ) as network " +
+                "         ,(select code_id from code_detail cd3 where cd3.code_desc = data.telecom_name and code_group = 'TELECOM' ) as telecom " +
                 "         ,now() " +
                 "         ,'N' " +
                 "         ,'N' " +
@@ -91,11 +90,14 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
                 "  inner join goods as g " +
                 "     on a.model_name = g.model_name " +
                 "  inner join code_detail as cd1 " +
-                "     on a.maker_name = cd1.code_desc " +
+                "     on a.maker_name = cd1.code_desc" +
+                "        and cd1.code_group = 'MAKER'  " +
                 "  inner join code_detail as cd2 " +
                 "     on a.telecom_name = cd2.code_desc " +
+                "        and cd2.code_group = 'TELECOM'  " +
                 "  inner join code_detail as cd3 " +
-                "     on a.network_name = cd3.code_desc ");
+                "     on a.network_name = cd3.code_desc " +
+                "        and cd3.code_group = 'NETWORK'  ");
 
         return em.createNativeQuery(sb.toString())
                 .setParameter("memberSeq", memberSeq)
@@ -118,7 +120,7 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
                 "         , concat('S', pub_noti_raw_data_id) " +
                 "    from pub_noti_code_map_data " +
                 "   where deadline_yn = 'N' " +
-                "     and deadline_date = date_format(now(), '%Y-%m-%d') ");
+                "     and deadline_date >= concat(date_format(now(), '%Y-%m-%d'), ' 00:00:00') ");
 
         em.createNativeQuery(sb.toString())
                 .setParameter("memberSeq", memberSeq)
@@ -132,7 +134,7 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
                 "                             where origin_key in (select concat('S', pub_noti_raw_data_id) " +
                 "                                                    from pub_noti_code_map_data " +
                 "                                                   where deadline_yn = 'N' " +
-                "                                                     and deadline_date = date_format(now(), '%Y-%m-%d')" +
+                "                                                     and deadline_date >= concat(date_format(now(), '%Y-%m-%d'), ' 00:00:00') " +
                 "                                                 )" +
                 "                              ) map " +
                 "   set p.deadline_yn = 'Y' " +
@@ -153,7 +155,7 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
                 "                                             where origin_key in (select concat('S', pub_noti_raw_data_id) " +
                 "                                                                    from pub_noti_code_map_data " +
                 "                                                                   where deadline_yn = 'N' " +
-                "                                                                     and deadline_date = date_format(now(), '%Y-%m-%d')" +
+                "                                                                     and deadline_date >= concat(date_format(now(), '%Y-%m-%d'), ' 00:00:00') " +
                 "                                                                  )" +
                 "                                            ) as map" +
                 "                                    ) as map " +

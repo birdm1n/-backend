@@ -22,7 +22,7 @@ public class MemberRole {
     private long seq;
 
     @Id
-    @JoinColumn(name = "role_id",  columnDefinition = "int comment '룰 아이디'")
+    @JoinColumn(name = "role_id",  columnDefinition = "int comment '역할 아이디'")
     private int roleId;
 
     @Builder

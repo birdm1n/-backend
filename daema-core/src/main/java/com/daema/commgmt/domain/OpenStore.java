@@ -46,7 +46,7 @@ public class OpenStore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '오픈 관리점 아이디'")
+    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '개통점 아이디'")
     private long openStoreId;
 
     @NotNull
@@ -54,52 +54,52 @@ public class OpenStore {
     private long storeId;
 
     @NotBlank
-    @Column(length = 50, name = "open_store_name", columnDefinition = "varchar(255) is not null comment '개통 관리점 이름'")
+    @Column(name = "open_store_name", columnDefinition = "varchar(255) comment '개통점 이름'")
     private String openStoreName;
 
     @NotNull
-    @Column(name = "telecom", columnDefinition = "int comment '통신사'")
+    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사'")
     private int telecom;
 
     @Transient
     private String telecomName;
 
     @NotBlank
-    @Column(name = "biz_no", columnDefinition = "char(12) is not null comment '사업자 넘버'")
+    @Column(name = "biz_no", columnDefinition = "char(12) comment '사업자 넘버'")
     private String bizNo;
 
     @Column(name = "charger_name", columnDefinition = "varchar(255) comment '담당자 이름'")
     private String chargerName;
 
     @NotBlank
-    @Column(length = 15, name = "charger_phone", columnDefinition = "varchar(255) is not null comment '담당자 연락처'")
+    @Column(name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
     private String chargerPhone;
 
     @NotBlank
-    @Column(length = 4, name = "charger_phone1", columnDefinition = "varchar(255) is not null comment '담당자 연락처1'")
+    @Column(name = "charger_phone1", columnDefinition = "varchar(255)    comment '담당자 연락처1'")
     private String chargerPhone1;
 
     @NotBlank
-    @Column(length = 4, name = "charger_phone2", columnDefinition = "varchar(255) is not null comment '담당자 연락처2'")
+    @Column(name = "charger_phone2", columnDefinition = "varchar(255)   comment '담당자 연락처2'")
     private String chargerPhone2;
 
     @NotBlank
-    @Column(length = 4, name = "charger_phone3", columnDefinition = "varchar(255) is not null comment '담당자 연락처3'")
+    @Column(name = "charger_phone3", columnDefinition = "varchar(255)   comment '담당자 연락처3'")
     private String chargerPhone3;
 
-    @Column(length = 7, name = "return_zip_code", columnDefinition = "varchar(255) is not null comment '반품 우편번호 코드'")
+    @Column(name = "return_zip_code", nullable = false, columnDefinition = "varchar(255) comment '반품 우편번호 코드'")
     private String returnZipCode;
 
-    @Column(length = 100,name = "return_addr", columnDefinition = "varchar(255) is not null comment '반품 주소'")
+    @Column(name = "return_addr", nullable = false, columnDefinition = "varchar(255) comment '반품 주소'")
     private String returnAddr;
 
-    @Column(length = 100, name = "return_addr_detail", columnDefinition = "varchar(255) is not null comment '반품 주소 상세'")
+    @Column(name = "return_addr_detail", nullable = false, columnDefinition = "varchar(255) comment '반품 주소 상세'")
     private String returnAddrDetail;
 
-    @Column(name = "use_yn", columnDefinition ="char(1) is not null comment '사용 여부'")
+    @Column(name = "use_yn", nullable = false, columnDefinition ="char(1) comment '사용 여부'")
     private String useYn;
 
-    @Column(name = "del_yn", columnDefinition = " comment is not null '삭제 여부'")
+    @Column(name = "del_yn", nullable = false, columnDefinition = "char(1) comment '삭제 여부'")
     private String delYn;
 
     @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")

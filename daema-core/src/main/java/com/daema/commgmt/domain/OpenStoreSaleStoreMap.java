@@ -17,11 +17,11 @@ import javax.persistence.*;
 public class OpenStoreSaleStoreMap {
 
     @Id
-    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '오픈 관리점 아이디'")
+    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '개통점 아이디'")
     private long openStoreId;
 
     @Id
-    @Column(name = "sale_store_id", columnDefinition = "BIGINT unsigned comment '영업 관리점 아이디'")
+    @Column(name = "sale_store_id", columnDefinition = "BIGINT unsigned comment '영업점 아이디'")
     private long saleStoreId;
 
     @Column(nullable = false, name = "use_yn", columnDefinition ="char(1) comment '사용 여부'")

@@ -19,8 +19,8 @@ public class StockDeviceListDto {
    private String model_name;
    private String capacity;
    private String color_name;
-   private Long maker;
-   private Long telecom;
+   private Long maker_code_id;
+   private Long telecom_code_id;
    private String telecom_name;
    private String maker_name;
 }

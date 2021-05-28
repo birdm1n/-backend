@@ -13,11 +13,11 @@ public class Salt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "salt_id", columnDefinition = "BIGINT UNSIGNED comment '소금값 아이디'")
+    @Column(name = "salt_id", columnDefinition = "BIGINT UNSIGNED comment '암호키 아이디'")
     private int id;
 
     @NotNull()
-    @Column(name = "salt_data", columnDefinition = "BIGINT UNSIGNED comment '소금값 아이디'")
+    @Column(name = "salt_data", columnDefinition = "VARCHAR(255) comment '암호키 값'")
     private String salt;
 
     public Salt() {

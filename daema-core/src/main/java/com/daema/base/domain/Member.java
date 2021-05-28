@@ -61,16 +61,16 @@ public class Member {
     @Column(name = "address", columnDefinition = "varchar(255) comment '주소지'")
     private String address;
 
-    @Column(name = "phone", length = 15, columnDefinition = "varchar(255) comment '연락처'")
+    @Column(name = "phone", columnDefinition = "varchar(255) comment '연락처'")
     private String phone;
 
-    @Column(name = "phone1", length = 4, columnDefinition = "varchar(255) comment '연락처1'")
+    @Column(name = "phone1", columnDefinition = "varchar(255) comment '연락처1'")
     private String phone1;
 
-    @Column(name = "phone2", length = 4, columnDefinition = "varchar(255) comment '연락처2'")
+    @Column(name = "phone2", columnDefinition = "varchar(255) comment '연락처2'")
     private String phone2;
 
-    @Column(name = "phone3", length = 4, columnDefinition = "varchar(255) comment '연락처3'")
+    @Column(name = "phone3", columnDefinition = "varchar(255) comment '연락처3'")
     private String phone3;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -87,7 +87,7 @@ public class Member {
     private LocalDateTime updDatetime;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "salt_id", columnDefinition = "BIGINT unsigned comment '소금값 아이디'")
+    @JoinColumn(name = "salt_id", columnDefinition = "BIGINT unsigned comment '암호키 아이디'")
     private Salt salt;
 
     @NotNull

@@ -46,16 +46,16 @@ public class PubNotiRepositoryImpl extends QuerydslRepositorySupport implements 
                 "                  from pub_noti as pn " +
                 "                 inner join goods as g " +
                 "                    on g.goods_id = pn.goods_id " +
-                "                       and g.telecom = :telecom " +
-                "                       and g.network = :network " +
+                "                       and g.telecom_code_id = :telecom " +
+                "                       and g.network_code_id = :network " +
                 "                       and g.del_yn = 'N' " +
                 "                       and g.use_yn = 'Y' " +
                 "                       and g.matching_yn = 'Y' " +
                 "                       and pn.del_yn = 'N' " +
                 "                 inner join charge as c " +
                 "                    on c.charge_id = pn.charge_id " +
-                "                       and c.telecom = :telecom " +
-                "                       and c.network = :network " +
+                "                       and c.telecom_code_id = :telecom " +
+                "                       and c.network_code_id = :network " +
                 "                       and c.del_yn = 'N' " +
                 "                       and c.use_yn = 'Y' " +
                 "                       and c.matching_yn = 'Y' " +

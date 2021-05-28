@@ -43,23 +43,23 @@ public class DeviceStatus extends BaseEntity {
     @Column(name = "ddct_amt", columnDefinition = "int comment '차감 금액'")
     private Integer ddctAmt;
 
-    @Column(name = "add_ddct_amt", columnDefinition = "int comment '부가 차감 금액'")
+    @Column(name = "add_ddct_amt", columnDefinition = "int comment '추가 차감 금액'")
     private Integer addDdctAmt;
 
     /**
      * 출고가 차감 YN
      */
     @Nullable
-    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1) comment ''")
+    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1) comment '출고가 차감 여부'")
     @ColumnDefault("\"N\"")
     private String ddctReleaseAmtYn = "N";
 
-    @Column(name = "in_stock_status", columnDefinition = "varchar(255) comment ''")
+    @Column(name = "in_stock_status", columnDefinition = "varchar(255) comment '입고상태'")
     @Enumerated(EnumType.STRING)
     private WmsEnum.InStockStatus inStockStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dvc_id", columnDefinition = "BIGINT unsigned comment ''")
+    @JoinColumn(name = "dvc_id", columnDefinition = "BIGINT unsigned comment '기기 아이디'")
     private Device device;
 
     @OneToOne(mappedBy = "inDeviceStatus", fetch = FetchType.LAZY)

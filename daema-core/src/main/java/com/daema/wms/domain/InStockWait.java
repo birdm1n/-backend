@@ -26,7 +26,7 @@ public class InStockWait extends BaseEntity {
     private Long waitId;
 
     @NotNull
-    @Column(name = "telecom", columnDefinition = "int comment '통신사'")
+    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사'")
     private int telecom;
 
     @Column(name = "telecom_name", columnDefinition = "varchar(255) comment '통신사 이름'")
@@ -73,8 +73,15 @@ public class InStockWait extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private WmsEnum.BarcodeType barcodeType;
 
-    @Column(name = "full_barcode", columnDefinition = "varchar(255) comment '전체 바코드'")
+
+    @Column(name = "raw_barcode", columnDefinition = "varchar(255) comment '원시 바코드'")
+    private String rawBarcode;
+
+    @Column(name = "full_barcode", columnDefinition = "varchar(255) comment '원시, 가공 바코드'")
     private String fullBarcode;
+
+    @Column(name = "serial_no", columnDefinition = "varchar(255) comment '시리얼_ex : 뒷 7자리'")
+    private String serialNo;
 
     @Column(name = "common_barcode", columnDefinition = "varchar(255) comment '공통 바코드'")
     private String commonBarcode;
@@ -90,7 +97,7 @@ public class InStockWait extends BaseEntity {
 
     // 제품상태
     @Nullable
-    @Column(name = "product_faulty_yn", columnDefinition ="char(1) comment'제품 불량 여부'")
+    @Column(name = "product_faulty_yn", columnDefinition ="char(1) comment '제품 불량 여부'")
     @ColumnDefault("\"N\"")
     private String productFaultyYn = "N";
 
@@ -103,7 +110,7 @@ public class InStockWait extends BaseEntity {
     private String inStockMemo;
 
     @Nullable
-    @Column(name = "product_miss_yn", columnDefinition ="char(1) comment'제품 누락 여부'")
+    @Column(name = "product_miss_yn", columnDefinition ="char(1) comment '제품 누락 여부'")
     @ColumnDefault("\"N\"")
     private String productMissYn = "N";
 
@@ -113,14 +120,14 @@ public class InStockWait extends BaseEntity {
     @Column(name = "ddct_amt", columnDefinition = "int comment '차감 금액'")
     private int ddctAmt;
 
-    @Column(name = "add_ddct_amt", columnDefinition = "int comment '부가 차감 금액'")
+    @Column(name = "add_ddct_amt", columnDefinition = "int comment '추가 차감 금액'")
     private int addDdctAmt;
 
     /**
      * 출고가 차감 YN
      */
     @Nullable
-    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1) comment '차감 출고가 금액 여부'")
+    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1) comment '출고가 차감 여부'")
     @ColumnDefault("\"N\"")
     private String ddctReleaseAmtYn = "N";
 

@@ -18,10 +18,10 @@ public class Provider {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "prov_id", columnDefinition = "BIGINT unsigned comment '공급 아이디'")
-    private long provId;
+    private Long provId;
 
     @NotBlank
-    @Column(length = 50, name = "prov_name", columnDefinition = "varchar(255) is not null comment '공급 이름'")
+    @Column(name = "prov_name", columnDefinition = "varchar(255) comment '공급 이름'")
     private String provName;
 
     @Column(name = "charger_name", columnDefinition = "varchar(255) comment '담당자 이름'")
@@ -30,29 +30,29 @@ public class Provider {
     @Column(name = "charger_email", columnDefinition = "varchar(255) comment '담당자 이메일'")
     private String chargerEmail;
 
-    @Column(length = 15, name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
+    @Column( name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
     private String chargerPhone;
 
-    @Column(length = 4, name = "charger_phone1", columnDefinition = "varchar(255) comment '담당자 연락처1'")
+    @Column(name = "charger_phone1", columnDefinition = "varchar(255) comment '담당자 연락처1'")
     private String chargerPhone1;
 
-    @Column(length = 4, name = "charger_phone2", columnDefinition = "varchar(255) comment '담당자 연락처2'")
+    @Column(name = "charger_phone2", columnDefinition = "varchar(255) comment '담당자 연락처2'")
     private String chargerPhone2;
 
-    @Column(length = 4, name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처3'")
+    @Column(name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처3'")
     private String chargerPhone3;
 
-    @Column(length = 7, name = "return_zip_code", columnDefinition = "varchar(255)  is not null comment '반품 우편번호 코드'")
+    @Column(name = "return_zip_code", nullable = false, columnDefinition = "varchar(255) comment '반품 우편번호 코드'")
     private String returnZipCode;
 
-    @Column(length = 100, name = "return_addr", columnDefinition = "varchar(255) is not null comment '반품 주소'")
+    @Column(name = "return_addr", nullable = false, columnDefinition = "varchar(255) comment '반품 주소'")
     private String returnAddr;
 
-    @Column(length = 100, name = "return_addr_detail", columnDefinition = "varchar(255) is not null comment '반품 주소 상세'")
+    @Column(name = "return_addr_detail", nullable = false, columnDefinition = "varchar(255) comment '반품 주소 상세'")
     private String returnAddrDetail;
 
     @Column(nullable = false, columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
-    private long storeId;
+    private Long storeId;
 
     @Column(nullable = false, name = "use_yn", columnDefinition ="char(1) comment '사용 여부'")
     private String useYn;
@@ -61,7 +61,7 @@ public class Provider {
     private String delYn = "N";
 
     @Column(name = "regi_user_id", columnDefinition = "BIGINT unsigned comment '등록 유저 아이디'")
-    private long regiUserId;
+    private Long regiUserId;
 
     @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
     private LocalDateTime regiDateTime;
@@ -75,15 +75,15 @@ public class Provider {
     @Transient
     private String name;
 
-    public Provider(long provId){
+    public Provider(Long provId){
         this.provId = provId;
     }
 
     @Builder
-    public Provider(long provId, String provName, String chargerName, String chargerEmail
+    public Provider(Long provId, String provName, String chargerName, String chargerEmail
             , String chargerPhone, String chargerPhone1, String chargerPhone2, String chargerPhone3
             , String returnZipCode, String returnAddr, String returnAddrDetail, String delYn, String useYn, long regiUserId, LocalDateTime regiDateTime
-    ,Long updUserId, LocalDateTime updDateTime, String name, long storeId){
+    ,Long updUserId, LocalDateTime updDateTime, String name, Long storeId){
         this.provId = provId;
         this.provName = provName;
         this.chargerPhone = chargerPhone;
@@ -105,13 +105,13 @@ public class Provider {
         this.storeId = storeId;
     }
 
-    public void updateDelYn(Provider provider, String delYn, long updUserId){
+    public void updateDelYn(Provider provider, String delYn, Long updUserId){
         provider.setDelYn(delYn);
         provider.setUpdUserId(updUserId);
         provider.setUpdDateTime(LocalDateTime.now());
     }
 
-    public void updateUseYn(Provider provider, String useYn, long updUserId){
+    public void updateUseYn(Provider provider, String useYn, Long updUserId){
         provider.setUseYn(useYn);
         provider.setUpdUserId(updUserId);
         provider.setUpdDateTime(LocalDateTime.now());

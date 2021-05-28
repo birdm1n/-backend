@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface CustomFuncMgmtRepository {
 
-	List<String> getMemberEnableUrlPathList(long memberSeq);
+	List<String> getMemberEnableUrlPathList(long memberSeq, long storeId);
 }

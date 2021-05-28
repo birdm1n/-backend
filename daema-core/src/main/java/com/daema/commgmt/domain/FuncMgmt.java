@@ -32,13 +32,13 @@ public class FuncMgmt {
     @Column(name = "title", columnDefinition = "varchar(255) comment '제목'")
     private String title;
 
-    @Column(name = "role", columnDefinition = "varchar(255) comment '룰'")
+    @Column(name = "role", columnDefinition = "varchar(255) comment '역할'")
     private String role;
 
     @Column(name = "url_path", columnDefinition = "varchar(255) comment 'url 경로'")
     private String urlPath;
 
-    @Column(name = "order_num", columnDefinition = "INT comment '순서 넘버'")
+    @Column(name = "order_num", columnDefinition = "INT comment '정렬 순서'")
     private int orderNum;
 
     @Builder

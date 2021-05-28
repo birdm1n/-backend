@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class OpenStoreUserMap {
 
     @Id
-    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '오픈 관리점 아이디'")
+    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '개통점 아이디'")
     private long openStoreId;
 
     @Id

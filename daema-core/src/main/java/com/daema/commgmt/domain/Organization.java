@@ -42,7 +42,7 @@ public class Organization {
     private long storeId;
 
     @NotBlank
-    @Column(length = 20, name = "org_name", columnDefinition = "varchar(255) is not null comment '조직 이름'")
+    @Column(name = "org_name", columnDefinition = "varchar(255) comment '조직 이름'")
     private String orgName;
 
     @Column(nullable = false, name = "del_yn", columnDefinition ="char(1) comment'삭제 여부'")

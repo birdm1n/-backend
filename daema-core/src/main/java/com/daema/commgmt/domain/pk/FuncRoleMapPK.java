@@ -13,9 +13,11 @@ public class FuncRoleMapPK implements Serializable {
 
 	private String funcId;
 	private int roleId;
+	private Long storeId;
 
-	public FuncRoleMapPK(String funcId, int roleId) {
+	public FuncRoleMapPK(String funcId, int roleId, Long storeId) {
 		this.funcId = funcId;
 		this.roleId = roleId;
+		this.storeId = storeId;
 	}
 }

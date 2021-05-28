@@ -20,13 +20,13 @@ public class GoodsOption {
     @Column(name = "goods_option_id", columnDefinition = "BIGINT unsigned comment '상품 옵션 아이디'")
     private long goodsOptionId;
 
-    @Column(name = "color_name", length = 20, columnDefinition = "varchar(255) comment '색상 이름'")
+    @Column(name = "color_name", columnDefinition = "varchar(255) comment '색상 이름'")
     private String colorName;
 
-    @Column(name = "distributor", length = 20 , columnDefinition = "varchar(255) comment '유통업자'")
+    @Column(name = "distributor", columnDefinition = "varchar(255) comment '유통업자'")
     private String distributor;
 
-    @Column(name = "common_barcode", length = 20, columnDefinition = "varchar(255) comment '공통 바코드'")
+    @Column(name = "common_barcode", columnDefinition = "varchar(255) comment '공통 바코드'")
     private String commonBarcode;
 
     @Column(nullable = false, name = "del_yn", columnDefinition ="char(1) comment '삭제 여부'")

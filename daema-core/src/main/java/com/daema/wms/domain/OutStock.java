@@ -21,7 +21,7 @@ public class OutStock extends BaseEntity {
     @Column(name = "out_stock_id", columnDefinition = "BIGINT unsigned comment '출고 재고 아이디'")
     private Long outStockId;
 
-    @Column(columnDefinition = "varchar(255) comment '출고 재고 타입'")
+    @Column(columnDefinition = "varchar(255) comment '출고 타입'")
     @Enumerated(EnumType.STRING)
     private WmsEnum.OutStockType outStockType;
 

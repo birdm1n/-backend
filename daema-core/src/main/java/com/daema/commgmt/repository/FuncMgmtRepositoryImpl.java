@@ -27,7 +27,7 @@ public class FuncMgmtRepositoryImpl extends QuerydslRepositorySupport implements
     private EntityManager em;
 
     @Override
-    public List<String> getMemberEnableUrlPathList(long memberSeq) {
+    public List<String> getMemberEnableUrlPathList(long memberSeq, long storeId) {
 
 
         JPQLQuery<FuncMgmt> query = from(funcMgmt);
@@ -38,13 +38,13 @@ public class FuncMgmtRepositoryImpl extends QuerydslRepositorySupport implements
                 )
         );
 
-        query.innerJoin(memberRole)
-                .on(memberRole.seq.eq(memberSeq));
-
         query.innerJoin(funcRoleMap)
-                .on(memberRole.seq.eq(memberSeq)
-                        .and(funcRoleMap.roleId.eq(memberRole.roleId))
+                .on(funcRoleMap.storeId.eq(storeId)
                         .and(funcRoleMap.funcId.eq(funcMgmt.funcId))
+                )
+                .innerJoin(memberRole)
+                .on(funcRoleMap.roleId.eq(memberRole.roleId)
+                        .and(memberRole.seq.eq(memberSeq))
                 );
 
         query.groupBy(funcRoleMap.funcId);
