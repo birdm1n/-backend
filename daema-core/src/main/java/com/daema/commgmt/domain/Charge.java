@@ -47,7 +47,9 @@ public class Charge extends ChargeBase{
     @Builder
     public Charge(long chargeId, String chargeName, int chargeAmt, String category, int telecom, int network
             , String originKey, String chargeCode, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn
-    , String voiceAmt, String dataAmt, String smsAmt, Integer discountAmt, String makerName, String networkName, String telecomName){
+    , String voiceAmt, String dataAmt, String smsAmt, String videoAmt
+    , String extraVoiceAmt, String extraDataAmt, String extraSmsAmt, String extraVideoAmt
+                  ,String chargeDesc, String addBenefit, String makerName, String networkName, String telecomName){
         this.chargeId = chargeId;
         this.chargeName = chargeName;
         this.chargeAmt = chargeAmt;
@@ -62,7 +64,13 @@ public class Charge extends ChargeBase{
         this.voiceAmt = voiceAmt;
         this.dataAmt = dataAmt;
         this.smsAmt = smsAmt;
-        this.discountAmt = discountAmt;
+        this.videoAmt = videoAmt;
+        this.extraVoiceAmt = extraVoiceAmt;
+        this.extraDataAmt = extraDataAmt;
+        this.extraSmsAmt = extraSmsAmt;
+        this.extraVideoAmt = extraVideoAmt;
+        this.chargeDesc = chargeDesc;
+        this.addBenefit = addBenefit;
         this.makerName = makerName;
         this.networkName = networkName;
         this.telecomName = telecomName;

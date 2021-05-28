@@ -27,7 +27,13 @@ public class ChargeMgmtDto {
 	private String voiceAmt;
 	private String dataAmt;
 	private String smsAmt;
-	private Integer discountAmt;
+	private String videoAmt;
+	private String extraVoiceAmt;
+	private String extraDataAmt;
+	private String extraSmsAmt;
+	private String extraVideoAmt;
+	private String chargeDesc;
+	private String addBenefit;
 	private String makerName;
 	private String networkName;
 	private String telecomName;
@@ -49,7 +55,15 @@ public class ChargeMgmtDto {
 				.voiceAmt(charge.getVoiceAmt())
 				.dataAmt(charge.getDataAmt())
 				.smsAmt(charge.getSmsAmt())
-				.discountAmt(charge.getDiscountAmt())
+				.videoAmt(charge.getVideoAmt())
+				.extraVoiceAmt(charge.getExtraVoiceAmt())
+				.extraDataAmt(charge.getExtraDataAmt())
+				.extraSmsAmt(charge.getExtraSmsAmt())
+				.extraVideoAmt(charge.getExtraVideoAmt())
+				.extraVideoAmt(charge.getExtraVideoAmt())
+				.extraVideoAmt(charge.getExtraVideoAmt())
+				.chargeDesc(charge.getChargeDesc())
+				.addBenefit(charge.getAddBenefit())
 				.makerName(charge.getMakerName())
 				.telecomName(charge.getTelecomName())
 				.networkName(charge.getNetworkName())

@@ -24,7 +24,13 @@ public class ChargeRegReqDto {
 	private String voiceAmt;
 	private String dataAmt;
 	private String smsAmt;
-	private Integer discountAmt;
+	private String videoAmt;
+	private String extraVoiceAmt;
+	private String extraDataAmt;
+	private String extraSmsAmt;
+	private String extraVideoAmt;
+	private String chargeDesc;
+	private String addBenefit;
 	private ChargeRegReqRejectDto regReqRejectDto;
 	private String makerName;
 	private String networkName;
@@ -45,7 +51,15 @@ public class ChargeRegReqDto {
 				.voiceAmt(chargeRegReq.getVoiceAmt())
 				.dataAmt(chargeRegReq.getDataAmt())
 				.smsAmt(chargeRegReq.getSmsAmt())
-				.discountAmt(chargeRegReq.getDiscountAmt())
+				.videoAmt(chargeRegReq.getVideoAmt())
+				.extraVoiceAmt(chargeRegReq.getExtraVoiceAmt())
+				.extraDataAmt(chargeRegReq.getExtraDataAmt())
+				.extraSmsAmt(chargeRegReq.getExtraSmsAmt())
+				.extraVideoAmt(chargeRegReq.getExtraVideoAmt())
+				.extraVideoAmt(chargeRegReq.getExtraVideoAmt())
+				.extraVideoAmt(chargeRegReq.getExtraVideoAmt())
+				.chargeDesc(chargeRegReq.getChargeDesc())
+				.addBenefit(chargeRegReq.getAddBenefit())
 				.regReqRejectDto(ChargeRegReqRejectDto.from(chargeRegReq.getChargeRegReqReject()))
 				.makerName(chargeRegReq.getMakerName())
 				.telecomName(chargeRegReq.getTelecomName())

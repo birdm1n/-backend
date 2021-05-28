@@ -44,8 +44,26 @@ public abstract class ChargeBase {
     @Column(name = "sms_amt")
     protected String smsAmt;
 
-    @Column(name = "discount_amt")
-    protected Integer discountAmt;
+    @Column(name = "video_amt")
+    protected String videoAmt;
+
+    @Column(name = "extra_data_amt")
+    protected String extraVoiceAmt;
+
+    @Column(name = "extra_data_amt")
+    protected String extraDataAmt;
+
+    @Column(name = "extra_sms_amt")
+    protected String extraSmsAmt;
+
+    @Column(name = "extra_video_amt")
+    protected String extraVideoAmt;
+
+    @Column(name = "charge_desc")
+    protected String chargeDesc;
+
+    @Column(name = "add_benefit")
+    protected String addBenefit;
 
     @Column(name = "regi_datetime")
     protected LocalDateTime regiDateTime;
