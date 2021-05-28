@@ -29,7 +29,7 @@ public class DataHandleController {
     /**
      * ApiOperation 의 nickname 속성을 조회해서 func_mgmt 테이블 데이터 관리
      */
-    @PostMapping("/extractApiFunc")
+    @GetMapping("/extractApiFunc")
     public void extractApiFunc() {
         dataHandleService.extractApiFunc();
     }
