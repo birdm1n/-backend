@@ -41,7 +41,7 @@ public class StoreStockHistory extends BaseUserInfoEntity {
     @Column(name = "stock_type_id", columnDefinition = "BIGINT unsigned comment '관리점 타입 아이디'")
     private Long stockTypeId;
 
-    @Column(name = "history_status", columnDefinition = "BIGINT unsigned comment '이력 상태'")
+    @Column(name = "history_status", columnDefinition = "varchar(255) comment '이력 상태'")
     @Enumerated(EnumType.STRING)
     private WmsEnum.HistoryStatus historyStatus;
 
