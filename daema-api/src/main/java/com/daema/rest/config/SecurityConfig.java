@@ -17,9 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -94,12 +92,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             configuration.addAllowedHeader("*");
 
         }else{
+
+            configuration.addAllowedOrigin("*");
+            /*
             List<String> allowedOrigins = new ArrayList<>();
             allowedOrigins.add("http://192.168.0.68:8080");
             allowedOrigins.add("http://192.168.0.14:8080");
 
-            configuration.addAllowedOrigin("*");
-            //configuration.setAllowedOrigins(allowedOrigins);
+            configuration.setAllowedOrigins(allowedOrigins);
+            */
 
             configuration.addAllowedHeader("*");
             //configuration.setAllowedHeaders(Arrays.asList("X-Requested-With","Origin","Content-Type","Accept","Authorization"));
