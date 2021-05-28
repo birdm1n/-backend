@@ -70,7 +70,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 if(profile != null &&
                         !"prod".equals(profile)) {
 
-                    String at = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IjEyMyIsImlhdCI6MTYyMjIwMTU5OSwiZXhwIjoxNjIyMjMwMzk5fQ.TCsuor5bs-JnyFjCU-ugJfmh_fiduVuVYu9dnV1CA8s";
+                    String at = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InNhIiwiaWF0IjoxNjE5NTEwMzIzLCJleHAiOjE5MzQ4NzAzMjN9.IdMZF15jwUJ3DyQjaiVTQQWEW7bpwyTukoxHFD0GT10";
 
                     //swagger 테스트용. SA-10년
                     cookieUtil.addHeaderCookie(httpServletResponse, JwtUtil.ACCESS_TOKEN_NAME, at);
