@@ -120,7 +120,14 @@ public class StockMgmtService {
 						.stockType(stockMgmtDto.getStockType())
 						.regiStoreId(stockMgmtDto.getRegiStoreId())
 						.chargerName(stockMgmtDto.getChargerName())
-						.chargerPhone(stockMgmtDto.getChargerPhone())
+						.chargerPhone(
+								stockMgmtDto.getChargerPhone1()
+								.concat(stockMgmtDto.getChargerPhone2())
+								.concat(stockMgmtDto.getChargerPhone3())
+						)
+						.chargerPhone1(stockMgmtDto.getChargerPhone1())
+						.chargerPhone2(stockMgmtDto.getChargerPhone2())
+						.chargerPhone3(stockMgmtDto.getChargerPhone3())
 						.delYn(StatusEnum.FLAG_N.getStatusMsg())
 						.regiUserId(stockMgmtDto.getRegiUserId())
 						.regiDateTime(LocalDateTime.now())
@@ -140,7 +147,14 @@ public class StockMgmtService {
 				&& stock.getRegiStoreId() == storeId) {
 			stock.setStockName(stockMgmtDto.getStockName());
 			stock.setChargerName(stockMgmtDto.getChargerName());
-			stock.setChargerPhone(stockMgmtDto.getChargerPhone());
+			stock.setChargerPhone(
+					stockMgmtDto.getChargerPhone1()
+					.concat(stockMgmtDto.getChargerPhone2())
+					.concat(stockMgmtDto.getChargerPhone3())
+			);
+			stock.setChargerPhone1(stockMgmtDto.getChargerPhone1());
+			stock.setChargerPhone2(stockMgmtDto.getChargerPhone2());
+			stock.setChargerPhone3(stockMgmtDto.getChargerPhone3());
 		}else{
 			throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
 		}

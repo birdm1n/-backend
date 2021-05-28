@@ -17,6 +17,9 @@ import java.time.LocalDateTime;
                         @ColumnResult(name="biz_no", type = String.class),
                         @ColumnResult(name="charger_name", type = String.class),
                         @ColumnResult(name="charger_phone", type = String.class),
+                        @ColumnResult(name="charger_phone1", type = String.class),
+                        @ColumnResult(name="charger_phone2", type = String.class),
+                        @ColumnResult(name="charger_phone3", type = String.class),
                         @ColumnResult(name="open_store_name", type = String.class),
                         @ColumnResult(name="regi_datetime", type = LocalDateTime.class),
                         @ColumnResult(name="return_addr", type = String.class),
@@ -72,6 +75,18 @@ public class OpenStore {
     @Column(length = 15, nullable = false, name = "charger_phone")
     private String chargerPhone;
 
+    @NotBlank
+    @Column(length = 4, nullable = false, name = "charger_phone1")
+    private String chargerPhone1;
+
+    @NotBlank
+    @Column(length = 4, nullable = false, name = "charger_phone2")
+    private String chargerPhone2;
+
+    @NotBlank
+    @Column(length = 4, nullable = false, name = "charger_phone3")
+    private String chargerPhone3;
+
     @Column(length = 7, nullable = false, name = "return_zip_code")
     private String returnZipCode;
 
@@ -91,7 +106,8 @@ public class OpenStore {
     private LocalDateTime regiDateTime;
 
     @Builder
-    public OpenStore(long openStoreId, long storeId, String openStoreName, int telecom, String telecomName, String bizNo, String chargerName, String chargerPhone
+    public OpenStore(long openStoreId, long storeId, String openStoreName, int telecom, String telecomName, String bizNo, String chargerName
+            , String chargerPhone, String chargerPhone1, String chargerPhone2, String chargerPhone3
             , String returnZipCode, String returnAddr, String returnAddrDetail, String useYn, String delYn, LocalDateTime regiDateTime){
         this.openStoreId = openStoreId;
         this.storeId = storeId;
@@ -100,6 +116,9 @@ public class OpenStore {
         this.telecomName = telecomName;
         this.bizNo = bizNo;
         this.chargerPhone = chargerPhone;
+        this.chargerPhone1 = chargerPhone1;
+        this.chargerPhone2 = chargerPhone2;
+        this.chargerPhone3 = chargerPhone3;
         this.chargerName = chargerName;
         this.returnZipCode = returnZipCode;
         this.returnAddr = returnAddr;

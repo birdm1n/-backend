@@ -16,6 +16,12 @@ public class SearchParamDto extends PagingDto {
 
     private String chargerPhone;
 
+    private String chargerPhone1;
+
+    private String chargerPhone2;
+
+    private String chargerPhone3;
+
     private String chargerEmail;
 
     private String returnAddr;

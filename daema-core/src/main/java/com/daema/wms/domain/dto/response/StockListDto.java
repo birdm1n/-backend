@@ -25,6 +25,12 @@ public class StockListDto {
 
     private String chargerPhone;
 
+    private String chargerPhone1;
+
+    private String chargerPhone2;
+
+    private String chargerPhone3;
+
     private String hierarchy;
 
     private int dvcCnt;

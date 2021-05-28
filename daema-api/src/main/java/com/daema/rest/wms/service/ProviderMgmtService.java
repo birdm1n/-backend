@@ -57,7 +57,14 @@ public class ProviderMgmtService {
 						.provName(providerMgmtDto.getProvName())
 						.chargerName(providerMgmtDto.getChargerName())
 						.chargerEmail(providerMgmtDto.getChargerEmail())
-						.chargerPhone(providerMgmtDto.getChargerPhone())
+						.chargerPhone(
+								providerMgmtDto.getChargerPhone1()
+								.concat(providerMgmtDto.getChargerPhone2())
+								.concat(providerMgmtDto.getChargerPhone3())
+						)
+						.chargerPhone1(providerMgmtDto.getChargerPhone1())
+						.chargerPhone2(providerMgmtDto.getChargerPhone2())
+						.chargerPhone3(providerMgmtDto.getChargerPhone3())
 						.returnZipCode(providerMgmtDto.getReturnZipCode())
 						.returnAddr(providerMgmtDto.getReturnAddr())
 						.returnAddrDetail(providerMgmtDto.getReturnAddrDetail())
@@ -83,7 +90,14 @@ public class ProviderMgmtService {
 			provider.setProvName(providerMgmtDto.getProvName());
 			provider.setChargerName(providerMgmtDto.getChargerName());
 			provider.setChargerEmail(providerMgmtDto.getChargerEmail());
-			provider.setChargerPhone(providerMgmtDto.getChargerPhone());
+			provider.setChargerPhone(
+					providerMgmtDto.getChargerPhone1()
+					.concat(providerMgmtDto.getChargerPhone2())
+					.concat(providerMgmtDto.getChargerPhone3())
+			);
+			provider.setChargerPhone1(providerMgmtDto.getChargerPhone1());
+			provider.setChargerPhone2(providerMgmtDto.getChargerPhone2());
+			provider.setChargerPhone3(providerMgmtDto.getChargerPhone3());
 			provider.setReturnZipCode(providerMgmtDto.getReturnZipCode());
 			provider.setReturnAddr(providerMgmtDto.getReturnAddr());
 			provider.setReturnAddrDetail(providerMgmtDto.getReturnAddrDetail());

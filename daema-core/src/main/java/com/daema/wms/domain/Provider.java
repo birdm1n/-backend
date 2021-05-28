@@ -33,6 +33,15 @@ public class Provider {
     @Column(length = 15, name = "charger_phone")
     private String chargerPhone;
 
+    @Column(length = 4, name = "charger_phone1")
+    private String chargerPhone1;
+
+    @Column(length = 4, name = "charger_phone2")
+    private String chargerPhone2;
+
+    @Column(length = 4, name = "charger_phone3")
+    private String chargerPhone3;
+
     @Column(length = 7, nullable = false, name = "return_zip_code")
     private String returnZipCode;
 
@@ -71,12 +80,16 @@ public class Provider {
     }
 
     @Builder
-    public Provider(long provId, String provName, String chargerPhone, String chargerName, String chargerEmail
+    public Provider(long provId, String provName, String chargerName, String chargerEmail
+            , String chargerPhone, String chargerPhone1, String chargerPhone2, String chargerPhone3
             , String returnZipCode, String returnAddr, String returnAddrDetail, String delYn, String useYn, long regiUserId, LocalDateTime regiDateTime
     ,Long updUserId, LocalDateTime updDateTime, String name, long storeId){
         this.provId = provId;
         this.provName = provName;
         this.chargerPhone = chargerPhone;
+        this.chargerPhone1 = chargerPhone1;
+        this.chargerPhone2 = chargerPhone2;
+        this.chargerPhone3 = chargerPhone3;
         this.chargerName = chargerName;
         this.chargerEmail = chargerEmail;
         this.returnZipCode = returnZipCode;

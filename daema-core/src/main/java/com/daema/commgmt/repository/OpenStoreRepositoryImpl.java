@@ -94,6 +94,9 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.biz_no " +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
+                    "       , os.charger_phone1 " +
+                    "       , os.charger_phone2 " +
+                    "       , os.charger_phone3 " +
                     "       , os.open_store_name " +
                     "       , os.regi_datetime " +
                     "       , os.return_addr " +
@@ -128,6 +131,9 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.biz_no " +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
+                    "       , os.charger_phone1 " +
+                    "       , os.charger_phone2 " +
+                    "       , os.charger_phone3 " +
                     "       , os.open_store_name " +
                     "       , os.regi_datetime " +
                     "       , os.return_addr " +
@@ -163,6 +169,9 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.biz_no " +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
+                    "       , os.charger_phone1 " +
+                    "       , os.charger_phone2 " +
+                    "       , os.charger_phone3 " +
                     "       , os.open_store_name " +
                     "       , os.regi_datetime " +
                     "       , os.return_addr " +
@@ -191,6 +200,9 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "       , os.biz_no " +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
+                    "       , os.charger_phone1 " +
+                    "       , os.charger_phone2 " +
+                    "       , os.charger_phone3 " +
                     "       , os.open_store_name " +
                     "       , os.regi_datetime " +
                     "       , os.return_addr " +

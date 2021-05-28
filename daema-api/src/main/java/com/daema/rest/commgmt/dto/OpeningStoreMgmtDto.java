@@ -20,6 +20,9 @@ public class OpeningStoreMgmtDto {
 	private String telecomName;
 	private String bizNo;
 	private String chargerPhone;
+	private String chargerPhone1;
+	private String chargerPhone2;
+	private String chargerPhone3;
 	private String chargerName;
 	private String returnZipCode;
 	private String returnAddr;
@@ -39,6 +42,9 @@ public class OpeningStoreMgmtDto {
 				.bizNo(openStore.getBizNo())
 				.chargerName(openStore.getChargerName())
 				.chargerPhone(openStore.getChargerPhone())
+				.chargerPhone1(openStore.getChargerPhone1())
+				.chargerPhone2(openStore.getChargerPhone2())
+				.chargerPhone3(openStore.getChargerPhone3())
 				.returnZipCode(openStore.getReturnZipCode())
 				.returnAddr(openStore.getReturnAddr())
 				.returnAddrDetail(openStore.getReturnAddrDetail())
@@ -58,6 +64,9 @@ public class OpeningStoreMgmtDto {
 				.bizNo(openStoreListDto.getBizNo())
 				.chargerName(openStoreListDto.getChargerName())
 				.chargerPhone(openStoreListDto.getChargerPhone())
+				.chargerPhone1(openStoreListDto.getChargerPhone1())
+				.chargerPhone2(openStoreListDto.getChargerPhone2())
+				.chargerPhone3(openStoreListDto.getChargerPhone3())
 				.returnZipCode(openStoreListDto.getReturnZipCode())
 				.returnAddr(openStoreListDto.getReturnAddr())
 				.returnAddrDetail(openStoreListDto.getReturnAddrDetail())

@@ -17,6 +17,9 @@ public class ProviderMgmtDto {
 	private String chargerName;
 	private String chargerEmail;
 	private String chargerPhone;
+	private String chargerPhone1;
+	private String chargerPhone2;
+	private String chargerPhone3;
 	private String returnZipCode;
 	private String returnAddr;
 	private String returnAddrDetail;
@@ -35,6 +38,9 @@ public class ProviderMgmtDto {
 				.chargerName(provider.getChargerName())
 				.chargerEmail(provider.getChargerEmail())
 				.chargerPhone(provider.getChargerPhone())
+				.chargerPhone1(provider.getChargerPhone1())
+				.chargerPhone2(provider.getChargerPhone2())
+				.chargerPhone3(provider.getChargerPhone3())
 				.returnZipCode(provider.getReturnZipCode())
 				.returnAddr(provider.getReturnAddr())
 				.returnAddrDetail(provider.getReturnAddrDetail())

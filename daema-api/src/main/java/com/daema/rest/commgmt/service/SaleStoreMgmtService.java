@@ -153,7 +153,14 @@ public class SaleStoreMgmtService {
 						.stockType(TypeEnum.STOCK_TYPE_I.getStatusCode())
 						.regiStoreId(resultStoreId)
 						.chargerName(wrapperDto.getSaleStore().getChargerName())
-						.chargerPhone(wrapperDto.getSaleStore().getChargerPhone())
+						.chargerPhone(
+								wrapperDto.getSaleStore().getChargerPhone1()
+								.concat(wrapperDto.getSaleStore().getChargerPhone2())
+								.concat(wrapperDto.getSaleStore().getChargerPhone3())
+						)
+						.chargerPhone1(wrapperDto.getSaleStore().getChargerPhone1())
+						.chargerPhone2(wrapperDto.getSaleStore().getChargerPhone2())
+						.chargerPhone3(wrapperDto.getSaleStore().getChargerPhone3())
 						.delYn(StatusEnum.FLAG_N.getStatusMsg())
 						.regiUserId(memberSeq)
 						.regiDateTime(LocalDateTime.now())
@@ -198,7 +205,14 @@ public class SaleStoreMgmtService {
                         .telecom(saleStoreMgmtDto.getTelecom())
 						.ceoName(saleStoreMgmtDto.getCeoName())
                         .bizNo(saleStoreMgmtDto.getBizNo())
-                        .chargerPhone(saleStoreMgmtDto.getChargerPhone())
+                        .chargerPhone(
+                        		saleStoreMgmtDto.getChargerPhone1()
+								.concat(saleStoreMgmtDto.getChargerPhone2())
+								.concat(saleStoreMgmtDto.getChargerPhone3())
+						)
+                        .chargerPhone1(saleStoreMgmtDto.getChargerPhone1())
+                        .chargerPhone2(saleStoreMgmtDto.getChargerPhone2())
+                        .chargerPhone3(saleStoreMgmtDto.getChargerPhone3())
                         .chargerName(saleStoreMgmtDto.getChargerName())
                         .chargerEmail(saleStoreMgmtDto.getChargerEmail())
                         .returnZipCode(saleStoreMgmtDto.getReturnZipCode())
@@ -243,7 +257,14 @@ public class SaleStoreMgmtService {
 							.stockType(TypeEnum.STOCK_TYPE_S.getStatusCode())
 							.regiStoreId(wrapperDto.getParentStoreId())
 							.chargerName(store.getChargerName())
-							.chargerPhone(store.getChargerPhone())
+							.chargerPhone(
+									store.getChargerPhone1()
+									.concat(store.getChargerPhone2())
+									.concat(store.getChargerPhone3())
+							)
+							.chargerPhone1(store.getChargerPhone1())
+							.chargerPhone2(store.getChargerPhone2())
+							.chargerPhone3(store.getChargerPhone3())
 							.delYn(StatusEnum.FLAG_N.getStatusMsg())
 							.regiUserId(wrapperDto.getMember().getSeq())
 							.regiDateTime(LocalDateTime.now())
@@ -274,7 +295,14 @@ public class SaleStoreMgmtService {
 			store.setTelecom(wrapperDto.getSaleStore().getTelecom());
 			store.setCeoName(wrapperDto.getSaleStore().getCeoName());
 			store.setBizNo(wrapperDto.getSaleStore().getBizNo());
-			store.setChargerPhone(wrapperDto.getSaleStore().getChargerPhone());
+			store.setChargerPhone(
+					wrapperDto.getSaleStore().getChargerPhone1()
+					.concat(wrapperDto.getSaleStore().getChargerPhone2())
+					.concat(wrapperDto.getSaleStore().getChargerPhone3())
+			);
+			store.setChargerPhone1(wrapperDto.getSaleStore().getChargerPhone1());
+			store.setChargerPhone2(wrapperDto.getSaleStore().getChargerPhone2());
+			store.setChargerPhone3(wrapperDto.getSaleStore().getChargerPhone3());
 			store.setChargerName(wrapperDto.getSaleStore().getChargerName());
 			store.setChargerEmail(wrapperDto.getSaleStore().getChargerEmail());
 			store.setReturnZipCode(wrapperDto.getSaleStore().getReturnZipCode());

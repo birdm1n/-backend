@@ -68,7 +68,10 @@ public class TransResponseDto {
 
     // 고객 전화번호
     private String cusPhone;
-    
+    private String cusPhone1;
+    private String cusPhone2;
+    private String cusPhone3;
+
     // 배송메모
     private String deliveryMemo;
 

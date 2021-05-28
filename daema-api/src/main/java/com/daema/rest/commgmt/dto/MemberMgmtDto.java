@@ -17,6 +17,9 @@ public class MemberMgmtDto {
 	private String email;
 	private String address;
 	private String phone;
+	private String phone1;
+	private String phone2;
+	private String phone3;
 	private LocalDateTime regiDatetime;
 	private LocalDateTime updDatetime;
 	private long storeId;
@@ -33,6 +36,9 @@ public class MemberMgmtDto {
 				.email(member.getEmail())
 				.address(member.getAddress())
 				.phone(member.getPhone())
+				.phone1(member.getPhone1())
+				.phone2(member.getPhone2())
+				.phone3(member.getPhone3())
 				.storeId(member.getStoreId())
 				.orgId(member.getOrgId())
 				.userStatus(member.getUserStatus())

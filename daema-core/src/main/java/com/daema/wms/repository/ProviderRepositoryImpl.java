@@ -36,6 +36,9 @@ public class ProviderRepositoryImpl extends QuerydslRepositorySupport implements
                 , provider.provId
                 , provider.provName
                 , provider.chargerPhone
+                , provider.chargerPhone1
+                , provider.chargerPhone2
+                , provider.chargerPhone3
                 , provider.chargerName
                 , provider.chargerEmail
                 , provider.returnZipCode

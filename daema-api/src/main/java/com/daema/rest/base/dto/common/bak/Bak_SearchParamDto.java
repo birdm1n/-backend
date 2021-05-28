@@ -23,6 +23,15 @@ public class Bak_SearchParamDto extends Bak_PagingDto {
 	@ApiModelProperty(value = "담당자 연락처")
 	private String chargerPhone;
 
+	@ApiModelProperty(value = "담당자 연락처1")
+	private String chargerPhone1;
+
+	@ApiModelProperty(value = "담당자 연락처2")
+	private String chargerPhone2;
+
+	@ApiModelProperty(value = "담당자 연락처3")
+	private String chargerPhone3;
+
 	@ApiModelProperty(value = "반품 주소지")
 	private String returnAddr;
 
@@ -76,6 +85,15 @@ public class Bak_SearchParamDto extends Bak_PagingDto {
 
 	@ApiModelProperty(value = "연락처")
 	private String phone;
+
+	@ApiModelProperty(value = "연락처")
+	private String phone1;
+
+	@ApiModelProperty(value = "연락처")
+	private String phone2;
+
+	@ApiModelProperty(value = "연락처")
+	private String phone3;
 
 
 }

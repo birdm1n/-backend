@@ -48,5 +48,11 @@ public class ComMgmtRequestDto extends SearchParamDto {
 
 	private String phone;
 
+	private String phone1;
+
+	private String phone2;
+
+	private String phone3;
+
 
 }

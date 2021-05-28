@@ -21,6 +21,9 @@ public class OrganizationMemberDto {
 	private String email;
 	private String address;
 	private String phone;
+	private String phone1;
+	private String phone2;
+	private String phone3;
 	private UserRole role = UserRole.ROLE_NOT_PERMITTED;
 	private LocalDateTime regiDatetime;
 	private LocalDateTime updDatetime;

@@ -236,7 +236,14 @@ public class OrganizationMgmtService {
                 .name(orgnztMemberDto.getName())
                 .email(orgnztMemberDto.getEmail())
                 .address(orgnztMemberDto.getAddress())
-                .phone(orgnztMemberDto.getPhone())
+                .phone(
+                        orgnztMemberDto.getPhone1()
+                        .concat(orgnztMemberDto.getPhone2())
+                        .concat(orgnztMemberDto.getPhone3())
+                )
+                .phone1(orgnztMemberDto.getPhone1())
+                .phone2(orgnztMemberDto.getPhone2())
+                .phone3(orgnztMemberDto.getPhone3())
                 .regiDatetime(LocalDateTime.now())
                 .role(orgnztMemberDto.getRole())
                 .updDatetime(LocalDateTime.now())
@@ -286,7 +293,14 @@ public class OrganizationMgmtService {
             member.setUpdDatetime(LocalDateTime.now());
             member.setName(orgnztMemberDto.getName());
             member.setEmail(orgnztMemberDto.getEmail());
-            member.setPhone(orgnztMemberDto.getPhone());
+            member.setPhone(
+                    orgnztMemberDto.getPhone1()
+                    .concat(orgnztMemberDto.getPhone2())
+                    .concat(orgnztMemberDto.getPhone3())
+            );
+            member.setPhone1(orgnztMemberDto.getPhone1());
+            member.setPhone2(orgnztMemberDto.getPhone2());
+            member.setPhone3(orgnztMemberDto.getPhone3());
 
             if(String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode())
                     .equals(orgnztMemberDto.getUserStatus())){

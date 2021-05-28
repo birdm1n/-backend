@@ -96,7 +96,14 @@ public class MoveStockMgmtService {
         Delivery delivery = Delivery.builder()
                 .deliveryType(requestDto.getDeliveryType())
                 .cusName(requestDto.getCusName())
-                .cusPhone(requestDto.getCusPhone())
+                .cusPhone(
+                        requestDto.getCusPhone1()
+                        .concat(requestDto.getCusPhone2())
+                        .concat(requestDto.getCusPhone3())
+                )
+                .cusPhone1(requestDto.getCusPhone1())
+                .cusPhone2(requestDto.getCusPhone2())
+                .cusPhone3(requestDto.getCusPhone3())
                 .usimFullBarcode(requestDto.getUsimFullBarcode())
                 .zipCode(requestDto.getZipCode())
                 .addr1(requestDto.getAddr1())
@@ -459,7 +466,14 @@ public class MoveStockMgmtService {
         MoveStock moveStock = moveStockRepository.findById(requestDto.getMoveStockId()).orElse(null);
         Delivery delivery = moveStock.getDelivery();
         delivery.setCusName(requestDto.getCusName());
-        delivery.setCusPhone(requestDto.getCusPhone());
+        delivery.setCusPhone(
+                requestDto.getCusPhone1()
+                .concat(requestDto.getCusPhone2())
+                .concat(requestDto.getCusPhone3())
+        );
+        delivery.setCusPhone1(requestDto.getCusPhone1());
+        delivery.setCusPhone2(requestDto.getCusPhone2());
+        delivery.setCusPhone3(requestDto.getCusPhone3());
         delivery.setZipCode(requestDto.getZipCode());
         delivery.setAddr1(requestDto.getAddr1());
         delivery.setAddr2(requestDto.getAddr2());

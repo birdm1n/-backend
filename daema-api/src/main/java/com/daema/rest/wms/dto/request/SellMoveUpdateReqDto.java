@@ -18,6 +18,15 @@ public class SellMoveUpdateReqDto {
     @ApiModelProperty(value = "고객 전화번호",  required = true)
     private String cusPhone;
 
+    @ApiModelProperty(value = "고객 전화번호1",  required = true)
+    private String cusPhone1;
+
+    @ApiModelProperty(value = "고객 전화번호2",  required = true)
+    private String cusPhone2;
+
+    @ApiModelProperty(value = "고객 전화번호3",  required = true)
+    private String cusPhone3;
+
     @ApiModelProperty(value = "우편번호",  required = true)
     private String zipCode;
 

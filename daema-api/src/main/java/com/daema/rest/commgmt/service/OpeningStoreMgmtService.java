@@ -79,7 +79,14 @@ public class OpeningStoreMgmtService {
                         .telecom(openingStoreMgmtDto.getTelecom())
                         .bizNo(openingStoreMgmtDto.getBizNo())
                         .chargerName(openingStoreMgmtDto.getChargerName())
-                        .chargerPhone(openingStoreMgmtDto.getChargerPhone())
+                        .chargerPhone(
+                                openingStoreMgmtDto.getChargerPhone1()
+                                .concat(openingStoreMgmtDto.getChargerPhone2())
+                                .concat(openingStoreMgmtDto.getChargerPhone3())
+                        )
+                        .chargerPhone1(openingStoreMgmtDto.getChargerPhone1())
+                        .chargerPhone2(openingStoreMgmtDto.getChargerPhone2())
+                        .chargerPhone3(openingStoreMgmtDto.getChargerPhone3())
                         .returnZipCode(openingStoreMgmtDto.getReturnZipCode())
                         .returnAddr(openingStoreMgmtDto.getReturnAddr())
                         .returnAddrDetail(openingStoreMgmtDto.getReturnAddrDetail())
@@ -99,7 +106,14 @@ public class OpeningStoreMgmtService {
                         .stockType(TypeEnum.STOCK_TYPE_O.getStatusCode())
                         .regiStoreId(authenticationUtil.getTargetStoreId(openingStoreMgmtDto.getStoreId()))
                         .chargerName(openingStoreMgmtDto.getChargerName())
-                        .chargerPhone(openingStoreMgmtDto.getChargerPhone())
+                        .chargerPhone(
+                                openingStoreMgmtDto.getChargerPhone1()
+                                .concat(openingStoreMgmtDto.getChargerPhone2())
+                                .concat(openingStoreMgmtDto.getChargerPhone3())
+                        )
+                        .chargerPhone1(openingStoreMgmtDto.getChargerPhone1())
+                        .chargerPhone2(openingStoreMgmtDto.getChargerPhone2())
+                        .chargerPhone3(openingStoreMgmtDto.getChargerPhone3())
                         .delYn(StatusEnum.FLAG_N.getStatusMsg())
                         .regiUserId(authenticationUtil.getMemberSeq())
                         .regiDateTime(LocalDateTime.now())
@@ -126,7 +140,14 @@ public class OpeningStoreMgmtService {
             openStore.setTelecom(openingStoreMgmtDto.getTelecom());
             openStore.setBizNo(openingStoreMgmtDto.getBizNo());
             openStore.setChargerName(openingStoreMgmtDto.getChargerName());
-            openStore.setChargerPhone(openingStoreMgmtDto.getChargerPhone());
+            openStore.setChargerPhone(
+                    openingStoreMgmtDto.getChargerPhone1()
+                    .concat(openingStoreMgmtDto.getChargerPhone2())
+                    .concat(openingStoreMgmtDto.getChargerPhone3())
+            );
+            openStore.setChargerPhone1(openingStoreMgmtDto.getChargerPhone1());
+            openStore.setChargerPhone2(openingStoreMgmtDto.getChargerPhone2());
+            openStore.setChargerPhone3(openingStoreMgmtDto.getChargerPhone3());
             openStore.setReturnZipCode(openingStoreMgmtDto.getReturnZipCode());
             openStore.setReturnAddr(openingStoreMgmtDto.getReturnAddr());
             openStore.setReturnAddrDetail(openingStoreMgmtDto.getReturnAddrDetail());

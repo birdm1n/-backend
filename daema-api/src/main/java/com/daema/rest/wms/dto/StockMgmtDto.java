@@ -22,6 +22,9 @@ public class StockMgmtDto {
 	private String stockName;
 	private String chargerName;
 	private String chargerPhone;
+	private String chargerPhone1;
+	private String chargerPhone2;
+	private String chargerPhone3;
 	private String delYn;
 	private long storeId;
 	private String stockType;
@@ -43,6 +46,9 @@ public class StockMgmtDto {
 				.stockName(stock.getStockName())
 				.chargerName(stock.getChargerName())
 				.chargerPhone(stock.getChargerPhone())
+				.chargerPhone1(stock.getChargerPhone1())
+				.chargerPhone2(stock.getChargerPhone2())
+				.chargerPhone3(stock.getChargerPhone3())
 				.storeId(stock.getStoreId())
 				.stockType(stock.getStockType())
 				.regiStoreId(stock.getRegiStoreId())
@@ -64,6 +70,9 @@ public class StockMgmtDto {
 				.stockType(stockListDto.getStockType())
 				.chargerName(stockListDto.getChargerName())
 				.chargerPhone(stockListDto.getChargerPhone())
+				.chargerPhone1(stockListDto.getChargerPhone1())
+				.chargerPhone2(stockListDto.getChargerPhone2())
+				.chargerPhone3(stockListDto.getChargerPhone3())
 				.hierarchy(stockListDto.getHierarchy())
 				.dvcCnt(stockListDto.getDvcCnt())
 			.build();

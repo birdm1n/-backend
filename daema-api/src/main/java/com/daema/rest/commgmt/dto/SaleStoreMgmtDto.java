@@ -19,6 +19,9 @@ public class SaleStoreMgmtDto {
 	private String bizNo;
 	private String ceoName;
 	private String chargerPhone;
+	private String chargerPhone1;
+	private String chargerPhone2;
+	private String chargerPhone3;
 	private String chargerName;
 	private String chargerEmail;
 	private String returnZipCode;
@@ -36,6 +39,9 @@ public class SaleStoreMgmtDto {
 				.bizNo(store.getBizNo())
 				.ceoName(store.getCeoName())
 				.chargerPhone(store.getChargerPhone())
+				.chargerPhone1(store.getChargerPhone1())
+				.chargerPhone2(store.getChargerPhone2())
+				.chargerPhone3(store.getChargerPhone3())
 				.chargerName(store.getChargerName())
 				.chargerEmail(store.getChargerEmail())
 				.returnZipCode(store.getReturnZipCode())

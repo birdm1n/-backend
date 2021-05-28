@@ -52,6 +52,15 @@ public class Delivery extends BaseEntity {
     @Column(name = "cus_phone")
     private String cusPhone;
 
+    @Column(name = "cus_phone1")
+    private String cusPhone1;
+
+    @Column(name = "cus_phone2")
+    private String cusPhone2;
+
+    @Column(name = "cus_phone3")
+    private String cusPhone3;
+
     @Column(name = "usim_full_barcode")
     private String usimFullBarcode;
 
@@ -65,7 +74,9 @@ public class Delivery extends BaseEntity {
     private String addr2;
 
     @Builder
-    public Delivery(Long deliveryId, WmsEnum.DeliveryType deliveryType, Integer courier, String invoiceNo, String deliveryMemo, WmsEnum.DeliveryStatus deliveryStatus, OutStock outStock, MoveStock moveStock, String cusName, String cusPhone, String usimFullBarcode, String zipCode, String addr1, String addr2) {
+    public Delivery(Long deliveryId, WmsEnum.DeliveryType deliveryType, Integer courier, String invoiceNo, String deliveryMemo, WmsEnum.DeliveryStatus deliveryStatus, OutStock outStock, MoveStock moveStock, String cusName
+            , String cusPhone, String cusPhone1, String cusPhone2, String cusPhone3
+            , String usimFullBarcode, String zipCode, String addr1, String addr2) {
         this.deliveryId = deliveryId;
         this.deliveryType = deliveryType;
         this.courier = courier;
@@ -76,6 +87,9 @@ public class Delivery extends BaseEntity {
         this.moveStock = moveStock;
         this.cusName = cusName;
         this.cusPhone = cusPhone;
+        this.cusPhone1 = cusPhone1;
+        this.cusPhone2 = cusPhone2;
+        this.cusPhone3 = cusPhone3;
         this.usimFullBarcode = usimFullBarcode;
         this.zipCode = zipCode;
         this.addr1 = addr1;

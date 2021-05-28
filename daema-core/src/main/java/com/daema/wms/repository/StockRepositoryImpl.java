@@ -55,6 +55,9 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "           , stock_type " +
                 "           , charger_name " +
                 "           , charger_phone " +
+                "           , charger_phone1 " +
+                "           , charger_phone2 " +
+                "           , charger_phone3 " +
                 "           , concat(stock_id, '/') as hierarchy" +
                 "           , 0 as dvc_cnt " +
                 "        from stock " +
@@ -72,6 +75,9 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "           , child.stock_type " +
                 "           , child.charger_name " +
                 "           , child.charger_phone " +
+                "           , child.charger_phone1 " +
+                "           , child.charger_phone2 " +
+                "           , child.charger_phone3 " +
                 "           , concat(parent.stock_id, '/', child.stock_id, '/') as hierarchy " +
                 "           , 0 as dvc_cnt " +
                 "        from stock child " +
@@ -92,6 +98,9 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "           , child.stock_type " +
                 "           , child.charger_name " +
                 "           , child.charger_phone " +
+                "           , child.charger_phone1 " +
+                "           , child.charger_phone2 " +
+                "           , child.charger_phone3 " +
                 "           , concat(parent.hierarchy, child.stock_id, '/') as hierarchy " +
                 "           , 0 as dvc_cnt " +
                 "        from stock child " +
@@ -102,6 +111,9 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "                         , child.stock_type " +
                 "                         , child.charger_name " +
                 "                         , child.charger_phone " +
+                "                         , child.charger_phone1 " +
+                "                         , child.charger_phone2 " +
+                "                         , child.charger_phone3 " +
                 "                         , concat(parent.stock_id, '/', child.stock_id, '/') as hierarchy " +
                 "                      from stock child " +
                 "                      inner join stock parent " +
@@ -200,6 +212,9 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "                             , child.stock_type " +
                 "                             , child.charger_name " +
                 "                             , child.charger_phone " +
+                "                             , child.charger_phone1 " +
+                "                             , child.charger_phone2 " +
+                "                             , child.charger_phone3 " +
                 "                             , concat(parent.stock_id, " +
                 "                                      '/', " +
                 "                                      child.stock_id, " +

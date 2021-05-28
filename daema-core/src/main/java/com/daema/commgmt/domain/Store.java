@@ -48,6 +48,15 @@ public class Store {
     @Column(length = 15, name = "charger_phone")
     private String chargerPhone;
 
+    @Column(length = 4, name = "charger_phone1")
+    private String chargerPhone1;
+
+    @Column(length = 4, name = "charger_phone2")
+    private String chargerPhone2;
+
+    @Column(length = 4, name = "charger_phone3")
+    private String chargerPhone3;
+
     @Column(length = 7, nullable = false, name = "return_zip_code")
     private String returnZipCode;
 
@@ -64,7 +73,8 @@ public class Store {
     private LocalDateTime regiDateTime;
 
     @Builder
-    public Store (long storeId, String storeName, int telecom, String telecomName, String bizNo, String ceoName, String chargerPhone
+    public Store (long storeId, String storeName, int telecom, String telecomName, String bizNo, String ceoName
+            ,String chargerPhone ,String chargerPhone1 ,String chargerPhone2 ,String chargerPhone3
             ,String chargerName, String chargerEmail, String returnZipCode
             ,String returnAddr, String returnAddrDetail, String useYn, LocalDateTime regiDateTime){
         this.storeId = storeId;
@@ -74,6 +84,9 @@ public class Store {
         this.bizNo = bizNo;
         this.ceoName = ceoName;
         this.chargerPhone = chargerPhone;
+        this.chargerPhone1 = chargerPhone1;
+        this.chargerPhone2 = chargerPhone2;
+        this.chargerPhone3 = chargerPhone3;
         this.chargerName = chargerName;
         this.chargerEmail = chargerEmail;
         this.returnZipCode = returnZipCode;

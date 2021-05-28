@@ -23,6 +23,9 @@ import java.util.List;
                         @ColumnResult(name="stock_type", type = String.class),
                         @ColumnResult(name="charger_name", type = String.class),
                         @ColumnResult(name="charger_phone", type = String.class),
+                        @ColumnResult(name="charger_phone1", type = String.class),
+                        @ColumnResult(name="charger_phone2", type = String.class),
+                        @ColumnResult(name="charger_phone3", type = String.class),
                         @ColumnResult(name="hierarchy", type = String.class),
                         @ColumnResult(name="dvc_cnt", type = Integer.class)
                 })
@@ -71,6 +74,15 @@ public class Stock {
     @Column(length = 15, name = "charger_phone")
     private String chargerPhone;
 
+    @Column(length = 4, name = "charger_phone1")
+    private String chargerPhone1;
+
+    @Column(length = 4, name = "charger_phone2")
+    private String chargerPhone2;
+
+    @Column(length = 4, name = "charger_phone3")
+    private String chargerPhone3;
+
     @Column(nullable = false, name = "del_yn", columnDefinition ="char(1)")
     @ColumnDefault("\"N\"")
     private String delYn;
@@ -104,7 +116,8 @@ public class Stock {
 
     @Builder
     public Stock(long stockId, String stockName, long parentStockId, long storeId, String stockType, String chargerName
-            , String chargerPhone, long regiStoreId, String delYn, long regiUserId, LocalDateTime regiDateTime
+            , String chargerPhone, String chargerPhone1, String chargerPhone2, String chargerPhone3
+            , long regiStoreId, String delYn, long regiUserId, LocalDateTime regiDateTime
             , Long updUserId, LocalDateTime updDateTime){
         this.stockId = stockId;
         this.stockName = stockName;
@@ -113,6 +126,9 @@ public class Stock {
         this.stockType = stockType;
         this.chargerName = chargerName;
         this.chargerPhone = chargerPhone;
+        this.chargerPhone1 = chargerPhone1;
+        this.chargerPhone2 = chargerPhone2;
+        this.chargerPhone3 = chargerPhone3;
         this.regiStoreId = regiStoreId;
         this.delYn = delYn;
         this.regiUserId = regiUserId;
