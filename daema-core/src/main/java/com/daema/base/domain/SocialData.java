@@ -21,7 +21,7 @@ public class SocialData {
     private String email;
     private String type;
 
-    @Column( columnDefinition = "BIGINT UNSIGNED comment '이름'")
+    @Column( columnDefinition = "BIGINT UNSIGNED comment '이름2'")
     private Long unsignedTest;
 
     @OneToOne(mappedBy = "social")
