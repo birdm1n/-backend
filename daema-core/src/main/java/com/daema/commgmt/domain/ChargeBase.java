@@ -47,7 +47,7 @@ public abstract class ChargeBase {
     @Column(name = "video_amt")
     protected String videoAmt;
 
-    @Column(name = "extra_data_amt")
+    @Column(name = "extra_voice_amt")
     protected String extraVoiceAmt;
 
     @Column(name = "extra_data_amt")
