@@ -106,6 +106,9 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
                 "     , members.name " +
                 "     , members.email " +
                 "     , members.phone " +
+                "     , members.phone1 " +
+                "     , members.phone2 " +
+                "     , members.phone3 " +
                 "     , members.user_status " +
                 "     , team_data.org_id " +
                 "     , team_data.org_name " +

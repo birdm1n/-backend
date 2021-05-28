@@ -19,6 +19,12 @@ public class OrgnztMemberListDto {
 
     private String phone;
 
+    private String phone1;
+
+    private String phone2;
+
+    private String phone3;
+
     private String userStatus;
 
     private long orgId;

@@ -22,6 +22,9 @@ import java.time.LocalDateTime;
                         @ColumnResult(name="name", type = String.class),
                         @ColumnResult(name="email", type = String.class),
                         @ColumnResult(name="phone", type = String.class),
+                        @ColumnResult(name="phone1", type = String.class),
+                        @ColumnResult(name="phone2", type = String.class),
+                        @ColumnResult(name="phone3", type = String.class),
                         @ColumnResult(name="user_status", type = String.class),
                         @ColumnResult(name="org_id", type = Long.class),
                         @ColumnResult(name="org_name", type = String.class),
@@ -56,6 +59,15 @@ public class Member {
     @Column(name = "phone", length = 15)
     private String phone;
 
+    @Column(name = "phone1", length = 4)
+    private String phone1;
+
+    @Column(name = "phone2", length = 4)
+    private String phone2;
+
+    @Column(name = "phone3", length = 4)
+    private String phone3;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="social_id")
     private SocialData social;
@@ -87,20 +99,24 @@ public class Member {
     public Member() {
     }
 
-    public Member(@NotBlank String username, @NotBlank String password, @NotBlank String name, @NotBlank String email, @NotBlank String address, @NotNull String phone, @NotNull long storeId, @NotNull long orgId, @NotBlank String userStatus) {
+    public Member(@NotBlank String username, @NotBlank String password, @NotBlank String name, @NotBlank String email, @NotBlank String address, @NotNull String phone, @NotNull String phone1, @NotNull String phone2, @NotNull String phone3, @NotNull long storeId, @NotNull long orgId, @NotBlank String userStatus) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
         this.address = address;
         this.phone = phone;
+        this.phone1 = phone1;
+        this.phone2 = phone2;
+        this.phone3 = phone3;
         this.storeId = storeId;
         this.orgId = orgId;
         this.userStatus = userStatus;
     }
 
     @Builder
-    public Member(long seq, String username, String password, String name, String email, String address, String phone
+    public Member(long seq, String username, String password, String name, String email, String address
+            , String phone, String phone1, String phone2, String phone3
             , LocalDateTime regiDatetime, LocalDateTime updDatetime, long storeId, long orgId, String userStatus, UserRole role){
 
         this.seq = seq;
@@ -110,6 +126,9 @@ public class Member {
         this.email = email;
         this.address = address;
         this.phone = phone;
+        this.phone1 = phone1;
+        this.phone2 = phone2;
+        this.phone3 = phone3;
         this.regiDatetime = regiDatetime;
         this.updDatetime = updDatetime;
         this.storeId = storeId;
