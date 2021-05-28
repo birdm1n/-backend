@@ -19,27 +19,27 @@ public class MoveStockAlarm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "move_stock_alarm_id")
+    @Column(name = "move_stock_alarm_id" , columnDefinition = "BIGINT unsigned comment '이동 재고 알람 아이디'")
     private Long moveStockAlarmId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", unique = true)
+    @JoinColumn(name = "store_id", unique = true, columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private Store store;
 
     //재판매 마감일자
-    @Column(name = "resell_day")
+    @Column(name = "resell_day", columnDefinition = "int comment '재판매 일자'")
     private Integer resellDay;
 
     //미출고 시점
-    @Column(name = "undelivered_day")
+    @Column(name = "undelivered_day", columnDefinition = "int comment '미출고 일자'")
     private Integer undeliveredDay;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "upd_user_id", referencedColumnName = "seq")
+    @JoinColumn(name = "upd_user_id", referencedColumnName = "seq", columnDefinition = "BIGINT unsigned comment '업데이트 유저 아이디'")
     private Member updUserId;
 
     @CreatedDate
-    @Column(name = "upd_datetime")
+    @Column(name = "upd_datetime", columnDefinition = "DATETIME(6) comment '업데이트 시간날짜'")
     private LocalDateTime updDateTime;
 
     @Builder

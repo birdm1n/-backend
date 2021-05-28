@@ -20,56 +20,56 @@ public class ReturnStock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "return_stock_id")
+    @Column(name = "return_stock_id", columnDefinition = "BIGINT unsigned comment '반품 재고 아이디'")
     private Long returnStockId;
 
 
     /**
      * 반품비
      */
-    @Column(name = "return_stock_amt")
+    @Column(name = "return_stock_amt", columnDefinition = "varchar(255) comment '반품 재고 금액'")
     private Integer returnStockAmt;
 
-    @Column(name = "return_stock_memo")
+    @Column(name = "return_stock_memo", columnDefinition = "varchar(255) comment '반품 재고 메모'")
     private String returnStockMemo;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq")
+    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq", columnDefinition = "BIGINT unsigned comment '등록 유저 아이디'")
     private Member regiUserId;
 
-    @Column(name = "regi_datetime")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
     private LocalDateTime regiDateTime;
 
     @Nullable
-    @Column(name = "del_yn", columnDefinition ="char(1)")
+    @Column(name = "del_yn", columnDefinition ="char(1) comment '삭제 여부'")
     @ColumnDefault("\"N\"")
     private String delYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dvc_id")
+    @JoinColumn(name = "dvc_id", columnDefinition = "BIGINT unsigned comment '기기 아이디'")
     private Device device;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dvc_status_id")
+    @JoinColumn(name = "dvc_status_id", columnDefinition = "BIGINT unsigned comment '기기 상태 아이디'")
     private DeviceStatus returnDeviceStatus;
 
     /**
      * 이전 보유처
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prev_stock_id", referencedColumnName = "stock_id")
+    @JoinColumn(name = "prev_stock_id", referencedColumnName = "stock_id", columnDefinition = "BIGINT unsigned comment '이전 재고 아이디'")
     private Stock prevStock;
 
     /**
      * 현재 보유처
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id")
+    @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id", columnDefinition = "BIGINT unsigned comment '다음 재고 아이디'")
     private Stock nextStock;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "store_id", columnDefinition = "BIGINT unsigned comment '재고 아이디'")
     private Store store;
 
     @Builder

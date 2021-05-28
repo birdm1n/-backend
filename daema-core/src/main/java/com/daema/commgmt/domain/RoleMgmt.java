@@ -16,22 +16,22 @@ public class RoleMgmt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
+    @Column(name = "role_id" , columnDefinition = "int comment '룰 아이디'")
     private int roleId;
 
-    @Column(name = "role_name")
+    @Column(name = "role_name" , columnDefinition = "varchar(255) comment '룰 이름'")
     private String roleName;
 
-    @Column(nullable = false, name = "necessary_yn", columnDefinition ="char(1)")
+    @Column(nullable = false, name = "necessary_yn", columnDefinition ="char(1) comment'필수 여부'")
     private String necessaryYn= "N";
 
-    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1)")
+    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1) comment'삭제 여부'")
     private String delYn = "N";
 
-    @Column(name = "store_id")
+    @Column(name = "store_id" , columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private long storeId;
 
-    @Column(name = "regi_datetime")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
     private LocalDateTime regiDateTime;
 
     @Builder

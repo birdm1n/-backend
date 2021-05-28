@@ -19,10 +19,10 @@ public class Board {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long boardNo;
 	
-	@Column(length = 200, nullable = false)
+	@Column(length = 200)
 	private String title;
 	
-	@Column(length = 50, nullable = false)
+	@Column(length = 50)
 	private String writer;
 	
 	@Lob

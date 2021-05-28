@@ -19,33 +19,33 @@ public class StoreStockHistory extends BaseUserInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "store_stock_history_id")
+    @Column(name = "store_stock_history_id", columnDefinition = "BIGINT unsigned comment '관리점 재고 이력 아이디'")
     private Long storeStockHistoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_stock_id")
+    @JoinColumn(name = "store_stock_id", columnDefinition = "BIGINT unsigned comment '관리점 재고 아이디'")
     private StoreStock storeStock;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "store_id", columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private Store store;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dvc_id")
+    @JoinColumn(name = "dvc_id", columnDefinition = "BIGINT unsigned comment '기기 아이디'")
     private Device device;
 
-    @Column(name = "stock_type")
+    @Column(name = "stock_type", columnDefinition = "varchar(255) comment '관리점 타입'")
     @Enumerated(EnumType.STRING)
     private WmsEnum.StockType stockType;
 
-    @Column(name = "stock_type_id")
+    @Column(name = "stock_type_id", columnDefinition = "BIGINT unsigned comment '관리점 타입 아이디'")
     private Long stockTypeId;
 
-    @Column(name = "history_status")
+    @Column(name = "history_status", columnDefinition = "BIGINT unsigned comment '이력 상태'")
     @Enumerated(EnumType.STRING)
     private WmsEnum.HistoryStatus historyStatus;
 
-    @Column(nullable = false, name = "stock_yn", columnDefinition = "char(1)")
+    @Column(nullable = false, name = "stock_yn", columnDefinition = "char(1) comment '재고 여부'")
     @ColumnDefault("\"Y\"")
     private String stockYn = "Y";
 
@@ -53,14 +53,14 @@ public class StoreStockHistory extends BaseUserInfoEntity {
      * 이전 보유처
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prev_stock_id", referencedColumnName = "stock_id")
+    @JoinColumn(name = "prev_stock_id", referencedColumnName = "stock_id", columnDefinition = "BIGINT unsigned comment '이전 재고 아이디'")
     private Stock prevStock;
 
     /**
      * 현재 보유처
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id")
+    @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id", columnDefinition = "BIGINT unsigned comment '다음 재고 아이디'")
     private Stock nextStock;
 
     @Builder

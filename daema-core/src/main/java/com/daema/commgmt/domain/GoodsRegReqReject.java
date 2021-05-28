@@ -20,16 +20,16 @@ public class GoodsRegReqReject {
 
     @Id
     @NotNull
-    @Column(name = "goods_reg_req_id")
+    @Column(name = "goods_reg_req_id", columnDefinition = "BIGINT unsigned comment ''")
     private long goodsRegReqId;
 
-    @Column(name = "reject_comment")
+    @Column(name = "reject_comment", columnDefinition = "varchar(255) comment '반려 코멘트'")
     private String rejectComment;
 
-    @Column(name = "reject_datetime")
+    @Column(name = "reject_datetime", columnDefinition = "DATETIME(6) comment '반려 날짜시간'")
     private LocalDateTime rejectDateTime;
 
-    @Column(name = "reject_user_id")
+    @Column(name = "reject_user_id", columnDefinition = "BIGINT unsigned comment '반려 유저 아이디'")
     private Long rejectUserId;
 
     @Builder

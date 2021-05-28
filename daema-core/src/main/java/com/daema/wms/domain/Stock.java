@@ -42,61 +42,61 @@ public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stock_id")
+    @Column(name = "stock_id", columnDefinition = "BIGINT UNSIGNED comment '재고 아이디'")
     private long stockId;
 
     @NotBlank
-    @Column(length = 50, nullable = false, name = "stock_name")
+    @Column(length = 50, name = "stock_name", columnDefinition = "varchar(255) is not null comment '재고 명'")
     private String stockName;
 
-    @Column(name = "parent_stock_id")
+    @Column(name = "parent_stock_id", columnDefinition = "varchar(255) comment '부모 출고 아이디'")
     @ColumnDefault(value = "0")
     private long parentStockId;
 
     /**
      * 개통점 openStoreId, 영업점 storeId, Login storeId
      */
-    @Column(nullable = false, name="store_id")
+    @Column(nullable = false, name="store_id", columnDefinition = "BIGINT UNSIGNED comment '관리점 아이디'")
     private long storeId;
 
     /**
      * O - openStore, S - store, I - inner (내부 관리)
      */
-    @Column(nullable = false, name="stock_type", columnDefinition = "char(1)")
+    @Column(nullable = false, name="stock_type", columnDefinition = "char(1) comment '재고 타입'")
     private String stockType;
 
-    @Column(nullable = false, name="regi_store_id")
+    @Column(nullable = false, name="regi_store_id", columnDefinition = "BIGINT UNSIGNED comment '등록 관리점 아이디'")
     private long regiStoreId;
 
-    @Column(name = "charger_name")
+    @Column(name = "charger_name", columnDefinition = "varchar(255) comment '담당자 명'")
     private String chargerName;
 
-    @Column(length = 15, name = "charger_phone")
+    @Column(length = 15, name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
     private String chargerPhone;
 
-    @Column(length = 4, name = "charger_phone1")
+    @Column(length = 4, name = "charger_phone1", columnDefinition = "varchar(255) comment '담당자 연락처1'")
     private String chargerPhone1;
 
-    @Column(length = 4, name = "charger_phone2")
+    @Column(length = 4, name = "charger_phone2", columnDefinition = "varchar(255) comment '담당자 연락처2'")
     private String chargerPhone2;
 
-    @Column(length = 4, name = "charger_phone3")
+    @Column(length = 4, name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처3'")
     private String chargerPhone3;
 
-    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1)")
+    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1) comment '삭제 여부'")
     @ColumnDefault("\"N\"")
     private String delYn;
 
-    @Column(name = "regi_user_id")
+    @Column(name = "regi_user_id", columnDefinition = "BIGINT UNSIGNED comment '등록 유저 아이디'")
     private long regiUserId;
 
-    @Column(name = "regi_datetime")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
     private LocalDateTime regiDateTime;
 
-    @Column(name = "upd_user_id")
+    @Column(name = "upd_user_id", columnDefinition = "BIGINT UNSIGNED comment '업데이트 유저 아이디'")
     private Long updUserId;
 
-    @Column(name = "upd_datetime")
+    @Column(name = "upd_datetime", columnDefinition = "DATETIME(6) comment '업데이트 날짜시간'")
     private LocalDateTime updDateTime;
 
     @OneToMany(mappedBy = "prevStock")

@@ -72,7 +72,7 @@ public class AuthService {
     }
 
     public Member loginSocialUser(String id, String type) throws NotFoundException{
-        SocialData socialData = socialDataRepository.findByIdAndType(id,type);
+        SocialData socialData = socialDataRepository.findBySocialDataIdAndSocialType(id,type);
         if(socialData == null) throw new NotFoundException("멤버가 조회되지 않음");
         return socialData.getMember();
     }

@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface SocialDataRepository extends CrudRepository<SocialData,Long> {
 
-    SocialData findByIdAndType(String username, String type);
+    SocialData findBySocialDataIdAndSocialType(String username, String type);
 
 }

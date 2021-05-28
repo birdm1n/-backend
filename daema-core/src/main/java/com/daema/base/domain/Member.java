@@ -1,7 +1,7 @@
 package com.daema.base.domain;
 
-import com.daema.commgmt.domain.dto.response.OrgnztMemberListDto;
 import com.daema.base.enums.UserRole;
+import com.daema.commgmt.domain.dto.response.OrgnztMemberListDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,60 +39,68 @@ import java.time.LocalDateTime;
 public class Member {
 
     @Id
+    @Column(name = "seq", columnDefinition = "BIGINT unsigned comment '시퀀스 아이디'")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
     //계정명. 로그인ID
-    @Column(unique = true)
+    @Column(unique = true, name="username", columnDefinition = "varchar(255) comment '유저 이름'")
     @NotNull
     private String username;
     @NotNull
+    @Column(name="password",  columnDefinition = "varchar(255) comment '패스워드'")
     private String password;
     //사용자명
     @NotBlank
+    @Column(name = "name", columnDefinition = "varchar(255) comment '이름'")
     private String name;
 
+    @Column(name = "email",  columnDefinition = "varchar(255) comment '이메일'")
     private String email;
 
+    @Column(name = "address", columnDefinition = "varchar(255) comment '주소지'")
     private String address;
 
-    @Column(name = "phone", length = 15)
+    @Column(name = "phone", length = 15, columnDefinition = "varchar(255) comment '연락처'")
     private String phone;
 
-    @Column(name = "phone1", length = 4)
+    @Column(name = "phone1", length = 4, columnDefinition = "varchar(255) comment '연락처1'")
     private String phone1;
 
-    @Column(name = "phone2", length = 4)
+    @Column(name = "phone2", length = 4, columnDefinition = "varchar(255) comment '연락처2'")
     private String phone2;
 
-    @Column(name = "phone3", length = 4)
+    @Column(name = "phone3", length = 4, columnDefinition = "varchar(255) comment '연락처3'")
     private String phone3;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="social_id")
+    @JoinColumn(name="social_data_id", columnDefinition = "BIGINT unsigned comment '소셜 아이디'")
     private SocialData social;
 
-    @Column(name = "role")
+    @Column(name = "role", columnDefinition = "varchar(255) comment '권한'")
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.ROLE_NOT_PERMITTED;
 
+    @Column(name="regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
     private LocalDateTime regiDatetime;
-
+    @Column(name="upd_datetime",  columnDefinition = "DATETIME(6) comment '수정 날짜시간'")
     private LocalDateTime updDatetime;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "salt_id")
+    @JoinColumn(name = "salt_id", columnDefinition = "BIGINT unsigned comment '소금값 아이디'")
     private Salt salt;
 
     @NotNull
+    @Column(name = "store_id", columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private long storeId;
     @NotNull
+    @Column(name = "org_id",  columnDefinition = "BIGINT unsigned comment '조직 아이디'")
     private long orgId;
     /**
      * 1-신규(미승인), 6-정상(승인), 9-삭제
      */
     @NotBlank
-    @Column(nullable = false, name = "user_status", columnDefinition ="char(1)")
+    @Column(nullable = false, name = "user_status", columnDefinition ="char(1) comment '유저 상태'")
     @ColumnDefault("1")
     private String userStatus;
 

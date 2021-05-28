@@ -31,21 +31,21 @@ public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "org_id")
+    @Column(name = "org_id", columnDefinition = "BIGINT unsigned comment '조직 아이디'")
     private long orgId;
 
-    @Column(name = "parent_org_id")
+    @Column(name = "parent_org_id", columnDefinition = "BIGINT unsigned comment '상위 조직 아이디'")
     @ColumnDefault(value = "0")
     private long parentOrgId;
 
-    @Column(name = "store_id")
+    @Column(name = "store_id", columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private long storeId;
 
     @NotBlank
-    @Column(length = 20, nullable = false, name = "org_name")
+    @Column(length = 20, name = "org_name", columnDefinition = "varchar(255) is not null comment '조직 이름'")
     private String orgName;
 
-    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1)")
+    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1) comment'삭제 여부'")
     @ColumnDefault("\"N\"")
     private String delYn;
 

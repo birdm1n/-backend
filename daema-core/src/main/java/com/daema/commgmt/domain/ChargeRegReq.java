@@ -18,10 +18,10 @@ public class ChargeRegReq extends ChargeBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "charge_reg_req_id")
+    @Column(name = "charge_reg_req_id", columnDefinition = "BIGINT UNSIGNED comment '요금 등록 요청 아이디'")
     private long chargeRegReqId;
 
-    @Column(name = "req_store_id")
+    @Column(name = "req_store_id", columnDefinition = "BIGINT UNSIGNED comment '요청 관리점 아이디'")
     private long reqStoreId;
 
     /**
@@ -29,7 +29,7 @@ public class ChargeRegReq extends ChargeBase {
      * 6 - 승인
      * 9 - 반려
      */
-    @Column(name = "req_status", nullable = false)
+    @Column(name = "req_status", columnDefinition = "INT  is not null comment '요청 상태'")
     @ColumnDefault("1")
     private int reqStatus;
 

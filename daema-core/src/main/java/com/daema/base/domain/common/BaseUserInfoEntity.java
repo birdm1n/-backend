@@ -23,23 +23,23 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 public abstract class BaseUserInfoEntity {
     @NotAudited
     @CreatedDate // 생성한 날
-    @Column(name = "regi_datetime", updatable = false)
+    @Column(name = "regi_datetime", updatable = false, columnDefinition = "DATETIME(6) comment '등록 일자'" )
     private LocalDateTime regiDateTime;
 
     @NotAudited
     @CreatedBy  // 최초 생성자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq", updatable = false)
+    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq", updatable = false, columnDefinition = "BIGINT UNSIGNED comment '등록자 아이디'")
     @Audited(targetAuditMode = NOT_AUDITED) // User 테이블까지 이력을 추적하지 않겠다는 설정 필수
     private Member regiUserId;
 
     @LastModifiedDate  // 마지막 수정한 날
-    @Column(name = "upd_datetime")
+    @Column(name = "upd_datetime", columnDefinition = "DATETIME(6) comment '수정 일자'")
     private LocalDateTime updDateTime;
 
     @LastModifiedBy // 마지막 수정자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "upd_user_id", referencedColumnName = "seq")
+    @JoinColumn(name = "upd_user_id", referencedColumnName = "seq", columnDefinition = "BIGINT UNSIGNED comment '수정자 아이디'")
     @Audited(targetAuditMode = NOT_AUDITED) // User 테이블까지 이력을 추적하지 않겠다는 설정 필수
     private Member updUserId;
 }

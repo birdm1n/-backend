@@ -2,7 +2,10 @@ package com.daema.commgmt.domain;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Getter
 @Setter
@@ -17,25 +20,25 @@ public class FuncMgmt {
      * groupId + "_" + method name
      */
     @Id
-    @Column(name = "func_id")
+    @Column(name = "func_id", columnDefinition = "varchar(255) comment '기능 아이디'")
     private String funcId;
 
-    @Column(name = "group_id")
+    @Column(name = "group_id", columnDefinition = "INT comment '그룹 아이디'")
     private int groupId;
 
-    @Column(name = "group_name")
+    @Column(name = "group_name", columnDefinition = "varchar(255) comment '그룹 명'")
     private String groupName;
 
-    @Column(name = "title")
+    @Column(name = "title", columnDefinition = "varchar(255) comment '제목'")
     private String title;
 
-    @Column(name = "role")
+    @Column(name = "role", columnDefinition = "varchar(255) comment '룰'")
     private String role;
 
-    @Column(name = "url_path")
+    @Column(name = "url_path", columnDefinition = "varchar(255) comment 'url 경로'")
     private String urlPath;
 
-    @Column(name = "order_num")
+    @Column(name = "order_num", columnDefinition = "INT comment '순서 넘버'")
     private int orderNum;
 
     @Builder

@@ -18,22 +18,22 @@ public class MoveStock extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "move_stock_id")
+    @Column(name = "move_stock_id", columnDefinition = "BIGINT unsigned comment '이동 재고 아이디'")
     private Long moveStockId;
 
-    @Column(name = "move_stock_type")
+    @Column(name = "move_stock_type", columnDefinition = "varchar(255) comment '이동 재고 타입'")
     @Enumerated(EnumType.STRING)
     private WmsEnum.MoveStockType moveStockType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dvc_id")
+    @JoinColumn(name = "dvc_id", columnDefinition = "BIGINT unsigned comment '기기 아이디'")
     private Device device;
 
     /**
      * 현재 보유처
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prev_stock_id", referencedColumnName = "stock_id")
+    @JoinColumn(name = "prev_stock_id", referencedColumnName = "stock_id", columnDefinition = "BIGINT unsigned comment '이전 재고 아이디'")
     private Stock prevStock;
 
 
@@ -43,15 +43,15 @@ public class MoveStock extends BaseEntity {
      * 3 : 다음 보유처(내 보유처 또는 내 하위 보유처)
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id")
+    @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id", columnDefinition = "BIGINT unsigned comment '다음 재고 아이디'")
     private Stock nextStock;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_id")
+    @JoinColumn(name = "delivery_id", columnDefinition = "BIGINT unsigned comment '배송 아이디'")
     private Delivery delivery;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "store_id", columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private Store store;
 
     @Builder

@@ -18,10 +18,10 @@ public class GoodsRegReq extends GoodsBase{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "goods_reg_req_id")
+    @Column(name = "goods_reg_req_id", columnDefinition = "BIGINT unsigned comment '상품 등록 요청 아이디'")
     private long goodsRegReqId;
 
-    @Column(name = "req_store_id")
+    @Column(name = "req_store_id" , columnDefinition = "BIGINT unsigned comment '요청 관리자 아이디'")
     private long reqStoreId;
 
     /**
@@ -29,7 +29,7 @@ public class GoodsRegReq extends GoodsBase{
      * 6 - 승인
      * 9 - 반려
      */
-    @Column(name = "req_status", nullable = false)
+    @Column(name = "req_status", columnDefinition = "int  is not null comment '요청 상태'")
     @ColumnDefault("1")
     private int reqStatus;
 

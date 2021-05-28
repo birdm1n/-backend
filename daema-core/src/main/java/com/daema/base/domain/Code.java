@@ -18,30 +18,30 @@ import java.time.LocalDateTime;
 public class Code {
 
     @Id
-    @Column(name = "code_id", length = 15)
+    @Column(name = "code_group", length = 15, columnDefinition = "varchar(255) comment '코드 아이디'")
     private String codeId;
 
-    @Column(name = "code_id_nm", length = 20)
+    @Column(name = "code_group_name", length = 20, columnDefinition = "varchar(255) comment '코드 아이디 이름'")
     private String codeIdNm;
 
-    @Column(name = "code_id_desc")
+    @Column(name = "code_group_desc", columnDefinition = "varchar(255) comment '코드 아이디 설명'")
     private String codeIdDesc;
 
-    @Column(name = "use_yn", columnDefinition ="char(1)")
+    @Column(name = "use_yn", columnDefinition ="char(1) comment '사용 여부'")
     private String useYn = "Y";
 
-    @Column(name = "order_num")
+    @Column(name = "order_num", columnDefinition = "INT comment '순서 넘버'")
     private int orderNum;
 
-    @Column(name = "regi_datetime")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
     private LocalDateTime regiDateTime;
 
-    @Column(name = "regi_user_id")
+    @Column(name = "regi_user_id", columnDefinition = "BIGINT UNSIGNED comment '등록 유저 아이디'")
     private long regiUserId;
 
-    @Column(name = "upd_datetime")
+    @Column(name = "upd_datetime", columnDefinition = "DATETIME(6) comment '업데이트 날짜시간'")
     private LocalDateTime updDateTime;
 
-    @Column(name = "upd_user_id")
+    @Column(name = "upd_user_id", columnDefinition = "BIGINT UNSIGNED comment '업데이트 유저 아이디'")
     private Long updUserId;
 }

@@ -18,11 +18,11 @@ import javax.validation.constraints.NotNull;
 public class MemberRole {
 
     @Id
-    @JoinColumn(name = "seq")
+    @JoinColumn(name = "seq" , columnDefinition = "BIGINT unsigned comment '시퀀스'")
     private long seq;
 
     @Id
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "role_id",  columnDefinition = "int comment '룰 아이디'")
     private int roleId;
 
     @Builder

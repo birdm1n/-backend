@@ -18,58 +18,58 @@ public class Store {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "store_id")
+    @Column(name = "store_id", columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private long storeId;
 
     @NotBlank
-    @Column(length = 50, nullable = false, unique = true, name = "store_name")
+    @Column(length = 50, unique = true, name = "store_name", columnDefinition = "varchar(255) is not null comment '관리점 이름'")
     private String storeName;
 
     @NotNull
-    @Column(name = "telecom")
+    @Column(name = "telecom", columnDefinition = "int comment '통신사'")
     private int telecom;
 
     @Transient
     private String telecomName;
 
     @NotBlank
-    @Column(nullable = false, name = "biz_no", unique = true, columnDefinition = "char(12)")
+    @Column(nullable = false, name = "biz_no", unique = true, columnDefinition = "char(12) comment '사업자 넘버'")
     private String bizNo;
 
-    @Column(name = "ceo_name")
+    @Column(name = "ceo_name", columnDefinition = "varchar(255) comment '대표자 이름'")
     private String ceoName;
 
-    @Column(name = "charger_name")
+    @Column(name = "charger_name", columnDefinition = "varchar(255) comment '담당자 이름'")
     private String chargerName;
 
-    @Column(name = "charger_email")
+    @Column(name = "charger_email", columnDefinition = "varchar(255) comment '담당자 이메일'")
     private String chargerEmail;
 
-    @Column(length = 15, name = "charger_phone")
+    @Column(length = 15, name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
     private String chargerPhone;
 
-    @Column(length = 4, name = "charger_phone1")
+    @Column(length = 4, name = "charger_phone1", columnDefinition = "varchar(255) comment '담당자 연락처2'")
     private String chargerPhone1;
 
-    @Column(length = 4, name = "charger_phone2")
+    @Column(length = 4, name = "charger_phone2", columnDefinition = "varchar(255) comment '담당자 연락처3'")
     private String chargerPhone2;
 
-    @Column(length = 4, name = "charger_phone3")
+    @Column(length = 4, name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처4'")
     private String chargerPhone3;
 
-    @Column(length = 7, nullable = false, name = "return_zip_code")
+    @Column(length = 7, name = "return_zip_code", columnDefinition = "varchar(255)  is not null comment '반품 우편번호 코드'")
     private String returnZipCode;
 
-    @Column(length = 100, nullable = false, name = "return_addr")
+    @Column(length = 100, name = "return_addr", columnDefinition = "varchar(255) is not null comment '반품 주소'")
     private String returnAddr;
 
-    @Column(length = 100, nullable = false, name = "return_addr_detail")
+    @Column(length = 100, name = "return_addr_detail", columnDefinition = "varchar(255) is not null comment '반품 주소 상세'")
     private String returnAddrDetail;
 
-    @Column(nullable = false, name = "use_yn", columnDefinition ="char(1)")
+    @Column(nullable = false, name = "use_yn", columnDefinition ="char(1) comment '사용 여부'")
     private String useYn;
 
-    @Column(name = "regi_datetime")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
     private LocalDateTime regiDateTime;
 
     @Builder

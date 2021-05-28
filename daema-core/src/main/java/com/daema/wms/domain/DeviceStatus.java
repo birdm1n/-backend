@@ -20,46 +20,46 @@ public class DeviceStatus extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dvc_status_id")
+    @Column(name = "dvc_status_id", columnDefinition = "BIGINT unsigned comment '기기 상태 아이디'")
     private Long dvcStatusId;
 
     @Nullable
-    @Column(name = "product_faulty_yn", columnDefinition ="char(1)")
+    @Column(name = "product_faulty_yn", columnDefinition ="char(1) comment '제품 불량 여부'")
     @ColumnDefault("\"N\"")
     private String productFaultyYn = "N";
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "extrr_status")
+    @Column(name = "extrr_status", columnDefinition = "varchar(255) comment '외장 상태'")
     private WmsEnum.DeviceExtrrStatus extrrStatus;
 
     @Nullable
-    @Column(name = "product_miss_yn", columnDefinition ="char(1)")
+    @Column(name = "product_miss_yn", columnDefinition ="char(1) comment '제품 누락 여부'")
     @ColumnDefault("\"N\"")
     private String productMissYn = "N";
 
-    @Column(name = "miss_product")
+    @Column(name = "miss_product" , columnDefinition = "varchar(255) comment '누락 제품'")
     private String missProduct = null;
 
-    @Column(name = "ddct_amt")
+    @Column(name = "ddct_amt", columnDefinition = "int comment '차감 금액'")
     private Integer ddctAmt;
 
-    @Column(name = "add_ddct_amt")
+    @Column(name = "add_ddct_amt", columnDefinition = "int comment '부가 차감 금액'")
     private Integer addDdctAmt;
 
     /**
      * 출고가 차감 YN
      */
     @Nullable
-    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1)")
+    @Column(name = "ddct_release_amt_yn", columnDefinition ="char(1) comment ''")
     @ColumnDefault("\"N\"")
     private String ddctReleaseAmtYn = "N";
 
-    @Column(name = "in_stock_status")
+    @Column(name = "in_stock_status", columnDefinition = "varchar(255) comment ''")
     @Enumerated(EnumType.STRING)
     private WmsEnum.InStockStatus inStockStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dvc_id")
+    @JoinColumn(name = "dvc_id", columnDefinition = "BIGINT unsigned comment ''")
     private Device device;
 
     @OneToOne(mappedBy = "inDeviceStatus", fetch = FetchType.LAZY)

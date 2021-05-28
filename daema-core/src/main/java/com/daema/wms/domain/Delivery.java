@@ -17,27 +17,28 @@ public class Delivery extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "delivery_id")
+    @Column(name = "delivery_id", columnDefinition = "BIGINT UNSIGNED comment '배송 아이디'")
     private Long deliveryId;
 
     /** 택배, 퀵, 직접전달 */
-    @Column(name = "delivery_type")
     @Enumerated(EnumType.STRING)
+    @Column(name = "delivery_type", columnDefinition = "varchar(255) comment '배송 타입'")
     private WmsEnum.DeliveryType deliveryType;
 
     //택배사 codeSeq
-    @Column(name = "courier")
+    @Column(name = "courier", columnDefinition = "INT comment '택배사'")
     private Integer courier;
 
     //송장번호
-    @Column(name = "invoice_no")
+    @Column(name = "invoice_no", columnDefinition = "varchar(255) comment '송장 번호'")
     private String invoiceNo;
 
-    @Column(name = "delivery_memo")
+    @Column(name = "delivery_memo", columnDefinition = "varchar(255) comment '배송 메모'")
     private String deliveryMemo;
 
-    @Column(name = "delivery_status")
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "delivery_status", columnDefinition = "varchar(255) comment '배송 상태'")
     private WmsEnum.DeliveryStatus deliveryStatus;
 
     @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
@@ -46,31 +47,31 @@ public class Delivery extends BaseEntity {
     @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
     private MoveStock moveStock;
 
-    @Column(name = "cus_name")
+    @Column(name = "cus_name", columnDefinition = "varchar(255) comment '고객 이름'")
     private String cusName;
 
-    @Column(name = "cus_phone")
+    @Column(name = "cus_phone", columnDefinition = "varchar(255) comment '고객 연락처'")
     private String cusPhone;
 
-    @Column(name = "cus_phone1")
+    @Column(name = "cus_phone1", columnDefinition = "varchar(255) comment '고객 연락처1'")
     private String cusPhone1;
 
-    @Column(name = "cus_phone2")
+    @Column(name = "cus_phone2", columnDefinition = "varchar(255) comment '고객 연락처2'")
     private String cusPhone2;
 
-    @Column(name = "cus_phone3")
+    @Column(name = "cus_phone3", columnDefinition = "varchar(255) comment '고객 연락처3'")
     private String cusPhone3;
 
-    @Column(name = "usim_full_barcode")
+    @Column(name = "usim_full_barcode", columnDefinition = "varchar(255) comment '유심 전체 바코드'")
     private String usimFullBarcode;
 
-    @Column(name = "zip_code")
+    @Column(name = "delivery_zip_code", columnDefinition = "varchar(255) comment '우편번호'")
     private String zipCode;
 
-    @Column(name = "delivery_addr", columnDefinition = "varchar(255) comment '주소'")
+    @Column(name = "delivery_addr", columnDefinition = "varchar(255) comment '배송 주소'")
     private String addr1;
 
-    @Column(name = "delivery_addr_detail", columnDefinition = "varchar(255) comment '주소상세'")
+    @Column(name = "delivery_addr_detail", columnDefinition = "varchar(255) comment '배송 주소 상세'")
     private String addr2;
 
     @Builder

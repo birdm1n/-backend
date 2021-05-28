@@ -46,26 +46,26 @@ public class Device extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dvc_id")
+    @Column(name = "dvc_id", columnDefinition = "BIGINT UNSIGNED comment '기기 아이디'")
     private Long dvcId;
-
-    @Column(name = "barcode_type")
+    
     @Enumerated(EnumType.STRING)
+    @Column(name = "barcode_type", columnDefinition = "varchar(255) comment '바코드 타입'")
     private WmsEnum.BarcodeType barcodeType;
 
-    @Column(name = "full_barcode")
+    @Column(name = "full_barcode", columnDefinition = "varchar(255) comment '전체 바코드'")
     private String fullBarcode;
 
-    @Column(name = "in_stock_amt")
+    @Column(name = "in_stock_amt", columnDefinition = "INT comment '입고 단가'" )
     private int inStockAmt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goods_option_id")
+    @JoinColumn(name = "goods_option_id", columnDefinition = "BIGINT UNSIGNED comment '상품 옵션 아이디'")
     private GoodsOption goodsOption;
 
     // 소유권을 가지는 Store
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "store_id", columnDefinition = "BIGINT UNSIGNED comment '관리점 아이디'" )
     private Store store;
 
     @OneToMany(mappedBy = "device")

@@ -17,10 +17,10 @@ public class AddServiceRegReq extends AddServiceBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "add_svc_reg_req_id")
+    @Column(name = "add_svc_reg_req_id", columnDefinition = "BIGINT UNSIGNED comment '부가 서비스 등록 요청 아이디'")
     private long addSvcRegReqId;
 
-    @Column(name = "req_store_id")
+    @Column(name = "req_store_id", columnDefinition = "BIGINT UNSIGNED comment '요청 관리점 아이디'")
     private long reqStoreId;
 
     /**
@@ -28,7 +28,7 @@ public class AddServiceRegReq extends AddServiceBase {
      * 6 - 승인
      * 9 - 반려
      */
-    @Column(name = "req_status", nullable = false)
+    @Column(name = "req_status", columnDefinition = "INT  is not null comment '요청 상태'")
     @ColumnDefault("1")
     private int reqStatus;
 

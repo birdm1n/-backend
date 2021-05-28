@@ -20,16 +20,16 @@ public class AddServiceRegReqReject {
 
     @Id
     @NotNull
-    @Column(name = "add_svc_reg_req_id")
+    @Column(name = "add_svc_reg_req_id", columnDefinition = "BIGINT UNSIGNED comment '부가 서비스 등록 요청 아이디'")
     private long addSvcRegReqId;
 
-    @Column(name = "reject_comment")
+    @Column(name = "reject_comment", columnDefinition = "varchar(255) comment '반려 의견'")
     private String rejectComment;
 
-    @Column(name = "reject_datetime")
+    @Column(name = "reject_datetime", columnDefinition = "DATETIME(6) comment '반려 날짜시간'")
     private LocalDateTime rejectDateTime;
 
-    @Column(name = "reject_user_id")
+    @Column(name = "reject_user_id", columnDefinition = "BIGINT UNSIGNED comment '반려 유저 아이디'")
     private Long rejectUserId;
 
     @Builder

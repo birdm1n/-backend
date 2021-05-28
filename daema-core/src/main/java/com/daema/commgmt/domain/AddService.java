@@ -18,23 +18,23 @@ public class AddService extends AddServiceBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "add_svc_id")
+    @Column(name = "add_svc_id", columnDefinition = "BIGINT UNSIGNED comment '부가 서비스 아이디'" )
     private long addSvcId;
 
     /**
      * 요청 승인(R) 구분
      * 코드 + pk : R123
      */
-    @Column(name = "origin_key", length = 8)
+    @Column(name = "origin_key", length = 8, columnDefinition = "varchar(255) comment '출처 키'")
     private String originKey;
 
     @Nullable
-    @Column(name = "use_yn", columnDefinition ="char(1)")
+    @Column(name = "use_yn", columnDefinition ="char(1) comment '사용 여부'")
     @ColumnDefault("\"N\"")
     private String useYn;
 
     @Nullable
-    @Column(name = "del_yn", columnDefinition ="char(1)")
+    @Column(name = "del_yn", columnDefinition ="char(1) comment '사용 여부'")
     @ColumnDefault("\"N\"")
     private String delYn;
 

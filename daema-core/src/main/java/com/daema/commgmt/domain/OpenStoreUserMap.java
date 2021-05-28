@@ -17,14 +17,14 @@ import javax.persistence.*;
 public class OpenStoreUserMap {
 
     @Id
-    @Column(name = "open_store_id")
+    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '오픈 관리점 아이디'")
     private long openStoreId;
 
     @Id
-    @Column(name = "user_id")
+    @Column(name = "user_id", columnDefinition = "BIGINT unsigned comment '유저 아이디'")
     private long userId;
 
-    @Column(nullable = false, name = "use_yn", columnDefinition ="char(1)")
+    @Column(nullable = false, name = "use_yn", columnDefinition ="char(1) comment '사용 여부' ")
     private String useYn;
 
     @Builder

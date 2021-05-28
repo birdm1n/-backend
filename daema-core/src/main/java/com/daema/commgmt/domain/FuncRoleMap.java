@@ -17,11 +17,11 @@ import javax.persistence.*;
 public class FuncRoleMap {
 
     @Id
-    @Column(name = "func_id")
+    @Column(name = "func_id", columnDefinition = "varchar(255) comment '기능 아이디'")
     private String funcId;
 
     @Id
-    @Column(name = "role_id")
+    @Column(name = "role_id", columnDefinition = "INT comment '룰 아이디'")
     private int roleId;
 
     @Builder

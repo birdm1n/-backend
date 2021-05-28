@@ -20,28 +20,28 @@ public class Goods extends GoodsBase{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "goods_id")
+    @Column(name = "goods_id", columnDefinition = "BIGINT UNSIGNED comment '상품 아이디'")
     private long goodsId;
 
     /**
      * 스마트초이스 연동(S)과 요청 승인(R) 구분
      * 코드 + pk : S123, R123
      */
-    @Column(name = "origin_key", length = 8)
+    @Column(name = "origin_key", length = 8, columnDefinition = "varchar(255) comment '출처 키'")
     private String originKey;
 
     @Nullable
-    @Column(name = "use_yn", columnDefinition ="char(1)")
+    @Column(name = "use_yn", columnDefinition ="char(1) comment '사용 여부'")
     @ColumnDefault("\"N\"")
     private String useYn;
 
     @Nullable
-    @Column(name = "matching_yn", columnDefinition ="char(1)")
+    @Column(name = "matching_yn", columnDefinition ="char(1) comment '매칭 여부'")
     @ColumnDefault("\"N\"")
     private String matchingYn;
 
     @Nullable
-    @Column(name = "del_yn", columnDefinition ="char(1)")
+    @Column(name = "del_yn", columnDefinition ="char(1) comment '사용 여부'")
     @ColumnDefault("\"N\"")
     private String delYn;
 

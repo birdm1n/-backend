@@ -15,17 +15,17 @@ import java.time.LocalDateTime;
 public abstract class PubNotiBase {
 
     @NotNull
-    @Column(name = "support_amt", nullable = false)
+    @Column(name = "support_amt", columnDefinition = "int is not null comment '지원 금액'")
     protected int supportAmt;
 
     @NotNull
-    @Column(name = "release_amt", nullable = false)
+    @Column(name = "release_amt", columnDefinition = "int is not null comment '출고가 금액'")
     protected int releaseAmt;
 
     @NotNull
-    @Column(name = "release_date")
+    @Column(name = "release_date", columnDefinition = "DATETIME(6) comment '출고가 날짜'")
     protected LocalDate releaseDate;
 
-    @Column(name = "regi_datetime")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
     protected LocalDateTime regiDateTime;
 }

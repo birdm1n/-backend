@@ -16,7 +16,7 @@ import javax.persistence.MappedSuperclass;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity extends BaseUserInfoEntity {
     @NotAudited
-    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1)")
+    @Column(nullable = false, name = "del_yn", columnDefinition ="char(1) comment '삭제 여부'")
     @ColumnDefault("\"N\"")
     private String delYn = "N";
 }
