@@ -214,7 +214,6 @@ public class GoodsMgmtService {
                             GoodsOptionDto goodsOptionDto = optKeys.get(goodsOption.getGoodsOptionId());
 
                             goodsOption.setColorName(goodsOptionDto.getColorName());
-                            goodsOption.setDistributor(goodsOptionDto.getDistributor());
                             goodsOption.setCommonBarcode(goodsOptionDto.getCommonBarcode());
                             goodsOption.setCapacity(goodsOptionDto.getCapacity());
                             goodsOption.setDelYn(StatusEnum.FLAG_N.getStatusMsg());

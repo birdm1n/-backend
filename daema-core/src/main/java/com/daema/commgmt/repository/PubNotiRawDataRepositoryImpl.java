@@ -63,7 +63,7 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
                 "    left join goods " +
                 "      on data.model_name = goods.model_name " +
                 "   where goods.goods_id is null " +
-                "   group by data.model_name ");
+                "   group by data.model_name, data.network_name, telecom_name ");
 
         em.createNativeQuery(sb.toString())
                 .executeUpdate();

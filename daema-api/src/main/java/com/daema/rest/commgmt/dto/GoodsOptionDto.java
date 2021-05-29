@@ -14,7 +14,6 @@ public class GoodsOptionDto {
 	private long goodsId;
 	private long goodsOptionId;
 	private String colorName;
-	private String distributor;
 	private String commonBarcode;
 	private String capacity;
 	private String unLockYn;
@@ -25,7 +24,6 @@ public class GoodsOptionDto {
 				.goodsId(goodsOption.getGoods().getGoodsId())
 				.goodsOptionId(goodsOption.getGoodsOptionId())
 				.colorName(goodsOption.getColorName())
-				.distributor(goodsOption.getDistributor())
 				.commonBarcode(goodsOption.getCommonBarcode())
 				.capacity(goodsOption.getCapacity())
 				.delYn(goodsOption.getDelYn())
@@ -38,7 +36,6 @@ public class GoodsOptionDto {
 				.goods(Goods.builder().goodsId(goodsOptionDto.getGoodsId()).build())
 				.goodsOptionId(goodsOptionDto.getGoodsOptionId())
 				.colorName(goodsOptionDto.getColorName())
-				.distributor(goodsOptionDto.getDistributor())
 				.commonBarcode(goodsOptionDto.getCommonBarcode())
 				.capacity(goodsOptionDto.getCapacity())
 				.delYn(goodsOptionDto.getDelYn())

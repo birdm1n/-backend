@@ -23,9 +23,6 @@ public class GoodsOption {
     @Column(name = "color_name", columnDefinition = "varchar(255) comment '색상 이름'")
     private String colorName;
 
-    @Column(name = "distributor", columnDefinition = "varchar(255) comment '유통업자'")
-    private String distributor;
-
     @Column(name = "common_barcode", columnDefinition = "varchar(255) comment '공통 바코드'")
     private String commonBarcode;
 
@@ -42,18 +39,14 @@ public class GoodsOption {
     @JoinColumn(name = "goods_id", columnDefinition = "BIGINT unsigned comment '상품 아이디'")
     private Goods goods;
 
-
     @OneToMany(mappedBy = "goodsOption")
     private List<Device> device;
 
-
-
     @Builder
-    public GoodsOption(long goodsOptionId, String colorName, String distributor, String commonBarcode
+    public GoodsOption(long goodsOptionId, String colorName, String commonBarcode
                        ,String delYn ,String unLockYn ,String capacity ,Goods goods){
         this.goodsOptionId = goodsOptionId;
         this.colorName = colorName;
-        this.distributor = distributor;
         this.commonBarcode = commonBarcode;
         this.goods = goods;
         this.capacity = capacity;
