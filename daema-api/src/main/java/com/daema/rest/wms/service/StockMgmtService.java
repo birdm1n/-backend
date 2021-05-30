@@ -80,6 +80,10 @@ public class StockMgmtService {
 			stockMgmtDto.setUpdUserId(authenticationUtil.getMemberSeq());
 		}
 
+		if(stockMgmtDto.getParentStockId() > 0){
+			stockMgmtDto.setParentStock(Stock.builder().stockId(stockMgmtDto.getParentStockId()).build());
+		}
+
 		stockRepository.save(
 				Stock.builder()
 						.stockId(stockMgmtDto.getStockId())

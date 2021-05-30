@@ -17,6 +17,7 @@ import java.util.List;
 public class StockMgmtDto {
 
 	private long stockId;
+	private long parentStockId;
 	private Stock parentStock;
 	private String stockName;
 	private String chargerName;
