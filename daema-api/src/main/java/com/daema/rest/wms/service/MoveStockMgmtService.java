@@ -76,12 +76,12 @@ public class MoveStockMgmtService {
     @Transactional
     public ResponseCodeEnum insertSellMove(SellMoveInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
-        String fullbarcode = requestDto.getFullBarcode();
+        String barcode = requestDto.getBarcode();
         Store store = Store.builder()
                 .storeId(storeId)
                 .build();
         // 1. [기기] 정보 조회
-        Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullbarcode, store, "N");
+        Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
         // 2. [재고] 조회
@@ -138,15 +138,16 @@ public class MoveStockMgmtService {
         storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
         return ResponseCodeEnum.OK;
     }
-    @Transactional
+    
+    @Transactional  /* 이동 재고 */
     public ResponseCodeEnum insertStockMove(StockMoveInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
-        String fullbarcode = requestDto.getFullBarcode();
+        String barcode = requestDto.getBarcode();
         Store store = Store.builder()
                 .storeId(storeId)
                 .build();
         // 1. [기기] 정보 조회
-        Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullbarcode, store, "N");
+        Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
         // 2. [재고 ]조회
@@ -242,12 +243,12 @@ public class MoveStockMgmtService {
     @Transactional
     public ResponseCodeEnum insertStockTrans(StockTransInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
-        String fullbarcode = requestDto.getFullBarcode();
+        String barcode = requestDto.getBarcode();
         Store store = Store.builder()
                 .storeId(storeId)
                 .build();
         // 1. [기기] 정보 조회
-        Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullbarcode, store, "N");
+        Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
         // 2. [재고 ]조회
@@ -306,12 +307,12 @@ public class MoveStockMgmtService {
     @Transactional
     public ResponseCodeEnum insertSellTrans(SellTransInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
-        String fullbarcode = requestDto.getFullBarcode();
+        String barcode = requestDto.getBarcode();
         Store store = Store.builder()
                 .storeId(storeId)
                 .build();
         // 1. [기기] 정보 조회
-        Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullbarcode, store, "N");
+        Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
         // 2. [재고 ]조회
@@ -370,12 +371,12 @@ public class MoveStockMgmtService {
     @Transactional
     public ResponseCodeEnum insertFaultyTrans(FaultyTransInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
-        String fullbarcode = requestDto.getFullBarcode();
+        String barcode = requestDto.getBarcode();
         Store store = Store.builder()
                 .storeId(storeId)
                 .build();
         // 1. [기기] 정보 조회
-        Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullbarcode, store, "N");
+        Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
 

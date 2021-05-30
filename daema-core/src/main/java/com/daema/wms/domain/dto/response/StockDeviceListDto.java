@@ -13,7 +13,7 @@ public class StockDeviceListDto {
    private Long stock_id;
    private String stock_name;
    private String hierarchy;
-   private String full_barcode;
+   private String raw_barcode;
    private Integer in_stock_amt;
    private String goods_name;
    private String model_name;

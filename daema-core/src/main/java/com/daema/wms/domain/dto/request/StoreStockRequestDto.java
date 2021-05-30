@@ -51,7 +51,7 @@ public class StoreStockRequestDto extends SearchParamDto {
     private WmsEnum.DeviceExtrrStatus extrrStatus;
 
     // 기기일련번호(바코드)
-    private String fullBarcode;
+    private String barcode;
 
     // 배송상태
     private WmsEnum.DeliveryStatus deliveryStatus;

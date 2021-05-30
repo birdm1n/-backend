@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +45,7 @@ public class InStockMgmtController {
 
     @ApiOperation(value = "입고 대기 등록", notes = "신규 입고대기 처리를 합니다.")
     @PostMapping("/insertWaitInStock")
-    public ResponseEntity<CommonResponse<Void>> insertWaitInStock(@ApiParam(value = "신규입고대기", required = true) @RequestBody InStockWaitInsertReqDto requestDto) {
+    public ResponseEntity<CommonResponse<Void>> insertWaitInStock(@Valid @ApiParam(value = "신규입고대기", required = true) @RequestBody InStockWaitInsertReqDto requestDto) {
         ResponseCodeEnum responseCodeEnum = inStockMgmtService.insertWaitInStock(requestDto);
 
         if (ResponseCodeEnum.OK != responseCodeEnum) {

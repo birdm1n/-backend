@@ -90,7 +90,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "색상")
 		private String colorName;
 		@ExcelTemplate(columnName = "기기일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 		@ExcelTemplate(columnName = "입고상태")
@@ -124,7 +124,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "색상")
 		private String colorName;
 		@ExcelTemplate(columnName = "기기 일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 		@ExcelTemplate(columnName = "입고상태")
@@ -168,7 +168,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "색상")
 		private String colorName;
 		@ExcelTemplate(columnName = "기기 일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 		@ExcelTemplate(columnName = "입고상태")
@@ -212,7 +212,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "모델명")
 		private String modelName;
 		@ExcelTemplate(columnName = "기기 일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "용량")
 		private String capacity;
 		@ExcelTemplate(columnName = "색상")
@@ -252,7 +252,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "모델명")
 		private String modelName;
 		@ExcelTemplate(columnName = "기기일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "용량")
 		private String capacity;
 		@ExcelTemplate(columnName = "색상")
@@ -292,7 +292,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "모델명")
 		private String modelName;
 		@ExcelTemplate(columnName = "기기일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "용량")
 		private String capacity;
 		@ExcelTemplate(columnName = "색상")
@@ -336,7 +336,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "색상")
 		private String colorName;
 		@ExcelTemplate(columnName = "기기 일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 		@ExcelTemplate(columnName = "입고상태")
@@ -381,7 +381,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "색상")
 		private String colorName;
 		@ExcelTemplate(columnName = "기기일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 		@ExcelTemplate(columnName = "입고상태")
@@ -426,7 +426,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "색상")
 		private String colorName;
 		@ExcelTemplate(columnName = "기기일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		/*
 		@ExcelTemplate(columnName = "고객명")
 		private String regiUserName;
@@ -472,7 +472,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "색상")
 		private String colorName;
 		@ExcelTemplate(columnName = "기기 일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 		@ExcelTemplate(columnName = "입고상태")
@@ -512,7 +512,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "색상")
 		private String colorName;
 		@ExcelTemplate(columnName = "기기일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 		@ExcelTemplate(columnName = "입고상태")
@@ -552,7 +552,7 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "색상")
 		private String colorName;
 		@ExcelTemplate(columnName = "기기 일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 		@ExcelTemplate(columnName = "배송방법")
 		private String deliveryTypeMsg;
 		@ExcelTemplate(columnName = "배송상태")
@@ -561,9 +561,9 @@ public class ExcelVO {
 		private String judgeStatusMsg;
 	}
 
-	//이동재고반품_엑셀업로드_실패목록
+	//이동재고반품/입고대기_엑셀업로드_실패목록
 	public static class BarcodeList {
 		@ExcelTemplate(columnName = "기기일련번호")
-		private String fullBarcode;
+		private String rawBarcode;
 	}
 }

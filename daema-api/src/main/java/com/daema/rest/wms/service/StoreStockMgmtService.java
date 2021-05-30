@@ -83,9 +83,9 @@ public class StoreStockMgmtService {
 	}
 
 	@Transactional
-	public void checkStoreStock(String fullBarcode){
+	public void checkStoreStock(String barcode){
 
-		Device device = deviceMgmtService.retrieveFullBarcode(fullBarcode);
+		Device device = deviceMgmtService.retrieveBarcode(barcode);
 
 		//상점내 재고 여부 확인하고 있으면 재고조사 or Exception
 		StoreStock storeStock = storeStockRepository.findByStoreAndDeviceAndStockYn(

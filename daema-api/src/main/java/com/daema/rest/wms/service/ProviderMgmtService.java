@@ -147,14 +147,14 @@ public class ProviderMgmtService {
 		}
 	}
 
-	public SearchMatchResponseDto getDeviceProvInfo(String fullBarcode) {
+	public SearchMatchResponseDto getDeviceProvInfo(String barcode) {
 		long storeId = authenticationUtil.getStoreId();
 		Store store = Store
 				.builder()
 				.storeId(storeId)
 				.build();
 
-		Device device = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullBarcode, store, "N");
+		Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
 		if(device == null){
 			return null;
 		}

@@ -17,7 +17,7 @@ public class StockMoveInsertReqDto {
     private Long nextStockId;
 
     @ApiModelProperty(value = "기기일련번호(바코드)",  required = true)
-    private String fullBarcode;
+    private String barcode;
 
     @ApiModelProperty(value = "택배사", example = "0",required = true)
     private Integer courier;

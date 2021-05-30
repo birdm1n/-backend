@@ -80,10 +80,10 @@ public class ReturnStockMgmtService {
 				for (ReturnStockReqDto returnStockDto : returnStockDtoList) {
 					try {
 						if(!returnStockCtrl.save(returnStockDto, stock)){
-							failBarcode.add(returnStockDto.getFullBarcode());
+							failBarcode.add(returnStockDto.getRawBarcode());
 						}
 					}catch (Exception e){
-						failBarcode.add(returnStockDto.getFullBarcode());
+						failBarcode.add(returnStockDto.getRawBarcode());
 						log.error(e.getMessage());
 					}
 				}
@@ -136,7 +136,7 @@ public class ReturnStockMgmtService {
 
 					//DB 조회 된 바코드 리스트 추출
 					Set<String> dbBarcode = returnStockDtoList.stream()
-							.map(ReturnStockResDto::getFullBarcode)
+							.map(ReturnStockResDto::getRawBarcode)
 							.collect(Collectors.toSet());
 
 					//엑셀 바코드 중 DB 에 없는 건은 failBarcode 에 add

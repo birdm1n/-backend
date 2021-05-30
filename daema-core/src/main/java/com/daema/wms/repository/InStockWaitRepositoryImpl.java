@@ -64,7 +64,7 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
 
     @Override
     public List<InStockWait> getList(long storeId, WmsEnum.InStockStatus inStockStatus) {
-        JPAQueryFactory queryFactory =  new JPAQueryFactory(em);
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         return queryFactory.selectFrom(inStockWait)
                 .where(
                         inStockWait.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
@@ -73,5 +73,25 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
                 )
                 .orderBy(inStockWait.regiDateTime.desc())
                 .fetch();
+    }
+
+    @Override
+    public long inStockWaitDuplCk(long storeId, String barcode) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        long resultCount = queryFactory
+                .selectFrom(inStockWait)
+                .where(
+                        inStockWait.ownStoreId.eq(storeId),
+                        inStockWait.delYn.eq("N"),
+
+                        inStockWait.rawBarcode.eq(barcode).or(
+                                inStockWait.fullBarcode.eq(barcode).or(
+                                        inStockWait.serialNo.eq(barcode)
+                                )
+                        )
+
+                )
+                .fetchCount();
+        return resultCount;
     }
 }

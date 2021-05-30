@@ -50,6 +50,6 @@ public class ReturnStockRequestDto extends SearchParamDto {
     // 외장상태 = "상" / "중" / "하" / "파손"
     private WmsEnum.DeviceExtrrStatus extrrStatus;
 
-    // 기기일련번호(바코드)
-    private String fullBarcode;
+    // 원시 바코드 or 정재된 바코드 or 시리얼 넘버  (바코드)
+    private String barcode;
 }

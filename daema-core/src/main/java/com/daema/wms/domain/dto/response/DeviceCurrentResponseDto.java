@@ -67,7 +67,7 @@ public class DeviceCurrentResponseDto {
     private String colorName;
 
     // 기기일련번호(바코드)
-    private String fullBarcode;
+    private String rawBarcode;
 
     //입고단가
     private int inStockAmt;

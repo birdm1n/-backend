@@ -35,9 +35,9 @@ public class DeviceMgmtService {
 		this.authenticationUtil = authenticationUtil;
 	}
 
-	public DeviceResponseDto getDeviceInfoFromFullBarcode(String fullBarcode){
+	public DeviceResponseDto getDeviceInfoFromBarcode(String barcode){
 
-		Device device = retrieveFullBarcode(fullBarcode);
+		Device device = retrieveBarcode(barcode);
 
 		DeviceResponseDto deviceResponseDto = new DeviceResponseDto();
 
@@ -73,8 +73,8 @@ public class DeviceMgmtService {
 		return deviceResponseDto;
 	}
 
-	public Device retrieveFullBarcode(String fullBarcode){
-		return deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullBarcode
+	public Device retrieveBarcode(String barcode){
+		return deviceRepository.getDeviceWithBarcode(barcode
 				, Store.builder().storeId(authenticationUtil.getStoreId()).build()
 				, StatusEnum.FLAG_N.getStatusMsg());
 	}

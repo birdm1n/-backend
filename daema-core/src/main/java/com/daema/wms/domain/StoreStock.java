@@ -100,6 +100,13 @@ public class StoreStock extends BaseEntity {
         return storeStock;
     }
 
+    public void updateToMove(MoveStock moveStock){
+        this.stockType = WmsEnum.StockType.valueOf(moveStock.getMoveStockType().name());
+        this.stockTypeId = moveStock.getMoveStockId();
+        this.prevStock = moveStock.getPrevStock();
+        this.nextStock = moveStock.getNextStock();
+    }
+
     //재고확인일을 업데이트 처리
     public StoreStock updateStoreStockCheck(StoreStock storeStock) {
 

@@ -58,7 +58,7 @@ public class MoveMgmtRequestDto extends SearchParamDto { //이동현황
     private WmsEnum.DeviceExtrrStatus extrrStatus;
 
     // 기기일련번호(바코드)
-    private String fullBarcode;
+    private String barcode;
 
 
     private Long dvcId;

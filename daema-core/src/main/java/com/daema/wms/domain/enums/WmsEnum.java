@@ -149,6 +149,7 @@ public enum WmsEnum {
     }
 
     public enum DeliveryType {
+        UNKNOWN("UNKNOWN"),
         PS("택배"),
         QUICK("퀵"),
         DIRECT("직접전달"),

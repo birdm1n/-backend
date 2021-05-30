@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class InStockInsertReqDto {
+
     @ApiModelProperty(value = "공급처 ID",  required = true)
     private Long waitId;
 
@@ -33,8 +34,13 @@ public class InStockInsertReqDto {
     @ApiModelProperty(value = "바코드입력 구분",  required = true)
     private WmsEnum.BarcodeType barcodeType;
 
-    @ApiModelProperty(value = "기기일련번호(바코드)",  required = true)
+    /*     바코드 가공용     */
+    @ApiModelProperty(value = "원시 바코드", required = true)
+    private String rawBarcode;
+    @ApiModelProperty(value = "원시, 가공 바코드", required = true)
     private String fullBarcode;
+    @ApiModelProperty(value = "시리얼_ex : 뒷 7자리", required = true)
+    private String serialNo;
 
     @ApiModelProperty(value = "입고상태",  required = true)
     private WmsEnum.InStockStatus inStockStatus;
@@ -68,8 +74,6 @@ public class InStockInsertReqDto {
     
     @ApiModelProperty(value = "누락제품")
     private String missProduct;
-
-
 
 
 }

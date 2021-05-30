@@ -20,7 +20,7 @@ import java.util.List;
                         @ColumnResult(name="stock_id", type = Long.class),
                         @ColumnResult(name="stock_name", type = String.class),
                         @ColumnResult(name="hierarchy", type = String.class),
-                        @ColumnResult(name="full_barcode", type = String.class),
+                        @ColumnResult(name="raw_barcode", type = String.class),
                         @ColumnResult(name="in_stock_amt", type = Integer.class),
                         @ColumnResult(name="goods_name", type = String.class),
                         @ColumnResult(name="model_name", type = String.class),

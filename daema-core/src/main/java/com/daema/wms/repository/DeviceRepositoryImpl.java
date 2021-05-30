@@ -3,6 +3,7 @@ package com.daema.wms.repository;
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.base.enums.StatusEnum;
+import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.Device;
 import com.daema.wms.domain.QDelivery;
 import com.daema.wms.domain.QStock;
@@ -17,12 +18,15 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +50,9 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
     public DeviceRepositoryImpl() {
         super(Device.class);
     }
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
     public List<DeviceHistoryResponseDto> getDeviceHistory(Long dvcId, Long storeId) {
@@ -183,7 +190,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 , goods.modelName.as("modelName")
                 , goodsOption.capacity.as("capacity")
                 , goodsOption.colorName.as("colorName")
-                , device.fullBarcode.as("fullBarcode")
+                , device.rawBarcode.as("rawBarcode")
                 , device.inStockAmt.as("inStockAmt")
                 , deviceStatus.inStockStatus.as("inStockStatus")
                 , deviceStatus.productFaultyYn.as("productFaultyYn")
@@ -255,7 +262,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                         eqModelName(requestDto.getModelName()),
                         eqCapacity(requestDto.getCapacity()),
                         eqColorName(requestDto.getColorName()),
-                        containsFullBarcode(requestDto.getFullBarcode()),
+                        containsBarcode(requestDto.getBarcode()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
                         eqExtrrStatus(requestDto.getExtrrStatus()),
                         eqMoveOrOutDeliveryType(requestDto.getDeliveryType(), moveDelivery, outDelivery),
@@ -272,6 +279,43 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
         QueryResults<DeviceCurrentResponseDto> resultList = query.fetchResults();
         return new PageImpl<>(resultList.getResults(), pageable, resultList.getTotal());
     }
+
+    @Override
+    public long deviceDuplCk(Store store, String barcode) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        long resultCount = queryFactory
+                .selectFrom(device)
+                .where(
+                        device.store.storeId.eq(store.getStoreId()),
+                        device.delYn.eq("N"),
+                        device.rawBarcode.eq(barcode).or(
+                                device.fullBarcode.eq(barcode).or(
+                                        device.serialNo.eq(barcode)
+                                )
+                        )
+                )
+                .fetchCount();
+        return resultCount;
+    }
+
+    @Override
+    public Device getDeviceWithBarcode(String barcode, Store store, String delYn) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        Device result = queryFactory
+                .selectFrom(device)
+                .where(
+                        device.store.storeId.eq(store.getStoreId()),
+                        device.delYn.eq(delYn),
+                        device.rawBarcode.eq(barcode).or(
+                                device.fullBarcode.eq(barcode).or(
+                                        device.serialNo.eq(barcode)
+                                )
+                        )
+                )
+                .fetchOne();
+        return result;
+    }
+
 
 
     private BooleanExpression betweenInStockRegDt(String startDt, String endDt) {
@@ -358,11 +402,15 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
         return goodsOption.colorName.eq(colorName);
     }
 
-    private BooleanExpression containsFullBarcode(String fullBarcode) {
-        if (StringUtils.isEmpty(fullBarcode)) {
+    private BooleanExpression containsBarcode(String barcode) {
+        if(StringUtils.isEmpty(barcode)){
             return null;
         }
-        return device.fullBarcode.contains(fullBarcode);
+        return device.rawBarcode.contains(barcode).or(
+                device.fullBarcode.contains(barcode).or(
+                        device.serialNo.contains(barcode)
+                )
+        );
     }
 
     private BooleanExpression eqExtrrStatus(WmsEnum.DeviceExtrrStatus extrrStatus) {
@@ -404,19 +452,6 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 outDlvr.deliveryStatus.eq(deliveryStatus)));
     }
 
-//    private BooleanExpression eqDeliveryType(WmsEnum.DeliveryType DeliveryType) {
-//        if (DeliveryType == null) {
-//            return null;
-//        }
-//        return delivery.deliveryType.eq(DeliveryType);
-//    }
-//
-//    private BooleanExpression eqDeliveryStatus(WmsEnum.DeliveryStatus deliveryStatus) {
-//        if (deliveryStatus == null) {
-//            return null;
-//        }
-//        return delivery.deliveryStatus.eq(deliveryStatus);
-//    }
 }
 
 

@@ -74,6 +74,8 @@ public class InStockWaitDto {
     private String colorName;
     private String commonBarcode;
     private String fullBarcode;
+    private String rawBarcode;
+    private String serialNo;
 
     // 입고단가
     private int inStockAmt;
@@ -129,6 +131,8 @@ public class InStockWaitDto {
                 .colorName(entity.getColorName())
                 .commonBarcode(entity.getCommonBarcode())
                 .fullBarcode(entity.getFullBarcode())
+                .rawBarcode(entity.getRawBarcode())
+                .serialNo(entity.getSerialNo())
                 .inStockAmt(entity.getInStockAmt())
                 .inStockStatus(entity.getInStockStatus())
                 .inStockStatusMsg(entity.getInStockStatus().getStatusMsg())

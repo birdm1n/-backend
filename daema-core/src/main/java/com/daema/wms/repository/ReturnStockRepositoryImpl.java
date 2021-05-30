@@ -81,7 +81,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 , goodsOption.goodsOptionId.as("goodsOptionId")
                 , goodsOption.colorName.as("colorName")
                 , goodsOption.commonBarcode.as("commonBarcode")
-                , device.fullBarcode.as("fullBarcode")
+                , device.rawBarcode.as("rawBarcode")
                 , returnStock.returnStockAmt.as("returnStockAmt")
                 , deviceStatus.inStockStatus.as("returnStockStatus")
                 , deviceStatus.productFaultyYn.as("productFaultyYn")
@@ -117,7 +117,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                         eqNextStockId(requestDto.getNextStockId()),
                         eqReturnStockStatus(requestDto.getReturnStockStatus()),
                         eqStatusStr(requestDto.getStatusStr()),
-                        eqFullBarcode(requestDto.getFullBarcode()),
+                        containsBarcode(requestDto.getBarcode()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
                         eqExtrrStatus(requestDto.getExtrrStatus()),
                         eqColorName(requestDto.getColorName()),
@@ -150,7 +150,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 ReturnStockResDto.class
 
                 , device.dvcId.as("dvcId")
-                , device.fullBarcode.as("fullBarcode")
+                , device.rawBarcode.as("rawBarcode")
 
                 , Expressions.asNumber(0).as("returnStockAmt")
 
@@ -183,7 +183,11 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
                 .leftJoin(storeStock.prevStock, prevStock)
                 .leftJoin(storeStock.nextStock, nextStock)
                 .where(
-                        device.fullBarcode.in(barcodeDataList)
+                        device.rawBarcode.in(barcodeDataList).or(
+                                device.fullBarcode.in(barcodeDataList).or(
+                                        device.serialNo.in(barcodeDataList)
+                                )
+                        )
                 );
 
         List<ReturnStockResDto> resultList = query.fetch();
@@ -240,11 +244,15 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         return goodsOption.colorName.eq(colorName);
     }
 
-    private BooleanExpression eqFullBarcode(String fullBarcode) {
-        if (StringUtils.isEmpty(fullBarcode)) {
+    private BooleanExpression containsBarcode(String barcode) {
+        if(StringUtils.isEmpty(barcode)){
             return null;
         }
-        return device.fullBarcode.contains(fullBarcode);
+        return device.rawBarcode.contains(barcode).or(
+                device.fullBarcode.contains(barcode).or(
+                        device.serialNo.contains(barcode)
+                )
+        );
     }
 
     private BooleanExpression eqExtrrStatus(WmsEnum.DeviceExtrrStatus extrrStatus) {

@@ -69,7 +69,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                         , goods.modelName.as("modelName")
                         , goodsOption.capacity.as("capacity")
                         , goodsOption.colorName.as("colorName")
-                        , device.fullBarcode.as("fullBarcode")
+                        , device.rawBarcode.as("rawBarcode")
                         , device.inStockAmt.as("inStockAmt")
                         , deviceStatus.inStockStatus.as("inStockStatus")
                         , deviceStatus.productFaultyYn.as("productFaultyYn")
@@ -157,7 +157,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                         , goods.modelName.as("modelName")
                         , goodsOption.capacity.as("capacity")
                         , goodsOption.colorName.as("colorName")
-                        , device.fullBarcode.as("fullBarcode")
+                        , device.rawBarcode.as("rawBarcode")
                         , device.inStockAmt.as("inStockAmt")
                         , deviceStatus.inStockStatus.as("inStockStatus")
                         , deviceStatus.productFaultyYn.as("productFaultyYn")
@@ -245,7 +245,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                         , goods.modelName.as("modelName")
                         , goodsOption.capacity.as("capacity")
                         , goodsOption.colorName.as("colorName")
-                        , device.fullBarcode.as("fullBarcode")
+                        , device.rawBarcode.as("rawBarcode")
                         , device.inStockAmt.as("inStockAmt")
                         , deviceStatus.inStockStatus.as("inStockStatus")
                         , deviceStatus.productFaultyYn.as("productFaultyYn")
@@ -365,7 +365,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                         .as("transStoreName")  // 이동처
                 , returnStock.returnStockAmt.as("returnStockAmt") // 반품비 ////****
                 , device.dvcId.as("dvcId")
-                , device.fullBarcode.as("fullBarcode")
+                , device.rawBarcode.as("rawBarcode")
                 , device.inStockAmt.as("inStockAmt")
                 , maker.codeNm.as("makerName")
                 , goods.goodsId.as("goodsId")
@@ -461,7 +461,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                         eqExtrrStatus(requestDto.getExtrrStatus()),
                         eqMoveOrOutDeliveryType(requestDto.getDeliveryType(), moveDelivery, outDelivery),
                         eqMoveOrOutDeliveryStatus(requestDto.getDeliveryStatus(), moveDelivery, outDelivery),
-                        containsFullBarcode(requestDto.getFullBarcode()),
+                        containsBarcode(requestDto.getBarcode()),
                         storeStockHistory.stockType.in
                                 (WmsEnum.StockType.SELL_MOVE
                                         , WmsEnum.StockType.STOCK_MOVE
@@ -516,11 +516,15 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
         return storeStockHistory.stockType.eq(stockType);
     }
 
-    private BooleanExpression containsFullBarcode(String fullBarcode) {
-        if (StringUtils.isEmpty(fullBarcode)) {
+    private BooleanExpression containsBarcode(String barcode) {
+        if(StringUtils.isEmpty(barcode)){
             return null;
         }
-        return device.fullBarcode.contains(fullBarcode);
+        return device.rawBarcode.contains(barcode).or(
+                device.fullBarcode.contains(barcode).or(
+                        device.serialNo.contains(barcode)
+                )
+        );
     }
 
     private BooleanExpression eqColorName(String colorName) {

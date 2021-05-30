@@ -32,7 +32,7 @@ public class MoveStockResponseDto {
 
     // 색상_기기일련번호(바코드)
     private String colorName;
-    private String fullBarcode;
+    private String rawBarcode;
 
     // 입고단가
     private int inStockAmt;

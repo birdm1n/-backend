@@ -75,7 +75,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , storeStock.checkDateTime2.as("stockCheckDateTime2")
 
                 , device.dvcId.as("dvcId")
-                , device.fullBarcode.as("fullBarcode")
+                , device.rawBarcode.as("rawBarcode")
                 , device.inStockAmt.as("inStockAmt")
 
                 , telecom.codeSeq.as("telecom")
@@ -166,7 +166,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                         eqNextStockId(requestDto.getNextStockId()),
                         eqStatusStr(nextStock, requestDto.getStatusStr()),
                         eqInStockStatus(requestDto.getInStockStatus()),
-                        eqFullBarcode(requestDto.getFullBarcode()),
+                        containsBarcode(requestDto.getBarcode()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
                         eqExtrrStatus(requestDto.getExtrrStatus()),
                         eqColorName(requestDto.getColorName()),
@@ -207,7 +207,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , moveStock.regiDateTime.as("moveDateTime")
 
                 , device.dvcId.as("dvcId")
-                , device.fullBarcode.as("fullBarcode")
+                , device.rawBarcode.as("rawBarcode")
                 , device.inStockAmt.as("inStockAmt")
 
                 , telecom.codeSeq.as("telecom")
@@ -303,7 +303,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                         eqNextStockId(requestDto.getNextStockId()),
                         eqStatusStr(nextStock, requestDto.getStatusStr()),
                         eqInStockStatus(requestDto.getInStockStatus()),
-                        eqFullBarcode(requestDto.getFullBarcode()),
+                        containsBarcode(requestDto.getBarcode()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
                         eqExtrrStatus(requestDto.getExtrrStatus()),
                         eqColorName(requestDto.getColorName()),
@@ -340,7 +340,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 , outStock.regiDateTime.as("moveDateTime")
 
                 , device.dvcId.as("dvcId")
-                , device.fullBarcode.as("fullBarcode")
+                , device.rawBarcode.as("rawBarcode")
                 , device.inStockAmt.as("inStockAmt")
 
                 , telecom.codeSeq.as("telecom")
@@ -458,7 +458,7 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 eqStatusStr(prevStock, requestDto.getStatusStr()),
                 eqJudgeStatus(requestDto.getJudgeStatus()),
                 eqDeliveryStatus(requestDto.getDeliveryStatus()),
-                eqFullBarcode(requestDto.getFullBarcode()),
+                containsBarcode(requestDto.getBarcode()),
                 eqFaultyYn(requestDto.getProductFaultyYn()),
                 eqExtrrStatus(requestDto.getExtrrStatus()),
                 eqColorName(requestDto.getColorName()),
@@ -541,11 +541,15 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         return goodsOption.colorName.eq(colorName);
     }
 
-    private BooleanExpression eqFullBarcode(String fullBarcode) {
-        if (StringUtils.isEmpty(fullBarcode)) {
+    private BooleanExpression containsBarcode(String barcode) {
+        if(StringUtils.isEmpty(barcode)){
             return null;
         }
-        return device.fullBarcode.contains(fullBarcode);
+        return device.rawBarcode.contains(barcode).or(
+                device.fullBarcode.contains(barcode).or(
+                        device.serialNo.contains(barcode)
+                )
+        );
     }
 
     private BooleanExpression eqExtrrStatus(WmsEnum.DeviceExtrrStatus extrrStatus) {

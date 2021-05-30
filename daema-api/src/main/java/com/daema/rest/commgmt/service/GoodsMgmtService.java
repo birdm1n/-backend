@@ -16,6 +16,7 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.commgmt.dto.GoodsOptionDto;
 import com.daema.rest.commgmt.dto.GoodsRegReqDto;
+import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
@@ -330,8 +331,13 @@ public class GoodsMgmtService {
     }
 
     @Transactional(readOnly = true)
-    public GoodsMatchRespDto goodsMatchBarcode(String fullBarcode) {
-        String commonBarcode = CommonUtil.getCmnBarcode(fullBarcode);
+    public GoodsMatchRespDto goodsMatchBarcode(String barcode) {
+        String commonBarcode;
+        try {
+            commonBarcode = CommonUtil.getCmnBarcode(barcode);
+        } catch (Exception e) {
+            return null;
+        }
         return goodsRepository.goodsMatchBarcode(commonBarcode);
     }
 

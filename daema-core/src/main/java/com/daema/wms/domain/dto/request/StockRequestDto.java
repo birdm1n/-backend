@@ -14,6 +14,6 @@ public class StockRequestDto extends SearchParamDto {
     private Long goodsId;
     private String capacity;
     private String colorName;
-    private String fullBarcode;
+    private String barcode;
 
 }

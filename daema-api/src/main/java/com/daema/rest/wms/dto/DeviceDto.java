@@ -20,6 +20,8 @@ public class DeviceDto {
 	private Long dvcId;
 	private WmsEnum.BarcodeType barcodeType;
 	private String fullBarcode;
+	private String rawBarcode;
+	private String serialNo;
 	private GoodsOptionDto goodsOptionDto;
 	private StoreDto storeDto;
 	private Long regiUserId;
@@ -33,6 +35,8 @@ public class DeviceDto {
 				.dvcId(device.getDvcId())
 				.barcodeType(device.getBarcodeType())
 				.fullBarcode(device.getFullBarcode())
+				.rawBarcode(device.getRawBarcode())
+				.serialNo(device.getSerialNo())
 				.goodsOptionDto(GoodsOptionDto.from(device.getGoodsOption()))
 				.storeDto(StoreDto.from(device.getStore()))
 				.regiUserId(device.getRegiUserId().getSeq())
@@ -48,6 +52,8 @@ public class DeviceDto {
 				.dvcId(deviceDto.getDvcId())
 				.barcodeType(deviceDto.getBarcodeType())
 				.fullBarcode(deviceDto.getFullBarcode())
+				.rawBarcode(deviceDto.getRawBarcode())
+				.serialNo(deviceDto.getSerialNo())
 				.goodsOption(GoodsOption.builder()
 						.goodsOptionId(deviceDto.getGoodsOptionDto().getGoodsOptionId())
 						.build())

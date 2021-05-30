@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @NoArgsConstructor
@@ -28,8 +29,9 @@ public class SellMoveInsertReqDto {
     @ApiModelProperty(value = "고객 전화번호3",  required = true)
     private String cusPhone3;
 
-    @ApiModelProperty(value = "기기일련번호(바코드)",  required = true)
-    private String fullBarcode;
+    @Length(min = 7, max = 20)
+    @ApiModelProperty(value = "원시 바코드 or 정재된 바코드 or 시리얼 넘버", required = true)
+    private String barcode;
 
     @ApiModelProperty(value = "유심일련번호",  required = true)
     private String usimFullBarcode;

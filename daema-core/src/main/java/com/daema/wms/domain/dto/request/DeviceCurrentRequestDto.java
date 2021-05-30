@@ -41,7 +41,7 @@ public class DeviceCurrentRequestDto extends SearchParamDto {
     private String colorName;
 
     // 기기일련번호(바코드)
-    private String fullBarcode;
+    private String barcode;
 
     //제조사
     private Integer maker;

@@ -15,7 +15,7 @@ public class ReturnStockReqDto {
 	private String returnStockMemo;
 	private DeviceStatusDto returnDeviceStatus;
 	private Long prevStockId;
-	private String fullBarcode;
+	private String rawBarcode;
 
 }
 

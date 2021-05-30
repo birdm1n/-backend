@@ -2,6 +2,7 @@ package com.daema.rest.wms.service;
 
 import com.daema.base.domain.CodeDetail;
 import com.daema.base.enums.StatusEnum;
+import com.daema.base.enums.TypeEnum;
 import com.daema.base.repository.CodeDetailRepository;
 import com.daema.commgmt.domain.Goods;
 import com.daema.commgmt.domain.GoodsOption;
@@ -54,6 +55,9 @@ public class InStockMgmtService {
     private final CodeDetailRepository codeDetailRepository;
     private final StoreStockRepository storeStockRepository;
     private final StoreStockHistoryRepository storeStockHistoryRepository;
+    private final DeliveryRepository deliveryRepository;
+    private final MoveStockRepository moveStockRepository;
+    private final StoreStockHistoryMgmtService storeStockHistoryMgmtService;
     private final FileUpload fileUpload;
     private final AuthenticationUtil authenticationUtil;
 
@@ -79,18 +83,24 @@ public class InStockMgmtService {
     public ResponseCodeEnum insertWaitInStock(InStockWaitInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
         Store store = Store.builder().storeId(storeId).build();
+
         // 중복 입력 확인용
-        InStockWait selectEntity = inStockWaitRepository.findByOwnStoreIdAndFullBarcodeAndDelYn(storeId, requestDto.getFullBarcode(), StatusEnum.FLAG_N.getStatusMsg());
-        if (selectEntity != null) return ResponseCodeEnum.DUPL_DATA;
+        long inStockWaitCnt = inStockWaitRepository.inStockWaitDuplCk(storeId, requestDto.getBarcode());
+        if (inStockWaitCnt > 0L) return ResponseCodeEnum.DUPL_DATA;
 
         //device 테이블에 중복된 기기가 있는지 확인
-        Device duplDvc = deviceRepository.findByFullBarcodeAndStoreAndDelYn(requestDto.getFullBarcode(), store, StatusEnum.FLAG_N.getStatusMsg());
-        if (duplDvc != null) return ResponseCodeEnum.DUPL_DVC;
+        long deviceCnt = deviceRepository.deviceDuplCk(store, requestDto.getBarcode());
+        if (deviceCnt > 0L) return ResponseCodeEnum.DUPL_DVC;
+
         // 보유처 정보
         SelectStockDto stockDto = stockRepository.getStock(storeId, requestDto.getTelecom(), requestDto.getStockId());
         if (stockDto == null) return ResponseCodeEnum.NO_STOCK;
-        stockDto.setStatusStr(storeId != stockDto.getStoreId() ? WmsEnum.StockStatStr.M : WmsEnum.StockStatStr.I);
 
+        if (storeId == stockDto.getStoreId()) { /* 매장재고 */
+            stockDto.setStatusStr(WmsEnum.StockStatStr.I);
+        } else { /* 이동재고 */
+            stockDto.setStatusStr(WmsEnum.StockStatStr.M);
+        }
 
         if (requestDto.getGoodsId() == null) {
             return commonBarcodeLogic(requestDto, stockDto, storeId);
@@ -113,6 +123,7 @@ public class InStockMgmtService {
         CodeDetail telecom = codeDetailRepository.findById(goodsEntity.getNetworkAttribute().getTelecom()).orElse(null);
         CodeDetail maker = codeDetailRepository.findById(goodsEntity.getMaker()).orElse(null);
 
+        // 상품의 통신사와 선택한 통신사와 일치 하지 않은경우.
         if (requestDto.getTelecom() != telecom.getCodeSeq()) return ResponseCodeEnum.NOT_MATCH_TELECOM;
         int inStockAmt = 0;
         PubNoti pubNoti = pubNotiRepository.findTopByGoodsIdOrderByRegiDateTimeDesc(goodsEntity.getGoodsId());
@@ -136,7 +147,9 @@ public class InStockMgmtService {
                         .goodsOptionId(goodsOptionEntity.getGoodsOptionId())
                         .colorName(goodsOptionEntity.getColorName())
                         .barcodeType(requestDto.getBarcodeType())
-                        .fullBarcode(requestDto.getFullBarcode())
+                        .rawBarcode(requestDto.getRawBarcode())  /* 원시 바코드 */
+                        .fullBarcode(requestDto.getFullBarcode())       /* 원시 수정 바코드 */
+                        .serialNo(requestDto.getSerialNo())             /* 시리얼 넘버 */
                         .inStockAmt(inStockAmt)
                         .inStockStatus(requestDto.getInStockStatus())
                         .productFaultyYn(requestDto.getProductFaultyYn())
@@ -160,12 +173,16 @@ public class InStockMgmtService {
      Desc : 공통바코드입력 입고대기 insert 로직
      */
     public ResponseCodeEnum commonBarcodeLogic(InStockWaitInsertReqDto requestDto, SelectStockDto stockDto, long storeId) {
-        String commonBarcode = requestDto.getFullBarcode();
+        String commonBarcode = requestDto.getBarcode();
         try {
             commonBarcode = CommonUtil.getCmnBarcode(commonBarcode);
         } catch (Exception e) {
             return ResponseCodeEnum.NO_GOODS;
         }
+        /* todo 원시 바코드 분할 작업 확인필요 */
+        /* 공통바코드인 경우 fullBarcode 로직 적용 */
+        String rawBarcode = requestDto.getRawBarcode();
+        String fullBarcode = rawBarcode.substring(0, rawBarcode.length() - 1); /* 원시 바코드 length -1 */
 
         // 상품정보
         GoodsMatchRespDto goodsMatchRespDto = goodsRepository.goodsMatchBarcode(commonBarcode);
@@ -196,7 +213,9 @@ public class InStockMgmtService {
                         .goodsOptionId(goodsMatchRespDto.getGoodsOptionId())
                         .colorName(goodsMatchRespDto.getColorName())
                         .barcodeType(requestDto.getBarcodeType())
-                        .fullBarcode(requestDto.getFullBarcode())
+                        .rawBarcode(rawBarcode)                         /* 원시 바코드 */
+                        .fullBarcode(fullBarcode)                       /* 원시 수정 바코드 */
+                        .serialNo(requestDto.getSerialNo())             /* 시리얼 넘버 */
                         .commonBarcode(commonBarcode)
                         .inStockAmt(inStockAmt)
                         .inStockStatus(requestDto.getInStockStatus())
@@ -243,11 +262,17 @@ public class InStockMgmtService {
         Store storeObj = Store.builder()
                 .storeId(storeId)
                 .build();
+        //내 보유 창고에서 1건 추출
+        Stock prevStock = stockRepository.findTopByRegiStoreIdAndStockTypeAndDelYn(storeId,
+                TypeEnum.STOCK_TYPE_I.getStatusCode(), StatusEnum.FLAG_N.getStatusMsg());
+
         List<Long> inStockWaitIds = new ArrayList<>();
         List<Device> devices = new ArrayList<>();
         List<StoreStock> storeStocks = new ArrayList<>();
         List<DeviceStatus> deviceStatuses = new ArrayList<>();
         List<InStock> inStocks = new ArrayList<>();
+        List<MoveStock> moveStocks = new ArrayList<>();
+        List<Delivery> deliveries = new ArrayList<>();
 
         if (CommonUtil.isNotEmptyList(reqListDto)) {
             for (InStockInsertReqDto reqDto : reqListDto) {
@@ -258,11 +283,13 @@ public class InStockMgmtService {
                         .provId(reqDto.getProvId())
                         .build();
                 inStockWaitIds.add(reqDto.getWaitId());
-
+                /* todo device raw, full, serial 확인  /  입고대기 request 로직*/
                 devices.add(
                         Device.builder()
                                 .barcodeType(reqDto.getBarcodeType())
-                                .fullBarcode(reqDto.getFullBarcode())
+                                .rawBarcode(reqDto.getRawBarcode())     /* 원시 바코드 */
+                                .fullBarcode(reqDto.getFullBarcode())   /* 원시 수정 바코드 */
+                                .serialNo(reqDto.getSerialNo())         /* 시리얼 넘버 */
                                 .inStockAmt(reqDto.getInStockAmt())
                                 .goodsOption(
                                         GoodsOption.builder()
@@ -272,7 +299,7 @@ public class InStockMgmtService {
                                 .store(storeObj)
                                 .build()
                 );
-                // device 추가
+
                 deviceStatuses.add(
                         DeviceStatus
                                 .builder()
@@ -305,6 +332,29 @@ public class InStockMgmtService {
                                 .nextStock(stockObj)
                                 .build()
                 );
+                /* todo 이동재고인 경우 로직 처리 확인필요*/
+                if (reqDto.getStatusStr() == WmsEnum.StockStatStr.M) {
+                    deliveries.add(
+                            Delivery.builder()
+                                    .deliveryType(WmsEnum.DeliveryType.UNKNOWN)
+                                    .courier(null)
+                                    .invoiceNo(null)
+                                    .deliveryMemo(null)
+                                    .deliveryStatus(WmsEnum.DeliveryStatus.NONE)
+                                    .build()
+                    );
+
+                    Stock nextStock = stockRepository.findById(reqDto.getStockId()).orElse(null); // 이동할 보유처
+                    moveStocks.add(
+                            // device, delivery 는 insert 후 추가
+                            MoveStock.builder()
+                                    .moveStockType(WmsEnum.MoveStockType.STOCK_MOVE)
+                                    .prevStock(prevStock)
+                                    .nextStock(nextStock)
+                                    .store(storeObj)
+                                    .build()
+                    );
+                }
 
             }
             // 1. 기기 insert
@@ -316,6 +366,7 @@ public class InStockMgmtService {
                 deviceStatuses.get(i).setDevice(tmpDevice);
                 inStocks.get(i).setDevice(tmpDevice);
                 storeStocks.get(i).setDevice(tmpDevice);
+                moveStocks.get(i).setDevice(tmpDevice);
             }
             // 2. 기기상태 insert
             deviceStatuses = deviceStatusRepository.saveAll(deviceStatuses);
@@ -334,9 +385,9 @@ public class InStockMgmtService {
             }
 
             // 4. 재고 insert
-            storeStockRepository.saveAll(storeStocks);
+            storeStocks = storeStockRepository.saveAll(storeStocks);
 
-            // 5. 재고 히스토리 insert
+            // 5. 입고 => 재고 히스토리 insert
             for (StoreStock storeStock : storeStocks) {
                 storeStockHistoryRepository.save(storeStock.toHistoryEntity(storeStock));
             }
@@ -351,6 +402,36 @@ public class InStockMgmtService {
                         );
             } else {
                 throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+            }
+
+            // 7. 이동 재고인 경우 [delivery],[moveStock],[storeStock],[storeStockHistory] insert
+            if (CommonUtil.isNotEmptyList(deliveries)) {
+                // 배송정보 insert
+                deliveries = deliveryRepository.saveAll(deliveries);
+
+                for (int i = 0; i < deliveries.size(); i++) {
+                    Delivery tmpDelivery = deliveries.get(i);
+                    moveStocks.get(i).setDelivery(tmpDelivery);
+                }
+
+                // 이동재고 insert
+                moveStocks = moveStockRepository.saveAll(moveStocks);
+
+
+                for (MoveStock moveStock : moveStocks) {
+                    // [재고] update
+                    StoreStock storeStock = moveStock.getDevice().getStoreStock();
+                    // todo 데이터 확인 INSTOCK => STOCK_MOVE => storeStock값 확인
+                    storeStock.updateToMove(moveStock);
+//                    storeStock.setStockType(WmsEnum.StockType.valueOf(moveStock.getMoveStockType().name()));
+//                    storeStock.setStockTypeId(moveStock.getMoveStockId());
+//                    storeStock.setPrevStock(moveStock.getPrevStock());
+//                    storeStock.setNextStock(moveStock.getNextStock());
+
+                    // [재고이력] insert, update
+                    storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
+                    storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
+                }
             }
 
         } else {
@@ -423,7 +504,7 @@ public class InStockMgmtService {
 
                     for (String excelBarcode : excelBarcodeList) {
                         InStockWaitInsertReqDto inStockWaitInsertReqDto = InStockWaitInsertReqDto.builder()
-                                .fullBarcode(excelBarcode)
+                                .barcode(excelBarcode)
                                 .provId(requestDto.getProvId())
                                 .telecom(requestDto.getTelecom())
                                 .stockId(requestDto.getStockId())

@@ -3,7 +3,6 @@ package com.daema.wms.repository;
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.QMember;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
-import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.Goods;
 import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.dto.request.InStockRequestDto;
@@ -72,7 +71,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                 , goodsOption.goodsOptionId.as("goodsOptionId")
                 , goodsOption.colorName.as("colorName")
                 , goodsOption.commonBarcode.as("commonBarcode")
-                , device.fullBarcode.as("fullBarcode")
+                , device.rawBarcode.as("rawBarcode")
                 , device.inStockAmt.as("inStockAmt")
                 , deviceStatus.inStockStatus.as("inStockStatus")
                 , deviceStatus.productFaultyYn.as("productFaultyYn")
@@ -109,7 +108,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                         eqStockId(requestDto.getStockId()),
                         eqInStockStatus(requestDto.getInStockStatus()),
                         eqStatusStr(requestDto.getStatusStr()),
-                        containsFullBarcode(requestDto.getFullBarcode()),
+                        containsBarcode(requestDto.getBarcode()),
                         eqFaultyYn(requestDto.getProductFaultyYn()),
                         eqExtrrStatus(requestDto.getExtrrStatus()),
                         eqColorName(requestDto.getColorName()),
@@ -200,11 +199,15 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
         return goodsOption.colorName.eq(colorName);
     }
 
-    private BooleanExpression containsFullBarcode(String fullBarcode) {
-        if(StringUtils.isEmpty(fullBarcode)){
+    private BooleanExpression containsBarcode(String barcode) {
+        if(StringUtils.isEmpty(barcode)){
             return null;
         }
-        return device.fullBarcode.contains(fullBarcode);
+        return device.rawBarcode.contains(barcode).or(
+                device.fullBarcode.contains(barcode).or(
+                        device.serialNo.contains(barcode)
+                )
+        );
     }
 
     private BooleanExpression eqExtrrStatus(WmsEnum.DeviceExtrrStatus extrrStatus) {

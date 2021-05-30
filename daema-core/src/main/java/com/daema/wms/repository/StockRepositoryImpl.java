@@ -75,7 +75,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "       ,stock_id " +
                 "       ,stock_name " +
                 "       ,hierarchy " +
-                "       ,full_barcode " +
+                "       ,raw_barcode " +
                 "       ,in_stock_amt " +
                 "       ,goods_name " +
                 "       ,model_name " +
@@ -198,11 +198,11 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
         if (StringUtils.hasText(requestDto.getColorName())) {
             sb.append(" and go.color_name = '").append(requestDto.getColorName()).append("'");
         }
-        if (StringUtils.hasText(requestDto.getFullBarcode())) {
+        if (StringUtils.hasText(requestDto.getBarcode())) {
             sb.append(" and (")
-                    .append("raw_barcode like '%").append(requestDto.getFullBarcode()).append("%'")
-                    .append("or full_barcode like '%").append(requestDto.getFullBarcode()).append("%'")
-                    .append("or serial_no like '%").append(requestDto.getFullBarcode()).append("%'")
+                    .append("raw_barcode like '%").append(requestDto.getBarcode()).append("%'")
+                    .append("or full_barcode like '%").append(requestDto.getBarcode()).append("%'")
+                    .append("or serial_no like '%").append(requestDto.getBarcode()).append("%'")
                     .append(") ");
         }
 

@@ -14,14 +14,15 @@ import lombok.*;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeviceResponseDto {
-
-	private Long dvcId;
-	private String fullBarcode;
+//  사용하지 않음..
+//	private Long dvcId;
+//	private String rawBarcode;
+//	private Long storeId;
 	private DeviceDto deviceDto;
 	private InStockMgmtDto inStockMgmtDto;
 	private GoodsMgmtDto goodsMgmtDto;
 	private StockMgmtDto stockMgmtDto;
-	private Long storeId;
+
 
 /*
 	public static DeviceResponseDto from(Device device) {

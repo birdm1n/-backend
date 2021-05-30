@@ -52,8 +52,8 @@ public class ReturnStockMgmtController {
 
     @ApiOperation(value = "기기정보 조회", notes = "기기고유번호로 기기정보를 조회합니다")
     @GetMapping("/getDeviceInfo")
-    public ResponseEntity<CommonResponse<ResponseDto<DeviceResponseDto>>> getDeviceInfo(@ApiParam(value = "기기고유번호", required = true) @RequestParam String fullBarcode) {
-        return responseHandler.getResponseMessageAsRetrieveResult(deviceMgmtService.getDeviceInfoFromFullBarcode(fullBarcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    public ResponseEntity<CommonResponse<ResponseDto<DeviceResponseDto>>> getDeviceInfo(@ApiParam(value = "기기고유번호", required = true) @RequestParam String barcode) {
+        return responseHandler.getResponseMessageAsRetrieveResult(deviceMgmtService.getDeviceInfoFromBarcode(barcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "이동재고반품 등록 엑셀 업로드", notes = "엑셀 업로드로 신규 이동재고반품 처리를 합니다.", produces = "multipart/form-data")

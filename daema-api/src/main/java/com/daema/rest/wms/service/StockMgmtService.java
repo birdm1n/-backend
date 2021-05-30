@@ -144,11 +144,11 @@ public class StockMgmtService {
 		return stockRepository.innerStockList(storeId);
 	}
 	@Transactional(readOnly = true)
-	public SearchMatchResponseDto getDeviceStock(String fullBarcode) {
+	public SearchMatchResponseDto getDeviceStock(String barcode) {
 		long storeId = authenticationUtil.getStoreId();
 		Store store = Store.builder().storeId(storeId).build();
 		//device 테이블에 중복된 기기가 있는지 확인
-		Device deviceEntity = deviceRepository.findByFullBarcodeAndStoreAndDelYn(fullBarcode, store, StatusEnum.FLAG_N.getStatusMsg());
+		Device deviceEntity = deviceRepository.getDeviceWithBarcode(barcode, store, StatusEnum.FLAG_N.getStatusMsg());
 		if(deviceEntity == null){
 			return null;
 		}

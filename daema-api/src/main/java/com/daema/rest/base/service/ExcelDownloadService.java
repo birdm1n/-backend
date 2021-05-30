@@ -79,7 +79,7 @@ public class ExcelDownloadService {
                 failList.forEach(
                         fail -> {
                             HashMap<String, Object> map = new HashMap();
-                            map.put("fullBarcode", fail);
+                            map.put("rawBarcode", fail);
                             mapList.add(map);
                         }
                 );
@@ -102,7 +102,7 @@ public class ExcelDownloadService {
                 failList.forEach(
                         fail -> {
                             HashMap<String, Object> map = new HashMap();
-                            map.put("fullBarcode", fail);
+                            map.put("rawBarcode", fail);
                             mapList.add(map);
                         }
                 );

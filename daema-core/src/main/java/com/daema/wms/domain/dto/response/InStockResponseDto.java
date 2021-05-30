@@ -71,7 +71,8 @@ public class InStockResponseDto {
     private long goodsOptionId;
     private String colorName;
     private String commonBarcode;
-    private String fullBarcode;
+    private String rawBarcode;
+
 
     // 입고단가
     private int inStockAmt;
