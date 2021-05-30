@@ -1,7 +1,6 @@
 package com.daema.rest.wms.dto;
 
 import com.daema.wms.domain.Stock;
-import com.daema.wms.domain.dto.response.StockListDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.*;
@@ -18,7 +17,7 @@ import java.util.List;
 public class StockMgmtDto {
 
 	private long stockId;
-	private long parentStockId;
+	private Stock parentStock;
 	private String stockName;
 	private String chargerName;
 	private String chargerPhone;
@@ -42,7 +41,7 @@ public class StockMgmtDto {
 	public static StockMgmtDto from (Stock stock) {
 		return StockMgmtDto.builder()
 				.stockId(stock.getStockId())
-				.parentStockId(stock.getParentStockId())
+				.parentStock(stock.getParentStock())
 				.stockName(stock.getStockName())
 				.chargerName(stock.getChargerName())
 				.chargerPhone(stock.getChargerPhone())
@@ -57,24 +56,6 @@ public class StockMgmtDto {
 				.updUserId(stock.getUpdUserId())
 				.updDateTime(stock.getUpdDateTime())
 				.delYn(stock.getDelYn())
-			.build();
-	}
-
-	public static StockMgmtDto dtoToDto (StockListDto stockListDto) {
-		return StockMgmtDto.builder()
-				.depth(stockListDto.getDepth())
-				.stockId(stockListDto.getStockId())
-				.parentStockId(stockListDto.getParentStockId())
-				.storeId(stockListDto.getStoreId())
-				.stockName(stockListDto.getStockName())
-				.stockType(stockListDto.getStockType())
-				.chargerName(stockListDto.getChargerName())
-				.chargerPhone(stockListDto.getChargerPhone())
-				.chargerPhone1(stockListDto.getChargerPhone1())
-				.chargerPhone2(stockListDto.getChargerPhone2())
-				.chargerPhone3(stockListDto.getChargerPhone3())
-				.hierarchy(stockListDto.getHierarchy())
-				.dvcCnt(stockListDto.getDvcCnt())
 			.build();
 	}
 }

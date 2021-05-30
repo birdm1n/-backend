@@ -1,16 +1,17 @@
 package com.daema.wms.repository;
 
 import com.daema.base.enums.StatusEnum;
+import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.StockRequestDto;
 import com.daema.wms.domain.dto.response.SelectStockDto;
 import com.daema.wms.domain.dto.response.StockDeviceListDto;
-import com.daema.wms.domain.dto.response.StockListDto;
 import com.daema.wms.repository.custom.CustomStockRepository;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.util.StringUtils;
 
@@ -44,94 +45,26 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
         return retMap;
     }
 
-    private List<StockListDto> searchStockList(StockRequestDto requestDto) {
+    private List<Stock> searchStockList(StockRequestDto requestDto) {
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("select 1 as depth " +
-                "           , stock_id " +
-                "           , store_id " +
-                "           , parent_stock_id " +
-                "           , stock_name " +
-                "           , stock_type " +
-                "           , charger_name " +
-                "           , charger_phone " +
-                "           , charger_phone1 " +
-                "           , charger_phone2 " +
-                "           , charger_phone3 " +
-                "           , concat(stock_id, '/') as hierarchy" +
-                "           , 0 as dvc_cnt " +
-                "        from stock " +
-                "       where regi_store_id = :regi_store_id " +
-                "         and parent_stock_id = 0 " +
-                "         and del_yn = 'N' " +
-                " " +
-                "       union " +
-                " " +
-                "      select 2 as depth " +
-                "           , child.stock_id " +
-                "           , child.store_id " +
-                "           , child.parent_stock_id " +
-                "           , child.stock_name " +
-                "           , child.stock_type " +
-                "           , child.charger_name " +
-                "           , child.charger_phone " +
-                "           , child.charger_phone1 " +
-                "           , child.charger_phone2 " +
-                "           , child.charger_phone3 " +
-                "           , concat(parent.stock_id, '/', child.stock_id, '/') as hierarchy " +
-                "           , 0 as dvc_cnt " +
-                "        from stock child " +
-                "        inner join stock parent " +
-                "        on child.regi_store_id = :regi_store_id " +
-                "            and child.del_yn = 'N' " +
-                "            and parent.del_yn = 'N' " +
-                "            and parent.parent_stock_id = 0 " +
-                "            and child.parent_stock_id = parent.stock_id " +
-                " " +
-                "       union " +
-                " " +
-                "      select 3 as depth " +
-                "           , child.stock_id " +
-                "           , child.store_id " +
-                "           , child.parent_stock_id " +
-                "           , child.stock_name " +
-                "           , child.stock_type " +
-                "           , child.charger_name " +
-                "           , child.charger_phone " +
-                "           , child.charger_phone1 " +
-                "           , child.charger_phone2 " +
-                "           , child.charger_phone3 " +
-                "           , concat(parent.hierarchy, child.stock_id, '/') as hierarchy " +
-                "           , 0 as dvc_cnt " +
-                "        from stock child " +
-                "        inner join (select child.stock_id " +
-                "                         , child.store_id " +
-                "                         , child.parent_stock_id " +
-                "                         , child.stock_name " +
-                "                         , child.stock_type " +
-                "                         , child.charger_name " +
-                "                         , child.charger_phone " +
-                "                         , child.charger_phone1 " +
-                "                         , child.charger_phone2 " +
-                "                         , child.charger_phone3 " +
-                "                         , concat(parent.stock_id, '/', child.stock_id, '/') as hierarchy " +
-                "                      from stock child " +
-                "                      inner join stock parent " +
-                "                      on parent.parent_stock_id = 0 " +
-                "                          and child.parent_stock_id = parent.stock_id " +
-                "                     where child.regi_store_id = :regi_store_id " +
-                "                       and child.del_yn = 'N' " +
-                "                       and parent.del_yn = 'N') as parent " +
-                "        on parent.stock_id = child.parent_stock_id " +
-                "            and child.regi_store_id = :regi_store_id " +
-                "            and child.del_yn = 'N' " +
-                "      order by hierarchy ");
+        QStock parent = new QStock("parent");
+        QStock child = new QStock("child");
 
+        JPAQueryFactory query =  new JPAQueryFactory(em);
 
-        Query query = em.createNativeQuery(sb.toString(), "StockList")
-                .setParameter("regi_store_id", requestDto.getStoreId());
-
-        return query.getResultList();
+        return query.selectFrom(parent)
+                .distinct()
+                .leftJoin(parent.childStockList, child)
+                .fetchJoin()
+                .where(parent.parentStock.isNull()
+                        ,parent.regiStoreId.eq(requestDto.getStoreId())
+                        ,parent.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
+                        .and(child.stockId.isNotNull()
+                                .and(child.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
+                                .or(child.stockId.isNull()))
+                )
+                .orderBy(parent.stockName.asc(), child.stockName.asc())
+                .fetch();
     }
 
     private List<StockDeviceListDto> searchStockDeviceList(StockRequestDto requestDto) {
@@ -181,7 +114,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "                                '/') as hierarchy " +
                 "                    from stock " +
                 "                   where regi_store_id = :regi_store_id " +
-                "                     and parent_stock_id = 0 " +
+                "                     and parent_stock_id is null " +
                 "                     and del_yn = 'N' " +
                 "                   union " +
                 "                  select child.stock_id " +
@@ -196,7 +129,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "                    on child.regi_store_id = :regi_store_id " +
                 "                        and child.del_yn = 'N' " +
                 "                        and parent.del_yn = 'N' " +
-                "                        and parent.parent_stock_id = 0 " +
+                "                        and parent.parent_stock_id is null " +
                 "                        and child.parent_stock_id = parent.stock_id " +
                 "                   union " +
                 "                  select child.stock_id " +
@@ -224,7 +157,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "                          from stock child " +
                 "                          inner join " +
                 "                          stock parent " +
-                "                          on parent.parent_stock_id = 0 " +
+                "                          on parent.parent_stock_id is null " +
                 "                              and child.parent_stock_id = parent.stock_id " +
                 "                         where child.regi_store_id = :regi_store_id " +
                 "                           and child.del_yn = 'N' " +
@@ -298,7 +231,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 .where(
                         stock.regiStoreId.eq(storeId),
                         stock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
-                        stock.parentStockId.eq(0L),
+                        stock.parentStock.isNull(),
                         store.telecom.eq(telecom)
                 )
                 .fetch();
@@ -323,7 +256,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         stock.stockId.eq(stockId),
                         stock.regiStoreId.eq(storeId),
                         stock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
-                        stock.parentStockId.eq(0L),
+                        stock.parentStock.isNull(),
                         store.telecom.eq(telecom)
                 )
                 .fetchOne();
@@ -344,7 +277,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         stock.regiStoreId.eq(storeId),
                         stock.storeId.ne(storeId),
                         stock.delYn.eq("N"),
-                        stock.parentStockId.eq(0L)
+                        stock.parentStock.isNull()
                 )
                 .fetch();
     }

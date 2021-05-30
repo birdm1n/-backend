@@ -14,20 +14,18 @@ import com.daema.wms.domain.Device;
 import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.StockRequestDto;
 import com.daema.wms.domain.dto.response.SelectStockDto;
-import com.daema.wms.domain.dto.response.StockListDto;
+import com.daema.rest.wms.dto.response.StockListDto;
 import com.daema.wms.repository.DeviceRepository;
 import com.daema.wms.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -50,44 +48,15 @@ public class StockMgmtService {
 
 		HashMap<String, List> stockDeviceListMap = stockRepository.getStockAndDeviceList(requestDto);
 
-		List<StockListDto> dataList = stockDeviceListMap.get("stockList");
-		List<StockMgmtDto> stockList = new ArrayList<>();
-
-		for(Iterator<StockListDto> iterator = dataList.iterator(); iterator.hasNext();){
-
-			StockListDto stockDto = iterator.next();
-
-			if(StringUtils.countOccurrencesOf(stockDto.getHierarchy(), "/") == 1){
-
-				stockList.add(stockList.size(), StockMgmtDto.dtoToDto(stockDto));
-
-			}else if(StringUtils.countOccurrencesOf(stockDto.getHierarchy(), "/") == 2){
-
-				addChildrenElementToStock(stockList.get(stockList.size() - 1), stockDto);
-
-			}else if(StringUtils.countOccurrencesOf(stockDto.getHierarchy(), "/") == 3){
-
-				addChildrenElementToStock(stockList.get(stockList.size() - 1).getChildren()
-						.get(stockList.get(stockList.size() - 1).getChildren().size() - 1), stockDto);
-			}
-		}
+		List<Stock> stockList = stockDeviceListMap.get("stockList");
 
 		stockMgmtResponseDto.setStoreName(storeRepository.findById(requestDto.getStoreId()).orElseGet(Store::new).getStoreName());
-		stockMgmtResponseDto.setStockList(stockList);
+		stockMgmtResponseDto.setStockList(stockList.stream().map(StockListDto::new).collect(Collectors.toList()));
 		stockMgmtResponseDto.setStockDeviceList(stockDeviceListMap.get("stockDeviceList"));
 
 		//TODO dvcCnt 각 보유처별 기기 카운트. 하위 보유처 포함
 
-
 		return stockMgmtResponseDto;
-	}
-
-	private void addChildrenElementToStock(StockMgmtDto parent, StockListDto child){
-		if(parent.getChildren() == null){
-			parent.setChildren(new ArrayList<>());
-		}
-
-		parent.getChildren().add(StockMgmtDto.dtoToDto(child));
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)
@@ -115,7 +84,7 @@ public class StockMgmtService {
 				Stock.builder()
 						.stockId(stockMgmtDto.getStockId())
 						.stockName(stockMgmtDto.getStockName())
-						.parentStockId(stockMgmtDto.getParentStockId())
+						.parentStock(stockMgmtDto.getParentStock())
 						.storeId(stockMgmtDto.getStoreId())
 						.stockType(stockMgmtDto.getStockType())
 						.regiStoreId(stockMgmtDto.getRegiStoreId())

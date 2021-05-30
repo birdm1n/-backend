@@ -101,7 +101,7 @@ public class OpeningStoreMgmtService {
                 StockMgmtDto.builder()
                         .stockId(0)
                         .stockName(openingStoreMgmtDto.getOpenStoreName())
-                        .parentStockId(0)
+                        .parentStock(null)
                         .storeId(openStoreId)
                         .stockType(TypeEnum.STOCK_TYPE_O.getStatusCode())
                         .regiStoreId(authenticationUtil.getTargetStoreId(openingStoreMgmtDto.getStoreId()))
