@@ -31,6 +31,7 @@ import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
 import static com.daema.wms.domain.QInStock.inStock;
 import static com.daema.wms.domain.QProvider.provider;
 import static com.daema.wms.domain.QStock.stock;
+import static com.daema.wms.domain.QStoreStock.storeStock;
 
 public class InStockRepositoryImpl extends QuerydslRepositorySupport implements CustomInStockRepository {
 
@@ -83,6 +84,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                 , inStock.updDateTime.as("updDateTime")
                 , updMember.seq.as("updUserId")
                 , updMember.username.as("updUserName")
+                , storeStock.stockType.as("stockType")
         ))
                 .from(inStock)
                 .innerJoin(inStock.store, store).on(
@@ -102,6 +104,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                 .innerJoin(telecom).on(
                     goods.networkAttribute.telecom.eq(telecom.codeSeq)
                 )
+                .innerJoin(device.storeStock,storeStock)
                 .where(
                         betweenInstockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
                         eqProvId(requestDto.getProvId()),
@@ -216,22 +219,18 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
         }
         return deviceStatus.extrrStatus.eq(extrrStatus);
     }
-
     private BooleanExpression eqFaultyYn(String productFaultyYn) {
         if(StringUtils.isEmpty(productFaultyYn)){
             return null;
         }
         return deviceStatus.productFaultyYn.eq(productFaultyYn);
     }
-
     private BooleanExpression eqStatusStr(WmsEnum.StockStatStr statusStr) {
         if(statusStr == null){
             return null;
         }
         return inStock.statusStr.eq(statusStr);
     }
-
-
     private BooleanExpression betweenInstockRegDt(String startDt, String endDt){
         if(StringUtils.isEmpty(startDt) || StringUtils.isEmpty(endDt)){
             return null;
@@ -241,5 +240,4 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
                 RetrieveClauseBuilder.stringToLocalDateTime(endDt, "e")
         );
     }
-
 }

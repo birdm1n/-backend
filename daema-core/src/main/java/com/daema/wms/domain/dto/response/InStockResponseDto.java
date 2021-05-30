@@ -98,6 +98,7 @@ public class InStockResponseDto {
     private LocalDateTime updDateTime;
     private Long updUserId;
     private String updUserName;
+    private WmsEnum.StockType stockType;
 
     // 경과일
     private Long diffRegiDate;
