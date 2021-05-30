@@ -18,8 +18,8 @@ public enum ResponseCodeEnum {
     NO_COLOR("1007", "색상을 선택해주세요"),
     NO_CAPACITY("1007", "용량을 선택해주세요"),
     NO_CAPACITY_COLOR("1007", "용량과 색상이 일치하는 기기가 없습니다"),
-    NO_STORE_STOCK("2000","기기 재고가 존재하지 않습니다")
-    
+    NO_STORE_STOCK("2000","기기 재고가 존재하지 않습니다"),
+    NOT_CHNG_STOCK_TYPE("2000","해당 기기의 상태를 변경할 수 없습니다.")
     ,
     ;
 

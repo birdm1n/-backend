@@ -153,6 +153,12 @@ public class MoveStockMgmtService {
         // 2. [재고 ]조회
         StoreStock storeStock = device.getStoreStock();
         if (storeStock == null) return ResponseCodeEnum.NO_STORE_STOCK;
+        WmsEnum.StockType stockType = storeStock.getStockType();
+        /* 입고상태이거나, 이동재고인 경우에만 이동가능 */
+        if(!(stockType == WmsEnum.StockType.IN_STOCK
+                || stockType == WmsEnum.StockType.STOCK_MOVE)) {
+            return ResponseCodeEnum.NOT_CHNG_STOCK_TYPE;
+        }
 
         // 택배 타입인 경우 = 배송중
         WmsEnum.DeliveryStatus deliveryStatus =
