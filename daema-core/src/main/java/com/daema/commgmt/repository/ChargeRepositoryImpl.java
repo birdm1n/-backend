@@ -50,6 +50,7 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
                 Charge.class
                 ,charge.chargeId
                 ,charge.chargeName
+                ,charge.chargeCode
                 ,charge.chargeAmt
                 ,charge.category
                 ,charge.originKey
@@ -110,6 +111,7 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
                 Charge.class
                 ,charge.chargeId
                 ,charge.chargeName
+                ,charge.chargeCode
                 ,charge.chargeAmt
                 ,charge.category
                 ,charge.originKey
