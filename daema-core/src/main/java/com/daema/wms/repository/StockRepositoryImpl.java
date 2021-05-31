@@ -52,15 +52,15 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
         QStock parent = new QStock("parent");
         QStock child = new QStock("child");
 
-        JPAQueryFactory query =  new JPAQueryFactory(em);
+        JPAQueryFactory query = new JPAQueryFactory(em);
 
         return query.selectFrom(parent)
                 .distinct()
                 .leftJoin(parent.childStockList, child)
                 .fetchJoin()
                 .where(parent.parentStock.isNull()
-                        ,parent.regiStoreId.eq(requestDto.getStoreId())
-                        ,parent.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
+                        , parent.regiStoreId.eq(requestDto.getStoreId())
+                        , parent.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 )
                 .orderBy(
                         new CaseBuilder()
@@ -233,17 +233,28 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 , stock.stockName.as("stockName")
         ));
         return query.from(stock)
-                .innerJoin(store)
-                .on(
+                .innerJoin(store).on(
                         stock.storeId.eq(store.storeId)
                 )
+
                 .where(
                         stock.regiStoreId.eq(storeId),
                         stock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                         stock.parentStock.isNull(),
                         store.telecom.eq(telecom)
                 )
-                .orderBy(stock.stockName.asc())
+                .orderBy(
+                        new CaseBuilder()
+                                .when(stock.stockType.eq(TypeEnum.STOCK_TYPE_O.getStatusCode()))
+                                .then("A")
+                                .when(stock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()))
+                                .then("B")
+                                .when(stock.stockType.eq(TypeEnum.STOCK_TYPE_S.getStatusCode()))
+                                .then("C")
+                                .otherwise(stock.stockType).asc()
+                        ,
+                        stock.stockName.asc()
+                )
                 .fetch();
     }
 
@@ -269,6 +280,18 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         stock.parentStock.isNull(),
                         store.telecom.eq(telecom)
                 )
+                .orderBy(
+                        new CaseBuilder()
+                                .when(stock.stockType.eq(TypeEnum.STOCK_TYPE_O.getStatusCode()))
+                                .then("A")
+                                .when(stock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()))
+                                .then("B")
+                                .when(stock.stockType.eq(TypeEnum.STOCK_TYPE_S.getStatusCode()))
+                                .then("C")
+                                .otherwise(stock.stockType).asc()
+                        ,
+                        stock.stockName.asc()
+                )
                 .fetchOne();
     }
 
@@ -286,8 +309,20 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 .where(
                         stock.regiStoreId.eq(storeId),
                         stock.storeId.ne(storeId),
-                        stock.delYn.eq("N"),
+                        stock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                         stock.parentStock.isNull()
+                )
+                .orderBy(
+                        new CaseBuilder()
+                                .when(stock.stockType.eq(TypeEnum.STOCK_TYPE_O.getStatusCode()))
+                                .then("A")
+                                .when(stock.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()))
+                                .then("B")
+                                .when(stock.stockType.eq(TypeEnum.STOCK_TYPE_S.getStatusCode()))
+                                .then("C")
+                                .otherwise(stock.stockType).asc()
+                        ,
+                        stock.stockName.asc()
                 )
                 .fetch();
     }

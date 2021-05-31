@@ -53,6 +53,10 @@ public class Device extends BaseEntity {
     @Column(name = "barcode_type", columnDefinition = "varchar(255) comment '바코드 타입'")
     private WmsEnum.BarcodeType barcodeType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "old_match_status", columnDefinition = "varchar(255) comment '구전산 기기 매칭 상태값'")
+    private WmsEnum.OldMatchState oldMatchState;
+
     @Column(name = "raw_barcode", columnDefinition = "varchar(255) comment '원시 바코드'")
     private String rawBarcode;
 

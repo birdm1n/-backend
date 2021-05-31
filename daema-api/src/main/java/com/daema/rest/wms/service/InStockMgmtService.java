@@ -13,6 +13,7 @@ import com.daema.commgmt.repository.GoodsOptionRepository;
 import com.daema.commgmt.repository.GoodsRepository;
 import com.daema.commgmt.repository.PubNotiRepository;
 import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.service.ShellService;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
@@ -58,6 +59,7 @@ public class InStockMgmtService {
     private final DeliveryRepository deliveryRepository;
     private final MoveStockRepository moveStockRepository;
     private final StoreStockHistoryMgmtService storeStockHistoryMgmtService;
+    private final ShellService shellService;
     private final FileUpload fileUpload;
     private final AuthenticationUtil authenticationUtil;
 
@@ -115,6 +117,7 @@ public class InStockMgmtService {
     private ResponseCodeEnum handWritingLogic(InStockWaitInsertReqDto requestDto, SelectStockDto stockDto, long storeId) {
         if (requestDto.getColorName() == null) return ResponseCodeEnum.NO_COLOR;
         if (requestDto.getCapacity() == null) return ResponseCodeEnum.NO_CAPACITY;
+        requestDto.setSerialNo(requestDto.getBarcode());
 
         Goods goodsEntity = goodsRepository.findById(requestDto.getGoodsId()).orElse(null);
         GoodsOption goodsOptionEntity = goodsOptionRepository.findTopByGoodsAndCapacityAndColorNameAndDelYn(goodsEntity, requestDto.getCapacity(), requestDto.getColorName(), "N");
@@ -291,6 +294,7 @@ public class InStockMgmtService {
                                 .fullBarcode(reqDto.getFullBarcode())   /* 원시 수정 바코드 */
                                 .serialNo(reqDto.getSerialNo())         /* 시리얼 넘버 */
                                 .inStockAmt(reqDto.getInStockAmt())
+                                .oldMatchState(WmsEnum.OldMatchState.NONE)
                                 .goodsOption(
                                         GoodsOption.builder()
                                                 .goodsOptionId(reqDto.getGoodsOptionId())
@@ -408,6 +412,7 @@ public class InStockMgmtService {
             } else {
                 throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
             }
+
 
             // 7. 이동 재고인 경우 [delivery],[moveStock],[storeStock],[storeStockHistory] insert
             if (CommonUtil.isNotEmptyList(deliveries)) {

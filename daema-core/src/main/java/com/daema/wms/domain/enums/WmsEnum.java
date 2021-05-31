@@ -19,6 +19,21 @@ public enum WmsEnum {
         }
     }
 
+    public enum OldMatchState {
+        NONE( "보류"),
+        OK( "성공"),
+        FAIL( "실패"),
+        ;
+        private final String statusMsg;
+
+        OldMatchState(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
+
     public enum StockStatStr {
         I("매장재고"),
         M("이동재고")

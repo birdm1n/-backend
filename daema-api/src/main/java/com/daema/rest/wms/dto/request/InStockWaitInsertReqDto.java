@@ -2,8 +2,10 @@ package com.daema.rest.wms.dto.request;
 
 import com.daema.wms.domain.enums.WmsEnum;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-import org.hibernate.validator.constraints.Length;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
@@ -26,7 +28,6 @@ public class InStockWaitInsertReqDto {
     @ApiModelProperty(value = "보유처 ID", example = "0", required = true)
     private Long stockId;
 
-    @Length(min = 7, max = 20)
     @ApiModelProperty(value = "원시 바코드 or 정재된 바코드 or 시리얼 넘버", required = true)
     private String barcode;
 
@@ -102,23 +103,9 @@ public class InStockWaitInsertReqDto {
             this.productMissYn = productMissYn;
         }
     }
-    /* todo 원시 바코드 분할 작업 확인필요 */
+
     public void setBarcode(String barcode) {
         this.barcode = barcode;
-        if(!StringUtils.isEmpty(barcode)){
-            int lastIndex = barcode.length();
-
-            if (barcode.length() >= 10) {
-                /* 원시 바코드 */
-                this.rawBarcode = barcode;
-//                /* 원시 바코드 length -1 */
-//                this.fullBarcode = barcode.substring(0, lastIndex - 1);
-            } else {
-                /* 원시 바코드 */
-                this.rawBarcode = barcode;
-                /* serialNo임 뒷 7자리 */
-                this.serialNo = barcode;
-            }
-        }
+        this.rawBarcode = barcode;
     }
 }
