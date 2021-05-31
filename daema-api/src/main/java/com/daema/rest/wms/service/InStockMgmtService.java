@@ -355,18 +355,23 @@ public class InStockMgmtService {
                                     .build()
                     );
                 }
-
             }
             // 1. 기기 insert
             devices = deviceRepository.saveAll(devices);
 
             // 기기 정보 세팅
+            int moveIndex = 0; // 이동재고를 위한 인덱스
             for (int i = 0; i < devices.size(); i++) {
                 Device tmpDevice = devices.get(i);
                 deviceStatuses.get(i).setDevice(tmpDevice);
                 inStocks.get(i).setDevice(tmpDevice);
                 storeStocks.get(i).setDevice(tmpDevice);
-                moveStocks.get(i).setDevice(tmpDevice);
+
+                /* 이동재고인 경우 로직 처리 확인필요*/
+                if(inStocks.get(i).getStatusStr() == WmsEnum.StockStatStr.M){
+                    moveStocks.get(moveIndex).setDevice(tmpDevice);
+                    moveIndex++;
+                }
             }
             // 2. 기기상태 insert
             deviceStatuses = deviceStatusRepository.saveAll(deviceStatuses);
@@ -420,13 +425,9 @@ public class InStockMgmtService {
 
                 for (MoveStock moveStock : moveStocks) {
                     // [재고] update
-                    StoreStock storeStock = moveStock.getDevice().getStoreStock();
+                    StoreStock storeStock = storeStockRepository.findByStoreAndDevice(storeObj, moveStock.getDevice());
                     // todo 데이터 확인 INSTOCK => STOCK_MOVE => storeStock값 확인
                     storeStock.updateToMove(moveStock);
-//                    storeStock.setStockType(WmsEnum.StockType.valueOf(moveStock.getMoveStockType().name()));
-//                    storeStock.setStockTypeId(moveStock.getMoveStockId());
-//                    storeStock.setPrevStock(moveStock.getPrevStock());
-//                    storeStock.setNextStock(moveStock.getNextStock());
 
                     // [재고이력] insert, update
                     storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);

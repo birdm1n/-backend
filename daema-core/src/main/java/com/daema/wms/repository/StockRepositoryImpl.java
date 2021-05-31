@@ -222,7 +222,6 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 , stock.stockId.as("stockId")
                 , stock.stockName.as("stockName")
         ));
-
         return query.from(stock)
                 .innerJoin(store)
                 .on(
@@ -234,6 +233,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         stock.parentStock.isNull(),
                         store.telecom.eq(telecom)
                 )
+                .orderBy(stock.stockName.asc())
                 .fetch();
     }
 

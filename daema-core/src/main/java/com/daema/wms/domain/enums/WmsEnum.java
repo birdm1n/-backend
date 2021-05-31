@@ -47,20 +47,6 @@ public enum WmsEnum {
         }
     }
 
-    public enum InStockType {
-        IN_STOCK("입고"),
-
-        ;
-        private final String statusMsg;
-
-        InStockType(String statusMsg) {
-            this.statusMsg = statusMsg;
-        }
-        public String getStatusMsg() {
-            return this.statusMsg;
-        }
-    }
-
     public enum MoveStockType {
         SELL_MOVE("판매이동"),
         STOCK_MOVE("이동재고"),
