@@ -51,7 +51,8 @@ public class StockMgmtService {
 		List<Stock> stockList = stockDeviceListMap.get("stockList");
 
 		stockMgmtResponseDto.setStoreName(storeRepository.findById(requestDto.getStoreId()).orElseGet(Store::new).getStoreName());
-		stockMgmtResponseDto.setStockList(stockList.stream().map(StockListDto::new).collect(Collectors.toList()));
+		stockMgmtResponseDto.setStockList(stockList.stream()
+				.map(StockListDto::new).collect(Collectors.toList()));
 		stockMgmtResponseDto.setStockDeviceList(stockDeviceListMap.get("stockDeviceList"));
 
 		//TODO dvcCnt 각 보유처별 기기 카운트. 하위 보유처 포함

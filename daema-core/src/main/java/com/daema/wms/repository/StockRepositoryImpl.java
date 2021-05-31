@@ -1,6 +1,7 @@
 package com.daema.wms.repository;
 
 import com.daema.base.enums.StatusEnum;
+import com.daema.base.enums.TypeEnum;
 import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.dto.request.StockRequestDto;
@@ -9,6 +10,7 @@ import com.daema.wms.domain.dto.response.StockDeviceListDto;
 import com.daema.wms.repository.custom.CustomStockRepository;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -59,11 +61,19 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 .where(parent.parentStock.isNull()
                         ,parent.regiStoreId.eq(requestDto.getStoreId())
                         ,parent.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
-                        .and(child.stockId.isNotNull()
-                                .and(child.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
-                                .or(child.stockId.isNull()))
                 )
-                .orderBy(parent.stockName.asc(), child.stockName.asc())
+                .orderBy(
+                        new CaseBuilder()
+                                .when(parent.stockType.eq(TypeEnum.STOCK_TYPE_O.getStatusCode()))
+                                .then("A")
+                                .when(parent.stockType.eq(TypeEnum.STOCK_TYPE_I.getStatusCode()))
+                                .then("B")
+                                .when(parent.stockType.eq(TypeEnum.STOCK_TYPE_S.getStatusCode()))
+                                .then("C")
+                                .otherwise(parent.stockType).asc()
+                        ,
+                        parent.stockName.asc(), child.stockName.asc()
+                )
                 .fetch();
     }
 

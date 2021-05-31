@@ -1,5 +1,6 @@
 package com.daema.rest.wms.dto.response;
 
+import com.daema.base.enums.StatusEnum;
 import com.daema.wms.domain.Stock;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -57,7 +58,10 @@ public class StockListDto {
         this.depth = StringUtils.countOccurrencesOf(this.hierarchy, "/");
 
         this.dvcCnt = 0;
-        this.children = stock.getChildStockList().stream().map(StockListDto::new).collect(Collectors.toList());
+        this.children = stock.getChildStockList()
+                .stream()
+                .filter(child -> child.getDelYn().equals(StatusEnum.FLAG_N.getStatusMsg()))
+                .map(StockListDto::new).collect(Collectors.toList());
     }
 
 }
