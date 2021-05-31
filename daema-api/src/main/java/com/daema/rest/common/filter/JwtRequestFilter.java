@@ -70,14 +70,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 if(profile != null &&
                         !"prod".equals(profile)) {
 
-                    String at = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InNhIiwiaWF0IjoxNjE5NTEwMzIzLCJleHAiOjE5MzQ4NzAzMjN9.IdMZF15jwUJ3DyQjaiVTQQWEW7bpwyTukoxHFD0GT10";
+                    username = redisUtil.getData("localUserid");
 
-                    //swagger 테스트용. SA-10년
-                    cookieUtil.addHeaderCookie(httpServletResponse, JwtUtil.ACCESS_TOKEN_NAME, at);
-                    jwt = at;
-                    username = jwtUtil.getUsername(jwt);
+                    //validation 통과용 강제 생성
+                    jwt = jwtUtil.generateToken(Member.builder().username(username).build());
                 }
-
             }
             if(username!=null){
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);

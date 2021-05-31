@@ -47,7 +47,7 @@ public class OauthController {
         try{
             final Member member = authService.loginSocialUser(socialData.getId(),socialData.getType());
 
-            return authService.chkLoginMemberStatus(member, res);
+            return authService.chkLoginMemberStatus(member, req, res);
 
         }catch(Exception e){
             return new CommonResponse(ResponseCodeEnum.FAIL.getResultCode(), "로그인에 실패했습니다.", e.getMessage());

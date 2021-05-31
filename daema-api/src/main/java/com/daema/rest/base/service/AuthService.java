@@ -8,6 +8,7 @@ import com.daema.base.enums.UserRole;
 import com.daema.base.repository.MemberRepository;
 import com.daema.base.repository.SocialDataRepository;
 import com.daema.rest.base.dto.request.SocialDataRequest;
+import com.daema.rest.common.consts.PropertiesValue;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.common.util.*;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.UUID;
@@ -137,7 +139,7 @@ public class AuthService {
         //emailUtil.sendMail(member.getEmail(),"사용자 비밀번호 안내 메일",CHANGE_PASSWORD_LINK + key);
     }
 
-    public CommonResponse chkLoginMemberStatus(Member member, HttpServletResponse res) throws Exception {
+    public CommonResponse chkLoginMemberStatus(Member member, HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         if(String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode()).equals(member.getUserStatus())
                 && (UserRole.ROLE_USER == member.getRole()
@@ -165,6 +167,14 @@ public class AuthService {
             //시스템 관리자인 경우에만 role key 생성
             if(UserRole.ROLE_ADMIN.equals(member.getRole())){
                 resMap.put("role", "A");
+            }
+
+            //로컬 ip 는 쿠키 문제로 redis 처리
+            String profile = PropertiesValue.profilesActive;
+
+            if(profile != null &&
+                    !"prod".equals(profile)) {
+                redisUtil.setData("localUserid", member.getUsername());
             }
 
             return new CommonResponse(ResponseCodeEnum.OK.getResultCode(), "로그인에 성공했습니다.", resMap);

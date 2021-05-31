@@ -6,10 +6,12 @@ import com.daema.rest.base.dto.request.ChangePassword2Request;
 import com.daema.rest.base.dto.request.LoginUserRequest;
 import com.daema.rest.base.dto.request.VerifyEmailRequest;
 import com.daema.rest.base.service.AuthService;
+import com.daema.rest.common.consts.PropertiesValue;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.common.util.CookieUtil;
 import com.daema.rest.common.util.JwtUtil;
+import com.daema.rest.common.util.RedisUtil;
 import lombok.extern.java.Log;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +26,14 @@ public class MemberController {
 
     final AuthenticationManager authenticationManager;
     private final CookieUtil cookieUtil;
+    private final RedisUtil redisUtil;
     private final AuthService authService;
 
-    public MemberController(AuthenticationManager authenticationManager, AuthService authService, CookieUtil cookieUtil) {
+    public MemberController(AuthenticationManager authenticationManager, AuthService authService, CookieUtil cookieUtil, RedisUtil redisUtil) {
         this.authenticationManager = authenticationManager;
         this.authService = authService;
         this.cookieUtil = cookieUtil;
+        this.redisUtil = redisUtil;
     }
 
 
@@ -44,11 +48,11 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public CommonResponse login(@RequestBody LoginUserRequest user, HttpServletResponse res) {
+    public CommonResponse login(@RequestBody LoginUserRequest user, HttpServletRequest req, HttpServletResponse res) {
         try {
             final Member member = authService.loginUser(user.getUsername(), user.getPassword());
 
-            return authService.chkLoginMemberStatus(member, res);
+            return authService.chkLoginMemberStatus(member, req, res);
 
         } catch (Exception e) {
             return new CommonResponse(ResponseCodeEnum.FAIL.getResultCode(), "로그인에 실패했습니다.", e.getMessage());
@@ -138,6 +142,14 @@ public class MemberController {
 
             cookieUtil.addHeaderCookie(res, JwtUtil.ACCESS_TOKEN_NAME, null);
             cookieUtil.addHeaderCookie(res, JwtUtil.REFRESH_TOKEN_NAME, null);
+
+            //로컬 ip 는 쿠키 문제로 redis 처리
+            String profile = PropertiesValue.profilesActive;
+
+            if(profile != null &&
+                    !"prod".equals(profile)) {
+                redisUtil.deleteData("localUserid");
+            }
 
             return new CommonResponse(ResponseCodeEnum.OK.getResultCode());
         } catch (Exception e) {
