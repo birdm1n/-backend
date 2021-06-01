@@ -113,7 +113,7 @@ public class MoveStockMgmtService {
                 .deliveryMemo(requestDto.getDeliveryMemo())
                 .deliveryStatus(deliveryStatus)
                 .build();
-        delivery = deliveryRepository.save(delivery);
+        deliveryRepository.save(delivery);
 
         // 4. [이동재고] insert
         // 판매이동 이기에 재고 보유처 같음
@@ -126,13 +126,12 @@ public class MoveStockMgmtService {
                 .delivery(delivery)
                 .store(store)
                 .build();
-        moveStock = moveStockRepository.save(moveStock);
+        moveStockRepository.save(moveStock);
 
         // 5. [재고] update
         // - 재고 테이블에 moveId
         // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
-        storeStock.setStockType(WmsEnum.StockType.SELL_MOVE);
-        storeStock.setStockTypeId(moveStock.getMoveStockId());
+        storeStock.updateToMove(moveStock);
 
         storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
         storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
@@ -172,7 +171,7 @@ public class MoveStockMgmtService {
                 .deliveryMemo(requestDto.getDeliveryMemo())
                 .deliveryStatus(deliveryStatus)
                 .build();
-        delivery = deliveryRepository.save(delivery);
+        deliveryRepository.save(delivery);
 
         
         // 이전 보유처, 이동할 보유처 정보
@@ -189,15 +188,13 @@ public class MoveStockMgmtService {
                 .delivery(delivery)
                 .store(store)
                 .build();
-        moveStock = moveStockRepository.save(moveStock);
+        moveStockRepository.save(moveStock);
 
         // 5. [재고] update
         // - 재고 테이블에 moveId
         // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
-        storeStock.setStockType(WmsEnum.StockType.STOCK_MOVE);
-        storeStock.setStockTypeId(moveStock.getMoveStockId());
-        storeStock.setPrevStock(prevStock);
-        storeStock.setNextStock(nextStock);
+        storeStock.updateToMove(moveStock);
+
         // 6. [재고이력] insert, update
         storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
         storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
@@ -273,7 +270,7 @@ public class MoveStockMgmtService {
                 .deliveryMemo(requestDto.getDeliveryMemo())
                 .deliveryStatus(deliveryStatus)
                 .build();
-        delivery = deliveryRepository.save(delivery);
+        deliveryRepository.save(delivery);
 
         // 이전 보유처, 이동할 보유처 정보
         Stock prevStock = storeStock.getNextStock(); //이전 보유처
@@ -289,22 +286,19 @@ public class MoveStockMgmtService {
                 .store(store)
                 .build();
 
-        outStock = outStockRepository.save(outStock);
+        outStockRepository.save(outStock);
 
         // 5. [재고] update
         // - 재고 테이블에 moveId
         // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
-        storeStock.setStockType(WmsEnum.StockType.STOCK_TRNS);
-        storeStock.setStockTypeId(outStock.getOutStockId());
-        storeStock.setPrevStock(prevStock);
-        storeStock.setNextStock(null);
-        storeStock.setStockYn("N");
+        storeStock.updateToTrans(outStock);
+
         // 6. [재고이력] insert, update
         storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
         storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
 
         // 7. 이관시 기기 delYn => 'Y'
-        device.setDelYn("Y");
+        device.deleteDevice();
 
 
         return ResponseCodeEnum.OK;
@@ -337,7 +331,7 @@ public class MoveStockMgmtService {
                 .deliveryMemo(requestDto.getDeliveryMemo())
                 .deliveryStatus(deliveryStatus)
                 .build();
-        delivery = deliveryRepository.save(delivery);
+        deliveryRepository.save(delivery);
 
         // 이전 보유처, 이동할 보유처 정보
         Stock prevStock = storeStock.getNextStock(); //이전 보유처
@@ -353,24 +347,20 @@ public class MoveStockMgmtService {
                 .store(store)
                 .build();
 
-        outStock = outStockRepository.save(outStock);
+        outStockRepository.save(outStock);
 
 
 
         // 5. [재고] update
         // - 재고 테이블에 moveId
         // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
-        storeStock.setStockType(WmsEnum.StockType.SELL_TRNS);
-        storeStock.setStockTypeId(outStock.getOutStockId());
-        storeStock.setPrevStock(prevStock);
-        storeStock.setNextStock(null);
-        storeStock.setStockYn("N");
+        storeStock.updateToTrans(outStock);
 
         // 6. [재고이력] insert, update
         storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
         storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
         // 7. 이관시 기기 delYn => 'Y'
-        device.setDelYn("Y");
+        device.deleteDevice();
         return ResponseCodeEnum.OK;
     }
 
@@ -402,7 +392,7 @@ public class MoveStockMgmtService {
                 .deliveryMemo(requestDto.getDeliveryMemo())
                 .deliveryStatus(deliveryStatus)
                 .build();
-        delivery = deliveryRepository.save(delivery);
+        deliveryRepository.save(delivery);
 
         // 이전 보유처, 이동할 보유처 정보
         Stock prevStock = storeStock.getNextStock(); //이전 보유처
@@ -418,22 +408,18 @@ public class MoveStockMgmtService {
                 .store(store)
                 .build();
 
-        outStock = outStockRepository.save(outStock);
+        outStockRepository.save(outStock);
 
         // 5. [재고] update
         // - 재고 테이블에 moveId
         // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
-        storeStock.setStockType(WmsEnum.StockType.FAULTY_TRNS);
-        storeStock.setStockTypeId(outStock.getOutStockId());
-        storeStock.setPrevStock(prevStock);
-        storeStock.setNextStock(null);
-        storeStock.setStockYn("N");
+        storeStock.updateToTrans(outStock);
 
         // 6. [재고이력] insert, update
         storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
         storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
         // 7. 이관시 기기 delYn => 'Y'
-        device.setDelYn("Y");
+        device.deleteDevice();
         return ResponseCodeEnum.OK;
     }
     @Transactional

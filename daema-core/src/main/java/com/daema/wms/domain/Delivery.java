@@ -96,4 +96,5 @@ public class Delivery extends BaseEntity {
         this.addr1 = addr1;
         this.addr2 = addr2;
     }
+
 }

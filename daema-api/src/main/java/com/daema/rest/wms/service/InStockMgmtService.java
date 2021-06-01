@@ -332,7 +332,7 @@ public class InStockMgmtService {
                         StoreStock.builder()
                                 .store(storeObj)
                                 .stockType(WmsEnum.StockType.IN_STOCK)
-                                .stockYn("Y")
+                                .stockYn(StatusEnum.FLAG_Y.getStatusMsg())
                                 .nextStock(stockObj)
                                 .build()
                 );
@@ -361,7 +361,7 @@ public class InStockMgmtService {
                 }
             }
             // 1. 기기 insert
-            devices = deviceRepository.saveAll(devices);
+            deviceRepository.saveAll(devices);
 
             // 기기 정보 세팅
             int moveIndex = 0; // 이동재고를 위한 인덱스
@@ -378,7 +378,7 @@ public class InStockMgmtService {
                 }
             }
             // 2. 기기상태 insert
-            deviceStatuses = deviceStatusRepository.saveAll(deviceStatuses);
+            deviceStatusRepository.saveAll(deviceStatuses);
 
             // 기기상태 정보 세팅
             for (int i = 0; i < deviceStatuses.size(); i++) {
@@ -386,15 +386,14 @@ public class InStockMgmtService {
                 inStocks.get(i).setInDeviceStatus(tmpDeviceStatus);
             }
             // 3. 입고 insert
-            inStocks = inStockRepository.saveAll(inStocks);
+            inStockRepository.saveAll(inStocks);
             for (int i = 0; i < inStocks.size(); i++) {
                 InStock tmpInStock = inStocks.get(i);
                 storeStocks.get(i).setStockTypeId(tmpInStock.getInStockId());
-                storeStocks.get(i).setHistoryStatus(WmsEnum.HistoryStatus.USE);
             }
 
             // 4. 재고 insert
-            storeStocks = storeStockRepository.saveAll(storeStocks);
+            storeStockRepository.saveAll(storeStocks);
 
             // 5. 입고 => 재고 히스토리 insert
             for (StoreStock storeStock : storeStocks) {
@@ -417,7 +416,7 @@ public class InStockMgmtService {
             // 7. 이동 재고인 경우 [delivery],[moveStock],[storeStock],[storeStockHistory] insert
             if (CommonUtil.isNotEmptyList(deliveries)) {
                 // 배송정보 insert
-                deliveries = deliveryRepository.saveAll(deliveries);
+                deliveryRepository.saveAll(deliveries);
 
                 for (int i = 0; i < deliveries.size(); i++) {
                     Delivery tmpDelivery = deliveries.get(i);
@@ -425,13 +424,12 @@ public class InStockMgmtService {
                 }
 
                 // 이동재고 insert
-                moveStocks = moveStockRepository.saveAll(moveStocks);
+                moveStockRepository.saveAll(moveStocks);
 
 
                 for (MoveStock moveStock : moveStocks) {
                     // [재고] update
                     StoreStock storeStock = storeStockRepository.findByStoreAndDevice(storeObj, moveStock.getDevice());
-                    // todo 데이터 확인 INSTOCK => STOCK_MOVE => storeStock값 확인
                     storeStock.updateToMove(moveStock);
 
                     // [재고이력] insert, update

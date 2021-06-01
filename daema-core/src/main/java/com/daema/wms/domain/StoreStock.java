@@ -1,6 +1,7 @@
 package com.daema.wms.domain;
 
 import com.daema.base.domain.common.BaseEntity;
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
@@ -99,12 +100,22 @@ public class StoreStock extends BaseEntity {
 
         return storeStock;
     }
-
+    // 이동시 업데이트
     public void updateToMove(MoveStock moveStock){
         this.stockType = WmsEnum.StockType.valueOf(moveStock.getMoveStockType().name());
         this.stockTypeId = moveStock.getMoveStockId();
         this.prevStock = moveStock.getPrevStock();
         this.nextStock = moveStock.getNextStock();
+        this.store = moveStock.getStore();
+    }
+    // 이관시 업데이트
+    public void updateToTrans(OutStock outStock){
+        this.stockType = WmsEnum.StockType.valueOf(outStock.getOutStockType().name());
+        this.stockTypeId = outStock.getOutStockId();
+        this.prevStock = outStock.getPrevStock();
+        this.nextStock = null;
+        this.stockYn = StatusEnum.FLAG_N.getStatusMsg();
+        this.store = outStock.getStore();
     }
 
     //재고확인일을 업데이트 처리
