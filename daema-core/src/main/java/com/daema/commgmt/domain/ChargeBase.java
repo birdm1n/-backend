@@ -22,10 +22,10 @@ public abstract class ChargeBase {
     protected String chargeName;
 
     @NotBlank
-    @Column(name = "charge_code", length = 20, columnDefinition = "varchar(255) comment '요금 코드'")
+    @Column(name = "charge_code",  columnDefinition = "varchar(255) comment '요금 코드'")
     protected String chargeCode;
 
-    @Column(name = "category", length = 100, columnDefinition = "varchar(255) comment '카테고리'")
+    @Column(name = "category", columnDefinition = "varchar(255) comment '카테고리'")
     protected String category;
 
     @NotNull

@@ -25,7 +25,7 @@ public class AddService extends AddServiceBase {
      * 요청 승인(R) 구분
      * 코드 + pk : R123
      */
-    @Column(name = "origin_key", length = 8, columnDefinition = "varchar(255) comment '출처 키'")
+    @Column(name = "origin_key", columnDefinition = "varchar(255) comment '출처 키'")
     private String originKey;
 
     @Nullable

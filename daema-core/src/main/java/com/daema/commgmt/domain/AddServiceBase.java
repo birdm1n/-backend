@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public abstract class AddServiceBase {
 
     @NotNull
-    @Column(name = "telecom_code_id",  columnDefinition = "INT comment '통신사'")
+    @Column(name = "telecom_code_id",  columnDefinition = "INT comment '통신사 코드 아이디'")
     protected int telecom;
 
     @NotBlank

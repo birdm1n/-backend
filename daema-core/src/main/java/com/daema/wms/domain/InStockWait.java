@@ -26,7 +26,7 @@ public class InStockWait extends BaseEntity {
     private Long waitId;
 
     @NotNull
-    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사'")
+    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사 코드 아이디'")
     private int telecom;
 
     @Column(name = "telecom_name", columnDefinition = "varchar(255) comment '통신사 이름'")

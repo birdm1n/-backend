@@ -2,7 +2,7 @@ package com.daema.base.enums;
 
 public enum ShellEnum {
     //쉘 타입 구분
-    MATCH_DEVICE("구전산 기기 매칭작업","sudo python3 /home/centos/webstormprojects/in-stock-insert.py" , "/home/webstorm/test.py"),
+    MATCH_DEVICE("구전산 기기 매칭작업","sudo python3 /home/centos/webstormprojects/in-stock-insert.py" , "/home/centos/webstormprojects/in-stock-insert.py"),
     ;
     private String desc;
     private String command;

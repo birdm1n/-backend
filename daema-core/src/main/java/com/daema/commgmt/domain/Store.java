@@ -26,14 +26,14 @@ public class Store {
     private String storeName;
 
     @NotNull
-    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사'")
+    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사 코드 아이디'")
     private int telecom;
 
     @Transient
     private String telecomName;
 
     @NotBlank
-    @Column(nullable = false, name = "biz_no", unique = true, columnDefinition = "char(12) comment '사업자 넘버'")
+    @Column(name = "biz_no", unique = true, nullable = false, columnDefinition = "varchar(12) comment '사업자 넘버'")
     private String bizNo;
 
     @Column(name = "ceo_name", columnDefinition = "varchar(255) comment '대표자 이름'")

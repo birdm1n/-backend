@@ -27,7 +27,7 @@ public class ReturnStock {
     /**
      * 반품비
      */
-    @Column(name = "return_stock_amt", columnDefinition = "varchar(255) comment '반품 재고 금액'")
+    @Column(name = "return_stock_amt", columnDefinition = "INT comment '반품 재고 금액'")
     private Integer returnStockAmt;
 
     @Column(name = "return_stock_memo", columnDefinition = "varchar(255) comment '반품 재고 메모'")

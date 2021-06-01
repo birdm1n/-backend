@@ -65,7 +65,7 @@ public class OpenStore {
     private String telecomName;
 
     @NotBlank
-    @Column(name = "biz_no", columnDefinition = "char(12) comment '사업자 넘버'")
+    @Column(name = "biz_no", columnDefinition = "varchar(12) comment '사업자 넘버'")
     private String bizNo;
 
     @Column(name = "charger_name", columnDefinition = "varchar(255) comment '담당자 이름'")

@@ -49,7 +49,7 @@ public class PubNoti extends PubNotiBase {
      * 스마트초이스 연동과 관리자 직접 등록(A) 구분
      * pub_noti_raw_data pk or 'A' : 123, A
      */
-    @Column(name = "origin_key", length = 8, columnDefinition = "varchar(255) comment '출처 키'")
+    @Column(name = "origin_key", columnDefinition = "varchar(255) comment '출처 키'")
     private String originKey;
 
     @Column(name = "del_yn", columnDefinition ="char(1) comment '삭제 여부' ")

@@ -74,7 +74,7 @@ public class PubNotiRawData extends PubNotiBase {
     @Column(name = "deadline_datetime", columnDefinition = "DATETIME(6) comment '마감 날짜시간'")
     private LocalDateTime deadLineDateTime;
 
-    @Column(name = "deadline_yn", columnDefinition ="char(1) comment'마감 여부'")
+    @Column(name = "deadline_yn", columnDefinition ="char(1) comment '마감 여부'")
     @ColumnDefault("\"N\"")
     private String deadLineYn;
 
