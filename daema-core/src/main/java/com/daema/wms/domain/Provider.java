@@ -63,13 +63,13 @@ public class Provider {
     @Column(name = "regi_user_id", columnDefinition = "BIGINT unsigned comment '등록 유저 아이디'")
     private Long regiUserId;
 
-    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     private LocalDateTime regiDateTime;
 
-    @Column(name = "upd_user_id", columnDefinition = "BIGINT unsigned comment '업데이트 유저 아이디'")
+    @Column(name = "upd_user_id", columnDefinition = "BIGINT unsigned comment '수정 유저 아이디'")
     private Long updUserId;
 
-    @Column(name = "upd_datetime", columnDefinition = "DATETIME(6) comment '업데이트 날짜시간'")
+    @Column(name = "upd_datetime", columnDefinition = "DATETIME(6) comment '수정 일시'")
     private LocalDateTime updDateTime;
 
     @Transient

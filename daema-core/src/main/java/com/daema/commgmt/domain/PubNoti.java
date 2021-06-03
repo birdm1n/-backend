@@ -57,7 +57,7 @@ public class PubNoti extends PubNotiBase {
     private String delYn;
 
     @Nullable
-    @Column(name = "del_datetime", columnDefinition = "DATETIME(6) comment '삭제 날짜시간'")
+    @Column(name = "del_datetime", columnDefinition = "DATETIME(6) comment '삭제 일시'")
     private LocalDateTime delDateTime;
 
     @Nullable

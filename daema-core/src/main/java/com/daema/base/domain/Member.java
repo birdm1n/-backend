@@ -81,9 +81,9 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.ROLE_NOT_PERMITTED;
 
-    @Column(name="regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
+    @Column(name="regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     private LocalDateTime regiDatetime;
-    @Column(name="upd_datetime",  columnDefinition = "DATETIME(6) comment '수정 날짜시간'")
+    @Column(name="upd_datetime",  columnDefinition = "DATETIME(6) comment '수정 일시'")
     private LocalDateTime updDatetime;
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -102,7 +102,7 @@ public class OpenStore {
     @Column(name = "del_yn", nullable = false, columnDefinition = "char(1) comment '삭제 여부'")
     private String delYn;
 
-    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     private LocalDateTime regiDateTime;
 
     @Builder

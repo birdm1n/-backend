@@ -30,7 +30,7 @@ public abstract class AddServiceBase {
     @Column(name = "add_svc_memo", columnDefinition = "varchar(255) comment '부가 서비스 메모'")
     protected String addSvcMemo;
 
-    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     protected LocalDateTime regiDateTime;
 
     @Transient

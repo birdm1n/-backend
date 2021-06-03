@@ -65,7 +65,7 @@ public abstract class ChargeBase {
     @Column(name = "add_benefit", columnDefinition = "varchar(255) comment '부가 이익'")
     protected String addBenefit;
 
-    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     protected LocalDateTime regiDateTime;
 
     @Transient

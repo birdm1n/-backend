@@ -35,11 +35,11 @@ public class MoveStockAlarm {
     private Integer undeliveredDay;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "upd_user_id", referencedColumnName = "seq", columnDefinition = "BIGINT unsigned comment '업데이트 유저 아이디'")
+    @JoinColumn(name = "upd_user_id", referencedColumnName = "seq", columnDefinition = "BIGINT unsigned comment '수정 유저 아이디'")
     private Member updUserId;
 
     @CreatedDate
-    @Column(name = "upd_datetime", columnDefinition = "DATETIME(6) comment '업데이트 시간날짜'")
+    @Column(name = "upd_datetime", columnDefinition = "DATETIME(6) comment '수정 일시'")
     private LocalDateTime updDateTime;
 
     @Builder

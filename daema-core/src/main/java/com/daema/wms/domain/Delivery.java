@@ -26,7 +26,7 @@ public class Delivery extends BaseEntity {
     private WmsEnum.DeliveryType deliveryType;
 
     //택배사 codeSeq
-    @Column(name = "courier", columnDefinition = "INT comment '택배사'")
+    @Column(name = "courier_code_id", columnDefinition = "INT comment '택배사 코드 아이디'")
     private Integer courier;
 
     //송장번호

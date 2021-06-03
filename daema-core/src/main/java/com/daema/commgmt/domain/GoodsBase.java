@@ -32,7 +32,7 @@ public abstract class GoodsBase {
     protected NetworkAttribute networkAttribute;
 
 
-    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     protected LocalDateTime regiDateTime;
 
     @Transient
