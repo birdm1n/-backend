@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface GoodsOptionRepository extends JpaRepository<GoodsOption, Number> {
     List<GoodsOption> findByGoodsGoodsIdInAndDelYn(List<Number> goodsId, String delYn);
+    List<GoodsOption> findByGoodsIsInAndDelYn(List<Goods> goods, String delYn);
     GoodsOption findTopByGoodsAndCapacityAndColorNameAndDelYn(Goods goods, String capacity, String colorName, String delYn);
 }

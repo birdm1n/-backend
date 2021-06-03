@@ -16,7 +16,6 @@ import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.commgmt.dto.GoodsOptionDto;
 import com.daema.rest.commgmt.dto.GoodsRegReqDto;
-import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
@@ -57,13 +56,8 @@ public class GoodsMgmtService {
         //관리자 외 사용자는 useYn = Y 정보만 출력
         Page<Goods> goodsList = goodsRepository.getSearchPage(requestDto, authenticationUtil.isAdmin());
 
-        List<Number> ids = goodsList.getContent()
-                .stream()
-                .map(Goods::getGoodsId)
-                .collect(Collectors.toList());
-
-        //goodsList 의 ids 로 옵션 추출
-        List<GoodsOption> optionList = goodsOptionRepository.findByGoodsGoodsIdInAndDelYn(ids, StatusEnum.FLAG_N.getStatusMsg());
+        //goodsList 의 옵션 추출
+        List<GoodsOption> optionList = goodsOptionRepository.findByGoodsIsInAndDelYn(goodsList.getContent(), StatusEnum.FLAG_N.getStatusMsg());
 
         Map<Goods, List<GoodsOption>> optionMap = optionList.stream()
                 .collect(Collectors.groupingBy(GoodsOption::getGoods));
