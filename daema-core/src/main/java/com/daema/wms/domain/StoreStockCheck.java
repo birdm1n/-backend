@@ -1,6 +1,6 @@
 package com.daema.wms.domain;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="store_stock_check")
+@org.hibernate.annotations.Table(appliesTo = "store_stock_check", comment = "관리점 재고 확인")
 public class StoreStockCheck {
 
     @Id
@@ -25,15 +25,15 @@ public class StoreStockCheck {
     private StoreStock storeStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq", columnDefinition = "BIGINT UNSIGNED comment '등록 유저 아이디'")
-    private Member regiUserId;
+    @JoinColumn(name = "regi_user_id", referencedColumnName = "member_id", columnDefinition = "BIGINT UNSIGNED comment '등록 유저 아이디'")
+    private Members regiUserId;
 
-    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     private LocalDateTime regiDateTime;
 
     @Builder
     public StoreStockCheck(Long storeStockChkId, StoreStock storeStock,
-                Member regiUserId, LocalDateTime regiDateTime){
+                           Members regiUserId, LocalDateTime regiDateTime){
         this.storeStockChkId = storeStockChkId;
         this.storeStock = storeStock;
         this.regiUserId = regiUserId;

@@ -1,6 +1,6 @@
 package com.daema.rest.base.web;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.rest.base.dto.request.SocialDataRequest;
 import com.daema.rest.base.service.AuthService;
 import com.daema.rest.common.enums.ResponseCodeEnum;
@@ -45,7 +45,7 @@ public class OauthController {
     public CommonResponse loginNaverUser(@RequestBody SocialDataRequest socialData, HttpServletRequest req, HttpServletResponse res){
         CommonResponse response;
         try{
-            final Member member = authService.loginSocialUser(socialData.getId(),socialData.getType());
+            final Members member = authService.loginSocialUser(socialData.getId(),socialData.getType());
 
             return authService.chkLoginMemberStatus(member, req, res);
 

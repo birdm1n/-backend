@@ -1,9 +1,9 @@
 package com.daema.commgmt.repository;
 
-import com.daema.commgmt.domain.MemberRole;
+import com.daema.commgmt.domain.MembersRole;
 import com.daema.commgmt.domain.Organization;
-import com.daema.base.domain.QMember;
-import com.daema.commgmt.domain.QMemberRole;
+import com.daema.base.domain.QMembers;
+import com.daema.commgmt.domain.QMembersRole;
 import com.daema.commgmt.domain.dto.response.OrgnztListDto;
 import com.daema.commgmt.domain.dto.response.OrgnztMemberListDto;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
@@ -101,7 +101,7 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
     private List<OrgnztMemberListDto> searchOrgnztMemberList(ComMgmtRequestDto requestDto){
 
         StringBuilder sb = new StringBuilder();
-        sb.append("select members.seq " +
+        sb.append("select members.member_id as seq " +
                 "     , members.username " +
                 "     , members.name " +
                 "     , members.email " +
@@ -183,12 +183,12 @@ public class OrganizationRepositoryImpl extends QuerydslRepositorySupport implem
         return query.getResultList();
     }
 
-    private List<MemberRole> searchOrgnztMemberRoleList(ComMgmtRequestDto requestDto){
+    private List<MembersRole> searchOrgnztMemberRoleList(ComMgmtRequestDto requestDto){
 
-        QMemberRole memberRole = QMemberRole.memberRole;
-        QMember member = QMember.member;
+        QMembersRole memberRole = QMembersRole.membersRole;
+        QMembers member = QMembers.members;
 
-        JPQLQuery<MemberRole> query = getQuerydsl().createQuery();
+        JPQLQuery<MembersRole> query = getQuerydsl().createQuery();
         query.from(memberRole)
                 .innerJoin(member)
                 .on(

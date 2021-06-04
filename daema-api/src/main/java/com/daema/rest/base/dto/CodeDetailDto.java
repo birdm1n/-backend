@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class CodeDetailDto {
 
-	private int codeSeq;
+	private Long codeSeq;
 	private String codeNm;
 	private String codeDesc;
 	private int orderNum;

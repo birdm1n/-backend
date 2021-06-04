@@ -15,8 +15,8 @@ public class AddServiceMgmtDto {
 	private long addSvcId;
 	private String addSvcName;
 	private int addSvcCharge;
-	private int telecom;
-	private int network;
+	private Long telecom;
+	private Long network;
 	private String originKey;
 	private String addSvcMemo;
 	private String useYn;

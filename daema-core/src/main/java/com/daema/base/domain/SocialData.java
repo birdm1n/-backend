@@ -7,10 +7,10 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table
 @Getter
 @Setter
 @NoArgsConstructor
+@org.hibernate.annotations.Table(appliesTo = "social_data", comment = "소셜 데이터")
 public class SocialData {
 
     @Id
@@ -21,14 +21,14 @@ public class SocialData {
     @Column(name = "social_data", columnDefinition = "varchar(255) comment '소셜 데이터'")
     private String socialData;
 
-    @Column(name = "social_email", columnDefinition = "varchar(255) comment '이메일'")
+    @Column(name = "social_email", columnDefinition = "varchar(255) comment '소셜 이메일'")
     private String socialEmail;
 
-    @Column(name = "social_type", columnDefinition = "varchar(255) comment '소셜 구분'")
+    @Column(name = "social_type", columnDefinition = "varchar(255) comment '소셜 타입'")
     private String socialType;
 
     @OneToOne(mappedBy = "social")
-    private Member member;
+    private Members member;
 
     public SocialData(String socialData, String socialEmail, String socialType) {
         this.socialData = socialData;

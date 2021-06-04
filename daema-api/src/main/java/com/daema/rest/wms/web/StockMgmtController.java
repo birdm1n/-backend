@@ -60,7 +60,7 @@ public class StockMgmtController {
 
     @ApiOperation(value = "보유처 선택 리스트", notes = "보유처의 선택 리스트를 조회합니다")
     @GetMapping("/selectStockList/{telecom}")
-    public ResponseEntity<CommonResponse<SelectStockDto>> selectStockList(@ApiParam(value = "통신사 번호", required = true) @PathVariable(value = "telecom") Integer telecom ) {
+    public ResponseEntity<CommonResponse<SelectStockDto>> selectStockList(@ApiParam(value = "통신사 번호", example = "0", required = true) @PathVariable(value = "telecom") Long telecom ) {
         return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.selectStockList(telecom), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 

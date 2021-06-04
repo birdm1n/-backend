@@ -42,7 +42,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="pub_noti_raw_data")
+@org.hibernate.annotations.Table(appliesTo = "pub_noti_raw_data", comment = "공시 알림 원시 데이터")
 public class PubNotiRawData extends PubNotiBase {
 
     @Id
@@ -71,7 +71,7 @@ public class PubNotiRawData extends PubNotiBase {
     @Column(name = "network_name", columnDefinition = "varchar(255) comment '통신망 이름'")
     private String networkName;
 
-    @Column(name = "deadline_datetime", columnDefinition = "DATETIME(6) comment '마감 날짜시간'")
+    @Column(name = "deadline_datetime", columnDefinition = "DATETIME(6) comment '마감 일시'")
     private LocalDateTime deadLineDateTime;
 
     @Column(name = "deadline_yn", columnDefinition ="char(1) comment '마감 여부'")

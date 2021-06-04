@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchMatchResponseDto {
 
-    private Integer maker;
+    private Long maker;
     private String makerName;
-    private Integer telecom;
+    private Long telecom;
     private String telecomName;
     private Long goodsId;
     private String goodsName;

@@ -65,8 +65,8 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements Cu
 
         query.innerJoin(codeDetail)
                 .on(store.telecom.eq(codeDetail.codeSeq)
-                    .and(codeDetail.codeId.eq("TELECOM"))
-                    .and(codeDetail.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
+                        .and(codeDetail.codeId.eq("TELECOM"))
+                        .and(codeDetail.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 );
 
         query.where(

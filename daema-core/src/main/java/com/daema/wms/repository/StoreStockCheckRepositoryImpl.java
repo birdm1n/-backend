@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 
 import java.util.List;
 
-import static com.daema.base.domain.QMember.member;
+import static com.daema.base.domain.QMembers.members;
 import static com.daema.commgmt.domain.QOrganization.organization;
 import static com.daema.wms.domain.QStoreStockCheck.storeStockCheck;
 
@@ -28,18 +28,18 @@ public class StoreStockCheckRepositoryImpl extends QuerydslRepositorySupport imp
                 StoreStockCheckListDto.class
                 , storeStockCheck.regiDateTime.as("regiDateTime")
 
-                , member.name.as("name")
+                , members.name.as("name")
 
                 , organization.orgName.as("orgName")
                 )
         )
 
                 .from(storeStockCheck)
-                .innerJoin(storeStockCheck.regiUserId, member).on(
+                .innerJoin(storeStockCheck.regiUserId, members).on(
                         storeStockCheck.storeStock.storeStockId.eq(storeStockId)
         )
                 .innerJoin(organization).on(
-                        member.orgId.eq(organization.orgId)
+                members.orgId.eq(organization.orgId)
         )
 
                 .orderBy(storeStockCheck.regiDateTime.desc());

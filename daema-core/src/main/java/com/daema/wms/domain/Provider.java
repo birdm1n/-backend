@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="prov_id")
+@EqualsAndHashCode(of="provId")
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="provider")
+@org.hibernate.annotations.Table(appliesTo = "provider", comment = "공급처")
 public class Provider {
 
     @Id
@@ -42,7 +42,7 @@ public class Provider {
     @Column(name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처3'")
     private String chargerPhone3;
 
-    @Column(name = "return_zip_code", nullable = false, columnDefinition = "varchar(255) comment '반품 우편번호 코드'")
+    @Column(name = "return_zip_code", nullable = false, columnDefinition = "varchar(255) comment '반품 우편 코드'")
     private String returnZipCode;
 
     @Column(name = "return_addr", nullable = false, columnDefinition = "varchar(255) comment '반품 주소'")

@@ -81,7 +81,7 @@ public class AddServiceMgmtService {
                         .addSvcMemo(addServiceMgmtDto.getAddSvcMemo())
                         .telecom(addServiceMgmtDto.getTelecom())
                         .reqStoreId(authenticationUtil.getStoreId())
-                        .reqStatus(StatusEnum.REG_REQ.getStatusCode())
+                        .reqStatus(String.valueOf(StatusEnum.REG_REQ.getStatusCode()))
                         .regiDateTime(LocalDateTime.now())
                     .build()
             );
@@ -173,7 +173,7 @@ public class AddServiceMgmtService {
         if(addServiceRegReq != null) {
             addServiceRegReq.updateReqStatus(addServiceRegReq, addServiceRegReqDto.getReqStatus());
 
-            if(addServiceRegReqDto.getReqStatus() == StatusEnum.REG_REQ_APPROVAL.getStatusCode()) {
+            if(Integer.parseInt(addServiceRegReqDto.getReqStatus()) == StatusEnum.REG_REQ_APPROVAL.getStatusCode()) {
                 //insertData 사용 안함. 요청 승인 정책이 시스템관리자에서 확장 또는 변경될 수 있음
                 addServiceRepository.save(
                         AddService.builder()
@@ -187,7 +187,7 @@ public class AddServiceMgmtService {
                                 .delYn(StatusEnum.FLAG_N.getStatusMsg())
                                 .build()
                 );
-            }else if(addServiceRegReqDto.getReqStatus() == StatusEnum.REG_REQ_REJECT.getStatusCode()){
+            }else if(Integer.parseInt(addServiceRegReqDto.getReqStatus()) == StatusEnum.REG_REQ_REJECT.getStatusCode()){
                 AddServiceRegReqReject addServiceRegReqReject = new AddServiceRegReqReject();
                 addServiceRegReqReject.setAddSvcRegReqId(addServiceRegReq.getAddSvcRegReqId());
                 addServiceRegReqReject.setRejectComment(addServiceRegReqDto.getRegReqRejectDto().getRejectComment());

@@ -1,7 +1,7 @@
 package com.daema.rest.commgmt.service;
 
-import com.daema.base.domain.Member;
-import com.daema.base.domain.QMember;
+import com.daema.base.domain.Members;
+import com.daema.base.domain.QMembers;
 import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
 import com.daema.base.repository.MemberRepository;
@@ -306,7 +306,7 @@ public class OpeningStoreMgmtService {
         List<OpenStoreListDto> openStoreList = openStoreRepository.getOpenStoreList(requestDto);
 
         //사용자 전체 목록
-        List<Member> memberList = memberRepository.findByMember(targetStoreId, QMember.member.name.asc());
+        List<Members> memberList = memberRepository.findByMember(targetStoreId, QMembers.members.name.asc());
 
         //개통점, 사용자 맵핑 목록
         List<OpenStoreUserMap> mapList = openStoreUserMapRepository.getMappingList(targetStoreId);
@@ -326,7 +326,7 @@ public class OpeningStoreMgmtService {
 
         List<String[]> filterOpenStoreInfos;
 
-        for (Member member : memberList) {
+        for (Members member : memberList) {
 
             filterOpenStoreInfos = new ArrayList<>();
 

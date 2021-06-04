@@ -22,7 +22,7 @@ public class InStockWaitInsertReqDto {
 
     @NotNull(message = "통신사를 입력해주세요")
     @ApiModelProperty(value = "통신사 ID", example = "0", required = true)
-    private int telecom;
+    private Long telecom;
 
     @NotNull(message = "보유처를 입력해주세요")
     @ApiModelProperty(value = "보유처 ID", example = "0", required = true)

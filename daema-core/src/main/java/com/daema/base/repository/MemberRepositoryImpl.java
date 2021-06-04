@@ -1,7 +1,7 @@
 package com.daema.base.repository;
 
-import com.daema.base.domain.Member;
-import com.daema.base.domain.QMember;
+import com.daema.base.domain.Members;
+import com.daema.base.domain.QMembers;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -11,14 +11,14 @@ import java.util.List;
 public class MemberRepositoryImpl extends QuerydslRepositorySupport implements CustomMemberRepository {
 
     public MemberRepositoryImpl() {
-        super(Member.class);
+        super(Members.class);
     }
 
     @Override
-    public List<Member> findByMember(long storeId, OrderSpecifier orderSpecifier) {
-        QMember member = QMember.member;
+    public List<Members> findByMember(long storeId, OrderSpecifier orderSpecifier) {
+        QMembers member = QMembers.members;
 
-        JPQLQuery<Member> query = from(member);
+        JPQLQuery<Members> query = from(member);
 
         query.where(
                 member.storeId.eq(storeId)

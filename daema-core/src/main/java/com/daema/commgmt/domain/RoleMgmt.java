@@ -7,17 +7,17 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="urlPath")
+@EqualsAndHashCode(of="roleId")
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name = "role_mgmt")
+@org.hibernate.annotations.Table(appliesTo = "role_mgmt", comment = "역할 관리")
 public class RoleMgmt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id" , columnDefinition = "int comment '역할 아이디'")
-    private int roleId;
+    @Column(name = "role_id" , columnDefinition = "BIGINT unsigned comment '역할 아이디'")
+    private long roleId;
 
     @Column(name = "role_name" , columnDefinition = "varchar(255) comment '역할 이름'")
     private String roleName;
@@ -31,7 +31,7 @@ public class RoleMgmt {
     @Column(name = "store_id" , columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private long storeId;
 
-    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     private LocalDateTime regiDateTime;
 
     @Builder

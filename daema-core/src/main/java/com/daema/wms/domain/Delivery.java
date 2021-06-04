@@ -12,7 +12,7 @@ import javax.persistence.*;
 @ToString(exclude = {"outStock", "moveStock"})
 @NoArgsConstructor
 @Entity
-@Table(name = "delivery")
+@org.hibernate.annotations.Table(appliesTo = "delivery", comment = "배송")
 public class Delivery extends BaseEntity {
 
     @Id
@@ -26,11 +26,11 @@ public class Delivery extends BaseEntity {
     private WmsEnum.DeliveryType deliveryType;
 
     //택배사 codeSeq
-    @Column(name = "courier_code_id", columnDefinition = "INT comment '택배사 코드 아이디'")
-    private Integer courier;
+    @Column(name = "courier_code_id", columnDefinition = "BIGINT unsigned comment '택배사 코드 아이디'")
+    private Long courier;
 
     //송장번호
-    @Column(name = "invoice_no", columnDefinition = "varchar(255) comment '송장 번호'")
+    @Column(name = "invoice_num", columnDefinition = "varchar(255) comment '송장 번호'")
     private String invoiceNo;
 
     @Column(name = "delivery_memo", columnDefinition = "varchar(255) comment '배송 메모'")
@@ -62,10 +62,10 @@ public class Delivery extends BaseEntity {
     @Column(name = "cus_phone3", columnDefinition = "varchar(255) comment '고객 연락처3'")
     private String cusPhone3;
 
-    @Column(name = "usim_full_barcode", columnDefinition = "varchar(255) comment '유심 전체 바코드'")
+    @Column(name = "usim_full_barcode", columnDefinition = "varchar(255) comment '유심 원시, 가공 바코드'")
     private String usimFullBarcode;
 
-    @Column(name = "delivery_zip_code", columnDefinition = "varchar(255) comment '우편번호'")
+    @Column(name = "delivery_zip_code", columnDefinition = "varchar(255) comment '배송 우편 코드'")
     private String zipCode;
 
     @Column(name = "delivery_addr", columnDefinition = "varchar(255) comment '배송 주소'")
@@ -75,7 +75,7 @@ public class Delivery extends BaseEntity {
     private String addr2;
 
     @Builder
-    public Delivery(Long deliveryId, WmsEnum.DeliveryType deliveryType, Integer courier, String invoiceNo, String deliveryMemo, WmsEnum.DeliveryStatus deliveryStatus, OutStock outStock, MoveStock moveStock, String cusName
+    public Delivery(Long deliveryId, WmsEnum.DeliveryType deliveryType, Long courier, String invoiceNo, String deliveryMemo, WmsEnum.DeliveryStatus deliveryStatus, OutStock outStock, MoveStock moveStock, String cusName
             , String cusPhone, String cusPhone1, String cusPhone2, String cusPhone3
             , String usimFullBarcode, String zipCode, String addr1, String addr2) {
         this.deliveryId = deliveryId;

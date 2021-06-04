@@ -33,13 +33,13 @@ import java.time.LocalDateTime;
 )
 
 @Entity
-@Table(name = "Members")
+@org.hibernate.annotations.Table(appliesTo = "members", comment = "회원")
 @Getter
 @Setter
-public class Member {
+public class Members {
 
     @Id
-    @Column(name = "seq", columnDefinition = "BIGINT unsigned comment '시퀀스 아이디'")
+    @Column(name = "member_id", columnDefinition = "BIGINT unsigned comment '회원 아이디'")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
@@ -58,7 +58,7 @@ public class Member {
     @Column(name = "email",  columnDefinition = "varchar(255) comment '이메일'")
     private String email;
 
-    @Column(name = "address", columnDefinition = "varchar(255) comment '주소지'")
+    @Column(name = "addr", columnDefinition = "varchar(255) comment '주소'")
     private String address;
 
     @Column(name = "phone", columnDefinition = "varchar(255) comment '연락처'")
@@ -74,10 +74,10 @@ public class Member {
     private String phone3;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="social_data_id", columnDefinition = "BIGINT unsigned comment '소셜 아이디'")
+    @JoinColumn(name="social_data_id", columnDefinition = "BIGINT unsigned comment '소셜 데이터 아이디'")
     private SocialData social;
 
-    @Column(name = "role", columnDefinition = "varchar(255) comment '권한'")
+    @Column(name = "role", columnDefinition = "varchar(255) comment '역할'")
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.ROLE_NOT_PERMITTED;
 
@@ -100,14 +100,14 @@ public class Member {
      * 1-신규(미승인), 6-정상(승인), 9-삭제
      */
     @NotBlank
-    @Column(nullable = false, name = "user_status", columnDefinition ="char(1) comment '유저 상태'")
+    @Column(nullable = false, name = "user_status", columnDefinition ="varchar(255) comment '유저 상태'")
     @ColumnDefault("1")
     private String userStatus;
 
-    public Member() {
+    public Members() {
     }
 
-    public Member(@NotBlank String username, @NotBlank String password, @NotBlank String name, @NotBlank String email, @NotBlank String address, @NotNull String phone, @NotNull String phone1, @NotNull String phone2, @NotNull String phone3, @NotNull long storeId, @NotNull long orgId, @NotBlank String userStatus) {
+    public Members(@NotBlank String username, @NotBlank String password, @NotBlank String name, @NotBlank String email, @NotBlank String address, @NotNull String phone, @NotNull String phone1, @NotNull String phone2, @NotNull String phone3, @NotNull long storeId, @NotNull long orgId, @NotBlank String userStatus) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -123,7 +123,7 @@ public class Member {
     }
 
     @Builder
-    public Member(long seq, String username, String password, String name, String email, String address
+    public Members(long seq, String username, String password, String name, String email, String address
             , String phone, String phone1, String phone2, String phone3
             , LocalDateTime regiDatetime, LocalDateTime updDatetime, long storeId, long orgId, String userStatus, UserRole role){
 
@@ -163,12 +163,12 @@ public class Member {
                 '}';
     }
 
-    public void updateUserStatus(Member member, String userStatus){
+    public void updateUserStatus(Members member, String userStatus){
         member.setUserStatus(userStatus);
         member.setUpdDatetime(LocalDateTime.now());
     }
 
-    public void updateOrgnztId(Member member, long orgnztId){
+    public void updateOrgnztId(Members member, long orgnztId){
         member.setOrgId(orgnztId);
         member.setUpdDatetime(LocalDateTime.now());
     }

@@ -15,7 +15,7 @@ import java.util.List;
 @ToString(exclude = {"optionList"})
 @NoArgsConstructor
 @Entity
-@Table(name="goods")
+@org.hibernate.annotations.Table(appliesTo = "goods", comment = "상품")
 public class Goods extends GoodsBase{
 
     @Id
@@ -41,7 +41,7 @@ public class Goods extends GoodsBase{
     private String matchingYn;
 
     @Nullable
-    @Column(name = "del_yn", columnDefinition ="char(1) comment '사용 여부'")
+    @Column(name = "del_yn", columnDefinition ="char(1) comment '삭제 여부'")
     @ColumnDefault("\"N\"")
     private String delYn;
 
@@ -49,7 +49,7 @@ public class Goods extends GoodsBase{
     private List<GoodsOption> optionList;
 
     @Builder
-    public Goods(long goodsId, String goodsName, String modelName, int maker, int telecom, int network
+    public Goods(long goodsId, String goodsName, String modelName, Long maker, Long telecom, Long network
             , String originKey, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn, String makerName, String networkName, String telecomName){
         this.goodsId = goodsId;
         this.goodsName = goodsName;

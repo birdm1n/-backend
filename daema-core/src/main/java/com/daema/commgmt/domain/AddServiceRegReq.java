@@ -1,7 +1,6 @@
 package com.daema.commgmt.domain;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="add_service_reg_req")
+@org.hibernate.annotations.Table(appliesTo = "add_service_reg_req", comment = "부가 서비스 등록 요청")
 public class AddServiceRegReq extends AddServiceBase {
 
     @Id
@@ -28,9 +27,8 @@ public class AddServiceRegReq extends AddServiceBase {
      * 6 - 승인
      * 9 - 반려
      */
-    @Column(name = "req_status", nullable = false, columnDefinition = "INT comment '요청 상태' default 1")
-    @ColumnDefault("1")
-    private int reqStatus;
+    @Column(name = "req_status", nullable = false, columnDefinition = "varchar(255) comment '요청 상태' default 1")
+    private String reqStatus;
 
     @Transient
     private AddServiceRegReqReject addServiceRegReqReject;
@@ -39,8 +37,8 @@ public class AddServiceRegReq extends AddServiceBase {
     private String reqStoreName;
 
     @Builder
-    public AddServiceRegReq(long addSvcRegReqId, long reqStoreId, String addSvcName, int addSvcCharge, int telecom
-            ,LocalDateTime regiDateTime, String addSvcMemo, int reqStatus, String telecomName
+    public AddServiceRegReq(long addSvcRegReqId, long reqStoreId, String addSvcName, int addSvcCharge, Long telecom
+            ,LocalDateTime regiDateTime, String addSvcMemo, String reqStatus, String telecomName
             ,String reqStoreName) {
         this.addSvcRegReqId = addSvcRegReqId;
         this.addSvcName = addSvcName;
@@ -54,7 +52,7 @@ public class AddServiceRegReq extends AddServiceBase {
         this.reqStoreName = reqStoreName;
     }
 
-    public void updateReqStatus(AddServiceRegReq addServiceRegReq, int reqStatus){
+    public void updateReqStatus(AddServiceRegReq addServiceRegReq, String reqStatus){
         addServiceRegReq.setReqStatus(reqStatus);
     }
 

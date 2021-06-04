@@ -15,7 +15,7 @@ public class Bak_SearchParamDto extends Bak_PagingDto {
 	private String saleStoreName;
 
 	@ApiModelProperty(value = "통신사 ID", example = "1")
-	private int telecom;
+	private Long telecom;
 
 	@ApiModelProperty(value = "사업자 번호")
 	private String bizNo;
@@ -57,10 +57,10 @@ public class Bak_SearchParamDto extends Bak_PagingDto {
 	private String modelName;
 
 	@ApiModelProperty(value = "제조사 ID", example = "1")
-	private int maker;
+	private Long maker;
 
 	@ApiModelProperty(value = "통신망 ID", example = "1")
-	private int network;
+	private Long network;
 
 	@ApiModelProperty(value = "요금제명")
 	private String chargeName;

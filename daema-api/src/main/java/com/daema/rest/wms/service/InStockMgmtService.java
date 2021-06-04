@@ -456,7 +456,7 @@ public class InStockMgmtService {
     }
 
     @Transactional(readOnly = true)
-    public List<SearchMatchResponseDto> getDeviceList(Integer telecomId, Integer makerId) {
+    public List<SearchMatchResponseDto> getDeviceList(Long telecomId, Long makerId) {
         long storeId = authenticationUtil.getStoreId();
         List<Goods> deviceList = inStockRepository.getDeviceList(storeId, telecomId, makerId);
 

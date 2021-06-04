@@ -1,6 +1,6 @@
 package com.daema.rest.common.filter;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.rest.base.dto.SecurityMember;
 import com.daema.rest.base.service.MyUserDetailsService;
 import com.daema.rest.commgmt.service.RoleFuncMgmtService;
@@ -73,7 +73,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     username = redisUtil.getData("localUserid");
 
                     //validation 통과용 강제 생성
-                    jwt = jwtUtil.generateToken(Member.builder().username(username).build());
+                    jwt = jwtUtil.generateToken(Members.builder().username(username).build());
                 }
             }
             if(username!=null){
@@ -117,7 +117,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
-                        Member member = new Member();
+                        Members member = new Members();
                         member.setUsername(refreshUname);
                         String newToken = jwtUtil.generateToken(member);
 

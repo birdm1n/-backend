@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="store")
+@org.hibernate.annotations.Table(appliesTo = "store", comment = "관리점")
 public class Store {
 
     @Id
@@ -26,14 +26,14 @@ public class Store {
     private String storeName;
 
     @NotNull
-    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사 코드 아이디'")
-    private int telecom;
+    @Column(name = "telecom_code_id", columnDefinition = "BIGINT unsigned comment '통신사 코드 아이디'")
+    private Long telecom;
 
     @Transient
     private String telecomName;
 
     @NotBlank
-    @Column(name = "biz_no", unique = true, nullable = false, columnDefinition = "varchar(12) comment '사업자 넘버'")
+    @Column(name = "biz_num", unique = true, nullable = false, columnDefinition = "varchar(255) comment '사업자 번호'")
     private String bizNo;
 
     @Column(name = "ceo_name", columnDefinition = "varchar(255) comment '대표자 이름'")
@@ -48,16 +48,16 @@ public class Store {
     @Column( name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
     private String chargerPhone;
 
-    @Column(name = "charger_phone1", columnDefinition = "varchar(255) comment '담당자 연락처2'")
+    @Column(name = "charger_phone1", columnDefinition = "varchar(255) comment '담당자 연락처1'")
     private String chargerPhone1;
 
-    @Column(name = "charger_phone2", columnDefinition = "varchar(255) comment '담당자 연락처3'")
+    @Column(name = "charger_phone2", columnDefinition = "varchar(255) comment '담당자 연락처2'")
     private String chargerPhone2;
 
-    @Column(name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처4'")
+    @Column(name = "charger_phone3", columnDefinition = "varchar(255) comment '담당자 연락처3'")
     private String chargerPhone3;
 
-    @Column(name = "return_zip_code", nullable = false, columnDefinition = "varchar(255) comment '반품 우편번호 코드'")
+    @Column(name = "return_zip_code", nullable = false, columnDefinition = "varchar(255) comment '반품 우편 코드'")
     private String returnZipCode;
 
     @Column(name = "return_addr", nullable = false, columnDefinition = "varchar(255) comment '반품 주소'")
@@ -69,11 +69,11 @@ public class Store {
     @Column(nullable = false, name = "use_yn", columnDefinition ="char(1) comment '사용 여부'")
     private String useYn;
 
-    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     private LocalDateTime regiDateTime;
 
     @Builder
-    public Store (long storeId, String storeName, int telecom, String telecomName, String bizNo, String ceoName
+    public Store (long storeId, String storeName, Long telecom, String telecomName, String bizNo, String ceoName
             ,String chargerPhone ,String chargerPhone1 ,String chargerPhone2 ,String chargerPhone3
             ,String chargerName, String chargerEmail, String returnZipCode
             ,String returnAddr, String returnAddrDetail, String useYn, LocalDateTime regiDateTime){

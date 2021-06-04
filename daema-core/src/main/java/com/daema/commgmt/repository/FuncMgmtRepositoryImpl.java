@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 import static com.daema.commgmt.domain.QFuncMgmt.funcMgmt;
 import static com.daema.commgmt.domain.QFuncRoleMap.funcRoleMap;
-import static com.daema.commgmt.domain.QMemberRole.memberRole;
+import static com.daema.commgmt.domain.QMembersRole.membersRole;
 
 public class FuncMgmtRepositoryImpl extends QuerydslRepositorySupport implements CustomFuncMgmtRepository {
 
@@ -42,9 +42,9 @@ public class FuncMgmtRepositoryImpl extends QuerydslRepositorySupport implements
                 .on(funcRoleMap.storeId.eq(storeId)
                         .and(funcRoleMap.funcId.eq(funcMgmt.funcId))
                 )
-                .innerJoin(memberRole)
-                .on(funcRoleMap.roleId.eq(memberRole.roleId)
-                        .and(memberRole.seq.eq(memberSeq))
+                .innerJoin(membersRole)
+                .on(funcRoleMap.roleId.eq(membersRole.roleId)
+                        .and(membersRole.seq.eq(memberSeq))
                 );
 
         query.groupBy(funcRoleMap.funcId);

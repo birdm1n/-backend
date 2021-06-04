@@ -16,12 +16,12 @@ public class GoodsRegReqDto {
 	private long reqStoreId;
 	private String goodsName;
 	private String modelName;
-	private int maker;
-	private int telecom;
-	private int network;
+	private Long maker;
+	private Long telecom;
+	private Long network;
 	private String capacity;
 	private LocalDateTime regiDateTime;
-	private int reqStatus;
+	private String reqStatus;
 	private GoodsRegReqRejectDto regReqRejectDto;
 	private String makerName;
 	private String networkName;

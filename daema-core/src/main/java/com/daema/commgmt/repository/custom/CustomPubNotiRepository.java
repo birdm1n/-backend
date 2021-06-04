@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CustomPubNotiRepository {
 
-	HashMap<String, List> getMappingList(int telecom, int network);
+	HashMap<String, List> getMappingList(Long telecom, Long network);
 	List<PubNoti> getHistoryList(PubNoti pubNoti);
 }

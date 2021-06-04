@@ -1,7 +1,7 @@
 package com.daema.wms.repository;
 
 import com.daema.base.domain.QCodeDetail;
-import com.daema.base.domain.QMember;
+import com.daema.base.domain.QMembers;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
@@ -46,7 +46,7 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
     public Page<ReturnStockResponseDto> getSearchPage(ReturnStockRequestDto requestDto) {
 
         JPQLQuery<ReturnStockResponseDto> query = getQuerydsl().createQuery();
-        QMember regMember = new QMember("regMember");
+        QMembers regMember = new QMembers("regMember");
         QStock prevStock = new QStock("prevStock");
         QStock nextStock = new QStock("nextStock");
 
@@ -195,14 +195,14 @@ public class ReturnStockRepositoryImpl extends QuerydslRepositorySupport impleme
         return resultList;
     }
 
-    private BooleanExpression eqTelecom(Integer telecom) {
+    private BooleanExpression eqTelecom(Long telecom) {
         if (telecom == null) {
             return null;
         }
         return goods.networkAttribute.telecom.eq(telecom);
     }
 
-    private BooleanExpression eqMaker(Integer maker) {
+    private BooleanExpression eqMaker(Long maker) {
         if (maker == null) {
             return null;
         }

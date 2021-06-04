@@ -128,15 +128,15 @@ public class GoodsRegReqRepositoryImpl extends QuerydslRepositorySupport impleme
         return goodsRegReq.modelName.contains(name);
     }
 
-    private BooleanExpression eqMaker(int name) {
-        if (name <= 0) {
+    private BooleanExpression eqMaker(Long name) {
+        if (name == null || name <= 0) {
             return null;
         }
         return goodsRegReq.maker.eq(name);
     }
 
-    private BooleanExpression eqNetwork(int name) {
-        if (name <= 0) {
+    private BooleanExpression eqNetwork(Long name) {
+        if (name == null || name <= 0) {
             return null;
         }
         return goodsRegReq.networkAttribute.network.eq(name);
@@ -151,8 +151,8 @@ public class GoodsRegReqRepositoryImpl extends QuerydslRepositorySupport impleme
         return goodsRegReq.networkAttribute.telecom.in(name);
     }
 
-    private BooleanExpression eqStatus(int name) {
-        if (name <= 0) {
+    private BooleanExpression eqStatus(String name) {
+        if (StringUtils.isEmpty(name)) {
             return null;
         }
         return goodsRegReq.reqStatus.eq(name);

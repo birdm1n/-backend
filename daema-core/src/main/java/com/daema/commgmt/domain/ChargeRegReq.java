@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="charge_reg_req")
+@org.hibernate.annotations.Table(appliesTo = "charge_reg_req", comment = "요금 등록 요청")
 public class ChargeRegReq extends ChargeBase {
 
     @Id
@@ -28,8 +28,8 @@ public class ChargeRegReq extends ChargeBase {
      * 6 - 승인
      * 9 - 반려
      */
-    @Column(name = "req_status", nullable = false, columnDefinition = "INT comment '요청 상태' default 1")
-    private int reqStatus;
+    @Column(name = "req_status", nullable = false, columnDefinition = "varchar(255) comment '요청 상태' default 1")
+    private String reqStatus;
 
     @Transient
     private ChargeRegReqReject chargeRegReqReject;
@@ -39,7 +39,7 @@ public class ChargeRegReq extends ChargeBase {
 
     @Builder
     public ChargeRegReq(long chargeRegReqId, long reqStoreId, String chargeName, int chargeAmt, String category
-            , int telecom, int network, String chargeCode, LocalDateTime regiDateTime, int reqStatus
+            , Long telecom, Long network, String chargeCode, LocalDateTime regiDateTime, String reqStatus
             , String makerName, String networkName, String telecomName
             ,String reqStoreName){
         this.chargeRegReqId = chargeRegReqId;
@@ -57,7 +57,7 @@ public class ChargeRegReq extends ChargeBase {
         this.reqStoreName = reqStoreName;
     }
 
-    public void updateReqStatus(ChargeRegReq chargeRegReq, int reqStatus){
+    public void updateReqStatus(ChargeRegReq chargeRegReq, String reqStatus){
         chargeRegReq.setReqStatus(reqStatus);
     }
 

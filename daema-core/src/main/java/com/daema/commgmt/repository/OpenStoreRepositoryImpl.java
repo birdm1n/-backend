@@ -91,7 +91,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
 
         if(pageable == null){
             sb.append("select os.open_store_id " +
-                    "       , os.biz_no " +
+                    "       , os.biz_num as biz_no" +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.charger_phone1 " +
@@ -128,7 +128,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "union " +
                     " " +
                     "select os.open_store_id " +
-                    "       , os.biz_no " +
+                    "       , os.biz_num as biz_no " +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.charger_phone1 " +
@@ -166,7 +166,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
 
         }else{
             sb.append("select os.open_store_id " +
-                    "       , os.biz_no " +
+                    "       , os.biz_num as biz_no " +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.charger_phone1 " +
@@ -197,7 +197,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
             sb.append(" union " +
                     " " +
                     "select os.open_store_id " +
-                    "       , os.biz_no " +
+                    "       , os.biz_num as biz_no " +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.charger_phone1 " +
@@ -255,7 +255,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
             sb.append(" and os.open_store_name like '%" + requestDto.getOpenStoreName() + "%'");
         }
         if(StringUtils.hasText(requestDto.getBizNo())){
-            sb.append(" and os.biz_no like '%" + requestDto.getBizNo() + "%'");
+            sb.append(" and os.biz_num like '%" + requestDto.getBizNo() + "%'");
         }
         if(StringUtils.hasText(requestDto.getReturnAddr())){
             sb.append(" and (os.return_addr like '%" + requestDto.getReturnAddr() + "%' " +

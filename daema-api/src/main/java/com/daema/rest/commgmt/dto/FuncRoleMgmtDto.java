@@ -15,7 +15,7 @@ public class FuncRoleMgmtDto {
 	@Builder
 	public static class FuncMgmtDto {
 		private String funcId;
-		private int groupId;
+		private long groupId;
 		private String groupName;
 		private String title;
 		private String role;
@@ -41,7 +41,7 @@ public class FuncRoleMgmtDto {
 	@AllArgsConstructor
 	@Builder
 	public static class RoleMgmtDto {
-		private int roleId;
+		private long roleId;
 		private String roleName;
 		private String necessaryYn= "N";
 		private String delYn = "N";

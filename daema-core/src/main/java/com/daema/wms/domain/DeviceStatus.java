@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
+
 @Builder
 @Getter
 @Setter
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="device_status")
+@org.hibernate.annotations.Table(appliesTo = "device_status", comment = "기기 상태")
 public class DeviceStatus extends BaseEntity {
 
     @Id
@@ -54,7 +55,7 @@ public class DeviceStatus extends BaseEntity {
     @ColumnDefault("\"N\"")
     private String ddctReleaseAmtYn = "N";
 
-    @Column(name = "in_stock_status", columnDefinition = "varchar(255) comment '입고상태'")
+    @Column(name = "in_stock_status", columnDefinition = "varchar(255) comment '입고 상태'")
     @Enumerated(EnumType.STRING)
     private WmsEnum.InStockStatus inStockStatus;
 

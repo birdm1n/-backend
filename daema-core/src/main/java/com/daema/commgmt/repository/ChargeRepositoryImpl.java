@@ -169,8 +169,8 @@ public class ChargeRepositoryImpl extends QuerydslRepositorySupport implements C
         return charge.chargeName.contains(name);
     }
 
-    private BooleanExpression eqNetwork(int name) {
-        if (name <= 0) {
+    private BooleanExpression eqNetwork(Long name) {
+        if (name == null || name <= 0) {
             return null;
         }
         return charge.networkAttribute.network.eq(name);

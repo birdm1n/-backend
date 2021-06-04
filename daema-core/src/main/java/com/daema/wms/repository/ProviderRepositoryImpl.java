@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-import static com.daema.base.domain.QMember.member;
+import static com.daema.base.domain.QMembers.members;
 import static com.daema.wms.domain.QProvider.provider;
 
 
@@ -47,13 +47,13 @@ public class ProviderRepositoryImpl extends QuerydslRepositorySupport implements
                 , provider.regiDateTime
                 , provider.updDateTime
                 , provider.useYn
-                , member.name.as("name")
+                , members.name.as("name")
         ));
 
         query.from(provider);
 
-        query.innerJoin(member)
-                .on(provider.updUserId.eq(member.seq)
+        query.innerJoin(members)
+                .on(provider.updUserId.eq(members.seq)
                 );
 
         query.where(

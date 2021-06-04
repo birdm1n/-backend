@@ -1,6 +1,6 @@
 package com.daema.rest.wms.service;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
@@ -207,7 +207,7 @@ public class MoveStockMgmtService {
     public void setLongTimeStoreStockAlarm(MoveStockAlarmDto requestDto){
 
         Store store = Store.builder().storeId(requestDto.getStoreId()).build();
-        Member member = Member.builder().seq(requestDto.getMemberSeq()).build();
+        Members member = Members.builder().seq(requestDto.getMemberSeq()).build();
 
         MoveStockAlarm moveStockAlarm = moveStockAlarmRepository.findByStore(store);
 

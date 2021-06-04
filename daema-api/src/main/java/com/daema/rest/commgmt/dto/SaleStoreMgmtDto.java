@@ -14,7 +14,7 @@ public class SaleStoreMgmtDto {
 
 	private long storeId;
 	private String saleStoreName;
-	private int telecom;
+	private Long telecom;
 	private String telecomName;
 	private String bizNo;
 	private String ceoName;

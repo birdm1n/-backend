@@ -1,6 +1,6 @@
 package com.daema.rest.wms.service;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
 import com.daema.commgmt.domain.Store;
@@ -248,7 +248,7 @@ class ReturnStockCtrl {
 							.store(Store.builder()
 									.storeId(authenticationUtil.getStoreId())
 									.build())
-							.regiUserId(Member.builder()
+							.regiUserId(Members.builder()
 									.seq(authenticationUtil.getMemberSeq())
 									.build())
 							.regiDateTime(regiDatetime)

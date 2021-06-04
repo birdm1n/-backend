@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GoodsMatchRespDto {
 
-    private int maker;
+    private Long maker;
     private String makerName;
-    private int telecom;
+    private Long telecom;
     private String telecomName;
     private long goodsId;
     private String goodsName;

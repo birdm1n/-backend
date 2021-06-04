@@ -2,18 +2,23 @@ package com.daema.commgmt.domain;
 
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Table;
 
 import javax.annotation.Nullable;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="chargeId")
+@EqualsAndHashCode(of="addSvcId")
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="add_service")
+@Table(appliesTo = "add_service", comment = "부가 서비스")
 public class AddService extends AddServiceBase {
 
     @Id
@@ -34,12 +39,12 @@ public class AddService extends AddServiceBase {
     private String useYn;
 
     @Nullable
-    @Column(name = "del_yn", columnDefinition ="char(1) comment '사용 여부'")
+    @Column(name = "del_yn", columnDefinition ="char(1) comment '삭제 여부'")
     @ColumnDefault("\"N\"")
     private String delYn;
 
     @Builder
-    public AddService(long addSvcId, String addSvcName, int addSvcCharge, int telecom
+    public AddService(long addSvcId, String addSvcName, int addSvcCharge, Long telecom
             , String originKey, LocalDateTime regiDateTime, String addSvcMemo, String useYn, String delYn
     ,String telecomName){
         this.addSvcId = addSvcId;

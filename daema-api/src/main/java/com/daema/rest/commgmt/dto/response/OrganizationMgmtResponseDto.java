@@ -23,9 +23,9 @@ public class OrganizationMgmtResponseDto {
 	public static class OrgnztMemberAndRoleDto {
 
 		public OrgnztMemberListDto member;
-		public List<Integer> roleIds;
+		public List<Long> roleIds;
 
-		public OrgnztMemberAndRoleDto(OrgnztMemberListDto member, List<Integer> roleIds) {
+		public OrgnztMemberAndRoleDto(OrgnztMemberListDto member, List<Long> roleIds) {
 			this.member = member;
 			this.roleIds = roleIds;
 		}

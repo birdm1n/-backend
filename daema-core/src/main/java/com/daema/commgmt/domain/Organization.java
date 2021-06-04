@@ -26,7 +26,7 @@ import javax.validation.constraints.NotBlank;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name = "organization")
+@org.hibernate.annotations.Table(appliesTo = "organization", comment = "조직")
 public class Organization {
 
     @Id

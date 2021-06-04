@@ -13,7 +13,7 @@ import javax.persistence.*;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="out_stock")
+@org.hibernate.annotations.Table(appliesTo = "out_stock", comment = "출고 재고")
 public class OutStock extends BaseEntity {
 
     @Id

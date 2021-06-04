@@ -14,7 +14,7 @@ public class StoreDto {
 
 	private long storeId;
 	private String storeName;
-	private int telecom;
+	private Long telecom;
 	private String telecomName;
 	private String bizNo;
 	private String ceoName;

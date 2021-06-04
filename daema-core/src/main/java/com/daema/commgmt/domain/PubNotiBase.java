@@ -23,7 +23,7 @@ public abstract class PubNotiBase {
     protected int releaseAmt;
 
     @NotNull
-    @Column(name = "release_date", columnDefinition = "DATETIME(6) comment '출고가 일자'")
+    @Column(name = "release_date", columnDefinition = "DATE comment '출고가 일자'")
     protected LocalDate releaseDate;
 
     @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")

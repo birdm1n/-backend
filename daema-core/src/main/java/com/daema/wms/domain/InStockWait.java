@@ -11,23 +11,23 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="wait_id")
+@EqualsAndHashCode(of="waitId")
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="in_stock_wait")
+@org.hibernate.annotations.Table(appliesTo = "in_stock_wait", comment = "입고 대기")
 public class InStockWait extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "wait_id", columnDefinition = "BIGINT unsigned comment '임시 아이디'")
+    @Column(name = "wait_id", columnDefinition = "BIGINT unsigned comment '대기 아이디'")
     private Long waitId;
 
     @NotNull
-    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사 코드 아이디'")
-    private int telecom;
+    @Column(name = "telecom_code_id", columnDefinition = "BIGINT unsigned comment '통신사 코드 아이디'")
+    private Long telecom;
 
     @Column(name = "telecom_name", columnDefinition = "varchar(255) comment '통신사 이름'")
     private String telecomName;
@@ -45,8 +45,8 @@ public class InStockWait extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private WmsEnum.StockStatStr statusStr;
 
-    @Column(name = "maker_code_id", columnDefinition = "int comment '제조사'")
-    private int maker;
+    @Column(name = "maker_code_id", columnDefinition = "BIGINT unsigned comment '제조사 코드 아이디'")
+    private Long maker;
 
     @Column(name = "maker_name", columnDefinition = "varchar(255) comment '제조사 이름'")
     private String makerName;
@@ -80,7 +80,7 @@ public class InStockWait extends BaseEntity {
     @Column(name = "full_barcode", columnDefinition = "varchar(255) comment '원시, 가공 바코드'")
     private String fullBarcode;
 
-    @Column(name = "serial_no", columnDefinition = "varchar(255) comment '시리얼_ex : 뒷 7자리'")
+    @Column(name = "serial_num", columnDefinition = "varchar(255) comment '시리얼 번호'")
     private String serialNo;
 
     @Column(name = "common_barcode", columnDefinition = "varchar(255) comment '공통 바코드'")

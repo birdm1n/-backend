@@ -14,7 +14,7 @@ import javax.persistence.*;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name = "store_stock_history")
+@org.hibernate.annotations.Table(appliesTo = "store_stock_history", comment = "관리점 재고 이력")
 public class StoreStockHistory extends BaseUserInfoEntity {
 
     @Id

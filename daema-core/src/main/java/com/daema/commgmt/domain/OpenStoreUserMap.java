@@ -12,12 +12,12 @@ import javax.persistence.*;
 @IdClass(OpenStoreUserMapPK.class)
 @ToString
 @Entity
-@Table(name="open_store_user_map")
+@org.hibernate.annotations.Table(appliesTo = "open_store_user_map", comment = "개통 관리점 유저 맵핑")
 @NoArgsConstructor
 public class OpenStoreUserMap {
 
     @Id
-    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '개통점 아이디'")
+    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '개통 관리점 아이디'")
     private long openStoreId;
 
     @Id

@@ -25,7 +25,7 @@ public class DeviceCurrentRequestDto extends SearchParamDto {
     private WmsEnum.StockType stockType;
 
     //통신사
-    private Integer telecom;
+    private Long telecom;
 
     //기기명
     private Long goodsId;
@@ -44,7 +44,7 @@ public class DeviceCurrentRequestDto extends SearchParamDto {
     private String barcode;
 
     //제조사
-    private Integer maker;
+    private Long maker;
 
     //입고상태
     private WmsEnum.InStockStatus inStockStatus;

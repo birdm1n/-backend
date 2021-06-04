@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 public abstract class AddServiceBase {
 
     @NotNull
-    @Column(name = "telecom_code_id",  columnDefinition = "INT comment '통신사 코드 아이디'")
-    protected int telecom;
+    @Column(name = "telecom_code_id",  columnDefinition = "BIGINT unsigned comment '통신사 코드 아이디'")
+    protected Long telecom;
 
     @NotBlank
     @Column(name = "add_svc_name", columnDefinition = "varchar(255) comment '부가 서비스 이름'")

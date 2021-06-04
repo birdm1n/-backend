@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public abstract class ChargeBase {
 
     @NotBlank
-    @Column(name = "charge_name", columnDefinition = "varchar(255) comment '요금 명'")
+    @Column(name = "charge_name", columnDefinition = "varchar(255) comment '요금 이름'")
     protected String chargeName;
 
     @NotBlank
@@ -35,28 +35,28 @@ public abstract class ChargeBase {
     @Embedded
     protected NetworkAttribute networkAttribute;
 
-    @Column(name = "voice_amt", columnDefinition = "varchar(255) comment '음성 금액'")
+    @Column(name = "voice_amt_detail", columnDefinition = "varchar(255) comment '음성 금액 상세'")
     protected String voiceAmt;
 
-    @Column(name = "data_amt", columnDefinition = "varchar(255) comment '데이터 금액'")
+    @Column(name = "data_amt_detail", columnDefinition = "varchar(255) comment '데이터 금액 상세'")
     protected String dataAmt;
 
-    @Column(name = "sms_amt", columnDefinition = "varchar(255) comment 'sms 금액'")
+    @Column(name = "sms_amt_detail", columnDefinition = "varchar(255) comment 'sms 금액 상세'")
     protected String smsAmt;
 
-    @Column(name = "video_amt", columnDefinition = "varchar(255) comment '영상 금액'")
+    @Column(name = "video_amt_detail", columnDefinition = "varchar(255) comment '영상 금액 상세'")
     protected String videoAmt;
 
-    @Column(name = "extra_voice_amt", columnDefinition = "varchar(255) comment '추가 음성 금액'")
+    @Column(name = "extra_voice_amt_detail", columnDefinition = "varchar(255) comment '추가 음성 금액 상세'")
     protected String extraVoiceAmt;
 
-    @Column(name = "extra_data_amt", columnDefinition = "varchar(255) comment '추가 데이터 금액'")
+    @Column(name = "extra_data_amt_detail", columnDefinition = "varchar(255) comment '추가 데이터 금액 상세'")
     protected String extraDataAmt;
 
-    @Column(name = "extra_sms_amt", columnDefinition = "varchar(255) comment '추가 sms 금액'")
+    @Column(name = "extra_sms_amt_detail", columnDefinition = "varchar(255) comment '추가 sms 금액 상세'")
     protected String extraSmsAmt;
 
-    @Column(name = "extra_video_amt", columnDefinition = "varchar(255) comment '추가 영상 금액'")
+    @Column(name = "extra_video_amt_detail", columnDefinition = "varchar(255) comment '추가 영상 금액 상세'")
     protected String extraVideoAmt;
 
     @Column(name = "charge_desc", columnDefinition = "varchar(255) comment '요금 설명'")

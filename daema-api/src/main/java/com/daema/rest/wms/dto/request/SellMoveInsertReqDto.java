@@ -44,7 +44,7 @@ public class SellMoveInsertReqDto {
     private String addr2;
 
     @ApiModelProperty(value = "택배사", example = "0",required = true)
-    private Integer courier;
+    private Long courier;
 
     @ApiModelProperty(value = "송장번호", required = true)
     private String invoiceNo;

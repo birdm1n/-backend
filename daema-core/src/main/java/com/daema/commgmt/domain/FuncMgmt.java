@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Getter
 @Setter
@@ -13,20 +12,20 @@ import javax.persistence.Table;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name = "func_mgmt")
+@org.hibernate.annotations.Table(appliesTo = "func_mgmt", comment = "기능 관리")
 public class FuncMgmt {
 
     /**
      * groupId + "_" + method name
      */
     @Id
-    @Column(name = "func_id", columnDefinition = "varchar(255) comment '기능 아이디'")
+    @Column(name = "func_name", columnDefinition = "varchar(255) comment '기능 이름'")
     private String funcId;
 
-    @Column(name = "group_id", columnDefinition = "INT comment '그룹 아이디'")
-    private int groupId;
+    @Column(name = "group_id", columnDefinition = "BIGINT unsigned comment '그룹 아이디'")
+    private long groupId;
 
-    @Column(name = "group_name", columnDefinition = "varchar(255) comment '그룹 명'")
+    @Column(name = "group_name", columnDefinition = "varchar(255) comment '그룹 이름'")
     private String groupName;
 
     @Column(name = "title", columnDefinition = "varchar(255) comment '제목'")
@@ -38,7 +37,7 @@ public class FuncMgmt {
     @Column(name = "url_path", columnDefinition = "varchar(255) comment 'url 경로'")
     private String urlPath;
 
-    @Column(name = "order_num", columnDefinition = "INT comment '정렬 순서'")
+    @Column(name = "order_seq", columnDefinition = "INT comment '정렬 순번'")
     private int orderNum;
 
     @Builder

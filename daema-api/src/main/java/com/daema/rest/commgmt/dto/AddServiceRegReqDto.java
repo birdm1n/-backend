@@ -16,9 +16,9 @@ public class AddServiceRegReqDto {
 	private long reqStoreId;
 	private String addSvcName;
 	private int addSvcCharge;
-	private int telecom;
+	private Long telecom;
 	private LocalDateTime regiDateTime;
-	private int reqStatus;
+	private String reqStatus;
 	private AddServiceRegReqRejectDto regReqRejectDto;
 	private String telecomName;
 	private String reqStoreName;

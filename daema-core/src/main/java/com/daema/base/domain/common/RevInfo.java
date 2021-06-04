@@ -27,8 +27,8 @@ import java.util.Date;
 @Entity
 @RevisionEntity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "Rev_info")
-public class CustomRevisionEntity implements Serializable {
+@org.hibernate.annotations.Table(appliesTo = "rev_info", comment = "리비전 정보")
+public class RevInfo implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -26,7 +26,6 @@ import java.util.List;
 
 import static com.daema.commgmt.domain.QGoods.goods;
 import static com.daema.commgmt.domain.QGoodsOption.goodsOption;
-import static com.daema.wms.domain.QDevice.device;
 
 public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements CustomGoodsRepository {
 
@@ -222,7 +221,7 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
     }
 
     @Override
-    public List<Goods> getGoodsSelectList(int telecomId) {
+    public List<Goods> getGoodsSelectList(Long telecomId) {
         JPQLQuery<Goods> query = getQuerydsl().createQuery();
 
         return query.select(Projections.fields(
@@ -285,22 +284,22 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
         return goods.modelName.contains(name);
     }
 
-    private BooleanExpression eqMaker(int name) {
-        if (name <= 0) {
+    private BooleanExpression eqMaker(Long name) {
+        if (name == null || name <= 0) {
             return null;
         }
         return goods.maker.eq(name);
     }
 
-    private BooleanExpression eqNetwork(int name) {
-        if (name <= 0) {
+    private BooleanExpression eqNetwork(Long name) {
+        if (name == null || name <= 0) {
             return null;
         }
         return goods.networkAttribute.network.eq(name);
     }
 
-    private BooleanExpression eqTelecomId(int name) {
-        if (name <= 0) {
+    private BooleanExpression eqTelecomId(Long name) {
+        if (name == null || name <= 0) {
             return null;
         }
         return goods.networkAttribute.telecom.eq(name);

@@ -5,9 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +15,7 @@ public class InStockWaitInsertExcelReqDto {
     private Long provId;
 
     @ApiModelProperty(value = "통신사 ID", required = true, example = "0")
-    private Integer telecom;
+    private Long telecom;
 
     @ApiModelProperty(value = "보유처 ID", required = true, example = "0")
     private Long stockId;

@@ -1,7 +1,7 @@
 package com.daema.wms.repository;
 
 import com.daema.base.domain.QCodeDetail;
-import com.daema.base.domain.QMember;
+import com.daema.base.domain.QMembers;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.commgmt.domain.QStore;
 import com.daema.commgmt.domain.Store;
@@ -49,8 +49,8 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
     @Override
     public Page<MoveStockResponseDto> getMoveTypeList(WmsEnum.MovePathType movePathType, MoveStockRequestDto requestDto) {
         JPQLQuery<MoveStockResponseDto> query = getQuerydsl().createQuery();
-        QMember regMember = new QMember("regMember");
-        QMember updMember = new QMember("updMember");
+        QMembers regMember = new QMembers("regMember");
+        QMembers updMember = new QMembers("updMember");
 
         QCodeDetail maker = new QCodeDetail("maker");
         QCodeDetail telecom = new QCodeDetail("telecom");
@@ -138,8 +138,8 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
     public Page<TransResponseDto> getTransTypeList(WmsEnum.MovePathType movePathType, MoveStockRequestDto requestDto) {
         JPQLQuery<TransResponseDto> query = getQuerydsl().createQuery();
 
-        QMember regMember = new QMember("regMember");
-        QMember updMember = new QMember("updMember");
+        QMembers regMember = new QMembers("regMember");
+        QMembers updMember = new QMembers("updMember");
 
         QCodeDetail maker = new QCodeDetail("maker");
         QCodeDetail telecom = new QCodeDetail("telecom");
@@ -226,8 +226,8 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
     public Page<TransResponseDto> getFaultyTransTypeList(WmsEnum.MovePathType movePathType, MoveStockRequestDto requestDto) {
         JPQLQuery<TransResponseDto> query = getQuerydsl().createQuery();
 
-        QMember regMember = new QMember("regMember");
-        QMember updMember = new QMember("updMember");
+        QMembers regMember = new QMembers("regMember");
+        QMembers updMember = new QMembers("updMember");
 
         QCodeDetail maker = new QCodeDetail("maker");
         QCodeDetail telecom = new QCodeDetail("telecom");
@@ -333,8 +333,8 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
         QStock prevStock = new QStock("prevStock"); // 쿼리타입 사용, 직접 jpql생성 별칭 "prevStock" 현재 보유처
         QStock nextStock = new QStock("nextStock");
 
-        QMember regMember = new QMember("regMember");
-        QMember updMember = new QMember("updMember");
+        QMembers regMember = new QMembers("regMember");
+        QMembers updMember = new QMembers("updMember");
 
         QCodeDetail telecom = new QCodeDetail("telecom");
         QCodeDetail maker = new QCodeDetail("maker");
@@ -563,14 +563,14 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
         return deviceStatus.extrrStatus.eq(extrrStatus);
     }
 
-    private BooleanExpression eqTelecom(Integer telecom) {
+    private BooleanExpression eqTelecom(Long telecom) {
         if (telecom == null) {
             return null;
         }
         return goods.networkAttribute.telecom.eq(telecom);
     }
 
-    private BooleanExpression eqMaker(Integer maker) {
+    private BooleanExpression eqMaker(Long maker) {
         if (maker == null) {
             return null;
         }

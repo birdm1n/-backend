@@ -1,6 +1,6 @@
 package com.daema.rest.base.service;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.base.domain.Salt;
 import com.daema.base.domain.SocialData;
 import com.daema.base.enums.StatusEnum;
@@ -53,7 +53,7 @@ public class AuthService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void signUpUser(Member member) {
+    public void signUpUser(Members member) {
         String password = member.getPassword();
         String salt = saltUtil.genSalt();
         member.setSalt(new Salt(salt));
@@ -63,7 +63,7 @@ public class AuthService {
 
     @Transactional
     public void signUpSocialUser(SocialDataRequest member){
-        Member newMember = new Member();
+        Members newMember = new Members();
         newMember.setUsername(member.getId());
         newMember.setPassword("");
         newMember.setEmail(member.getEmail());
@@ -73,14 +73,14 @@ public class AuthService {
         memberRepository.save(newMember);
     }
 
-    public Member loginSocialUser(String id, String type) throws NotFoundException{
+    public Members loginSocialUser(String id, String type) throws NotFoundException{
         SocialData socialData = socialDataRepository.findBySocialDataIdAndSocialType(id,type);
         if(socialData == null) throw new NotFoundException("멤버가 조회되지 않음");
         return socialData.getMember();
     }
 
-    public Member loginUser(String id, String password) throws Exception{
-        Member member = memberRepository.findByUsername(id);
+    public Members loginUser(String id, String password) throws Exception{
+        Members member = memberRepository.findByUsername(id);
         if(member == null) throw new Exception ("멤버가 조회되지 않음");
         String salt = member.getSalt().getSalt();
         password = saltUtil.encodePassword(salt,password);
@@ -89,21 +89,21 @@ public class AuthService {
         return member;
     }
 
-    public Member findByUsername(String username) throws NotFoundException {
-        Member member = memberRepository.findByUsername(username);
+    public Members findByUsername(String username) throws NotFoundException {
+        Members member = memberRepository.findByUsername(username);
         if(member == null) throw new NotFoundException("멤버가 조회되지 않음");
         return member;
     }
 
     public void verifyEmail(String key) throws NotFoundException {
         String memberId = redisUtil.getData(key);
-        Member member = memberRepository.findByUsername(memberId);
+        Members member = memberRepository.findByUsername(memberId);
         if(member == null) throw new NotFoundException("멤버가 조회되지않음");
         modifyUserRole(member, UserRole.ROLE_USER);
         redisUtil.deleteData(key);
     }
 
-    public void sendVerificationMail(Member member) throws NotFoundException {
+    public void sendVerificationMail(Members member) throws NotFoundException {
         String VERIFICATION_LINK = "http://localhost:8080/user/verify/";
         if(member == null) throw new NotFoundException("멤버가 조회되지 않음");
         UUID uuid = UUID.randomUUID();
@@ -111,7 +111,7 @@ public class AuthService {
         emailUtil.sendMail(member.getEmail(),"회원가입 인증메일입니다.",VERIFICATION_LINK + uuid.toString());
     }
 
-    public void modifyUserRole(Member member, UserRole userRole){
+    public void modifyUserRole(Members member, UserRole userRole){
         member.setRole(userRole);
         memberRepository.save(member);
     }
@@ -121,7 +121,7 @@ public class AuthService {
         return !memberId.equals("");
     }
 
-    public void changePassword(Member member,String password) throws NotFoundException{
+    public void changePassword(Members member, String password) throws NotFoundException{
         if(member == null) throw new NotFoundException("changePassword(),멤버가 조회되지 않음");
         String salt = saltUtil.genSalt();
         member.setSalt(new Salt(salt));
@@ -130,7 +130,7 @@ public class AuthService {
     }
 
 
-    public void requestChangePassword(Member member) throws NotFoundException{
+    public void requestChangePassword(Members member) throws NotFoundException{
         String CHANGE_PASSWORD_LINK = "http://localhost:8080/user/password/";
         if(member == null) throw new NotFoundException("멤버가 조회되지 않음.");
         String key = REDIS_CHANGE_PASSWORD_PREFIX + UUID.randomUUID();
@@ -139,7 +139,7 @@ public class AuthService {
         //emailUtil.sendMail(member.getEmail(),"사용자 비밀번호 안내 메일",CHANGE_PASSWORD_LINK + key);
     }
 
-    public CommonResponse chkLoginMemberStatus(Member member, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    public CommonResponse chkLoginMemberStatus(Members member, HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         if(String.valueOf(StatusEnum.USER_APPROVAL.getStatusCode()).equals(member.getUserStatus())
                 && (UserRole.ROLE_USER == member.getRole()

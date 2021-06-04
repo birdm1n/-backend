@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="charge")
+@org.hibernate.annotations.Table(appliesTo = "charge", comment = "요금")
 public class Charge extends ChargeBase{
 
     @Id
@@ -35,17 +35,17 @@ public class Charge extends ChargeBase{
     private String useYn;
 
     @Nullable
-    @Column(name = "matching_yn", columnDefinition ="char(1) comment '사용 여부'")
+    @Column(name = "matching_yn", columnDefinition ="char(1) comment '매칭 여부'")
     @ColumnDefault("\"N\"")
     private String matchingYn;
 
     @Nullable
-    @Column(name = "del_yn", columnDefinition ="char(1) comment '사용 여부'")
+    @Column(name = "del_yn", columnDefinition ="char(1) comment '삭제 여부'")
     @ColumnDefault("\"N\"")
     private String delYn;
 
     @Builder
-    public Charge(long chargeId, String chargeName, int chargeAmt, String category, int telecom, int network
+    public Charge(long chargeId, String chargeName, int chargeAmt, String category, Long telecom, Long network
             , String originKey, String chargeCode, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn
     , String voiceAmt, String dataAmt, String smsAmt, String videoAmt
     , String extraVoiceAmt, String extraDataAmt, String extraSmsAmt, String extraVideoAmt

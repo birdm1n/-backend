@@ -63,7 +63,8 @@ public class AddServiceRepositoryImpl extends QuerydslRepositorySupport implemen
                         .and(telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .where(
-                        containsAddSvcName(requestDto.getAddSvcName())
+                        builder
+                        ,containsAddSvcName(requestDto.getAddSvcName())
                         ,eqTelecom(requestDto.getTelecom())
                         ,eqUseYn(requestDto.getUseYn())
                         ,betweenStartDateEndDate(requestDto.getSrhStartDate(), requestDto.getSrhEndDate())

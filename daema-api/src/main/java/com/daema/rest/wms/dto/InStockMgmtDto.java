@@ -1,6 +1,6 @@
 package com.daema.rest.wms.dto;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.wms.domain.InStock;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
@@ -19,9 +19,9 @@ public class InStockMgmtDto {
     private int inStockAmt;
     private String inStockMemo;
     private LocalDateTime regiDateTime;
-    private Member regiUserId;
+    private Members regiUserId;
     private LocalDateTime updDateTime;
-    private Member updUserId;
+    private Members updUserId;
     private String delYn;
     private Long provId;
     private Long stockId;

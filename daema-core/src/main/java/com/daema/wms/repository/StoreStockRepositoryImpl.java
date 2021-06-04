@@ -478,14 +478,14 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
         return new PageImpl<>(resultList, pageable, total);
     }
 
-    private BooleanExpression eqTelecom(Integer telecom) {
+    private BooleanExpression eqTelecom(Long telecom) {
         if (telecom == null) {
             return null;
         }
         return goods.networkAttribute.telecom.eq(telecom);
     }
 
-    private BooleanExpression eqMaker(Integer maker) {
+    private BooleanExpression eqMaker(Long maker) {
         if (maker == null) {
             return null;
         }

@@ -1,6 +1,6 @@
 package com.daema.rest.config;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.rest.base.service.AuditorAwareImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class JpaAuditConfig {
 
     @Bean
-    public AuditorAware<Member> auditorProvider(){
+    public AuditorAware<Members> auditorProvider(){
         return new AuditorAwareImpl();
     }
 

@@ -1,11 +1,11 @@
 package com.daema.rest.commgmt.service;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.UserRole;
 import com.daema.base.repository.MemberRepository;
 import com.daema.base.repository.MemberRoleRepository;
-import com.daema.commgmt.domain.MemberRole;
+import com.daema.commgmt.domain.MembersRole;
 import com.daema.commgmt.domain.Organization;
 import com.daema.commgmt.domain.RoleMgmt;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
@@ -106,10 +106,10 @@ public class OrganizationMgmtService {
             orgnztMemberListMap.get("memberList").forEach(
                 member -> {
                     mList.add(new OrgnztMemberAndRoleDto((OrgnztMemberListDto) member
-                                    ,((List<MemberRole>) orgnztMemberListMap.get("memberRoleList"))
+                                    ,((List<MembersRole>) orgnztMemberListMap.get("memberRoleList"))
                                     .stream()
                                     .filter(roles -> roles.getSeq() == ((OrgnztMemberListDto) member).getSeq())
-                                    .map(MemberRole::getRoleId)
+                                    .map(MembersRole::getRoleId)
                                     .collect(Collectors.toList()))
                     );
                 }
@@ -177,7 +177,7 @@ public class OrganizationMgmtService {
                 && orgnzt.getStoreId() == storeId) {
             orgnzt.setDelYn(StatusEnum.FLAG_Y.getStatusMsg());
 
-            List<Member> membersList = memberRepository.findByOrgId(orgnzt.getOrgId());
+            List<Members> membersList = memberRepository.findByOrgId(orgnzt.getOrgId());
 
             if(CommonUtil.isNotEmptyList(membersList)) {
                 Organization orgnztBasicData = organizationRepository.findByStoreIdAndOrgName(orgnzt.getStoreId(), Constants.ORGANIZATION_DEFAULT_GROUP_NAME);
@@ -230,7 +230,7 @@ public class OrganizationMgmtService {
             }
         }
 
-        authService.signUpUser(Member.builder()
+        authService.signUpUser(Members.builder()
                 .username(orgnztMemberDto.getUsername())
                 .password(orgnztMemberDto.getPassword())
                 .name(orgnztMemberDto.getName())
@@ -271,10 +271,10 @@ public class OrganizationMgmtService {
         if(orgnztMemberDto.getRoleIds() != null
                 && CommonUtil.isNotEmptyList(Arrays.asList(orgnztMemberDto.getRoleIds()))) {
 
-            List<MemberRole> memberRoles = new ArrayList<>();
+            List<MembersRole> memberRoles = new ArrayList<>();
 
             for (int roleId : orgnztMemberDto.getRoleIds()) {
-                memberRoles.add(new MemberRole(memberSeq, roleId));
+                memberRoles.add(new MembersRole(memberSeq, roleId));
             }
 
             memberRoleRepository.saveAll(memberRoles);
@@ -284,7 +284,7 @@ public class OrganizationMgmtService {
     @Transactional
     public void updateUser(OrganizationMemberDto orgnztMemberDto) throws NotFoundException {
 
-        Member member = memberRepository.findById(orgnztMemberDto.getSeq()).orElse(null);
+        Members member = memberRepository.findById(orgnztMemberDto.getSeq()).orElse(null);
         long storeId = authenticationUtil.getTargetStoreId(orgnztMemberDto.getStoreId());
 
         if(member != null
@@ -330,7 +330,7 @@ public class OrganizationMgmtService {
 
         if (CommonUtil.isNotEmptyList(userIds)) {
 
-            List<Member> membersList = memberRepository.findAllById(
+            List<Members> membersList = memberRepository.findAllById(
                     userIds.stream()
                             .map(Number::longValue).collect(Collectors.toList())
             );

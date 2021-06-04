@@ -1,7 +1,7 @@
 package com.daema.rest.base.service;
 
 import com.daema.base.domain.CodeDetail;
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
 import com.daema.base.enums.UserRole;
@@ -241,7 +241,7 @@ public class DataHandleService {
                     .orElseGet(Store::new).getStoreName();
         } else if (reqModel.get("userName") != null) {
             retVal = Optional.ofNullable(memberRepository.findByUsername((String) reqModel.get("userName")))
-                    .orElseGet(Member::new).getUsername();
+                    .orElseGet(Members::new).getUsername();
         } else if (reqModel.get("bizNo") != null) {
             retVal = Optional.ofNullable(storeRepository.findByBizNoAndUseYn((String) reqModel.get("bizNo"), StatusEnum.FLAG_Y.getStatusMsg()))
                     .orElseGet(Store::new).getBizNo();

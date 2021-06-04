@@ -1,6 +1,6 @@
 package com.daema.rest.common.util;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -57,11 +57,11 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-    public String generateToken(Member member) {
+    public String generateToken(Members member) {
         return doGenerateToken(member.getUsername(), TOKEN_VALIDATION_SECOND);
     }
 
-    public String generateRefreshToken(Member member) {
+    public String generateRefreshToken(Members member) {
         return doGenerateToken(member.getUsername(), REFRESH_TOKEN_VALIDATION_SECOND);
     }
 

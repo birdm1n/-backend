@@ -84,7 +84,7 @@ public class RoleFuncMgmtService {
 
         if (reqModelMap.get("delRoleId") != null) {
 
-            Integer roleId = Integer.parseInt(reqModelMap.get("delRoleId") + "");
+            Long roleId = Long.parseLong(reqModelMap.get("delRoleId") + "");
             RoleMgmt roleMgmt = roleMgmtRepository.findById(roleId).orElse(null);
 
             long storeId = authenticationUtil.getTargetStoreId(Long.parseLong(String.valueOf(reqModelMap.getAttribute("storeId"))));

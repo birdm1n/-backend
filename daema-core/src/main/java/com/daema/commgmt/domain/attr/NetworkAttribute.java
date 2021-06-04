@@ -15,9 +15,9 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 public class NetworkAttribute {
 
-    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사 코드 아이디'")
-    public int telecom;
+    @Column(name = "telecom_code_id", columnDefinition = "BIGINT unsigned comment '통신사 코드 아이디'")
+    public Long telecom;
 
-    @Column(name = "network_code_id", columnDefinition = "int comment '통신망 코드 아이디'")
-    public int network;
+    @Column(name = "network_code_id", columnDefinition = "BIGINT unsigned comment '통신망 코드 아이디'")
+    public Long network;
 }

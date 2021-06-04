@@ -134,7 +134,7 @@ public class StockMgmtService {
 		}
 	}
 	@Transactional(readOnly = true)
-    public List<SelectStockDto> selectStockList(Integer telecom) {
+    public List<SelectStockDto> selectStockList(Long telecom) {
 		long storeId = authenticationUtil.getStoreId();
 		return stockRepository.selectStockList(storeId, telecom);
     }

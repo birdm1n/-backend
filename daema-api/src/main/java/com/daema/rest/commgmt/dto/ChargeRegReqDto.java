@@ -17,10 +17,10 @@ public class ChargeRegReqDto {
 	private int chargeAmt;
 	private String chargeName;
 	private String category;
-	private int telecom;
-	private int network;
+	private Long telecom;
+	private Long network;
 	private LocalDateTime regiDateTime;
-	private int reqStatus;
+	private String reqStatus;
 	private String voiceAmt;
 	private String dataAmt;
 	private String smsAmt;

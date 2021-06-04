@@ -9,9 +9,9 @@ import java.util.List;
 public interface CustomStockRepository {
     HashMap<String, List> getStockAndDeviceList(StockRequestDto requestDto);
 
-    List<SelectStockDto> selectStockList(long storeId, Integer telecom);
+    List<SelectStockDto> selectStockList(long storeId, Long telecom);
 
-    SelectStockDto getStock(Long storeId, Integer telecom, Long stockId);
+    SelectStockDto getStock(Long storeId, Long telecom, Long stockId);
 
     List<SelectStockDto> innerStockList(long storeId);
 

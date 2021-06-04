@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class StoreStockRequestDto extends SearchParamDto {
     // 통신사
-    private Integer telecom;
+    private Long telecom;
 
     //입고일
     private String inStockRegiDate;
@@ -30,7 +30,7 @@ public class StoreStockRequestDto extends SearchParamDto {
     private WmsEnum.StockStatStr statusStr;
 
     //제조사
-    private Integer maker;
+    private Long maker;
 
     //기기명
     private Long goodsId;

@@ -16,8 +16,8 @@ public class ChargeMgmtDto {
 	private String chargeName;
 	private int chargeAmt;
 	private String category;
-	private int telecom;
-	private int network;
+	private Long telecom;
+	private Long network;
 	private String originKey;
 	private String chargeCode;
 	private String useYn;

@@ -33,8 +33,8 @@ public class PubNotiMgmtController {
 
     @ApiOperation(value = "공시지원금 목록 조회", notes = "공시지원금 목록을 조회합니다", nickname = Constants.API_PUB_NOTI + "||1")
     @GetMapping("/getList")
-    public ResponseEntity<CommonResponse<PubNotiMgmtResponseDto>> getList(@ApiParam(value = "통신사 ID", required = true, example = "1") @RequestParam int telecom
-            , @ApiParam(value = "통신망 ID", required = true, example = "1") @RequestParam int network) {
+    public ResponseEntity<CommonResponse<PubNotiMgmtResponseDto>> getList(@ApiParam(value = "통신사 ID", required = true, example = "1") @RequestParam Long telecom
+            , @ApiParam(value = "통신망 ID", required = true, example = "1") @RequestParam Long network) {
         return responseHandler.getResponseMessageAsRetrieveResult(pubNotiMgmtService.getList(telecom, network), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 

@@ -22,7 +22,7 @@ public class PubNotiRepositoryImpl extends QuerydslRepositorySupport implements 
     private EntityManager em;
 
     @Override
-    public HashMap<String, List> getMappingList(int telecom, int network) {
+    public HashMap<String, List> getMappingList(Long telecom, Long network) {
 
         HashMap<String, List> retMap = new HashMap<>();
 
@@ -92,7 +92,7 @@ public class PubNotiRepositoryImpl extends QuerydslRepositorySupport implements 
         return query.fetch();
     }
 
-    private List<Goods> getGoodsList(int telecom, int network){
+    private List<Goods> getGoodsList(Long telecom, Long network){
         QGoods goods = QGoods.goods;
 
         JPQLQuery<Goods> goodsQuery = getQuerydsl().createQuery();
@@ -109,7 +109,7 @@ public class PubNotiRepositoryImpl extends QuerydslRepositorySupport implements 
         return goodsQuery.fetch();
     }
 
-    private List<Charge> getChargeList(int telecom, int network){
+    private List<Charge> getChargeList(Long telecom, Long network){
         QCharge charge = QCharge.charge;
 
         JPQLQuery<Charge> chargeQuery = getQuerydsl().createQuery();

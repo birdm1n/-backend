@@ -9,12 +9,12 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Setter
-@EqualsAndHashCode(of = "dvcId")
+@EqualsAndHashCode(of = "dvcJudgeId")
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "device_judge")
+@org.hibernate.annotations.Table(appliesTo = "device_judge", comment = "기기 판정")
 public class DeviceJudge extends BaseEntity {
 
     @Id

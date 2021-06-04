@@ -1,6 +1,6 @@
 package com.daema.wms.domain;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.commgmt.domain.Store;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="return_stock")
+@org.hibernate.annotations.Table(appliesTo = "return_stock", comment = "반품 재고")
 public class ReturnStock {
 
     @Id
@@ -35,10 +35,10 @@ public class ReturnStock {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq", columnDefinition = "BIGINT unsigned comment '등록 유저 아이디'")
-    private Member regiUserId;
+    @JoinColumn(name = "regi_user_id", referencedColumnName = "member_id", columnDefinition = "BIGINT unsigned comment '등록 유저 아이디'")
+    private Members regiUserId;
 
-    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 날짜시간'")
+    @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     private LocalDateTime regiDateTime;
 
     @Nullable
@@ -69,15 +69,15 @@ public class ReturnStock {
     private Stock nextStock;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", columnDefinition = "BIGINT unsigned comment '재고 아이디'")
+    @JoinColumn(name = "store_id", columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private Store store;
 
     @Builder
     public ReturnStock(Long returnStockId, Integer returnStockAmt
             , String returnStockMemo, Device device, DeviceStatus returnDeviceStatus
-            ,Stock prevStock, Stock nextStock, Store store
-            ,Member regiUserId ,LocalDateTime regiDateTime
-    ,String delYn){
+            , Stock prevStock, Stock nextStock, Store store
+            , Members regiUserId , LocalDateTime regiDateTime
+    , String delYn){
         this.returnStockId = returnStockId;
         this.returnStockAmt = returnStockAmt;
         this.returnStockMemo = returnStockMemo;

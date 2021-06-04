@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.daema.base.domain.QMember.member;
+import static com.daema.base.domain.QMembers.members;
 import static com.daema.commgmt.domain.QGoods.goods;
 import static com.daema.commgmt.domain.QGoodsOption.goodsOption;
 import static com.daema.commgmt.domain.QStore.store;
@@ -75,8 +75,8 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .on(device.dvcId.eq(dvcId).and(device.store.storeId.eq(storeId)))
                 .innerJoin(inStock.store, store)
                 .on(inStock.device.dvcId.eq(dvcId).and(inStock.store.storeId.eq(storeId)))
-                .innerJoin(inStock.regiUserId, member)
-                .on(inStock.device.dvcId.eq(dvcId).and(inStock.regiUserId.seq.eq(member.seq)));
+                .innerJoin(inStock.regiUserId, members)
+                .on(inStock.device.dvcId.eq(dvcId).and(inStock.regiUserId.seq.eq(members.seq)));
 
         List<DeviceHistoryResponseDto> historyList = new ArrayList<>(inStockQuery.fetch());
 
@@ -100,8 +100,8 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .on(device.dvcId.eq(dvcId).and(device.store.storeId.eq(storeId)))
                 .innerJoin(moveStock.store, store)
                 .on(moveStock.device.dvcId.eq(dvcId).and(moveStock.store.storeId.eq(storeId)))
-                .innerJoin(moveStock.regiUserId, member)
-                .on(moveStock.device.dvcId.eq(dvcId).and(moveStock.regiUserId.seq.eq(member.seq)))
+                .innerJoin(moveStock.regiUserId, members)
+                .on(moveStock.device.dvcId.eq(dvcId).and(moveStock.regiUserId.seq.eq(members.seq)))
                 .innerJoin(moveStock.delivery, delivery)
         ;
 
@@ -130,8 +130,8 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .on(device.dvcId.eq(dvcId).and(device.store.storeId.eq(storeId)))
                 .innerJoin(outStock.store, store)
                 .on(outStock.device.dvcId.eq(dvcId).and(outStock.store.storeId.eq(storeId)))
-                .innerJoin(outStock.regiUserId, member)
-                .on(outStock.device.dvcId.eq(dvcId).and(outStock.regiUserId.seq.eq(member.seq)))
+                .innerJoin(outStock.regiUserId, members)
+                .on(outStock.device.dvcId.eq(dvcId).and(outStock.regiUserId.seq.eq(members.seq)))
                 .innerJoin(outStock.delivery, delivery)
         ;
 
@@ -152,8 +152,8 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .on(device.dvcId.eq(dvcId).and(device.store.storeId.eq(storeId)))
                 .innerJoin(returnStock.store, store)
                 .on(returnStock.device.dvcId.eq(dvcId).and(returnStock.store.storeId.eq(storeId)))
-                .innerJoin(returnStock.regiUserId, member)
-                .on(returnStock.device.dvcId.eq(dvcId).and(returnStock.regiUserId.seq.eq(member.seq)))
+                .innerJoin(returnStock.regiUserId, members)
+                .on(returnStock.device.dvcId.eq(dvcId).and(returnStock.regiUserId.seq.eq(members.seq)))
                 .where(returnStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()));
 
         historyList.addAll(returnStockQuery.fetch());
@@ -345,14 +345,14 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
         return goods.modelName.eq(modelName);
     }
 
-    private BooleanExpression eqTelecom(Integer name) {
+    private BooleanExpression eqTelecom(Long name) {
         if (name == null) {
             return null;
         }
         return goods.networkAttribute.telecom.eq(name);
     }
 
-    private BooleanExpression eqMaker(Integer maker) {
+    private BooleanExpression eqMaker(Long maker) {
         if (maker == null) {
             return null;
         }

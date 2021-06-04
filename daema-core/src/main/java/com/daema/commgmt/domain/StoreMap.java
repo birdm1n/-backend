@@ -10,9 +10,9 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @EqualsAndHashCode(of={"storeId", "parentStoreId"})
 @IdClass(StoreMapPK.class)
-@ToString
 @Entity
-@Table(name="store_map")
+@ToString
+@org.hibernate.annotations.Table(appliesTo = "store_map", comment = "관리점 맵핑")
 @NoArgsConstructor
 public class StoreMap {
 
@@ -39,3 +39,4 @@ public class StoreMap {
         storeMap.setUseYn(useYn);
     }
 }
+

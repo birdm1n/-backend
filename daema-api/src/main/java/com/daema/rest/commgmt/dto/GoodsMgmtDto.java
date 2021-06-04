@@ -19,9 +19,9 @@ public class GoodsMgmtDto {
 	private long goodsId;
 	private String goodsName;
 	private String modelName;
-	private int maker;
-	private int telecom;
-	private int network;
+	private Long maker;
+	private Long telecom;
+	private Long network;
 	private String originKey;
 	private String useYn;
 	private String matchingYn;

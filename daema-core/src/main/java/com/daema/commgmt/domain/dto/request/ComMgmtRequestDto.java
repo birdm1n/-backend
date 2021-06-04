@@ -24,13 +24,13 @@ public class ComMgmtRequestDto extends SearchParamDto {
 
 	private long goodsId;
 
-	private int reqStatus;
+	private String reqStatus;
 
 	private String modelName;
 
-	private int maker;
+	private Long maker;
 
-	private int network;
+	private Long network;
 
 	private String chargeName;
 

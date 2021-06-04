@@ -47,7 +47,7 @@ public class OpenStoreUserMapRepositoryImpl extends QuerydslRepositorySupport im
                 "    on data.open_store_id = osum.open_store_id " +
                 " inner join members as u " +
                 "    on u.store_id = :storeId " +
-                "       and osum.user_id = u.seq " +
+                "       and osum.user_id = u.member_id " +
                 "       and u.user_status = 6 ");
 
         Query query = em.createNativeQuery(sb.toString(), OpenStoreUserMap.class)

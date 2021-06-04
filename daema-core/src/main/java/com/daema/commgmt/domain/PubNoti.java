@@ -10,25 +10,25 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @SqlResultSetMapping(
-        name="PubNotiMapping",
+        name = "PubNotiMapping",
         classes = @ConstructorResult(
                 targetClass = PubNotiMappingDto.class,
                 columns = {
-                        @ColumnResult(name="goods_id", type = Long.class),
-                        @ColumnResult(name="charge_id", type = Long.class),
-                        @ColumnResult(name="support_amt", type = Integer.class),
-                        @ColumnResult(name="release_amt", type = Integer.class),
-                        @ColumnResult(name="release_date", type = LocalDate.class)
+                        @ColumnResult(name = "goods_id", type = Long.class),
+                        @ColumnResult(name = "charge_id", type = Long.class),
+                        @ColumnResult(name = "support_amt", type = Integer.class),
+                        @ColumnResult(name = "release_amt", type = Integer.class),
+                        @ColumnResult(name = "release_date", type = LocalDate.class)
                 })
 )
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="pubNotiId")
+@EqualsAndHashCode(of = "pubNotiId")
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="pub_noti", indexes = @Index(name = "idx_pub_noti_goods_id_charge_id", columnList = "goods_id, charge_id"))
+@org.hibernate.annotations.Table(appliesTo = "pub_noti", comment = "공시 알림")
 public class PubNoti extends PubNotiBase {
 
     @Id
@@ -52,7 +52,7 @@ public class PubNoti extends PubNotiBase {
     @Column(name = "origin_key", columnDefinition = "varchar(255) comment '출처 키'")
     private String originKey;
 
-    @Column(name = "del_yn", columnDefinition ="char(1) comment '삭제 여부' ")
+    @Column(name = "del_yn", columnDefinition = "char(1) comment '삭제 여부' ")
     @ColumnDefault("\"N\"")
     private String delYn;
 
@@ -66,8 +66,8 @@ public class PubNoti extends PubNotiBase {
 
     @Builder
     public PubNoti(long pubNotiId, int supportAmt, int releaseAmt
-            ,LocalDate releaseDate , LocalDateTime regiDateTime, long regiUserId, String originKey
-            ,long chargeId, long goodsId, String delYn , LocalDateTime delDateTime, long delUserId){
+            , LocalDate releaseDate, LocalDateTime regiDateTime, long regiUserId, String originKey
+            , long chargeId, long goodsId, String delYn, LocalDateTime delDateTime, long delUserId) {
         this.pubNotiId = pubNotiId;
         this.supportAmt = supportAmt;
         this.releaseAmt = releaseAmt;
@@ -82,7 +82,7 @@ public class PubNoti extends PubNotiBase {
         this.regiDateTime = regiDateTime;
     }
 
-    public void updateDelInfo(PubNoti pubNoti, long delUserId, String delYn){
+    public void updateDelInfo(PubNoti pubNoti, long delUserId, String delYn) {
         pubNoti.setDelDateTime(LocalDateTime.now());
         pubNoti.setDelYn(delYn);
         pubNoti.setDelUserId(delUserId);

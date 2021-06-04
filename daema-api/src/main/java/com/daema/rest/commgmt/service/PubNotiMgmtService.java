@@ -40,7 +40,7 @@ public class PubNotiMgmtService {
         this.authenticationUtil = authenticationUtil;
     }
 
-    public PubNotiMgmtResponseDto getList(int telecom, int network) {
+    public PubNotiMgmtResponseDto getList(Long telecom, Long network) {
 
         HashMap<String, List> pubNotiMap = pubNotiRepository.getMappingList(telecom, network);
 

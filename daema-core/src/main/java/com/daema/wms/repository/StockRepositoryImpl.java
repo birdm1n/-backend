@@ -105,7 +105,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                 "           , hierarchy " +
                 "           , raw_barcode " +
                 "           , full_barcode " +
-                "           , serial_no " +
+                "           , serial_num " +
                 "           , ifnull(in_stock_amt, 0) as in_stock_amt " +
                 "           , goods_option_id " +
                 "        from device as dv " +
@@ -212,7 +212,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
             sb.append(" and (")
                     .append("raw_barcode like '%").append(requestDto.getBarcode()).append("%'")
                     .append("or full_barcode like '%").append(requestDto.getBarcode()).append("%'")
-                    .append("or serial_no like '%").append(requestDto.getBarcode()).append("%'")
+                    .append("or serial_num like '%").append(requestDto.getBarcode()).append("%'")
                     .append(") ");
         }
 
@@ -225,7 +225,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
     }
 
     @Override
-    public List<SelectStockDto> selectStockList(long storeId, Integer telecom) {
+    public List<SelectStockDto> selectStockList(long storeId, Long telecom) {
         JPQLQuery<SelectStockDto> query = getQuerydsl().createQuery();
         query.select(Projections.fields(
                 SelectStockDto.class
@@ -259,7 +259,7 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
     }
 
     @Override
-    public SelectStockDto getStock(Long storeId, Integer telecom, Long stockId) {
+    public SelectStockDto getStock(Long storeId, Long telecom, Long stockId) {
         JPQLQuery<SelectStockDto> query = getQuerydsl().createQuery();
         query.select(Projections.fields(
                 SelectStockDto.class

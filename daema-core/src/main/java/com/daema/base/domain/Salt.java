@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@org.hibernate.annotations.Table(appliesTo = "salt", comment = "암호키")
 public class Salt {
 
     @Id
@@ -17,7 +18,7 @@ public class Salt {
     private int id;
 
     @NotNull()
-    @Column(name = "salt_data", columnDefinition = "VARCHAR(255) comment '암호키 값'")
+    @Column(name = "salt_data", columnDefinition = "VARCHAR(255) comment '암호키 데이터'")
     private String salt;
 
     public Salt() {

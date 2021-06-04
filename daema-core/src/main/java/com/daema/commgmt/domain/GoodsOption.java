@@ -12,7 +12,7 @@ import java.util.List;
 @ToString(exclude = {"device"})
 @NoArgsConstructor
 @Entity
-@Table(name="goods_option")
+@org.hibernate.annotations.Table(appliesTo = "goods_option", comment = "상품 옵션")
 public class GoodsOption {
 
     @Id

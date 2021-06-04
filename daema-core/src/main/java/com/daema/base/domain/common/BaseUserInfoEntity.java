@@ -1,6 +1,6 @@
 package com.daema.base.domain.common;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -29,9 +29,9 @@ public abstract class BaseUserInfoEntity {
     @NotAudited
     @CreatedBy  // 최초 생성자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "regi_user_id", referencedColumnName = "seq", updatable = false, columnDefinition = "BIGINT UNSIGNED comment '등록 유저 아이디'")
+    @JoinColumn(name = "regi_user_id", referencedColumnName = "member_id", updatable = false, columnDefinition = "BIGINT UNSIGNED comment '등록 유저 아이디'")
     @Audited(targetAuditMode = NOT_AUDITED) // User 테이블까지 이력을 추적하지 않겠다는 설정 필수
-    private Member regiUserId;
+    private Members regiUserId;
 
     @LastModifiedDate  // 마지막 수정한 날
     @Column(name = "upd_datetime", columnDefinition = "DATETIME(6) comment '수정 일시'")
@@ -39,7 +39,7 @@ public abstract class BaseUserInfoEntity {
 
     @LastModifiedBy // 마지막 수정자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "upd_user_id", referencedColumnName = "seq", columnDefinition = "BIGINT UNSIGNED comment '수정 유저 아이디'")
+    @JoinColumn(name = "upd_user_id", referencedColumnName = "member_id", columnDefinition = "BIGINT UNSIGNED comment '수정 유저 아이디'")
     @Audited(targetAuditMode = NOT_AUDITED) // User 테이블까지 이력을 추적하지 않겠다는 설정 필수
-    private Member updUserId;
+    private Members updUserId;
 }

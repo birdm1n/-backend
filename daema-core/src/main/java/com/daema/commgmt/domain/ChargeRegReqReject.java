@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="charge_reg_req_reject")
+@org.hibernate.annotations.Table(appliesTo = "charge_reg_req_reject", comment = "요금 등록 요청 거절")
 public class ChargeRegReqReject {
 
     @Id
@@ -23,13 +22,13 @@ public class ChargeRegReqReject {
     @Column(name = "charge_reg_req_id", columnDefinition = "BIGINT UNSIGNED comment '요금 등록 요청 아이디'")
     private long chargeRegReqId;
 
-    @Column(name = "reject_comment", columnDefinition = "varchar(255) comment '반려 의견'")
+    @Column(name = "reject_comment", columnDefinition = "varchar(255) comment '반려 코멘트'")
     private String rejectComment;
 
-    @Column(name = "reject_datetime", columnDefinition = "varchar(255) comment '반려 날짜시간'")
+    @Column(name = "reject_datetime", columnDefinition = "DATETIME(6) comment '반려 일시'")
     private LocalDateTime rejectDateTime;
 
-    @Column(name = "reject_user_id", columnDefinition = "varchar(255) comment '반려 유저 아이디'")
+    @Column(name = "reject_user_id", columnDefinition = "BIGINT UNSIGNED comment '반려 유저 아이디'")
     private Long rejectUserId;
 
     @Builder

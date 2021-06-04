@@ -87,7 +87,7 @@ public class ChargeMgmtService {
                         .network(chargeMgmtDto.getNetwork())
                         .chargeCode(chargeMgmtDto.getChargeCode())
                         .reqStoreId(authenticationUtil.getStoreId())
-                        .reqStatus(StatusEnum.REG_REQ.getStatusCode())
+                        .reqStatus(String.valueOf(StatusEnum.REG_REQ.getStatusCode()))
                         .regiDateTime(LocalDateTime.now())
                     .build()
             );
@@ -183,7 +183,7 @@ public class ChargeMgmtService {
         if(chargeRegReq != null) {
             chargeRegReq.updateReqStatus(chargeRegReq, chargeRegReqDto.getReqStatus());
 
-            if(chargeRegReqDto.getReqStatus() == StatusEnum.REG_REQ_APPROVAL.getStatusCode()) {
+            if(Integer.parseInt(chargeRegReqDto.getReqStatus()) == StatusEnum.REG_REQ_APPROVAL.getStatusCode()) {
                 //insertData 사용 안함. 요청 승인 정책이 시스템관리자에서 확장 또는 변경될 수 있음
                 chargeRepository.save(
                         Charge.builder()
@@ -200,7 +200,7 @@ public class ChargeMgmtService {
                                 .delYn(StatusEnum.FLAG_N.getStatusMsg())
                                 .build()
                 );
-            }else if(chargeRegReqDto.getReqStatus() == StatusEnum.REG_REQ_REJECT.getStatusCode()){
+            }else if(Integer.parseInt(chargeRegReqDto.getReqStatus()) == StatusEnum.REG_REQ_REJECT.getStatusCode()){
                 ChargeRegReqReject chargeRegReqReject = new ChargeRegReqReject();
                 chargeRegReqReject.setChargeRegReqId(chargeRegReq.getChargeRegReqId());
                 chargeRegReqReject.setRejectComment(chargeRegReqDto.getRegReqRejectDto().getRejectComment());

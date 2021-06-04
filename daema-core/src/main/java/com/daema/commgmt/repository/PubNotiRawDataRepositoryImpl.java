@@ -50,10 +50,10 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
         sb.append("insert into goods (goods_name, maker_code_id, model_name, network_code_id, telecom_code_id" +
                 "  ,regi_datetime, del_yn, matching_yn, origin_key, use_yn) " +
                 "  select data.goods_name " +
-                "         ,(select code_id from code_detail cd where cd.code_desc = data.maker_name and code_group = 'MAKER' ) as maker " +
+                "         ,(select code_id from code_detail cd where cd.code_name = data.maker_name and code_group = 'MAKER' ) as maker " +
                 "         ,data.model_name " +
-                "         ,(select code_id from code_detail cd2 where cd2.code_desc = data.network_name and code_group = 'NETWORK' ) as network " +
-                "         ,(select code_id from code_detail cd3 where cd3.code_desc = data.telecom_name and code_group = 'TELECOM' ) as telecom " +
+                "         ,(select code_id from code_detail cd2 where cd2.code_name = data.network_name and code_group = 'NETWORK' ) as network " +
+                "         ,(select code_id from code_detail cd3 where cd3.code_name = data.telecom_name and code_group = 'TELECOM' ) as telecom " +
                 "         ,now() " +
                 "         ,'N' " +
                 "         ,'N' " +
@@ -90,13 +90,13 @@ public class PubNotiRawDataRepositoryImpl extends QuerydslRepositorySupport impl
                 "  inner join goods as g " +
                 "     on a.model_name = g.model_name " +
                 "  inner join code_detail as cd1 " +
-                "     on a.maker_name = cd1.code_desc" +
+                "     on a.maker_name = cd1.code_name" +
                 "        and cd1.code_group = 'MAKER'  " +
                 "  inner join code_detail as cd2 " +
-                "     on a.telecom_name = cd2.code_desc " +
+                "     on a.telecom_name = cd2.code_name " +
                 "        and cd2.code_group = 'TELECOM'  " +
                 "  inner join code_detail as cd3 " +
-                "     on a.network_name = cd3.code_desc " +
+                "     on a.network_name = cd3.code_name " +
                 "        and cd3.code_group = 'NETWORK'  ");
 
         return em.createNativeQuery(sb.toString())

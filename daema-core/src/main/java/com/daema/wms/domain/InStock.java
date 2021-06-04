@@ -10,12 +10,12 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Setter
-@EqualsAndHashCode(of="in_stock_id")
+@EqualsAndHashCode(of="inStockId")
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="in_stock")
+@org.hibernate.annotations.Table(appliesTo = "in_stock", comment = "입고")
 public class InStock extends BaseEntity {
 
     @Id
@@ -39,14 +39,14 @@ public class InStock extends BaseEntity {
     private Device device;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dvc_status_id", columnDefinition = "BIGINT unsigned comment '입고된 기기 상태'")
+    @JoinColumn(name = "dvc_status_id", columnDefinition = "BIGINT unsigned comment '기기 상태 아이디'")
     private DeviceStatus inDeviceStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_id", columnDefinition = "BIGINT unsigned comment '재고'")
+    @JoinColumn(name = "stock_id", columnDefinition = "BIGINT unsigned comment '재고 아이디'")
     private Stock stock;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", columnDefinition = "BIGINT unsigned comment '관리점'")
+    @JoinColumn(name = "store_id", columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private Store store;
 }

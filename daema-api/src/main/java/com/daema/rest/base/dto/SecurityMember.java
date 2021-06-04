@@ -1,6 +1,6 @@
 package com.daema.rest.base.dto;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
@@ -11,21 +11,21 @@ public class SecurityMember extends User {
 
     private long storeId;
     private long memberSeq;
-    private Member member;
+    private Members member;
     private List<String> memberFuncList;
 
-    public SecurityMember(Member member){
+    public SecurityMember(Members member){
         super(member.getUsername(),"{noop}"+ member.getPassword(), AuthorityUtils.createAuthorityList(member.getRole().toString()));
         setMemberSeq(member.getSeq());
         setStoreId(member.getStoreId());
         setMember(member);
     }
 
-    public Member getMember() {
+    public Members getMember() {
         return member;
     }
 
-    public void setMember(Member member) {
+    public void setMember(Members member) {
         this.member = member;
     }
 

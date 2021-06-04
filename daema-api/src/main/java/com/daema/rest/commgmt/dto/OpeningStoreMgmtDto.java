@@ -16,7 +16,7 @@ public class OpeningStoreMgmtDto {
 	private long openStoreId;
 	private long storeId;
 	private String openStoreName;
-	private int telecom;
+	private Long telecom;
 	private String telecomName;
 	private String bizNo;
 	private String chargerPhone;

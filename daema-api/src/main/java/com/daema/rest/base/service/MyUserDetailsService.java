@@ -1,6 +1,6 @@
 package com.daema.rest.base.service;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.rest.base.dto.SecurityMember;
 import com.daema.base.repository.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +20,7 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Member member = memberRepository.findByUsername(username);
+        Members member = memberRepository.findByUsername(username);
         if(member == null){
             throw new UsernameNotFoundException(username + " : 사용자 존재하지 않음");
         }

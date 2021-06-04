@@ -6,16 +6,15 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of="seq")
+@EqualsAndHashCode(of="pubNotiRawDataId")
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="pub_noti_code_map_data")
+@org.hibernate.annotations.Table(appliesTo = "pub_noti_code_map_data", comment = "공시 알림 코드 맵핑 데이터")
 public class PubNotiCodeMapData extends PubNotiBase {
 
     @Id
@@ -28,7 +27,7 @@ public class PubNotiCodeMapData extends PubNotiBase {
     @Column(name = "goods_id", columnDefinition = "BIGINT unsigned comment '상품 아이디'")
     private Long goodsId;
 
-    @Column(name = "deadline_date", columnDefinition = "DATETIME(6) comment '마감 날짜'")
+    @Column(name = "deadline_date", columnDefinition = "DATE comment '마감 일자'")
     private LocalDate deadLineDate;
 
     @Column(name = "deadline_yn", columnDefinition ="char(1) comment '마감 여부'")

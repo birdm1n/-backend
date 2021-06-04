@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
                         @ColumnResult(name="return_addr_detail", type = String.class),
                         @ColumnResult(name="return_zip_code", type = String.class),
                         @ColumnResult(name="store_id", type = Long.class),
-                        @ColumnResult(name="telecom", type = Integer.class),
+                        @ColumnResult(name="telecom", type = Long.class),
                         @ColumnResult(name="use_yn", type = String.class),
                         @ColumnResult(name="del_yn", type = String.class),
                         @ColumnResult(name="telecomName", type = String.class),
@@ -34,19 +34,18 @@ import java.time.LocalDateTime;
                 })
 )
 
-
 @Getter
 @Setter
 @EqualsAndHashCode(of="openStoreId")
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="open_store")
+@org.hibernate.annotations.Table(appliesTo = "open_store", comment = "개통 관리점")
 public class OpenStore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '개통점 아이디'")
+    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '개통 관리점 아이디'")
     private long openStoreId;
 
     @NotNull
@@ -54,18 +53,18 @@ public class OpenStore {
     private long storeId;
 
     @NotBlank
-    @Column(name = "open_store_name", columnDefinition = "varchar(255) comment '개통점 이름'")
+    @Column(name = "open_store_name", columnDefinition = "varchar(255) comment '개통 관리점 이름'")
     private String openStoreName;
 
     @NotNull
-    @Column(name = "telecom_code_id", columnDefinition = "int comment '통신사'")
-    private int telecom;
+    @Column(name = "telecom_code_id", columnDefinition = "BIGINT unsigned comment '통신사 코드 아이디'")
+    private Long telecom;
 
     @Transient
     private String telecomName;
 
     @NotBlank
-    @Column(name = "biz_no", columnDefinition = "varchar(12) comment '사업자 넘버'")
+    @Column(name = "biz_num", columnDefinition = "varchar(255) comment '사업자 번호'")
     private String bizNo;
 
     @Column(name = "charger_name", columnDefinition = "varchar(255) comment '담당자 이름'")
@@ -87,7 +86,7 @@ public class OpenStore {
     @Column(name = "charger_phone3", columnDefinition = "varchar(255)   comment '담당자 연락처3'")
     private String chargerPhone3;
 
-    @Column(name = "return_zip_code", nullable = false, columnDefinition = "varchar(255) comment '반품 우편번호 코드'")
+    @Column(name = "return_zip_code", nullable = false, columnDefinition = "varchar(255) comment '반품 우편 코드'")
     private String returnZipCode;
 
     @Column(name = "return_addr", nullable = false, columnDefinition = "varchar(255) comment '반품 주소'")
@@ -106,7 +105,7 @@ public class OpenStore {
     private LocalDateTime regiDateTime;
 
     @Builder
-    public OpenStore(long openStoreId, long storeId, String openStoreName, int telecom, String telecomName, String bizNo, String chargerName
+    public OpenStore(long openStoreId, long storeId, String openStoreName, Long telecom, String telecomName, String bizNo, String chargerName
             , String chargerPhone, String chargerPhone1, String chargerPhone2, String chargerPhone3
             , String returnZipCode, String returnAddr, String returnAddrDetail, String useYn, String delYn, LocalDateTime regiDateTime){
         this.openStoreId = openStoreId;

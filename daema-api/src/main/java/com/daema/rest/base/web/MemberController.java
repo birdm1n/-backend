@@ -1,6 +1,6 @@
 package com.daema.rest.base.web;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import com.daema.rest.base.dto.request.ChangePassword1Request;
 import com.daema.rest.base.dto.request.ChangePassword2Request;
 import com.daema.rest.base.dto.request.LoginUserRequest;
@@ -38,7 +38,7 @@ public class MemberController {
 
 
     @PostMapping("/signup")
-    public CommonResponse signUpUser(@RequestBody Member member) {
+    public CommonResponse signUpUser(@RequestBody Members member) {
         try {
             authService.signUpUser(member);
             return new CommonResponse(ResponseCodeEnum.OK.getResultCode(), "회원가입을 성공적으로 완료했습니다.", null);
@@ -50,7 +50,7 @@ public class MemberController {
     @PostMapping("/login")
     public CommonResponse login(@RequestBody LoginUserRequest user, HttpServletRequest req, HttpServletResponse res) {
         try {
-            final Member member = authService.loginUser(user.getUsername(), user.getPassword());
+            final Members member = authService.loginUser(user.getUsername(), user.getPassword());
 
             return authService.chkLoginMemberStatus(member, req, res);
 
@@ -63,7 +63,7 @@ public class MemberController {
     public CommonResponse verify(@RequestBody VerifyEmailRequest requestVerifyEmail, HttpServletRequest req, HttpServletResponse res) {
         CommonResponse response;
         try {
-            Member member = authService.findByUsername(requestVerifyEmail.getUsername());
+            Members member = authService.findByUsername(requestVerifyEmail.getUsername());
             authService.sendVerificationMail(member);
             response = new CommonResponse(ResponseCodeEnum.OK.getResultCode(), "성공적으로 인증메일을 보냈습니다.", null);
         } catch (Exception exception) {
@@ -103,7 +103,7 @@ public class MemberController {
     public CommonResponse requestChangePassword(@RequestBody ChangePassword1Request requestChangePassword1) {
         CommonResponse response;
         try {
-            Member member = authService.findByUsername(requestChangePassword1.getUsername());
+            Members member = authService.findByUsername(requestChangePassword1.getUsername());
             if (!member.getEmail().equals(requestChangePassword1.getEmail())) throw new NoSuchFieldException("");
             authService.requestChangePassword(member);
             response = new CommonResponse(ResponseCodeEnum.OK.getResultCode(), "성공적으로 사용자의 비밀번호 변경요청을 수행했습니다.", null);
@@ -119,7 +119,7 @@ public class MemberController {
     public CommonResponse changePassword(@RequestBody ChangePassword2Request requestChangePassword2) {
         CommonResponse response;
         try{
-            Member member = authService.findByUsername(requestChangePassword2.getUsername());
+            Members member = authService.findByUsername(requestChangePassword2.getUsername());
             authService.changePassword(member,requestChangePassword2.getPassword());
             response = new CommonResponse(ResponseCodeEnum.OK.getResultCode(),"성공적으로 사용자의 비밀번호를 변경했습니다.",null);
         }catch(Exception e){

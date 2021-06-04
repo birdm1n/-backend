@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name = "store_stock")
+@org.hibernate.annotations.Table(appliesTo = "store_stock", comment = "관리점 재고")
 public class StoreStock extends BaseEntity {
 
     @Id
@@ -49,24 +49,24 @@ public class StoreStock extends BaseEntity {
     @ColumnDefault("\"Y\"")
     private String stockYn = "Y";
 
-    @Column(name = "check_date_time1", columnDefinition = "DATETIME(6) comment '확인 날짜 시간1'")
+    @Column(name = "first_check_datetime", columnDefinition = "DATETIME(6) comment '첫번째 확인 일시'")
     private LocalDateTime checkDateTime1;
 
-    @Column(name = "check_date_time2", columnDefinition = "DATETIME(6) comment '확인 날짜 시간2'")
+    @Column(name = "second_check_datetime", columnDefinition = "DATETIME(6) comment '두번째 확인 일시'")
     private LocalDateTime checkDateTime2;
 
     /**
      * 이전 보유처
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prev_stock_id", referencedColumnName = "stock_id", columnDefinition = "BIGINT UNSIGNED comment '이전 보유처 아이디'")
+    @JoinColumn(name = "prev_stock_id", referencedColumnName = "stock_id", columnDefinition = "BIGINT UNSIGNED comment '이전 재고 아이디'")
     private Stock prevStock;
 
     /**
      * 현재 보유처
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id", columnDefinition = "BIGINT UNSIGNED comment '현재 보유처 아이디'")
+    @JoinColumn(name = "next_stock_id", referencedColumnName = "stock_id", columnDefinition = "BIGINT UNSIGNED comment '다음 재고 아이디'")
     private Stock nextStock;
 
     @Transient

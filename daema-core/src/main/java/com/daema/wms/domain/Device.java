@@ -42,7 +42,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "device")
+@org.hibernate.annotations.Table(appliesTo = "device", comment = "기기")
 public class Device extends BaseEntity {
 
     @Id
@@ -55,7 +55,7 @@ public class Device extends BaseEntity {
     private WmsEnum.BarcodeType barcodeType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "old_match_status", columnDefinition = "varchar(255) comment '구전산 기기 매칭 상태값'")
+    @Column(name = "old_match_status", columnDefinition = "varchar(255) comment '구전산 매칭 상태'")
     private WmsEnum.OldMatchState oldMatchState;
 
     @Column(name = "raw_barcode", columnDefinition = "varchar(255) comment '원시 바코드'")
@@ -64,10 +64,10 @@ public class Device extends BaseEntity {
     @Column(name = "full_barcode", columnDefinition = "varchar(255) comment '원시, 가공 바코드'")
     private String fullBarcode;
 
-    @Column(name = "serial_no", columnDefinition = "varchar(255) comment '시리얼_ex : 뒷 7자리'")
+    @Column(name = "serial_num", columnDefinition = "varchar(255) comment '시리얼 번호'")
     private String serialNo;
 
-    @Column(name = "in_stock_amt", columnDefinition = "INT comment '입고 단가'" )
+    @Column(name = "in_stock_amt", columnDefinition = "INT comment '입고 금액'" )
     private int inStockAmt;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -18,15 +18,15 @@ import java.time.LocalDateTime;
 public abstract class GoodsBase {
 
     @NotBlank
-    @Column(name = "goods_name", columnDefinition = "varchar(255) comment '상품 명'")
+    @Column(name = "goods_name", columnDefinition = "varchar(255) comment '상품 이름'")
     protected String goodsName;
 
     @NotBlank
-    @Column(name = "model_name", columnDefinition = "varchar(255) comment '모델 명'")
+    @Column(name = "model_name", columnDefinition = "varchar(255) comment '모델 이름'")
     protected String modelName;
 
-    @Column(name = "maker_code_id", columnDefinition = "INT comment '제조사 코드'")
-    protected int maker;
+    @Column(name = "maker_code_id", columnDefinition = "BIGINT unsigned comment '제조사 코드 아이디'")
+    protected Long maker;
 
     @Embedded
     protected NetworkAttribute networkAttribute;

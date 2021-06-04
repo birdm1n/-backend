@@ -37,7 +37,7 @@ public class OpenStoreListDto {
 
     private long storeId;
 
-    private int telecom;
+    private Long telecom;
 
     private String useYn;
 

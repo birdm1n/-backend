@@ -101,7 +101,7 @@ public class GoodsMgmtService {
                             .telecom(goodsMgmtDto.getTelecom())
                             .network(goodsMgmtDto.getNetwork())
                             .reqStoreId(authenticationUtil.getStoreId())
-                            .reqStatus(StatusEnum.REG_REQ.getStatusCode())
+                            .reqStatus(String.valueOf(StatusEnum.REG_REQ.getStatusCode()))
                             .regiDateTime(LocalDateTime.now())
                             .build()
             );
@@ -253,7 +253,7 @@ public class GoodsMgmtService {
         if (goodsRegReq != null) {
             goodsRegReq.updateReqStatus(goodsRegReq, goodsRegReqDto.getReqStatus());
 
-            if (goodsRegReqDto.getReqStatus() == StatusEnum.REG_REQ_APPROVAL.getStatusCode()) {
+            if (Integer.parseInt(goodsRegReqDto.getReqStatus()) == StatusEnum.REG_REQ_APPROVAL.getStatusCode()) {
                 //insertData 사용 안함. 요청 승인 정책이 시스템관리자에서 확장 또는 변경될 수 있음
                 goodsRepository.save(
                         Goods.builder()
@@ -269,7 +269,7 @@ public class GoodsMgmtService {
                                 .delYn(StatusEnum.FLAG_N.getStatusMsg())
                                 .build()
                 );
-            } else if (goodsRegReqDto.getReqStatus() == StatusEnum.REG_REQ_REJECT.getStatusCode()) {
+            } else if (Integer.parseInt(goodsRegReqDto.getReqStatus()) == StatusEnum.REG_REQ_REJECT.getStatusCode()) {
                 GoodsRegReqReject goodsRegReqReject = new GoodsRegReqReject();
                 goodsRegReqReject.setGoodsRegReqId(goodsRegReq.getGoodsRegReqId());
                 goodsRegReqReject.setRejectComment(goodsRegReqDto.getRegReqRejectDto().getRejectComment());
@@ -351,7 +351,7 @@ public class GoodsMgmtService {
         return responseDtos;
     }
     @Transactional(readOnly = true)
-    public List<SearchMatchResponseDto> getGoodsSelectList(int telecomId) {
+    public List<SearchMatchResponseDto> getGoodsSelectList(Long telecomId) {
         List<Goods> goodsList = goodsRepository.getGoodsSelectList(telecomId);
         List<SearchMatchResponseDto> responseDtos = new ArrayList<>();
         if (CommonUtil.isNotEmptyList(goodsList)) {

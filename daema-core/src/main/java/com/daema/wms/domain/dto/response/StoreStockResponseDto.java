@@ -40,7 +40,7 @@ public class StoreStockResponseDto {
      Desc : 기기별 입력정보 및 모델별 입력정보
      */
     // 통신사
-    private int telecom;
+    private Long telecom;
     private String telecomName;
 
     // 공급처
@@ -55,7 +55,7 @@ public class StoreStockResponseDto {
     private String statusStr;
 
     //제조사
-    private int maker;
+    private Long maker;
     private String makerName;
 
 

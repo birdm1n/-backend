@@ -1,13 +1,13 @@
 package com.daema.base.repository;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface MemberRepository extends JpaRepository<Member, Long>, CustomMemberRepository {
+public interface MemberRepository extends JpaRepository<Members, Long>, CustomMemberRepository {
 
-    Member findByUsername(String username);
-    List<Member> findByOrgId(long orgId);
+    Members findByUsername(String username);
+    List<Members> findByOrgId(long orgId);
 }
 

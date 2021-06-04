@@ -2,7 +2,6 @@ package com.daema.commgmt.domain;
 
 import com.daema.commgmt.domain.attr.NetworkAttribute;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="goods_reg_req")
+@org.hibernate.annotations.Table(appliesTo = "goods_reg_req", comment = "상품 등록 요청")
 public class GoodsRegReq extends GoodsBase{
 
     @Id
@@ -21,7 +20,7 @@ public class GoodsRegReq extends GoodsBase{
     @Column(name = "goods_reg_req_id", columnDefinition = "BIGINT unsigned comment '상품 등록 요청 아이디'")
     private long goodsRegReqId;
 
-    @Column(name = "req_store_id" , columnDefinition = "BIGINT unsigned comment '요청 관리자 아이디'")
+    @Column(name = "req_store_id" , columnDefinition = "BIGINT unsigned comment '요청 관리점 아이디'")
     private long reqStoreId;
 
     /**
@@ -29,9 +28,8 @@ public class GoodsRegReq extends GoodsBase{
      * 6 - 승인
      * 9 - 반려
      */
-    @Column(name = "req_status", nullable = false, columnDefinition = "INT comment '요청 상태' default 1")
-    @ColumnDefault("1")
-    private int reqStatus;
+    @Column(name = "req_status", nullable = false, columnDefinition = "varchar(255) comment '요청 상태' default 1")
+    private String reqStatus;
 
     @Transient
     private GoodsRegReqReject goodsRegReqReject;
@@ -41,7 +39,7 @@ public class GoodsRegReq extends GoodsBase{
 
     @Builder
     public GoodsRegReq(long goodsRegReqId, long reqStoreId, String goodsName, String modelName
-            , int maker, int telecom, int network, LocalDateTime regiDateTime, int reqStatus
+            , Long maker, Long telecom, Long network, LocalDateTime regiDateTime, String reqStatus
             , String makerName, String networkName, String telecomName
             ,String reqStoreName){
         this.goodsRegReqId = goodsRegReqId;
@@ -58,7 +56,7 @@ public class GoodsRegReq extends GoodsBase{
         this.reqStoreName = reqStoreName;
     }
 
-    public void updateReqStatus(GoodsRegReq goodsRegReq, int reqStatus){
+    public void updateReqStatus(GoodsRegReq goodsRegReq, String reqStatus){
         goodsRegReq.setReqStatus(reqStatus);
     }
 

@@ -1,6 +1,6 @@
 package com.daema.rest.commgmt.dto;
 
-import com.daema.base.domain.Member;
+import com.daema.base.domain.Members;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -29,7 +29,7 @@ public class MemberMgmtDto {
 	 */
 	private String userStatus;
 
-	public static MemberMgmtDto from (Member member) {
+	public static MemberMgmtDto from (Members member) {
 		return MemberMgmtDto.builder()
 				.seq(member.getSeq())
 				.name(member.getName())

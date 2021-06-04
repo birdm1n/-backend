@@ -109,8 +109,8 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
         return addServiceRegReq.telecom.in(name);
     }
 
-    private BooleanExpression eqStatus(int name) {
-        if (name <= 0) {
+    private BooleanExpression eqStatus(String name) {
+        if (StringUtils.isEmpty(name)) {
             return null;
         }
         return addServiceRegReq.reqStatus.eq(name);

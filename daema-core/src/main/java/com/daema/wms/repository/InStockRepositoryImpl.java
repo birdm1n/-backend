@@ -1,7 +1,7 @@
 package com.daema.wms.repository;
 
 import com.daema.base.domain.QCodeDetail;
-import com.daema.base.domain.QMember;
+import com.daema.base.domain.QMembers;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.commgmt.domain.Goods;
 import com.daema.wms.domain.InStock;
@@ -44,8 +44,8 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
     @Override
     public Page<InStockResponseDto> getInStockList(InStockRequestDto requestDto) {
         JPQLQuery<InStockResponseDto> query = getQuerydsl().createQuery();
-        QMember regMember = new QMember("regMember");
-        QMember updMember = new QMember("updMember");
+        QMembers regMember = new QMembers("regMember");
+        QMembers updMember = new QMembers("updMember");
 
         QCodeDetail maker = new QCodeDetail("maker");
         QCodeDetail telecom = new QCodeDetail("telecom");
@@ -129,7 +129,7 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
 
 
     @Override
-    public List<Goods> getDeviceList(long storeId, Integer telecomId, Integer makerId) {
+    public List<Goods> getDeviceList(long storeId, Long telecomId, Long makerId) {
         JPQLQuery<Goods> query = getQuerydsl().createQuery();
         return query.select(Projections.fields(
                 Goods.class
@@ -151,14 +151,14 @@ public class InStockRepositoryImpl extends QuerydslRepositorySupport implements 
 
     }
 
-    private BooleanExpression eqTelecom(Integer telecom) {
+    private BooleanExpression eqTelecom(Long telecom) {
         if (telecom == null) {
             return null;
         }
         return goods.networkAttribute.telecom.eq(telecom);
     }
 
-    private BooleanExpression eqMaker(Integer maker) {
+    private BooleanExpression eqMaker(Long maker) {
         if (maker == null) {
             return null;
         }

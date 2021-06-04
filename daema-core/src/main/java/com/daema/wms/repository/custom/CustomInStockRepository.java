@@ -11,5 +11,5 @@ public interface CustomInStockRepository {
 
     Page<InStockResponseDto> getInStockList(InStockRequestDto requestDto);
 
-    List<Goods> getDeviceList(long storeId, Integer telecomId, Integer makerId);
+    List<Goods> getDeviceList(long storeId, Long telecomId, Long makerId);
 }

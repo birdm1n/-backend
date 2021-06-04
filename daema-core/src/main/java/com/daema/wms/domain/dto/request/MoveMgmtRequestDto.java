@@ -16,7 +16,7 @@ public class MoveMgmtRequestDto extends SearchParamDto { //이동현황
 
 
     // 통신사
-    private Integer telecom;
+    private Long telecom;
 
 //    //입고일
     private String inStockRegiDate;
@@ -31,7 +31,7 @@ public class MoveMgmtRequestDto extends SearchParamDto { //이동현황
     private WmsEnum.StockType stockType;
 
     //제조사
-    private Integer maker;
+    private Long maker;
 
     //기기명(모델명)
     private Long goodsId;

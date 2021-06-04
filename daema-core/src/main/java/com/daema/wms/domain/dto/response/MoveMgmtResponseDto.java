@@ -22,7 +22,7 @@ public class MoveMgmtResponseDto { // 이동현황
 
 
     // 통신사
-    private int telecom;
+    private Long telecom;
     private String telecomName;
 
 
@@ -43,7 +43,7 @@ public class MoveMgmtResponseDto { // 이동현황
     private String stockTypeMsg;
 
     //제조사
-    private int maker;
+    private Long maker;
     private String makerName;
 
     //기기명(모델명)

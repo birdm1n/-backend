@@ -12,9 +12,9 @@ public class MemberRolePK implements Serializable {
 	private static final long serialVersionUID = -2263366215448584838L;
 
 	private long seq;
-	private int roleId;
+	private long roleId;
 
-	public MemberRolePK(long seq, int roleId) {
+	public MemberRolePK(long seq, long roleId) {
 		this.seq = seq;
 		this.roleId = roleId;
 	}

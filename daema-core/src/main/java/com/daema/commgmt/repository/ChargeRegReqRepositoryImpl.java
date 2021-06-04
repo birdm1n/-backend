@@ -112,8 +112,8 @@ public class ChargeRegReqRepositoryImpl extends QuerydslRepositorySupport implem
         return chargeRegReq.chargeName.contains(name);
     }
 
-    private BooleanExpression eqNetwork(int name) {
-        if (name <= 0) {
+    private BooleanExpression eqNetwork(Long name) {
+        if (name == null || name <= 0) {
             return null;
         }
         return chargeRegReq.networkAttribute.network.eq(name);
@@ -128,8 +128,8 @@ public class ChargeRegReqRepositoryImpl extends QuerydslRepositorySupport implem
         return chargeRegReq.networkAttribute.telecom.in(name);
     }
 
-    private BooleanExpression eqStatus(int name) {
-        if (name <= 0) {
+    private BooleanExpression eqStatus(String name) {
+        if (StringUtils.isEmpty(name)) {
             return null;
         }
         return chargeRegReq.reqStatus.eq(name);

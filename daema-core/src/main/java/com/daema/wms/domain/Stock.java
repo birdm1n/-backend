@@ -15,20 +15,20 @@ import java.util.List;
 @ToString(exclude = {"prevMoveStockList", "nextMoveStockList", "prevStoreStockList", "nextStoreStockList", "prevOutStockList", "childStockList"})
 @NoArgsConstructor
 @Entity
-@Table(name="stock")
+@org.hibernate.annotations.Table(appliesTo = "stock", comment = "재고")
 public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stock_id", columnDefinition = "BIGINT UNSIGNED comment '창고 아이디'")
+    @Column(name = "stock_id", columnDefinition = "BIGINT UNSIGNED comment '재고 아이디'")
     private long stockId;
 
     @NotBlank
-    @Column(name = "stock_name", columnDefinition = "varchar(255) comment '창고 명'")
+    @Column(name = "stock_name", columnDefinition = "varchar(255) comment '재고 이름'")
     private String stockName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_stock_id", columnDefinition = "BIGINT UNSIGNED comment '부모 창고 아이디'")
+    @JoinColumn(name = "parent_stock_id", columnDefinition = "BIGINT UNSIGNED comment '부모 재고 아이디'")
     private Stock parentStock;
 
     @OneToMany(mappedBy = "parentStock")
@@ -43,13 +43,13 @@ public class Stock {
     /**
      * O - openStore, S - store, I - inner (내부 관리)
      */
-    @Column(nullable = false, name="stock_type", columnDefinition = "char(1) comment '재고 타입'")
+    @Column(nullable = false, name="stock_type", columnDefinition = "varchar(255) comment '재고 타입'")
     private String stockType;
 
     @Column(nullable = false, name="regi_store_id", columnDefinition = "BIGINT UNSIGNED comment '등록 관리점 아이디'")
     private long regiStoreId;
 
-    @Column(name = "charger_name", columnDefinition = "varchar(255) comment '담당자 명'")
+    @Column(name = "charger_name", columnDefinition = "varchar(255) comment '담당자 이름'")
     private String chargerName;
 
     @Column( name = "charger_phone", columnDefinition = "varchar(255) comment '담당자 연락처'")
