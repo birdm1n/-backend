@@ -217,4 +217,41 @@ public enum WmsEnum {
             return this.statusMsg;
         }
     }
+
+    /* OPENING("개통") - 철회 가능, CANCEL("철회") - 철회 완료, COMPL("완료") - 철회불가 */
+    public enum OpeningStatus {
+        OPENING("개통", "철회가능" ),
+        CANCEL("철회", "철회완료"),
+        COMPL("완료" , "철회불가")
+        ,
+        ;
+
+        private final String statusMsg;
+        private final String cancelMsg;
+
+        OpeningStatus(String statusMsg, String cancelMsg) {
+            this.statusMsg = statusMsg;
+            this.cancelMsg = cancelMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+        public String getCancelMsg() {
+            return cancelMsg;
+        }
+    }
+    public enum OpeningText {
+        NONE("-"),
+        OPENING("개통"),
+        NOT_OPENING("미개통")
+        ;
+        private final String statusMsg;
+
+        OpeningText(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
 }

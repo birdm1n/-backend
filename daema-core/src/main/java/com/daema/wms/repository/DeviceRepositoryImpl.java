@@ -35,15 +35,16 @@ import static com.daema.base.domain.QMembers.members;
 import static com.daema.commgmt.domain.QGoods.goods;
 import static com.daema.commgmt.domain.QGoodsOption.goodsOption;
 import static com.daema.commgmt.domain.QStore.store;
+import static com.daema.wms.domain.QDelivery.delivery;
 import static com.daema.wms.domain.QDevice.device;
 import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
 import static com.daema.wms.domain.QInStock.inStock;
 import static com.daema.wms.domain.QMoveStock.moveStock;
+import static com.daema.wms.domain.QOpening.opening;
 import static com.daema.wms.domain.QOutStock.outStock;
 import static com.daema.wms.domain.QProvider.provider;
 import static com.daema.wms.domain.QReturnStock.returnStock;
 import static com.daema.wms.domain.QStoreStock.storeStock;
-import static com.daema.wms.domain.QDelivery.delivery;
 
 public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements CustomDeviceRepository {
 
@@ -211,6 +212,22 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                         .when(moveStock.isNotNull())
                         .then(moveDelivery.deliveryStatus)
                         .otherwise(outDelivery.deliveryStatus).as("deliveryStatus")
+                , new CaseBuilder()
+                        .when(
+                                opening.delYn.isEmpty().and(
+                                        storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE)
+                                )
+                        ) /* 개통 데이터가 없으면서, 이동재고/판매이동 경우 개통 가능 - (미개통 상태)*/
+                        .then(WmsEnum.OpeningText.NOT_OPENING.getStatusMsg())
+                        .when(
+                                opening.delYn.isNotEmpty().and(
+                                        storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE)
+                                )
+                        )/* 개통 불가 가능 - (개통 상태)*/
+                        .then(WmsEnum.OpeningText.OPENING.getStatusMsg())
+                        /* 이동재고/판매이동 상태가 아닌 경우 개통 불가 가능 - (-) */
+                        .otherwise(WmsEnum.OpeningText.NONE.getStatusMsg())
+                        .as("openingText")
         ))
                 .from(device)
                 .innerJoin(device.store, store).on
@@ -220,7 +237,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .innerJoin(device.inStocks, inStock)
                 .innerJoin(device.deviceStatusList, deviceStatus).on
                 (
-                        deviceStatus.delYn.eq("N")
+                        deviceStatus.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 )
                 .innerJoin(device.goodsOption, goodsOption)
                 .innerJoin(goodsOption.goods, goods)
@@ -235,6 +252,10 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .innerJoin(device.storeStock, storeStock)
                 .leftJoin(storeStock.prevStock, prevStock)
                 .leftJoin(storeStock.nextStock, nextStock)
+                .leftJoin(device.openingList, opening).on
+                (
+                        opening.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()) /* 최종 상태가 => 개통, 개통 완료인 건만 조회 */
+                )
                 .leftJoin(moveStock).on
                 (
                         storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE),
@@ -315,7 +336,6 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .fetchOne();
         return result;
     }
-
 
 
     private BooleanExpression betweenInStockRegDt(String startDt, String endDt) {
@@ -403,7 +423,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
     }
 
     private BooleanExpression containsBarcode(String barcode) {
-        if(StringUtils.isEmpty(barcode)){
+        if (StringUtils.isEmpty(barcode)) {
             return null;
         }
         return device.rawBarcode.contains(barcode).or(

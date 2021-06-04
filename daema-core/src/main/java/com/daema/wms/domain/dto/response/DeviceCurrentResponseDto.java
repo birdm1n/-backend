@@ -104,9 +104,11 @@ public class DeviceCurrentResponseDto {
     //반품비
     private Integer returnStockAmt;
 
-    //출고가차감(Y/N) 체크박스
+    // 출고가차감(Y/N) 체크박스
     private String ddctReleaseAmtYn;
 
+    // 개통 가능 여부
+    private String openingText;
 
     public String getInStockStatusMsg() {
         return this.inStockStatus != null ? this.inStockStatus.getStatusMsg() : "";

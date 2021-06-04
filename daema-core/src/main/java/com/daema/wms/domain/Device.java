@@ -38,7 +38,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "dvcId")
-@ToString(exclude = {"inStocks", "outStocks", "deviceStatusList", "moveStockList", "returnStockList", "storeStock", "deviceJudges"})
+@ToString(exclude = {"inStocks", "outStocks", "deviceStatusList", "moveStockList", "returnStockList", "storeStock", "deviceJudges", "openingList"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -99,6 +99,9 @@ public class Device extends BaseEntity {
 
     @OneToMany(mappedBy = "device")
     private List<DeviceJudge> deviceJudges = new ArrayList<>();
+
+    @OneToMany(mappedBy = "device")
+    private List<Opening> openingList = new ArrayList<>();
 
     public void deleteDevice(){
         super.setDelYn(StatusEnum.FLAG_Y.getStatusMsg());
