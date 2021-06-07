@@ -182,7 +182,6 @@ public class InStockMgmtService {
         } catch (Exception e) {
             return ResponseCodeEnum.NO_GOODS;
         }
-        /* todo 원시 바코드 분할 작업 확인필요 */
         /* 공통바코드인 경우 fullBarcode 로직 적용 */
         String rawBarcode = requestDto.getRawBarcode();
         String fullBarcode = rawBarcode.substring(0, rawBarcode.length() - 1); /* 원시 바코드 length -1 */
@@ -286,7 +285,6 @@ public class InStockMgmtService {
                         .provId(reqDto.getProvId())
                         .build();
                 inStockWaitIds.add(reqDto.getWaitId());
-                /* todo device raw, full, serial 확인  /  입고대기 request 로직*/
                 devices.add(
                         Device.builder()
                                 .barcodeType(reqDto.getBarcodeType())
@@ -336,7 +334,6 @@ public class InStockMgmtService {
                                 .nextStock(stockObj)
                                 .build()
                 );
-                /* todo 이동재고인 경우 로직 처리 확인필요*/
                 if (reqDto.getStatusStr() == WmsEnum.StockStatStr.M) {
                     deliveries.add(
                             Delivery.builder()

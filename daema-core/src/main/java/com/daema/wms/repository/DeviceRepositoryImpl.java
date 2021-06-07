@@ -213,14 +213,42 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                         .then(moveDelivery.deliveryStatus)
                         .otherwise(outDelivery.deliveryStatus).as("deliveryStatus")
                 , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.cusName)
+                        .otherwise(outDelivery.cusName).as("cusName")
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.cusPhone1)
+                        .otherwise(outDelivery.cusPhone1).as("cusPhone1")
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.cusPhone2)
+                        .otherwise(outDelivery.cusPhone2).as("cusPhone2")
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.cusPhone3)
+                        .otherwise(outDelivery.cusPhone3).as("cusPhone3")
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.addr1)
+                        .otherwise(outDelivery.addr1).as("addr1")
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.addr2)
+                        .otherwise(outDelivery.addr2).as("addr2")
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
+                        .then(moveDelivery.zipCode)
+                        .otherwise(outDelivery.zipCode).as("zipCode")
+                , new CaseBuilder()
                         .when(
-                                opening.delYn.isEmpty().and(
+                                opening.isNull().and(
                                         storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE)
                                 )
                         ) /* 개통 데이터가 없으면서, 이동재고/판매이동 경우 개통 가능 - (미개통 상태)*/
                         .then(WmsEnum.OpeningText.NOT_OPENING.getStatusMsg())
                         .when(
-                                opening.delYn.isNotEmpty().and(
+                                opening.isNotNull().and(
                                         storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE)
                                 )
                         )/* 개통 불가 가능 - (개통 상태)*/

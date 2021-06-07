@@ -1,6 +1,7 @@
 package com.daema.wms.domain;
 
 import com.daema.base.domain.common.BaseEntity;
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
@@ -52,4 +53,13 @@ public class Opening extends BaseEntity {
     @JoinColumn(name = "dvc_id", columnDefinition = "BIGINT unsigned comment '기기 아이디'")
     private Device device;
 
+
+    public void insertOpening(Store store, Device device, LocalDate openingDate, String openingMemo ){
+        this.store = store;
+        this.device = device;
+        this.openingDate = openingDate;
+        this.openingMemo = openingMemo;
+        this.openingStatus = WmsEnum.OpeningStatus.OPENING;
+        super.setDelYn(StatusEnum.FLAG_N.getStatusMsg());
+    }
 }

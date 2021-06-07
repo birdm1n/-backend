@@ -107,8 +107,30 @@ public class DeviceCurrentResponseDto {
     // 출고가차감(Y/N) 체크박스
     private String ddctReleaseAmtYn;
 
+    // 고객 이름
+    private String cusName;
+
+    // 고객 연락처 1
+    private String cusPhone1;
+
+    // 고객 연락처 2
+    private String cusPhone2;
+
+    // 고객 연락처 3
+    private String cusPhone3;
+    
+    // 고객 배송 주소
+    private String addr1;
+
+    // 고객 배송 주소 상세
+    private String addr2;
+
+    // 우편 코드
+    private String zipCode;
+
     // 개통 가능 여부
     private String openingText;
+
 
     public String getInStockStatusMsg() {
         return this.inStockStatus != null ? this.inStockStatus.getStatusMsg() : "";
