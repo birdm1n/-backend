@@ -172,12 +172,10 @@ public class ExcelDownloadService {
                 ).getResultList();
             }
         } else if ("getMoveMgmtListExcel".equals(pageType)) {
-            //TODO 이동현황 엑셀 다운로드 추가 필요
             fileName = "이동현황_";
             cls = ExcelVO.MoveMgmtList.class;
             dataList = moveStockMgmtService.getMoveMgmtList(mapper.convertValue(modelMap, MoveMgmtRequestDto.class)).getResultList();
         } else if ("getDeviceCurrentListExcel".equals(pageType)) {
-            //TODO 기기현황 엑셀 다운로드 추가 필요
             fileName = "기기현황_";
             cls = ExcelVO.DeviceCurrentList.class;
             dataList = deviceCurrentMgmtService.getDeviceCurrentPage(mapper.convertValue(modelMap, DeviceCurrentRequestDto.class)).getResultList();
