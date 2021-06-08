@@ -33,6 +33,7 @@ import static com.daema.wms.domain.QInStock.inStock;
 import static com.daema.wms.domain.QMoveStock.moveStock;
 import static com.daema.wms.domain.QOpening.opening;
 import static com.daema.wms.domain.QOutStock.outStock;
+import static com.daema.wms.domain.QReturnStock.returnStock;
 import static com.daema.wms.domain.QStoreStock.storeStock;
 
 public class OpeningRepositoryImpl extends QuerydslRepositorySupport implements CustomOpeningRepository {
@@ -78,6 +79,10 @@ public class OpeningRepositoryImpl extends QuerydslRepositorySupport implements 
                         .otherwise(outDelivery.cusName).as("cusName")
                 , new CaseBuilder()
                         .when(moveStock.isNotNull())
+                        .then(moveDelivery.cusPhone)
+                        .otherwise(outDelivery.cusPhone).as("cusPhone")
+                , new CaseBuilder()
+                        .when(moveStock.isNotNull())
                         .then(moveDelivery.cusPhone1)
                         .otherwise(outDelivery.cusPhone1).as("cusPhone1")
                 , new CaseBuilder()
@@ -103,6 +108,16 @@ public class OpeningRepositoryImpl extends QuerydslRepositorySupport implements 
                 , opening.openingStatus.as("cancelStatus")
                 , opening.cancelDate.as("cancelDate")
                 , opening.cancelMemo.as("cancelMemo")
+                , deviceStatus.inStockStatus.as("inStockStatus")
+                , deviceStatus.productFaultyYn.as("productFaultyYn")
+                , deviceStatus.extrrStatus.as("extrrStatus")
+                , deviceStatus.productMissYn.as("productMissYn")
+                , deviceStatus.missProduct.as("missProduct")
+                , deviceStatus.ddctAmt.as("ddctAmt")
+                , deviceStatus.addDdctAmt.as("addDdctAmt")
+                , deviceStatus.ddctReleaseAmtYn.as("ddctReleaseAmtYn")
+                , returnStock.returnStockAmt.as("returnStockAmt")
+
         ))
                 .from(opening)
                 .innerJoin(opening.device, device)
@@ -140,6 +155,10 @@ public class OpeningRepositoryImpl extends QuerydslRepositorySupport implements 
                         storeStock.stockTypeId.eq(outStock.outStockId)
                 )
                 .leftJoin(outStock.delivery, outDelivery)
+                .leftJoin(device.returnStockList, returnStock).on
+                (
+                        returnStock.delYn.eq("N")
+                )
                 .where(
                         eqTelecom(requestDto.getTelecom()),
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),

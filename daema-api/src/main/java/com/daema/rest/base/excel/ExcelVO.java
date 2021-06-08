@@ -352,6 +352,46 @@ public class ExcelVO {
 
 	}
 
+	//개통이력기기현황
+	public static class OpeningCurrentList {
+		@ExcelTemplate(columnName = "통신사")
+		private String telecomName;
+		@ExcelTemplate(columnName = "입고일")
+		private LocalDateTime inStockRegiDate;
+		@ExcelTemplate(columnName = "입고일-경과일")
+		private String diffInStockRegiDate;
+		@ExcelTemplate(columnName = "개통일")
+		private LocalDate openingDate;
+		@ExcelTemplate(columnName = "개통일-경과일")
+		private Long diffOpeningDate;
+		@ExcelTemplate(columnName = "보유처 Before")
+		private String prevStockName;
+		@ExcelTemplate(columnName = "보유처 After")
+		private String nextStockName;
+		@ExcelTemplate(columnName = "재고구분")
+		private String stockTypeMsg;
+		@ExcelTemplate(columnName = "제조사")
+		private String makerName;
+		@ExcelTemplate(columnName = "기기명")
+		private String goodsName;
+		@ExcelTemplate(columnName = "모델명")
+		private String modelName;
+		@ExcelTemplate(columnName = "용량")
+		private String capacity;
+		@ExcelTemplate(columnName = "색상")
+		private String colorName;
+		@ExcelTemplate(columnName = "기기일련번호")
+		private String rawBarcode;
+		@ExcelTemplate(columnName = "입고단가")
+		private String inStockAmt;
+		@ExcelTemplate(columnName = "고객명")
+		private String cusName;
+		@ExcelTemplate(columnName = "고객 전화번호")
+		private String cusPhone;
+		@ExcelTemplate(columnName = "철회")
+		private String cancelStatusMsg;
+	}
+
 	//기기현황
 	public static class DeviceCurrentList {
 		@ExcelTemplate(columnName = "통신사")
@@ -394,6 +434,8 @@ public class ExcelVO {
 		private String deliveryTypeMsg;
 		@ExcelTemplate(columnName = "배송상태")
 		private String deliveryStatusMsg;
+		@ExcelTemplate(columnName = "개통상태")
+		private String openingText;
 
 	}
 

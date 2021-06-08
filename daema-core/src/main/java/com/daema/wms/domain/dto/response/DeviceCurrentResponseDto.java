@@ -96,13 +96,13 @@ public class DeviceCurrentResponseDto {
     private String missProduct;
 
     //차감비
-    private Integer ddctAmt;
+    private int ddctAmt;
 
     //추가차감금액
-    private Integer addDdctAmt;
+    private int addDdctAmt;
 
     //반품비
-    private Integer returnStockAmt;
+    private int returnStockAmt;
 
     // 출고가차감(Y/N) 체크박스
     private String ddctReleaseAmtYn;

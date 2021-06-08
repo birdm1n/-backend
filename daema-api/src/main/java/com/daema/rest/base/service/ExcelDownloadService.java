@@ -36,19 +36,21 @@ public class ExcelDownloadService {
     private final ReturnStockMgmtService returnStockMgmtService;
     private final StoreStockMgmtService storeStockMgmtService;
     private final DeviceCurrentMgmtService deviceCurrentMgmtService;
+    private final OpeningCurrentMgmtService openingCurrentMgmtService;
     private final AuthenticationUtil authenticationUtil;
 
     private String fileName;
     private Class<?> cls;
     private List dataList;
 
-    public ExcelDownloadService(PubNotiRawDataRepository pubNotiRawDataRepository, ReturnStockMgmtService returnStockMgmtService, InStockMgmtService inStockMgmtService, MoveStockMgmtService moveStockMgmtService, StoreStockMgmtService storeStockMgmtService, DeviceCurrentMgmtService deviceCurrentMgmtService, AuthenticationUtil authenticationUtil) {
+    public ExcelDownloadService(PubNotiRawDataRepository pubNotiRawDataRepository, ReturnStockMgmtService returnStockMgmtService, InStockMgmtService inStockMgmtService, MoveStockMgmtService moveStockMgmtService, StoreStockMgmtService storeStockMgmtService, DeviceCurrentMgmtService deviceCurrentMgmtService, OpeningCurrentMgmtService openingCurrentMgmtService, AuthenticationUtil authenticationUtil) {
         this.pubNotiRawDataRepository = pubNotiRawDataRepository;
         this.returnStockMgmtService = returnStockMgmtService;
         this.inStockMgmtService = inStockMgmtService;
         this.moveStockMgmtService = moveStockMgmtService;
         this.storeStockMgmtService = storeStockMgmtService;
         this.deviceCurrentMgmtService = deviceCurrentMgmtService;
+        this.openingCurrentMgmtService = openingCurrentMgmtService;
         this.authenticationUtil = authenticationUtil;
     }
 
@@ -175,6 +177,10 @@ public class ExcelDownloadService {
             fileName = "이동현황_";
             cls = ExcelVO.MoveMgmtList.class;
             dataList = moveStockMgmtService.getMoveMgmtList(mapper.convertValue(modelMap, MoveMgmtRequestDto.class)).getResultList();
+        } else if ("getOpeningCurrentListExcel".equals(pageType)) {
+            fileName = "개통현황_";
+            cls = ExcelVO.OpeningCurrentList.class;
+            dataList = openingCurrentMgmtService.getOpeningCurrentList(mapper.convertValue(modelMap, OpeningCurrentRequestDto.class)).getResultList();
         } else if ("getDeviceCurrentListExcel".equals(pageType)) {
             fileName = "기기현황_";
             cls = ExcelVO.DeviceCurrentList.class;

@@ -253,7 +253,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                                 )
                         )/* 개통 불가 가능 - (개통 상태)*/
                         .then(WmsEnum.OpeningText.OPENING.getStatusMsg())
-                        /* 이동재고/판매이동 상태가 아닌 경우 개통 불가 가능 - (-) */
+                        /* 이동재고/판매이동 상태가 아닌 경우 개통 불가능 - (-) */
                         .otherwise(WmsEnum.OpeningText.NONE.getStatusMsg())
                         .as("openingText")
         ))

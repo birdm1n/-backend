@@ -87,6 +87,9 @@ public class OpeningCurrentResponseDto {
     // 고객 이름
     private String cusName;
 
+    // 고객 연락처
+    private String cusPhone;
+
     // 고객 연락처 1
     private String cusPhone1;
 
@@ -118,5 +121,55 @@ public class OpeningCurrentResponseDto {
 
     // 철회메모
     private String cancelMemo;
+
+
+    //입고상태
+    private WmsEnum.InStockStatus inStockStatus;
+    private String inStockStatusMsg;
+    public String getInStockStatusMsg() {
+        return this.inStockStatus != null ? this.inStockStatus.getStatusMsg() : "";
+    }
+
+    // 제품상태 =  N, "-" / Y, "불량"
+    private String productFaultyYn;
+
+    // 외장상태 = "상" / "중" / "하" / "파손"
+    private WmsEnum.DeviceExtrrStatus extrrStatus;
+    private String extrrStatusMsg;
+    public String getExtrrStatusMsg() {
+        return this.extrrStatus != null ? this.extrrStatus.getStatusMsg() : "";
+    }
+
+    //배송방법
+    private WmsEnum.DeliveryType deliveryType;
+    private String deliveryTypeMsg;
+    public String getDeliveryTypeMsg() {
+        return this.deliveryType != null ? this.deliveryType.getStatusMsg() : "";
+    }
+
+    //    //배송상태
+    private WmsEnum.DeliveryStatus deliveryStatus;
+    private String deliveryStatusMsg;
+    public String getDeliveryStatusMsg() {
+        return this.deliveryStatus != null ? this.deliveryStatus.getStatusMsg() : "";
+    }
+
+    //구성품누락
+    private String productMissYn;
+
+    //누락제품
+    private String missProduct;
+
+    //차감비
+    private int ddctAmt;
+
+    //추가차감금액
+    private int addDdctAmt;
+
+    //반품비
+    private int returnStockAmt;
+
+    // 출고가차감(Y/N) 체크박스
+    private String ddctReleaseAmtYn;
 
 }

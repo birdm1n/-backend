@@ -62,4 +62,12 @@ public class Opening extends BaseEntity {
         this.openingStatus = WmsEnum.OpeningStatus.OPENING;
         super.setDelYn(StatusEnum.FLAG_N.getStatusMsg());
     }
+
+    public void updateCancel(LocalDate cancelDate, String cancelMemo ){
+        this.cancelDate = cancelDate;
+        this.cancelMemo = cancelMemo;
+        this.openingStatus = WmsEnum.OpeningStatus.CANCEL;
+        super.setDelYn(StatusEnum.FLAG_Y.getStatusMsg());
+    }
+
 }
