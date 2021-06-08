@@ -5,10 +5,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
-
 @Getter
 @Setter
-@EqualsAndHashCode(of={"openStoreId", "saleStoreId"})
+@EqualsAndHashCode(of={"openingStoreId", "saleStoreId"})
 @IdClass(OpenStoreSaleStoreMapPK.class)
 @ToString
 @Entity
@@ -17,8 +16,8 @@ import javax.persistence.*;
 public class OpenStoreSaleStoreMap {
 
     @Id
-    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '개통 관리점 아이디'")
-    private long openStoreId;
+    @Column(name = "opening_store_id", columnDefinition = "BIGINT unsigned comment '개통 관리점 아이디'")
+    private long openingStoreId;
 
     @Id
     @Column(name = "sale_store_id", columnDefinition = "BIGINT unsigned comment '영업 관리점 아이디'")
@@ -28,14 +27,14 @@ public class OpenStoreSaleStoreMap {
     private String useYn;
 
     @Builder
-    public OpenStoreSaleStoreMap(long openStoreId, long saleStoreId){
-        this.openStoreId = openStoreId;
+    public OpenStoreSaleStoreMap(long openingStoreId, long saleStoreId){
+        this.openingStoreId = openingStoreId;
         this.saleStoreId = saleStoreId;
     }
 
     @Builder
-    public OpenStoreSaleStoreMap(long openStoreId, long saleStoreId, String useYn){
-        this.openStoreId = openStoreId;
+    public OpenStoreSaleStoreMap(long openingStoreId, long saleStoreId, String useYn){
+        this.openingStoreId = openingStoreId;
         this.saleStoreId = saleStoreId;
         this.useYn = useYn;
     }

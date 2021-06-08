@@ -45,7 +45,7 @@ public class OpenStore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '개통 관리점 아이디'")
+    @Column(name = "opening_store_id", columnDefinition = "BIGINT unsigned comment '개통 관리점 아이디'")
     private long openStoreId;
 
     @NotNull
@@ -53,7 +53,7 @@ public class OpenStore {
     private long storeId;
 
     @NotBlank
-    @Column(name = "open_store_name", columnDefinition = "varchar(255) comment '개통 관리점 이름'")
+    @Column(name = "opening_store_name", columnDefinition = "varchar(255) comment '개통 관리점 이름'")
     private String openStoreName;
 
     @NotNull

@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of={"openStoreId", "userId"})
+@EqualsAndHashCode(of={"openingStoreId", "userId"})
 @IdClass(OpenStoreUserMapPK.class)
 @ToString
 @Entity
@@ -17,8 +17,8 @@ import javax.persistence.*;
 public class OpenStoreUserMap {
 
     @Id
-    @Column(name = "open_store_id", columnDefinition = "BIGINT unsigned comment '개통 관리점 아이디'")
-    private long openStoreId;
+    @Column(name = "opening_store_id", columnDefinition = "BIGINT unsigned comment '개통 관리점 아이디'")
+    private long openingStoreId;
 
     @Id
     @Column(name = "user_id", columnDefinition = "BIGINT unsigned comment '유저 아이디'")
@@ -29,13 +29,13 @@ public class OpenStoreUserMap {
 
     @Builder
     public OpenStoreUserMap(long openStoreId, long userId){
-        this.openStoreId = openStoreId;
+        this.openingStoreId = openStoreId;
         this.userId = userId;
     }
 
     @Builder
     public OpenStoreUserMap(long openStoreId, long userId, String useYn){
-        this.openStoreId = openStoreId;
+        this.openingStoreId = openStoreId;
         this.userId = userId;
         this.useYn = useYn;
     }

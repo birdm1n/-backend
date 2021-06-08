@@ -60,7 +60,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                         "select os.* " +
                         "  from open_store as os " +
                         " inner join open_store_sale_store_map osssm " +
-                        "    on os.open_store_id = osssm.open_store_id " +
+                        "    on os.opening_store_id = osssm.opening_store_id " +
                         "       and osssm.sale_store_id = :storeId " +
                         "       and os.del_yn = 'N' " +
                         "       and os.use_yn = 'Y' " +
@@ -90,14 +90,14 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
         StringBuilder sb = new StringBuilder();
 
         if(pageable == null){
-            sb.append("select os.open_store_id " +
+            sb.append("select os.opening_store_id as open_store_id " +
                     "       , os.biz_num as biz_no" +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.charger_phone1 " +
                     "       , os.charger_phone2 " +
                     "       , os.charger_phone3 " +
-                    "       , os.open_store_name " +
+                    "       , os.opening_store_name as open_store_name " +
                     "       , os.regi_datetime " +
                     "       , os.return_addr " +
                     "       , os.return_addr_detail " +
@@ -127,14 +127,14 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     " " +
                     "union " +
                     " " +
-                    "select os.open_store_id " +
+                    "select os.opening_store_id as open_store_id " +
                     "       , os.biz_num as biz_no " +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.charger_phone1 " +
                     "       , os.charger_phone2 " +
                     "       , os.charger_phone3 " +
-                    "       , os.open_store_name " +
+                    "       , os.opening_store_name as open_store_name " +
                     "       , os.regi_datetime " +
                     "       , os.return_addr " +
                     "       , os.return_addr_detail " +
@@ -148,7 +148,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "  from open_store as os " +
                     " inner join open_store_sale_store_map osssm " +
                     "    on osssm.sale_store_id = :storeId " +
-                    "       and os.open_store_id = osssm.open_store_id " +
+                    "       and os.opening_store_id = osssm.opening_store_id " +
                     "       and os.del_yn = 'N' " +
                     "       and os.use_yn = 'Y' " +
                     "       and osssm.use_yn = 'Y' " +
@@ -165,14 +165,14 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
             sb.append(" order by open_store_name ");
 
         }else{
-            sb.append("select os.open_store_id " +
+            sb.append("select os.opening_store_id as open_store_id " +
                     "       , os.biz_num as biz_no " +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.charger_phone1 " +
                     "       , os.charger_phone2 " +
                     "       , os.charger_phone3 " +
-                    "       , os.open_store_name " +
+                    "       , os.opening_store_name as open_store_name " +
                     "       , os.regi_datetime " +
                     "       , os.return_addr " +
                     "       , os.return_addr_detail " +
@@ -196,14 +196,14 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
 
             sb.append(" union " +
                     " " +
-                    "select os.open_store_id " +
+                    "select os.opening_store_id as open_store_id " +
                     "       , os.biz_num as biz_no " +
                     "       , os.charger_name " +
                     "       , os.charger_phone " +
                     "       , os.charger_phone1 " +
                     "       , os.charger_phone2 " +
                     "       , os.charger_phone3 " +
-                    "       , os.open_store_name " +
+                    "       , os.opening_store_name as open_store_name " +
                     "       , os.regi_datetime " +
                     "       , os.return_addr " +
                     "       , os.return_addr_detail " +
@@ -217,7 +217,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
                     "  from open_store as os " +
                     " inner join open_store_sale_store_map osssm " +
                     "    on osssm.sale_store_id = :storeId " +
-                    "       and os.open_store_id = osssm.open_store_id " +
+                    "       and os.opening_store_id = osssm.opening_store_id " +
                     "       and os.del_yn = 'N' " +
                     "       and os.use_yn = 'Y' " +
                     " inner join code_detail as cd " +

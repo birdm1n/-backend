@@ -9,15 +9,15 @@ public class OpenStoreUserMapPK implements Serializable {
 
 	private static final long serialVersionUID = 270442920138578680L;
 
-	private long openStoreId;
+	private long openingStoreId;
 	private long userId;
 
 	public OpenStoreUserMapPK() {
 
 	}
 
-	public OpenStoreUserMapPK(long openStoreId, long userId) {
-		this.openStoreId = openStoreId;
+	public OpenStoreUserMapPK(long openingStoreId, long userId) {
+		this.openingStoreId = openingStoreId;
 		this.userId = userId;
 	}
 }

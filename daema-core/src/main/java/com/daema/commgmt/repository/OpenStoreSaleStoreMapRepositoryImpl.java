@@ -22,11 +22,11 @@ public class OpenStoreSaleStoreMapRepositoryImpl extends QuerydslRepositorySuppo
     public List<OpenStoreSaleStoreMap> getMappingList(long storeId) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("select data.open_store_id " +
+        sb.append("select data.opening_store_id " +
                 "       ,osssm.sale_store_id " +
                 "       ,osssm.use_yn " +
                 "  from ( " +
-                "      select open_store_id " +
+                "      select opening_store_id " +
                 "        from open_store as os " +
                 "       where store_id = :storeId " +
                 "         and os.del_yn = 'N' " +
@@ -34,17 +34,17 @@ public class OpenStoreSaleStoreMapRepositoryImpl extends QuerydslRepositorySuppo
                 " " +
                 "       union " +
                 " " +
-                "      select osssm.open_store_id " +
+                "      select osssm.opening_store_id " +
                 "        from open_store as os " +
                 "        inner join open_store_sale_store_map osssm " +
                 "        on osssm.sale_store_id = :storeId " +
-                "            and os.open_store_id = osssm.open_store_id " +
+                "            and os.opening_store_id = osssm.opening_store_id " +
                 "            and os.del_yn = 'N' " +
                 "            and os.use_yn = 'Y' " +
                 "            and osssm.use_yn = 'Y' " +
                 "  ) as data " +
                 " inner join open_store_sale_store_map osssm " +
-                "    on data.open_store_id = osssm.open_store_id " +
+                "    on data.opening_store_id = osssm.opening_store_id " +
                 " inner join store_map as sm " +
                 "    on sm.parent_store_id = :storeId " +
                 "       and osssm.sale_store_id = sm.store_id " +

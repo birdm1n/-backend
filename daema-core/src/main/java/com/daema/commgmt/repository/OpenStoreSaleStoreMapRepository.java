@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface OpenStoreSaleStoreMapRepository extends JpaRepository<OpenStoreSaleStoreMap, OpenStoreSaleStoreMapPK>, CustomOpenStoreSaleStoreMapRepository {
 
-    Optional<OpenStoreSaleStoreMap> findByOpenStoreIdAndSaleStoreId(long openStoreId, long saleStoreId);
+    Optional<OpenStoreSaleStoreMap> findByOpeningStoreIdAndSaleStoreId(long openStoreId, long saleStoreId);
 }

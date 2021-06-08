@@ -204,7 +204,7 @@ public class OpeningStoreMgmtService {
                 throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
             }
         }else{
-            OpenStoreSaleStoreMap openStoreSaleStoreMap = openStoreSaleStoreMapRepository.findByOpenStoreIdAndSaleStoreId(openStoreId, storeId).orElse(null);
+            OpenStoreSaleStoreMap openStoreSaleStoreMap = openStoreSaleStoreMapRepository.findByOpeningStoreIdAndSaleStoreId(openStoreId, storeId).orElse(null);
 
             if (openStoreSaleStoreMap != null) {
                 openStoreSaleStoreMap.updateUseYn(openStoreSaleStoreMap, useYn);
