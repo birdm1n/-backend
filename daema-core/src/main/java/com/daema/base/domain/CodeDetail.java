@@ -39,13 +39,13 @@ public class CodeDetail {
     @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'"  )
     private LocalDateTime regiDateTime;
 
-    @Column(name = "regi_user_id", columnDefinition = "BIGINT UNSIGNED comment '등록자 아이디'")
+    @Column(name = "regi_user_id", columnDefinition = "BIGINT UNSIGNED comment '등록 유저 아이디'")
     private long regiUserId;
 
     @Column(name = "upd_datetime", columnDefinition = "DATETIME(6) comment '수정 일시'")
     private LocalDateTime updDateTime;
 
-    @Column(name = "upd_user_id", columnDefinition = "BIGINT UNSIGNED comment '수정자 아이디'")
+    @Column(name = "upd_user_id", columnDefinition = "BIGINT UNSIGNED comment '수정 유저 아이디'")
     private Long updUserId;
 
 
