@@ -361,7 +361,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                                 )
                         )
                 )
-                .fetchOne();
+                .fetchFirst();
         return result;
     }
 

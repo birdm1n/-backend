@@ -41,6 +41,7 @@ import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
 import static com.daema.wms.domain.QInStock.inStock;
 import static com.daema.wms.domain.QMoveStock.moveStock;
 import static com.daema.wms.domain.QMoveStockAlarm.moveStockAlarm;
+import static com.daema.wms.domain.QOpening.opening;
 import static com.daema.wms.domain.QOutStock.outStock;
 import static com.daema.wms.domain.QProvider.provider;
 import static com.daema.wms.domain.QReturnStock.returnStock;
@@ -149,17 +150,17 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                 .innerJoin(telecom).on(
                 goods.networkAttribute.telecom.eq(telecom.codeSeq)
         )
-
                 .leftJoin(storeStock.prevStock, prevStock)
                 .innerJoin(storeStock.nextStock, nextStock)
-
                 .leftJoin(inStock).on(
                 inStock.device.dvcId.eq(storeStock.device.dvcId))
                 .leftJoin(returnStock).on(
                 returnStock.device.dvcId.eq(storeStock.device.dvcId)
                         .and(returnStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()))
         )
-
+                .leftJoin(device.openingList, opening).on(
+                        opening.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
+        )
                 .where(
                         betweenInStockRegDt(requestDto.getInStockRegiDate(), requestDto.getInStockRegiDate()),
                         betweenStoreStockCheckDt(requestDto.getStoreStockCheckDate(), requestDto.getStoreStockCheckDate()),
@@ -173,7 +174,8 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                         eqGoodsId(requestDto.getGoodsId()),
                         eqCapacity(requestDto.getCapacity()),
                         eqTelecom(requestDto.getTelecom()),
-                        eqMaker(requestDto.getMaker())
+                        eqMaker(requestDto.getMaker()),
+                        opening.openingId.isNull()
                 )
                 .orderBy(
                         new OrderSpecifier(Order.DESC, compareCheckDateTime).nullsLast()

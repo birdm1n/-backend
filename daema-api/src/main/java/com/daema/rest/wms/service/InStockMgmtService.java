@@ -67,15 +67,16 @@ public class InStockMgmtService {
     @Transactional(readOnly = true)
     public InStockWaitResponseDto getWaitInStockList(WmsEnum.InStockStatus inStockStatus) {
         long storeId = authenticationUtil.getStoreId();
+        long memberId = authenticationUtil.getMemberSeq();
         InStockWaitResponseDto responseDto = new InStockWaitResponseDto();
 
-        List<InStockWait> entityList = inStockWaitRepository.getList(storeId, inStockStatus);
+        List<InStockWait> entityList = inStockWaitRepository.getList(memberId, storeId, inStockStatus);
         List<InStockWaitDto> inStockWaitDtoList = entityList.stream()
                 .map(InStockWaitDto::from)
                 .collect(Collectors.toList());
         responseDto.setInStockWaitDtoList(inStockWaitDtoList);
 
-        List<InStockWaitGroupDto> inStockWaitGroupDtoList = inStockWaitRepository.groupInStockWaitList(storeId, inStockStatus);
+        List<InStockWaitGroupDto> inStockWaitGroupDtoList = inStockWaitRepository.groupInStockWaitList(memberId, storeId, inStockStatus);
         responseDto.setInStockWaitGroupDtoList(inStockWaitGroupDtoList);
 
         return responseDto;
@@ -84,6 +85,7 @@ public class InStockMgmtService {
     @Transactional
     public ResponseCodeEnum insertWaitInStock(InStockWaitInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
+        long memberId = authenticationUtil.getMemberSeq();
         Store store = Store.builder().storeId(storeId).build();
 
         // 중복 입력 확인용
