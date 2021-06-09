@@ -396,7 +396,7 @@ public class InStockMgmtService {
 
             // 5. 입고 => 재고 히스토리 insert
             for (StoreStock storeStock : storeStocks) {
-                storeStockHistoryRepository.save(storeStock.toHistoryEntity(storeStock));
+                storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
             }
 
             // 6. 입고 대기 목록 삭제
