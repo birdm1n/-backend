@@ -5,10 +5,16 @@ import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.enums.WmsEnum;
 import lombok.*;
+import org.hibernate.envers.AuditOverride;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
+
+@AuditOverride(forClass = BaseEntity.class)
+@Audited
 @Builder
 @Getter
 @Setter
@@ -45,10 +51,12 @@ public class Opening extends BaseEntity {
     @Column(name = "batch_compl_date", columnDefinition = "DATE comment '배치 완료 일자'")
     private LocalDate batchComplDate;
 
+    @Audited(targetAuditMode = NOT_AUDITED) // 해당 테이블까지 이력을 추적하지 않겠다는 설정 필수
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", columnDefinition = "BIGINT unsigned comment '관리점 아이디'")
     private Store store;
-    
+
+    @Audited(targetAuditMode = NOT_AUDITED) // 해당 테이블까지 이력을 추적하지 않겠다는 설정 필수
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dvc_id", columnDefinition = "BIGINT unsigned comment '기기 아이디'")
     private Device device;

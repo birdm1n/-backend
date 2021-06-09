@@ -18,6 +18,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.Set;
+
 @Api(value = "재고이동/이관 API", tags = "재고이동/이관 API")
 @RestController
 @RequiredArgsConstructor
@@ -100,9 +102,9 @@ public class MoveStockMgmtController {
             @ApiImplicitParam(value = "이동재고 ID", required = true, example = "1", name = "moveStockId", paramType = "query", allowMultiple = true)
     })
     @PostMapping("/deleteMoveStock")
-    public ResponseEntity<CommonResponse<Void>> deleteMoveStock(@ApiIgnore @RequestBody ModelMap reqModel) {
-        moveStockMgmtService.deleteMoveStock(reqModel);
-        return responseHandler.ok();
+    public ResponseEntity<CommonResponse<Set<String>>> deleteMoveStock(@ApiIgnore @RequestBody ModelMap reqModel) {
+        Set<String> fails = moveStockMgmtService.deleteMoveStock(reqModel);
+        return responseHandler.ok(fails);
     }
 
     @ApiOperation(value = "판매이동 수정", notes = "판매이동 수정 기능을 수행합니다.")

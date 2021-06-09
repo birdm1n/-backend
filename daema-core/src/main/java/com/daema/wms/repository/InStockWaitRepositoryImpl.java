@@ -1,6 +1,5 @@
 package com.daema.wms.repository;
 
-import com.daema.base.domain.QCodeDetail;
 import com.daema.base.enums.StatusEnum;
 import com.daema.wms.domain.InStockWait;
 import com.daema.wms.domain.dto.response.InStockWaitGroupDto;
@@ -16,7 +15,6 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static com.daema.wms.domain.QInStockWait.inStockWait;
-import static com.daema.wms.domain.QProvider.provider;
 
 public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport implements CustomInStockWaitRepository {
 
@@ -28,7 +26,21 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
     private EntityManager em;
 
     @Override
-    public List<InStockWaitGroupDto> groupInStockWaitList(long storeId, WmsEnum.InStockStatus inStockStatus) {
+    public List<InStockWait> getList(long memberId, long storeId, WmsEnum.InStockStatus inStockStatus) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        return queryFactory.selectFrom(inStockWait)
+                .where(
+                        inStockWait.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
+                        inStockWait.inStockStatus.eq(inStockStatus),
+                        inStockWait.ownStoreId.eq(storeId).or(inStockWait.holdStoreId.eq(storeId)),
+                        inStockWait.regiUserId.seq.eq(memberId)
+                )
+                .orderBy(inStockWait.regiDateTime.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<InStockWaitGroupDto> groupInStockWaitList(long memberId, long storeId, WmsEnum.InStockStatus inStockStatus) {
         JPQLQuery<InStockWaitGroupDto> query = getQuerydsl().createQuery();
 
 
@@ -47,7 +59,8 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
                 .where(
                         inStockWait.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                         inStockWait.inStockStatus.eq(inStockStatus),
-                        inStockWait.ownStoreId.eq(storeId).or(inStockWait.holdStoreId.eq(storeId))
+                        inStockWait.ownStoreId.eq(storeId).or(inStockWait.holdStoreId.eq(storeId)),
+                        inStockWait.regiUserId.seq.eq(memberId)
                 )
                 .groupBy(
                         inStockWait.telecomName
@@ -63,19 +76,6 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     @Override
-    public List<InStockWait> getList(long storeId, WmsEnum.InStockStatus inStockStatus) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-        return queryFactory.selectFrom(inStockWait)
-                .where(
-                        inStockWait.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
-                        inStockWait.inStockStatus.eq(inStockStatus),
-                        inStockWait.ownStoreId.eq(storeId).or(inStockWait.holdStoreId.eq(storeId))
-                )
-                .orderBy(inStockWait.regiDateTime.desc())
-                .fetch();
-    }
-
-    @Override
     public long inStockWaitDuplCk(long storeId, String barcode) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         long resultCount = queryFactory
@@ -83,13 +83,11 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
                 .where(
                         inStockWait.ownStoreId.eq(storeId),
                         inStockWait.delYn.eq("N"),
-
                         inStockWait.rawBarcode.eq(barcode).or(
                                 inStockWait.fullBarcode.eq(barcode).or(
                                         inStockWait.serialNo.eq(barcode)
                                 )
                         )
-
                 )
                 .fetchCount();
         return resultCount;

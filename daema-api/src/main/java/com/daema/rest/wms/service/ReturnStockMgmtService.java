@@ -5,6 +5,7 @@ import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
 import com.daema.commgmt.domain.Store;
 import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
@@ -21,6 +22,7 @@ import com.daema.wms.domain.dto.response.ReturnStockResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class ReturnStockMgmtService {
 
@@ -40,22 +43,12 @@ public class ReturnStockMgmtService {
 	private final DeviceRepository deviceRepository;
 	private final DeviceStatusRepository deviceStatusRepository;
 	private final MoveStockRepository moveStockRepository;
+	private final MoveStockMgmtService moveStockMgmtService;
 	private final AuthenticationUtil authenticationUtil;
 	private final ReturnStockCtrl returnStockCtrl;
 	private final FileUpload fileUpload;
 
-	public ReturnStockMgmtService(StockRepository stockRepository, ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
-			, DeviceStatusRepository deviceStatusRepository
-			, MoveStockRepository moveStockRepository, AuthenticationUtil authenticationUtil, ReturnStockCtrl returnStockCtrl, FileUpload fileUpload) {
-		this.stockRepository = stockRepository;
-		this.returnStockRepository = returnStockRepository;
-		this.deviceRepository = deviceRepository;
-		this.deviceStatusRepository = deviceStatusRepository;
-		this.moveStockRepository = moveStockRepository;
-		this.authenticationUtil = authenticationUtil;
-		this.returnStockCtrl = returnStockCtrl;
-		this.fileUpload = fileUpload;
-	}
+
 
 	public ResponseDto<ReturnStockResponseDto> getReturnStockList(ReturnStockRequestDto requestDto) {
 
@@ -157,7 +150,7 @@ public class ReturnStockMgmtService {
 		return failBarcode;
 	}
 }
-
+@RequiredArgsConstructor
 @Service
 class ReturnStockCtrl {
 
@@ -167,18 +160,7 @@ class ReturnStockCtrl {
 	private final StoreStockMgmtService storeStockMgmtService;
 	private final StoreStockHistoryMgmtService storeStockHistoryMgmtService;
 	private final AuthenticationUtil authenticationUtil;
-
-	public ReturnStockCtrl(ReturnStockRepository returnStockRepository, DeviceRepository deviceRepository
-			, DeviceStatusRepository deviceStatusRepository
-			, StoreStockMgmtService storeStockMgmtService
-			, StoreStockHistoryMgmtService storeStockHistoryMgmtService, AuthenticationUtil authenticationUtil) {
-		this.returnStockRepository = returnStockRepository;
-		this.deviceRepository = deviceRepository;
-		this.deviceStatusRepository = deviceStatusRepository;
-		this.storeStockMgmtService = storeStockMgmtService;
-		this.storeStockHistoryMgmtService = storeStockHistoryMgmtService;
-		this.authenticationUtil = authenticationUtil;
-	}
+	private final MoveStockMgmtService moveStockMgmtService;
 
 	@Transactional
 	public boolean save(ReturnStockReqDto returnStockDto, Stock stock) {
@@ -189,6 +171,13 @@ class ReturnStockCtrl {
 		Device device = deviceRepository.findById(returnStockDto.getDvcId()).orElseGet(null);
 
 		if (device != null) {
+
+			/* [재고] 조회 및 유효성 체크 */
+			StoreStock prevStoreStock = device.getStoreStock();
+			ResponseCodeEnum validCode = moveStockMgmtService.changeCkStockType(prevStoreStock, WmsEnum.StockType.RETURN_STOCK);
+			if (validCode != ResponseCodeEnum.OK) {
+				return success;
+			}
 
 			List<ReturnStock> returnStocks = returnStockRepository.findByDeviceAndStore(
 					device,
