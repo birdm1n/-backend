@@ -151,11 +151,11 @@ public class GoodsRegReqRepositoryImpl extends QuerydslRepositorySupport impleme
         return goodsRegReq.networkAttribute.telecom.in(name);
     }
 
-    private BooleanExpression eqStatus(String name) {
-        if (StringUtils.isEmpty(name)) {
+    private BooleanExpression eqStatus(Integer name) {
+        if (name == null || name == 0) {
             return null;
         }
-        return goodsRegReq.reqStatus.eq(name);
+        return goodsRegReq.reqStatus.eq(name.toString());
     }
 
     private BooleanExpression betweenStartDateEndDate(String startDate, String endDate) {

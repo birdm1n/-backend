@@ -25,7 +25,7 @@ public class ComMgmtRequestDto extends SearchParamDto {
 
 	private long goodsId;
 
-	private String reqStatus;
+	private Integer reqStatus;
 
 	private String modelName;
 

@@ -112,11 +112,11 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
         return addServiceRegReq.telecom.in(name);
     }
 
-    private BooleanExpression eqStatus(String name) {
-        if (StringUtils.isEmpty(name)) {
+    private BooleanExpression eqStatus(Integer name) {
+        if (name == null || name == 0) {
             return null;
         }
-        return addServiceRegReq.reqStatus.eq(name);
+        return addServiceRegReq.reqStatus.eq(name.toString());
     }
 
     private BooleanExpression betweenStartDateEndDate(String startDate, String endDate) {
