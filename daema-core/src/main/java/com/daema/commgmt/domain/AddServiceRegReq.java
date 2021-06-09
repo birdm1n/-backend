@@ -1,5 +1,6 @@
 package com.daema.commgmt.domain;
 
+import com.daema.base.enums.TypeEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,12 +39,13 @@ public class AddServiceRegReq extends AddServiceBase {
 
     @Builder
     public AddServiceRegReq(long addSvcRegReqId, long reqStoreId, String addSvcName, int addSvcCharge, Long telecom
-            ,LocalDateTime regiDateTime, String addSvcMemo, String reqStatus, String telecomName
+            ,TypeEnum.AddSvcType addSvcType, LocalDateTime regiDateTime, String addSvcMemo, String reqStatus, String telecomName
             ,String reqStoreName) {
         this.addSvcRegReqId = addSvcRegReqId;
         this.addSvcName = addSvcName;
         this.addSvcCharge = addSvcCharge;
         this.telecom = telecom;
+        this.addSvcType = addSvcType;
         this.reqStoreId = reqStoreId;
         this.reqStatus = reqStatus;
         this.addSvcMemo = addSvcMemo;

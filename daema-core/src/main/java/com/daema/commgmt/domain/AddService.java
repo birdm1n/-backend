@@ -1,15 +1,12 @@
 package com.daema.commgmt.domain;
 
+import com.daema.base.enums.TypeEnum;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Table;
 
 import javax.annotation.Nullable;
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -44,13 +41,14 @@ public class AddService extends AddServiceBase {
     private String delYn;
 
     @Builder
-    public AddService(long addSvcId, String addSvcName, int addSvcCharge, Long telecom
-            , String originKey, LocalDateTime regiDateTime, String addSvcMemo, String useYn, String delYn
-    ,String telecomName){
+    public AddService(long addSvcId, String addSvcName, int addSvcCharge, Long telecom, TypeEnum.AddSvcType addSvcType
+            , String originKey, LocalDateTime regiDateTime, String addSvcMemo
+            , String useYn, String delYn, String telecomName){
         this.addSvcId = addSvcId;
         this.addSvcName = addSvcName;
         this.addSvcCharge = addSvcCharge;
         this.telecom = telecom;
+        this.addSvcType = addSvcType;
         this.originKey = originKey;
         this.addSvcMemo = addSvcMemo;
         this.useYn = useYn;

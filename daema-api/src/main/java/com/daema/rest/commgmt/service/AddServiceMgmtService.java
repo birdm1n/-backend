@@ -65,6 +65,7 @@ public class AddServiceMgmtService {
                     AddService.builder()
                             .addSvcName(addServiceMgmtDto.getAddSvcName())
                             .addSvcCharge(addServiceMgmtDto.getAddSvcCharge())
+                            .addSvcType(addServiceMgmtDto.getAddSvcType())
                             .telecom(addServiceMgmtDto.getTelecom())
                             .originKey(addServiceMgmtDto.getOriginKey())
                             .addSvcMemo(addServiceMgmtDto.getAddSvcMemo())
@@ -79,6 +80,7 @@ public class AddServiceMgmtService {
                         .addSvcName(addServiceMgmtDto.getAddSvcName())
                         .addSvcCharge(addServiceMgmtDto.getAddSvcCharge())
                         .addSvcMemo(addServiceMgmtDto.getAddSvcMemo())
+                        .addSvcType(addServiceMgmtDto.getAddSvcType())
                         .telecom(addServiceMgmtDto.getTelecom())
                         .reqStoreId(authenticationUtil.getStoreId())
                         .reqStatus(String.valueOf(StatusEnum.REG_REQ.getStatusCode()))
@@ -100,6 +102,7 @@ public class AddServiceMgmtService {
             addService.setAddSvcName(addServiceMgmtDto.getAddSvcName());
             addService.setAddSvcCharge(addServiceMgmtDto.getAddSvcCharge());
             addService.setAddSvcMemo(addServiceMgmtDto.getAddSvcMemo());
+            addService.setAddSvcType(addServiceMgmtDto.getAddSvcType());
             addService.setTelecom(addServiceMgmtDto.getTelecom());
 
             if (StringUtils.hasText(addServiceMgmtDto.getOriginKey())) {
@@ -179,6 +182,7 @@ public class AddServiceMgmtService {
                         AddService.builder()
                                 .addSvcName(addServiceRegReq.getAddSvcName())
                                 .addSvcCharge(addServiceRegReq.getAddSvcCharge())
+                                .addSvcType(addServiceRegReq.getAddSvcType())
                                 .telecom(addServiceRegReq.getTelecom())
                                 .originKey("R".concat(String.valueOf(addServiceRegReq.getAddSvcRegReqId())))
                                 .addSvcMemo(addServiceRegReq.getAddSvcMemo())

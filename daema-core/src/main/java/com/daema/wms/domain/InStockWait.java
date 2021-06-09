@@ -120,7 +120,7 @@ public class InStockWait extends BaseEntity {
     @Column(name = "ddct_amt", columnDefinition = "int comment '차감 금액'")
     private int ddctAmt;
 
-    @Column(name = "add_ddct_amt", columnDefinition = "int comment '추가 차감 금액'")
+    @Column(name = "extra_ddct_amt", columnDefinition = "int comment '추가 차감 금액'")
     private int addDdctAmt;
 
     /**

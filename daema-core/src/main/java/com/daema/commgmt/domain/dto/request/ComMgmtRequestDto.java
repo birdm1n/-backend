@@ -1,6 +1,7 @@
 package com.daema.commgmt.domain.dto.request;
 
 import com.daema.base.dto.SearchParamDto;
+import com.daema.base.enums.TypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,6 +40,8 @@ public class ComMgmtRequestDto extends SearchParamDto {
 	private String category;
 
 	private String addSvcName;
+
+	private TypeEnum.AddSvcType addSvcType;
 
 	private int addSvcCharge;
 

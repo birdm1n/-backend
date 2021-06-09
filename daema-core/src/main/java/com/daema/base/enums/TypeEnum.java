@@ -33,4 +33,18 @@ public enum TypeEnum {
         return this.statusMsg;
     }
 
+    public enum AddSvcType {
+        NORMAL("일반"),
+        INSURANCE("보험"),
+        ;
+
+        private final String statusMsg;
+
+        AddSvcType(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.daema.rest.commgmt.dto;
 
+import com.daema.base.enums.TypeEnum;
 import com.daema.commgmt.domain.AddServiceRegReq;
 import lombok.*;
 
@@ -16,6 +17,7 @@ public class AddServiceRegReqDto {
 	private long reqStoreId;
 	private String addSvcName;
 	private int addSvcCharge;
+	private TypeEnum.AddSvcType addSvcType;
 	private Long telecom;
 	private LocalDateTime regiDateTime;
 	private String reqStatus;
@@ -29,6 +31,7 @@ public class AddServiceRegReqDto {
 				.reqStoreId(addServiceRegReq.getReqStoreId())
 				.addSvcName(addServiceRegReq.getAddSvcName())
 				.addSvcCharge(addServiceRegReq.getAddSvcCharge())
+				.addSvcType(addServiceRegReq.getAddSvcType())
 				.telecom(addServiceRegReq.getTelecom())
 				.regiDateTime(addServiceRegReq.getRegiDateTime())
 				.reqStatus(addServiceRegReq.getReqStatus())

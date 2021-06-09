@@ -1,5 +1,6 @@
 package com.daema.rest.commgmt.dto;
 
+import com.daema.base.enums.TypeEnum;
 import com.daema.commgmt.domain.AddService;
 import lombok.*;
 
@@ -15,6 +16,8 @@ public class AddServiceMgmtDto {
 	private long addSvcId;
 	private String addSvcName;
 	private int addSvcCharge;
+	private TypeEnum.AddSvcType addSvcType;
+	private String addSvcTypeName;
 	private Long telecom;
 	private Long network;
 	private String originKey;
@@ -30,6 +33,7 @@ public class AddServiceMgmtDto {
 				.addSvcName(addService.getAddSvcName())
 				.addSvcCharge(addService.getAddSvcCharge())
 				.telecom(addService.getTelecom())
+				.addSvcType(addService.getAddSvcType())
 				.originKey(addService.getOriginKey())
 				.addSvcMemo(addService.getAddSvcMemo())
 				.regiDateTime(addService.getRegiDateTime())
@@ -37,5 +41,9 @@ public class AddServiceMgmtDto {
 				.delYn(addService.getDelYn())
 				.telecomName(addService.getTelecomName())
 			.build();
+	}
+
+	public String getAddSvcName() {
+		return this.addSvcType != null ? this.addSvcType.getStatusMsg() : "";
 	}
 }
