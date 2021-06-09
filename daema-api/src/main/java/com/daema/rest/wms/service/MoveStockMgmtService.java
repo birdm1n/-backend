@@ -512,7 +512,6 @@ public class MoveStockMgmtService {
         boolean sucess = false;
         // 기기가 개통상태인지 확인
         long openingCount = openingRepository.countByDeviceAndStoreAndDelYn(moveStock.getDevice(), moveStock.getStore(), StatusEnum.FLAG_N.getStatusMsg());
-        mo
         if(openingCount == 0L){ // 개통상태가 아니면
             StoreStockHistory storeStockHistory = storeStockHistoryRepository.findByStockTypeAndStockTypeId(WmsEnum.StockType.SELL_MOVE, moveStock.getMoveStockId());
 
