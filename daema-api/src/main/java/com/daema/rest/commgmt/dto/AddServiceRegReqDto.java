@@ -18,6 +18,7 @@ public class AddServiceRegReqDto {
 	private String addSvcName;
 	private int addSvcCharge;
 	private TypeEnum.AddSvcType addSvcType;
+	private String addSvcTypeName;
 	private Long telecom;
 	private LocalDateTime regiDateTime;
 	private String reqStatus;
@@ -39,6 +40,10 @@ public class AddServiceRegReqDto {
 				.telecomName(addServiceRegReq.getTelecomName())
 				.reqStoreName(addServiceRegReq.getReqStoreName())
 			.build();
+	}
+
+	public String getAddSvcTypeName() {
+		return this.addSvcType != null ? this.addSvcType.getStatusMsg() : "";
 	}
 }
 

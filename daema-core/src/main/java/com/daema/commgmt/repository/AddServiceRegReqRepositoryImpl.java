@@ -3,6 +3,7 @@ package com.daema.commgmt.repository;
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.base.enums.StatusEnum;
+import com.daema.base.enums.TypeEnum;
 import com.daema.commgmt.domain.AddServiceRegReq;
 import com.daema.commgmt.domain.AddServiceRegReqReject;
 import com.daema.commgmt.domain.QStore;
@@ -50,6 +51,7 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
                 ,addServiceRegReq.addSvcName
                 ,addServiceRegReq.addSvcCharge
                 ,addServiceRegReq.addSvcMemo
+                ,addServiceRegReq.addSvcType
                 ,addServiceRegReq.telecom
                 ,addServiceRegReq.reqStatus
                 ,addServiceRegReq.reqStoreId
@@ -81,6 +83,7 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
                         ,eqTelecom(requestDto.getTelecom())
                         ,eqStatus(requestDto.getReqStatus())
                         ,betweenStartDateEndDate(requestDto.getSrhStartDate(), requestDto.getSrhEndDate())
+                        ,eqAddSvcType(requestDto.getAddSvcType())
                 )
                 .orderBy(addServiceRegReq.regiDateTime.desc());
 
@@ -123,6 +126,14 @@ public class AddServiceRegReqRepositoryImpl extends QuerydslRepositorySupport im
         }
         return addServiceRegReq.regiDateTime.between(RetrieveClauseBuilder.stringToLocalDateTime(startDate, "s")
                 , RetrieveClauseBuilder.stringToLocalDateTime(endDate, "e"));
+    }
+
+    private BooleanExpression eqAddSvcType(TypeEnum.AddSvcType addSvcType) {
+        if (addSvcType == null) {
+            return null;
+        }
+
+        return addServiceRegReq.addSvcType.eq(addSvcType);
     }
 
 }
