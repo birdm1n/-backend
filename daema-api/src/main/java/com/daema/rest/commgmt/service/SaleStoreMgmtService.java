@@ -113,7 +113,7 @@ public class SaleStoreMgmtService {
 		List<RoleMgmt> roleMgmtList = roleFuncMgmtService.getRoleList(resultStoreId);
 
 		if(CommonUtil.isNotEmptyList(roleMgmtList)) {
-			memberDto.setRoleIds(roleMgmtList.stream().map(RoleMgmt::getRoleId).toArray(Integer[]::new));
+			memberDto.setRoleIds(roleMgmtList.stream().map(RoleMgmt::getRoleId).toArray(Long[]::new));
 		}
 
 		//사용자 추가 및 롤 등록

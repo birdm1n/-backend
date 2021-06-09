@@ -26,7 +26,7 @@ public class MembersRole {
     private long roleId;
 
     @Builder
-    public MembersRole(@NotNull long seq, @NotNull int roleId) {
+    public MembersRole(@NotNull long seq, @NotNull long roleId) {
         this.seq = seq;
         this.roleId = roleId;
     }

@@ -273,7 +273,7 @@ public class OrganizationMgmtService {
 
             List<MembersRole> memberRoles = new ArrayList<>();
 
-            for (int roleId : orgnztMemberDto.getRoleIds()) {
+            for (long roleId : orgnztMemberDto.getRoleIds()) {
                 memberRoles.add(new MembersRole(memberSeq, roleId));
             }
 
