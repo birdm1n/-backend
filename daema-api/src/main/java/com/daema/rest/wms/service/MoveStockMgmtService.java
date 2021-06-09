@@ -28,9 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -483,9 +481,8 @@ public class MoveStockMgmtService {
         return validCode;
     }
 
-
-    @Transactional
-    public void deleteMoveStock(ModelMap reqModelMap) {
+    public Set<String> deleteMoveStock(ModelMap reqModelMap) {
+        Set<String> failBarcode = new HashSet<>();
         List<Number> delMoveStockIds = (List<Number>) reqModelMap.get("moveStockId");
         if (CommonUtil.isNotEmptyList(delMoveStockIds)) {
             List<MoveStock> moveStockList = moveStockRepository.findAllById(
@@ -496,17 +493,10 @@ public class MoveStockMgmtService {
             if (CommonUtil.isNotEmptyList(moveStockList)) {
                 Optional.of(moveStockList).orElseGet(Collections::emptyList)
                         .forEach(moveStock -> {
-                            StoreStockHistory storeStockHistory = storeStockHistoryRepository.findByStockTypeAndStockTypeId(WmsEnum.StockType.SELL_MOVE, moveStock.getMoveStockId());
-                            StoreStock storeStock = StoreStock
-                                    .builder()
-                                    .storeStockId(storeStockHistory.getStoreStock().getStoreStockId())
-                                    .stockType(WmsEnum.StockType.SELL_MOVE)
-                                    .stockTypeId(moveStock.getMoveStockId())
-                                    .store(moveStock.getStore())
-                                    .device(moveStock.getDevice())
-                                    .build();
-                            moveStock.setDelYn("Y");
-                            storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, true);
+                            boolean isSuccess = sellMoveDel(moveStock);
+                            if(!isSuccess){
+                                failBarcode.add(moveStock.getDevice().getRawBarcode());
+                            }
                         });
             } else {
                 throw new ProcessErrorException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
@@ -514,7 +504,32 @@ public class MoveStockMgmtService {
         } else {
             throw new ProcessErrorException(ServiceReturnMsgEnum.ILLEGAL_ARGUMENT.name());
         }
+        return failBarcode;
+    }
 
+    @Transactional
+    public boolean sellMoveDel(MoveStock moveStock){
+        boolean sucess = false;
+        // 기기가 개통상태인지 확인
+        long openingCount = openingRepository.countByDeviceAndStoreAndDelYn(moveStock.getDevice(), moveStock.getStore(), StatusEnum.FLAG_N.getStatusMsg());
+        mo
+        if(openingCount == 0L){ // 개통상태가 아니면
+            StoreStockHistory storeStockHistory = storeStockHistoryRepository.findByStockTypeAndStockTypeId(WmsEnum.StockType.SELL_MOVE, moveStock.getMoveStockId());
+
+            StoreStock storeStock = StoreStock
+                    .builder()
+                    .storeStockId(storeStockHistory.getStoreStock().getStoreStockId())
+                    .stockType(WmsEnum.StockType.SELL_MOVE)
+                    .stockTypeId(moveStock.getMoveStockId())
+                    .store(moveStock.getStore())
+                    .device(moveStock.getDevice())
+                    .build();
+            moveStock.setDelYn("Y");
+            storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, true);
+            sucess = true;
+        }
+
+        return sucess;
     }
 
     @Transactional
