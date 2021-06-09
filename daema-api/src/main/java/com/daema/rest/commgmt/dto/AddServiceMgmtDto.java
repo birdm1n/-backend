@@ -43,7 +43,7 @@ public class AddServiceMgmtDto {
 			.build();
 	}
 
-	public String getAddSvcName() {
+	public String getAddSvcTypeName() {
 		return this.addSvcType != null ? this.addSvcType.getStatusMsg() : "";
 	}
 }

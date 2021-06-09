@@ -71,7 +71,7 @@ public class InStockInsertReqDto {
 
     @ApiModelProperty(value = "구성품 누락여부")
     private String productMissYn;
-    
+
     @ApiModelProperty(value = "누락제품")
     private String missProduct;
 
