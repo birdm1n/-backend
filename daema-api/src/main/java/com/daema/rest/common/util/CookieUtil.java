@@ -41,7 +41,9 @@ public class CookieUtil {
 
         String profile = PropertiesValue.profilesActive;
 
-        if(!"prod".equals(profile)) {
+        if((!"prod".equals(profile) ||
+                !"stag".equals(profile)
+        )) {
             return ResponseCookie.from(cookieName, value)
                     .httpOnly(true)
                     .path("/")

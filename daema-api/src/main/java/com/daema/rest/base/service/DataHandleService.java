@@ -111,7 +111,10 @@ public class DataHandleService {
                         nickname = annotation.nickname().split("\\|\\|");
 
                         if (profile != null &&
-                                !"prod".equals(profile)) {
+                                (!"prod".equals(profile) ||
+                                        !"stag".equals(profile)
+                                )
+                        ) {
                             funcMgmt = FuncMgmt.builder()
                                     .funcId(nickname[0].concat("_".concat(method.getMethod().getName())))
                                     .groupId(Integer.parseInt(nickname[0]))

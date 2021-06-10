@@ -21,7 +21,7 @@ import java.util.List;
  * prod 실행 방지
  */
 @Configuration
-@Profile({"!prod"})
+@Profile({"!prod","!stag"})
 @EnableSwagger2
 public class SwaggerConfig {
 

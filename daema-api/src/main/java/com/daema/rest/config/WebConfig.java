@@ -30,7 +30,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         String profile = PropertiesValue.profilesActive;
         if(profile != null &&
-                !"prod".equals(profile)) {
+                (!"prod".equals(profile) ||
+                        !"stag".equals(profile)
+                )
+        ) {
             registry.addMapping("/**")
                     .allowedOrigins("*")
                     .allowedMethods("*");
