@@ -111,6 +111,52 @@ spring:
 
 
 
+--- #stage 환경
+
+server:
+  port: 8080
+
+spring:
+  profiles: stag
+  redis:
+    host: skl-mno-live-redis.bpbpqa.0001.apn2.cache.amazonaws.com
+    port: 6379
+    lettuce:
+      pool:
+        min-idle: 2
+        max-idle: 10
+        max-active: 10
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        use_sql_comments: true
+        format_sql: true
+      org:
+        hibernate:
+          envers:
+            audit_table_suffix: _history # 히스토리 테이블 suffix 네임 커스텀                      (기본값 : _AUD)
+            revision_field_name: rev_id  # _histiry 생성시 rev_info테이블의 외래키 컬럼명 커스텀    (기본값 : REV)
+            revision_type_field_name: rev_type  #  rev_type 컬럼명 커스텀                        (기본값 : REVTYPE)
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://skl-mno-live-db.cluster-c1d40i0uxtd9.ap-northeast-2.rds.amazonaws.com:3306/test_sklmnolive?characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: admin
+    password: eoakdb123
+    sql-script-encoding: UTF-8
+  #    schema: classpath:./db/mysql/schema.sql
+  #    data: classpath:./db/mysql/data.sql
+  #    initialization-mode: always
+  #    continue-on-error: true #table, data exists exception ignore
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+
+
+
+
 --- #prod 환경
 
 server:

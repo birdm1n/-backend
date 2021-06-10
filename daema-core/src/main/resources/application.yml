@@ -27,6 +27,21 @@ spring:
     username: cardmobile
     password: Zkemahqkdlf199@
 
+
+--- #stage 환경
+
+spring:
+  profiles: stag
+  jpa:
+    generate-ddl: false
+      show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://211.115.206.199:3306/cardmobile?serverTimezone=UTC
+    username: cardmobile
+    password: Zkemahqkdlf199@
+
+
 --- #prod 환경
 
 spring:

@@ -86,10 +86,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT"));
 
         if(profile != null &&
-                (!"prod".equals(profile) ||
-                        !"stag".equals(profile)
-                )
-        ) {
+                (!"prod".equals(profile) &&
+                        !"stag".equals(profile))) {
 
             configuration.addAllowedOrigin("*");
             configuration.addAllowedHeader("*");

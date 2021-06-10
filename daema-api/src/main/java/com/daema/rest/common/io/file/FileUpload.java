@@ -43,10 +43,8 @@ public class FileUpload {
             String profile = PropertiesValue.profilesActive;
 
             if(profile != null &&
-                    (!"prod".equals(profile) ||
-                            !"stag".equals(profile)
-                    )
-            ) {
+                    (!"prod".equals(profile) &&
+                            !"stag".equals(profile))) {
 
                 filePath = "C:".concat(Constants.XLS_UPLOAD_PATH.concat(File.separator)).concat(DateUtil.getTodayYYYYMM()).concat(File.separator);
             }

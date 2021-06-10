@@ -6,6 +6,9 @@
     <springProfile name="test">
         <property resource="logback-test.properties"/>
     </springProfile>
+    <springProfile name="stag">
+        <property resource="logback-stag.properties"/>
+    </springProfile>
     <springProfile name="prod">
         <property resource="logback-prod.properties"/>
     </springProfile>

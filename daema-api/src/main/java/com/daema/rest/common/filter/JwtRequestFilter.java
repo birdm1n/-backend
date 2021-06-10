@@ -68,10 +68,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 String profile = PropertiesValue.profilesActive;
 
                 if(profile != null &&
-                        (!"prod".equals(profile) ||
-                                !"stag".equals(profile)
-                        )
-                ) {
+                        (!"prod".equals(profile) &&
+                                !"stag".equals(profile))) {
 
                     username = redisUtil.getData("localUserid");
 

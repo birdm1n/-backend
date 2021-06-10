@@ -173,11 +173,8 @@ public class AuthService {
             String profile = PropertiesValue.profilesActive;
 
             if(profile != null &&
-                    (!"prod".equals(profile) ||
-                            !"stag".equals(profile)
-                    )
-
-            ) {
+                    (!"prod".equals(profile) &&
+                            !"stag".equals(profile))) {
                 redisUtil.setData("localUserid", member.getUsername());
             }
 

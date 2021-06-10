@@ -71,7 +71,8 @@ public class ErrorHandlerAdvice extends ResponseEntityExceptionHandler {
 
         CustomException customException;
 
-        if (("prod".equals(PropertiesValue.profilesActive)||"stag".equals(PropertiesValue.profilesActive) )) {
+        if ("prod".equals(PropertiesValue.profilesActive)
+                || "stag".equals(PropertiesValue.profilesActive)) {
             customException = new CustomException(
                     httpErrorStatus.value(), "Exception occurred", httpErrorStatus);
         } else {
