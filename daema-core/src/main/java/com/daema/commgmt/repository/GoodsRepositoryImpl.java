@@ -183,10 +183,11 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
         QCodeDetail telecom = new QCodeDetail("telecom");
         QCodeDetail maker = new QCodeDetail("maker");
 
-        JPQLQuery<Goods> query = getQuerydsl().createQuery();
+        JPQLQuery<GoodsMatchRespDto> query = getQuerydsl().createQuery();
 
-        GoodsMatchRespDto goodsMatchRespDto =
-                query.select(Projections.fields(
+        GoodsMatchRespDto goodsMatchRespDto = null;
+
+        query.select(Projections.fields(
                         GoodsMatchRespDto.class
                         , maker.codeSeq.as("maker")
                         , maker.codeNm.as("makerName")
@@ -205,8 +206,8 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                                 goodsOption.commonBarcode.eq(commonBarcode),
                                 goods.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
                                 goodsOption.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
-                                goods.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()),
-                                goods.matchingYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
+                                goods.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
+                                //TODO 매칭 YN 추가. 운영 편의를 위해 현재는 USE_YN 만 적용
                         )
                         .innerJoin(maker)
                         .on(
@@ -217,7 +218,14 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         .on(
                                 goods.networkAttribute.telecom.eq(telecom.codeSeq),
                                 telecom.useYn.eq("Y")
-                        ).fetchOne();
+                        );
+
+        long barcodeCnt = query.fetchCount();
+
+        if(barcodeCnt == 1){
+            goodsMatchRespDto = query.fetchOne();
+        }
+
         return goodsMatchRespDto;
     }
 
