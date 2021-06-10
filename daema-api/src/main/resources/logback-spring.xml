@@ -9,6 +9,9 @@
     <springProfile name="prod">
         <property resource="logback-prod.properties"/>
     </springProfile>
+    <springProfile name="stag">
+        <property resource="logback-stag.properties"/>
+    </springProfile>
     <property name="LOG_PATH" value="${log.config.path}"/>
     <property name="LOG_FILE_NAME" value="${log.config.filename}"/>
     <property name="ERR_LOG_FILE_NAME" value="err_log"/>

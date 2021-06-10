@@ -83,7 +83,10 @@ public class DownloadController {
             String profile = PropertiesValue.profilesActive;
 
             if(profile != null &&
-                    !"prod".equals(profile)) {
+                    (!"prod".equals(profile) ||
+                            !"stag".equals(profile)
+                    )
+            ) {
 
                 filePath = "C:".concat(Constants.XLS_TEMPLATE_PATH.concat(File.separator));
             }
