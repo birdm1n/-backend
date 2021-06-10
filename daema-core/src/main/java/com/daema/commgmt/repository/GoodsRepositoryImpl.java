@@ -203,9 +203,10 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         .innerJoin(goodsOption.goods, goods)
                         .on(
                                 goodsOption.commonBarcode.eq(commonBarcode),
-                                goods.delYn.eq("N"),
-                                goodsOption.delYn.eq("N")
-
+                                goods.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
+                                goodsOption.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
+                                goods.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()),
+                                goods.matchingYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
                         )
                         .innerJoin(maker)
                         .on(
