@@ -1,10 +1,10 @@
 package com.daema.commgmt.repository;
 
+import com.daema.base.domain.common.RetrieveClauseBuilder;
 import com.daema.commgmt.domain.OpenStore;
 import com.daema.commgmt.domain.QOpenStore;
-import com.daema.base.domain.common.RetrieveClauseBuilder;
-import com.daema.commgmt.domain.dto.response.OpenStoreListDto;
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
+import com.daema.commgmt.domain.dto.response.OpenStoreListDto;
 import com.daema.commgmt.repository.custom.CustomOpenStoreRepository;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
@@ -252,7 +252,7 @@ public class OpenStoreRepositoryImpl extends QuerydslRepositorySupport implement
     private void whereClause(StringBuilder sb, ComMgmtRequestDto requestDto){
 
         if(StringUtils.hasText(requestDto.getOpenStoreName())){
-            sb.append(" and os.open_store_name like '%" + requestDto.getOpenStoreName() + "%'");
+            sb.append(" and os.opening_store_name like '%" + requestDto.getOpenStoreName() + "%'");
         }
         if(StringUtils.hasText(requestDto.getBizNo())){
             sb.append(" and os.biz_num like '%" + requestDto.getBizNo() + "%'");
