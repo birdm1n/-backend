@@ -86,6 +86,8 @@ public class MoveStockResponseDto {
     private LocalDateTime updDateTime;
     private Long updUserId;
     private String updUserName;
+    // 추가 - 판매이동 수정 불가처리 위해 (판매이동 상태만 수정)
+    private String updateYn;
 
     // 입고일
     private LocalDateTime inStockRegiDateTime;

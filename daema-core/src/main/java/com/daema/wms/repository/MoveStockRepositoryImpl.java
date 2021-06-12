@@ -3,6 +3,7 @@ package com.daema.wms.repository;
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.QMembers;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.QStore;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.MoveStock;
@@ -36,9 +37,11 @@ import static com.daema.wms.domain.QDevice.device;
 import static com.daema.wms.domain.QDeviceStatus.deviceStatus;
 import static com.daema.wms.domain.QInStock.inStock;
 import static com.daema.wms.domain.QMoveStock.moveStock;
+import static com.daema.wms.domain.QOpening.opening;
 import static com.daema.wms.domain.QOutStock.outStock;
 import static com.daema.wms.domain.QProvider.provider;
 import static com.daema.wms.domain.QReturnStock.returnStock;
+import static com.daema.wms.domain.QStoreStock.storeStock;
 import static com.daema.wms.domain.QStoreStockHistory.storeStockHistory;
 
 public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implements CustomMoveStockRepository {
@@ -93,6 +96,10 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                         , moveStock.regiDateTime.as("regiDateTime")
                         , updMember.seq.as("updUserId")
                         , updMember.username.as("updUserName")
+                        , new CaseBuilder()
+                                .when(storeStock.isNotNull().and(opening.isNull()))
+                                .then(StatusEnum.FLAG_Y.getStatusMsg())
+                                .otherwise(StatusEnum.FLAG_N.getStatusMsg()).as("updateYn")
                 )
         )
                 .from(moveStock)
@@ -105,15 +112,15 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                 .innerJoin(moveStock.device, device).on
                 (
                         moveStock.moveStockType.eq(WmsEnum.MoveStockType.valueOf(movePathType.name()))
-                        , moveStock.delYn.eq("N")
+                        , moveStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 )
                 .innerJoin(device.inStocks, inStock).on
                 (
-                        inStock.delYn.eq("N")
+                        inStock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 )
                 .innerJoin(device.deviceStatusList, deviceStatus).on
                 (
-                        deviceStatus.delYn.eq("N")
+                        deviceStatus.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
                 )
                 .innerJoin(moveStock.delivery, delivery)
                 .innerJoin(device.goodsOption, goodsOption)
@@ -128,6 +135,17 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                 )
                 .leftJoin(moveStock.nextStock, nextStock)
                 .leftJoin(moveStock.prevStock, prevStock)
+                /* 판매이동 수정 가능 여부 판단을 위한 추가 join 부분 */
+                .leftJoin(storeStock).on
+                (
+                        storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE),
+                        storeStock.stockTypeId.eq(moveStock.moveStockId),
+                        storeStock.stockYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
+                )
+                .leftJoin(device.openingList, opening).on
+                (
+                        opening.delYn.eq(StatusEnum.FLAG_N.getStatusMsg())
+                )
                 .orderBy(moveStock.regiDateTime.desc());
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
         QueryResults<MoveStockResponseDto> resultList = query.fetchResults();
@@ -425,11 +443,13 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                 .leftJoin(storeStockHistory.nextStock, nextStock)
                 .leftJoin(moveStock).on
                 (
+                        storeStockHistory.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE),
                         storeStockHistory.stockTypeId.eq(moveStock.moveStockId)
                 )
                 .leftJoin(moveStock.delivery, moveDelivery)
                 .leftJoin(outStock).on
                 (
+                        storeStockHistory.stockType.in(WmsEnum.StockType.SELL_TRNS, WmsEnum.StockType.STOCK_TRNS, WmsEnum.StockType.FAULTY_TRNS),
                         storeStockHistory.stockTypeId.eq(outStock.outStockId)
                 )
                 .leftJoin(outStock.delivery, outDelivery)
