@@ -330,7 +330,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
     }
 
     @Override
-    public long deviceDuplCk(Store store, String barcode) {
+    public long deviceDuplCk(Store store, String barcode, List<Long> goodsOptionId ) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         long resultCount = queryFactory
                 .selectFrom(device)
@@ -341,7 +341,8 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                                 device.fullBarcode.eq(barcode).or(
                                         device.serialNo.eq(barcode)
                                 )
-                        )
+                        ),
+                        inGoodsOptionId(goodsOptionId)
                 )
                 .fetchCount();
         return resultCount;
@@ -500,6 +501,12 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 outDlvr.deliveryStatus.eq(deliveryStatus)));
     }
 
+    private BooleanExpression inGoodsOptionId(List<Long> goodsOptionId) {
+        if (goodsOptionId == null) {
+            return null;
+        }
+        return device.goodsOption.goodsOptionId.in(goodsOptionId);
+    }
 }
 
 

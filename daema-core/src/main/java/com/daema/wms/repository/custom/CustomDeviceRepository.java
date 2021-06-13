@@ -15,7 +15,7 @@ public interface CustomDeviceRepository {
 
     Page<DeviceCurrentResponseDto> getDeviceCurrentPage(DeviceCurrentRequestDto deviceCurrentRequestDto);
 
-    long deviceDuplCk(Store store, String barcode );
+    long deviceDuplCk(Store store, String barcode, List<Long> goodsOptionId );
 
     Device getDeviceWithBarcode(String barcode, Store store, String delYn);
 }

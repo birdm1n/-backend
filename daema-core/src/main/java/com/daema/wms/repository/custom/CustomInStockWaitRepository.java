@@ -13,5 +13,5 @@ public interface CustomInStockWaitRepository {
 
     List<InStockWait> getList(long memberId, long storeId, WmsEnum.InStockStatus inStockStatus);
 
-    long inStockWaitDuplCk(long storeId, String barcode);
+    long inStockWaitDuplCk(long storeId, String barcode, Long goodsId);
 }

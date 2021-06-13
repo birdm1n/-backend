@@ -89,11 +89,21 @@ public class InStockMgmtService {
         Store store = Store.builder().storeId(storeId).build();
 
         // 중복 입력 확인용
-        long inStockWaitCnt = inStockWaitRepository.inStockWaitDuplCk(storeId, requestDto.getBarcode());
+        // goodsId와 바코드가 겹치면 동일 기기로 판단
+        long inStockWaitCnt = inStockWaitRepository.inStockWaitDuplCk(storeId, requestDto.getBarcode(), requestDto.getGoodsId());
         if (inStockWaitCnt > 0L) return ResponseCodeEnum.DUPL_DATA;
 
         //device 테이블에 중복된 기기가 있는지 확인
-        long deviceCnt = deviceRepository.deviceDuplCk(store, requestDto.getBarcode());
+        List<Long> goodsOptionIds = null;
+        if(requestDto.getGoodsId() != null) {
+            goodsOptionIds = goodsRepository.findById(requestDto.getGoodsId()).orElseGet(null)
+                    .getOptionList()
+                    .stream().map(GoodsOption::getGoodsOptionId)
+                    .collect(Collectors.toList());
+        }
+
+        //기등록된 기기 정보에서 optionId 와 바코드가 겹치면 동일 기기로 판단
+        long deviceCnt = deviceRepository.deviceDuplCk(store, requestDto.getBarcode(), goodsOptionIds);
         if (deviceCnt > 0L) return ResponseCodeEnum.DUPL_DVC;
 
         // 보유처 정보
@@ -119,11 +129,13 @@ public class InStockMgmtService {
     private ResponseCodeEnum handWritingLogic(InStockWaitInsertReqDto requestDto, SelectStockDto stockDto, long storeId) {
         if (requestDto.getColorName() == null) return ResponseCodeEnum.NO_COLOR;
         if (requestDto.getCapacity() == null) return ResponseCodeEnum.NO_CAPACITY;
+        //수기 입력시 자급제 조건 필터 추가
+        if (requestDto.getUnLockYn() == null) return ResponseCodeEnum.NO_UNLOCK_YN;
         requestDto.setSerialNo(requestDto.getBarcode());
 
         Goods goodsEntity = goodsRepository.findById(requestDto.getGoodsId()).orElse(null);
-        GoodsOption goodsOptionEntity = goodsOptionRepository.findTopByGoodsAndCapacityAndColorNameAndDelYn(goodsEntity, requestDto.getCapacity(), requestDto.getColorName(), "N");
-        if (goodsOptionEntity == null) return ResponseCodeEnum.NO_CAPACITY_COLOR;
+        GoodsOption goodsOptionEntity = goodsOptionRepository.findTopByGoodsAndCapacityAndColorNameAndUnLockYnAndDelYn(goodsEntity, requestDto.getCapacity(), requestDto.getColorName(), requestDto.getUnLockYn(), "N");
+        if (goodsOptionEntity == null) return ResponseCodeEnum.NO_CAPACITY_COLOR_UNLOCK_YN;
 
         CodeDetail telecom = codeDetailRepository.findById(goodsEntity.getNetworkAttribute().getTelecom()).orElse(null);
         CodeDetail maker = codeDetailRepository.findById(goodsEntity.getMaker()).orElse(null);

@@ -6,6 +6,7 @@ import com.daema.wms.domain.dto.response.InStockWaitGroupDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomInStockWaitRepository;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -76,8 +77,9 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     @Override
-    public long inStockWaitDuplCk(long storeId, String barcode) {
+    public long inStockWaitDuplCk(long storeId, String barcode, Long goodsId) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
         long resultCount = queryFactory
                 .selectFrom(inStockWait)
                 .where(
@@ -87,9 +89,17 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
                                 inStockWait.fullBarcode.eq(barcode).or(
                                         inStockWait.serialNo.eq(barcode)
                                 )
-                        )
+                        ),
+                        eqGoodsId(goodsId)
                 )
                 .fetchCount();
         return resultCount;
+    }
+
+    private BooleanExpression eqGoodsId(Long goodsId) {
+        if (goodsId == null) {
+            return null;
+        }
+        return inStockWait.goodsId.eq(goodsId);
     }
 }

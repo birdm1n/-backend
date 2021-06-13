@@ -71,6 +71,9 @@ public class InStockWaitInsertReqDto {
     @ApiModelProperty(value = "색상")
     private String colorName;
 
+    @ApiModelProperty(value = "자급제 여부")
+    private String unLockYn;
+
     /*     바코드 가공용     */
     @ApiModelProperty(value = "원시 바코드", example = "")
     private String rawBarcode;
