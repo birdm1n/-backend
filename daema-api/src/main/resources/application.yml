@@ -1,9 +1,6 @@
 logging:
   config: classpath:logback-spring.xml
-  level:
-    org:
-      hibernate:
-        type: trace
+
 
 spring:
   jwt:
