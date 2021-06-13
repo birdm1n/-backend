@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 @Service
 public class MoveStockMgmtService {
 
+    private final DeviceMgmtService deviceMgmtService;
     private final MoveStockRepository moveStockRepository;
     private final MoveStockAlarmRepository moveStockAlarmRepository;
     private final AuthenticationUtil authenticationUtil;
@@ -74,12 +75,11 @@ public class MoveStockMgmtService {
     @Transactional
     public ResponseCodeEnum insertSellMove(SellMoveInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
-        String barcode = requestDto.getBarcode();
         Store store = Store.builder()
                 .storeId(storeId)
                 .build();
         // 1. [기기] 정보 조회
-        Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
+        Device device = deviceMgmtService.retrieveDeviceFromSelDvcId(requestDto.getSelDvcId());
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
         // 2. [재고] 조회
@@ -148,7 +148,7 @@ public class MoveStockMgmtService {
                 .storeId(storeId)
                 .build();
         // 1. [기기] 정보 조회
-        Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
+        Device device = deviceMgmtService.retrieveDeviceFromSelDvcId(requestDto.getSelDvcId());
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
         // 2. [재고 ]조회
@@ -252,7 +252,7 @@ public class MoveStockMgmtService {
                 .storeId(storeId)
                 .build();
         // 1. [기기] 정보 조회
-        Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
+        Device device = deviceMgmtService.retrieveDeviceFromSelDvcId(requestDto.getSelDvcId());
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
         // 2. [재고 ]조회
@@ -317,7 +317,7 @@ public class MoveStockMgmtService {
                 .storeId(storeId)
                 .build();
         // 1. [기기] 정보 조회
-        Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
+        Device device = deviceMgmtService.retrieveDeviceFromSelDvcId(requestDto.getSelDvcId());
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
         // 2. [재고 ]조회
@@ -382,7 +382,7 @@ public class MoveStockMgmtService {
                 .storeId(storeId)
                 .build();
         // 1. [기기] 정보 조회
-        Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
+        Device device = deviceMgmtService.retrieveDeviceFromSelDvcId(requestDto.getSelDvcId());
         if (device == null) return ResponseCodeEnum.NO_DEVICE;
 
         // 2. [재고 ]조회

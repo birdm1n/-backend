@@ -2,6 +2,7 @@ package com.daema.wms.repository;
 
 import com.daema.base.domain.QCodeDetail;
 import com.daema.base.domain.common.RetrieveClauseBuilder;
+import com.daema.base.dto.PagingDto;
 import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.Store;
 import com.daema.wms.domain.Device;
@@ -10,6 +11,7 @@ import com.daema.wms.domain.QStock;
 import com.daema.wms.domain.dto.request.DeviceCurrentRequestDto;
 import com.daema.wms.domain.dto.response.DeviceCurrentResponseDto;
 import com.daema.wms.domain.dto.response.DeviceHistoryResponseDto;
+import com.daema.wms.domain.dto.response.DeviceListResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomDeviceRepository;
 import com.querydsl.core.QueryResults;
@@ -349,21 +351,61 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
     }
 
     @Override
-    public Device getDeviceWithBarcode(String barcode, Store store, String delYn) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-        Device result = queryFactory
-                .selectFrom(device)
-                .where(
-                        device.store.storeId.eq(store.getStoreId()),
-                        device.delYn.eq(delYn),
-                        device.rawBarcode.eq(barcode).or(
-                                device.fullBarcode.eq(barcode).or(
-                                        device.serialNo.eq(barcode)
-                                )
-                        )
+    public Page<DeviceListResponseDto> getDeviceWithBarcode(String barcode, Store store) {
+
+        JPQLQuery<DeviceListResponseDto> query = getQuerydsl().createQuery();
+        QCodeDetail maker = new QCodeDetail("maker");
+        QCodeDetail telecom = new QCodeDetail("telecom");
+        QCodeDetail network = new QCodeDetail("network");
+
+        query.select(Projections.fields(
+                DeviceListResponseDto.class
+                , device.dvcId.as("dvcId")
+
+                , telecom.codeNm.as("telecomName")
+                , maker.codeNm.as("makerName")
+                , network.codeNm.as("networkName")
+
+                , goods.goodsName.as("goodsName")
+                , goods.modelName.as("modelName")
+
+                , goodsOption.colorName.as("colorName")
+                , goodsOption.capacity.as("capacity")
                 )
-                .fetchFirst();
-        return result;
+        )
+                .from(device)
+                .innerJoin(device.goodsOption, goodsOption).on(
+                    device.store.storeId.eq(store.getStoreId()),
+                    device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
+                    device.rawBarcode.eq(barcode).or(
+                            device.fullBarcode.eq(barcode).or(
+                                    device.serialNo.eq(barcode)
+                            )
+                    )
+                )
+                .innerJoin(goodsOption.goods, goods)
+                .innerJoin(telecom).on(
+                goods.networkAttribute.telecom.eq(telecom.codeSeq)
+        )
+                .innerJoin(maker).on(
+                goods.maker.eq(maker.codeSeq)
+        )
+                .innerJoin(network).on(
+                goods.networkAttribute.network.eq(network.codeSeq)
+        );
+
+        query.orderBy(goods.goodsName.asc());
+
+        PagingDto requestDto = new PagingDto();
+        requestDto.setPageRange(10000);  //전체 데이터 가져오기 위함. 1개 관리점에 10000건의 바코드가 겹칠 일은 없음
+
+        PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
+
+        List<DeviceListResponseDto> resultList = query.fetch();
+
+        long total = query.fetchCount();
+
+        return new PageImpl<>(resultList, pageable, total);
     }
 
 

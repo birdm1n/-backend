@@ -28,8 +28,11 @@ public class SellMoveInsertReqDto {
     @ApiModelProperty(value = "고객 전화번호3",  required = true)
     private String cusPhone3;
 
-    @ApiModelProperty(value = "원시 바코드 or 정재된 바코드 or 시리얼 넘버", required = true)
+    @ApiModelProperty(value = "원시 바코드 or 정재된 바코드 or 시리얼 넘버", required = false)
     private String barcode;
+
+    @ApiModelProperty(value = "기기 ID", required = true)
+    private String selDvcId;
 
     @ApiModelProperty(value = "유심일련번호",  required = true)
     private String usimFullBarcode;

@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProviderMgmtService {
 
+	private final DeviceMgmtService deviceMgmtService;
 	private final ProviderRepository providerRepository;
 	private final DeviceRepository deviceRepository;
 	private final InStockRepository inStockRepository;
@@ -147,14 +148,14 @@ public class ProviderMgmtService {
 		}
 	}
 
-	public SearchMatchResponseDto getDeviceProvInfo(String barcode) {
+	public SearchMatchResponseDto getDeviceProvInfo(String selDvcId) {
 		long storeId = authenticationUtil.getStoreId();
 		Store store = Store
 				.builder()
 				.storeId(storeId)
 				.build();
 
-		Device device = deviceRepository.getDeviceWithBarcode(barcode, store, "N");
+		Device device = deviceMgmtService.retrieveDeviceFromSelDvcId(selDvcId);
 		if(device == null){
 			return null;
 		}

@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
-import java.util.Set;
 
 @Api(value = "이동재고반품 API", tags = "이동재고반품 API")
 @RestController
@@ -44,22 +43,22 @@ public class ReturnStockMgmtController {
 
     @ApiOperation(value = "이동재고반품 등록", notes = "신규 이동재고반품 처리를 합니다.")
     @PostMapping("/insertReturnStock")
-    public ResponseEntity<CommonResponse<Set<Long>>> insertReturnStock(@ApiParam(value = "신규 이동재고반품", required = true) @RequestBody List<ReturnStockReqDto> returnStockDtoList) {
-        Set<String> fails = returnStockMgmtService.insertReturnStock(returnStockDtoList);
+    public ResponseEntity<CommonResponse<List<Long>>> insertReturnStock(@ApiParam(value = "신규 이동재고반품", required = true) @RequestBody List<ReturnStockReqDto> returnStockDtoList) {
+        List<String> fails = returnStockMgmtService.insertReturnStock(returnStockDtoList);
 
         return responseHandler.ok(fails);
     }
 
-    @ApiOperation(value = "기기정보 조회", notes = "기기고유번호로 기기정보를 조회합니다")
+    @ApiOperation(value = "기기정보 조회", notes = "기기ID로 기기정보를 조회합니다")
     @GetMapping("/getDeviceInfo")
-    public ResponseEntity<CommonResponse<ResponseDto<DeviceResponseDto>>> getDeviceInfo(@ApiParam(value = "기기고유번호", required = true) @RequestParam String barcode) {
-        return responseHandler.getResponseMessageAsRetrieveResult(deviceMgmtService.getDeviceInfoFromBarcode(barcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    public ResponseEntity<CommonResponse<ResponseDto<DeviceResponseDto>>> getDeviceInfo(@ApiParam(value = "기기ID", required = true) @RequestParam String selDvcId) {
+        return responseHandler.getResponseMessageAsRetrieveResult(deviceMgmtService.getDeviceInfoFromSelDvcId(selDvcId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "이동재고반품 등록 엑셀 업로드", notes = "엑셀 업로드로 신규 이동재고반품 처리를 합니다.", produces = "multipart/form-data")
     @PostMapping("/insertReturnStockExcel")
-    public ResponseEntity<CommonResponse<Set<String>>> insertReturnStockExcel(@ApiParam(value = "엑셀파일", required = true, name = "excelFile") @RequestPart MultipartFile excelFile, @ApiIgnore MultipartHttpServletRequest mRequest) {
-        Set<String> fails = returnStockMgmtService.insertReturnStockExcel(mRequest);
+    public ResponseEntity<CommonResponse<List<String>>> insertReturnStockExcel(@ApiParam(value = "엑셀파일", required = true, name = "excelFile") @RequestPart MultipartFile excelFile, @ApiIgnore MultipartHttpServletRequest mRequest) {
+        List<String> fails = returnStockMgmtService.insertReturnStockExcel(mRequest);
         return responseHandler.ok(fails);
     }
 }

@@ -42,7 +42,7 @@ public class StoreStockMgmtController {
     @ApiOperation(value = "재고 확인", notes = "재고 확인 처리를 합니다.")
     @PostMapping("/checkStoreStock")
     public ResponseEntity<CommonResponse<Void>> checkStoreStock(@ApiParam(value = "기기일련번호", required = true) @RequestBody ModelMap paramMap) {
-        storeStockMgmtService.checkStoreStock(String.valueOf(paramMap.get("barcode")));
+        storeStockMgmtService.checkStoreStock(String.valueOf(paramMap.get("selDvcId")));
         return responseHandler.ok();
     }
 

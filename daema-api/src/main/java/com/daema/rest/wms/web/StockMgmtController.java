@@ -70,4 +70,8 @@ public class StockMgmtController {
         return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.innerStockList(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
+    @GetMapping("/migrationTelkitMoveStockData")
+    public ResponseEntity<CommonResponse<SelectStockDto>> migrationTelkitMoveStockData() {
+        return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.migrationTelkitMoveStockData(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
 }

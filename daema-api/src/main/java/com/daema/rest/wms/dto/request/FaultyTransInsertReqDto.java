@@ -16,8 +16,11 @@ public class FaultyTransInsertReqDto {
     @ApiModelProperty(value = "공급처 ID", example = "0", required = true)
     private Long provId;
 
-    @ApiModelProperty(value = "기기일련번호(바코드)",  required = true)
+    @ApiModelProperty(value = "원시 바코드 or 정재된 바코드 or 시리얼 넘버", required = false)
     private String barcode;
+
+    @ApiModelProperty(value = "기기 ID", required = true)
+    private String selDvcId;
 
     @ApiModelProperty(value = "택배사", example = "0",required = true)
     private Long courier;

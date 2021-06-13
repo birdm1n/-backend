@@ -9,20 +9,22 @@ import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.StockMgmtDto;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
+import com.daema.rest.wms.dto.response.StockListDto;
 import com.daema.rest.wms.dto.response.StockMgmtResponseDto;
 import com.daema.wms.domain.Device;
 import com.daema.wms.domain.Stock;
+import com.daema.wms.domain.StockTmp;
 import com.daema.wms.domain.dto.request.StockRequestDto;
 import com.daema.wms.domain.dto.response.SelectStockDto;
-import com.daema.rest.wms.dto.response.StockListDto;
-import com.daema.wms.repository.DeviceRepository;
 import com.daema.wms.repository.StockRepository;
+import com.daema.wms.repository.StockTmpRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,165 +33,197 @@ import java.util.stream.Collectors;
 @Service
 public class StockMgmtService {
 
-	private final StockRepository stockRepository;
+    private final DeviceMgmtService deviceMgmtService;
 
-	private final StoreRepository storeRepository;
+    private final StockRepository stockRepository;
 
-	private final DeviceRepository deviceRepository;
+    private final StoreRepository storeRepository;
 
-	private final AuthenticationUtil authenticationUtil;
+    private final MoveStockMgmtService moveStockMgmtService;
 
+    private final AuthenticationUtil authenticationUtil;
 
-	public StockMgmtResponseDto getStockList(StockRequestDto requestDto) {
+    private final StockTmpRepository stockTmpRepository;
 
-		requestDto.setStoreId(authenticationUtil.getStoreId());
+    public StockMgmtResponseDto getStockList(StockRequestDto requestDto) {
 
-		StockMgmtResponseDto stockMgmtResponseDto = new StockMgmtResponseDto();
+        requestDto.setStoreId(authenticationUtil.getStoreId());
 
-		HashMap<String, List> stockDeviceListMap = stockRepository.getStockAndDeviceList(requestDto);
+        StockMgmtResponseDto stockMgmtResponseDto = new StockMgmtResponseDto();
 
-		List<Stock> stockList = stockDeviceListMap.get("stockList");
+        HashMap<String, List> stockDeviceListMap = stockRepository.getStockAndDeviceList(requestDto);
 
-		stockMgmtResponseDto.setStoreName(storeRepository.findById(requestDto.getStoreId()).orElseGet(Store::new).getStoreName());
-		stockMgmtResponseDto.setStockList(stockList.stream()
-				.map(StockListDto::new).collect(Collectors.toList()));
-		stockMgmtResponseDto.setStockDeviceList(stockDeviceListMap.get("stockDeviceList"));
+        List<Stock> stockList = stockDeviceListMap.get("stockList");
 
-		//TODO dvcCnt 각 보유처별 기기 카운트. 하위 보유처 포함
+        stockMgmtResponseDto.setStoreName(storeRepository.findById(requestDto.getStoreId()).orElseGet(Store::new).getStoreName());
+        stockMgmtResponseDto.setStockList(stockList.stream()
+                .map(StockListDto::new).collect(Collectors.toList()));
+        stockMgmtResponseDto.setStockDeviceList(stockDeviceListMap.get("stockDeviceList"));
 
-		return stockMgmtResponseDto;
-	}
+        //TODO dvcCnt 각 보유처별 기기 카운트. 하위 보유처 포함
 
-	@Transactional(propagation = Propagation.REQUIRED)
-	public void insertStock(StockMgmtDto stockMgmtDto) {
-
-		//내부 관리 창고는 현재 로그인 기준으로 storeId 설정
-		if(TypeEnum.STOCK_TYPE_I.getStatusCode().equals(stockMgmtDto.getStockType())){
-			//관리점(영업점) 회원 가입시, 내부 창고가 생성되며 로그인 이전 상태이므로 예외처리 추가
-			if(!authenticationUtil.hasRole("ROLE_ANONYMOUS")
-				|| authenticationUtil.getStoreId() > 0) {
-				stockMgmtDto.setStoreId(authenticationUtil.getStoreId());
-			}
-		}
-
-		if(stockMgmtDto.getRegiStoreId() == 0){
-			stockMgmtDto.setRegiStoreId(authenticationUtil.getStoreId());
-		}
-
-		if(stockMgmtDto.getRegiUserId() == 0){
-			stockMgmtDto.setRegiUserId(authenticationUtil.getMemberSeq());
-			stockMgmtDto.setUpdUserId(authenticationUtil.getMemberSeq());
-		}
-
-		if(stockMgmtDto.getParentStockId() > 0){
-			stockMgmtDto.setParentStock(Stock.builder().stockId(stockMgmtDto.getParentStockId()).build());
-		}
-
-		stockRepository.save(
-				Stock.builder()
-						.stockId(stockMgmtDto.getStockId())
-						.stockName(stockMgmtDto.getStockName())
-						.parentStock(stockMgmtDto.getParentStock())
-						.storeId(stockMgmtDto.getStoreId())
-						.stockType(stockMgmtDto.getStockType())
-						.regiStoreId(stockMgmtDto.getRegiStoreId())
-						.chargerName(stockMgmtDto.getChargerName())
-						.chargerPhone(
-								stockMgmtDto.getChargerPhone1()
-								.concat(stockMgmtDto.getChargerPhone2())
-								.concat(stockMgmtDto.getChargerPhone3())
-						)
-						.chargerPhone1(stockMgmtDto.getChargerPhone1())
-						.chargerPhone2(stockMgmtDto.getChargerPhone2())
-						.chargerPhone3(stockMgmtDto.getChargerPhone3())
-						.delYn(StatusEnum.FLAG_N.getStatusMsg())
-						.regiUserId(stockMgmtDto.getRegiUserId())
-						.regiDateTime(LocalDateTime.now())
-						.updUserId(stockMgmtDto.getUpdUserId())
-						.updDateTime(LocalDateTime.now())
-					.build()
-		);
-	}
-
-	@Transactional
-	public void updateStock(StockMgmtDto stockMgmtDto) {
-
-		Stock stock = stockRepository.findById(stockMgmtDto.getStockId()).orElse(null);
-		long storeId = authenticationUtil.getStoreId();
-
-		if(stock != null
-				&& stock.getRegiStoreId() == storeId) {
-			stock.setStockName(stockMgmtDto.getStockName());
-			stock.setChargerName(stockMgmtDto.getChargerName());
-			stock.setChargerPhone(
-					stockMgmtDto.getChargerPhone1()
-					.concat(stockMgmtDto.getChargerPhone2())
-					.concat(stockMgmtDto.getChargerPhone3())
-			);
-			stock.setChargerPhone1(stockMgmtDto.getChargerPhone1());
-			stock.setChargerPhone2(stockMgmtDto.getChargerPhone2());
-			stock.setChargerPhone3(stockMgmtDto.getChargerPhone3());
-		}else{
-			throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
-		}
-	}
-	@Transactional(readOnly = true)
-    public List<SelectStockDto> selectStockList(Long telecom) {
-		long storeId = authenticationUtil.getStoreId();
-		return stockRepository.selectStockList(storeId, telecom);
+        return stockMgmtResponseDto;
     }
 
-	@Transactional(readOnly = true)
-	public List<SelectStockDto> innerStockList() {
-		long storeId = authenticationUtil.getStoreId();
-		return stockRepository.innerStockList(storeId);
-	}
-	@Transactional(readOnly = true)
-	public SearchMatchResponseDto getDeviceStock(String barcode) {
-		long storeId = authenticationUtil.getStoreId();
-		Store store = Store.builder().storeId(storeId).build();
-		//device 테이블에 중복된 기기가 있는지 확인
-		Device deviceEntity = deviceRepository.getDeviceWithBarcode(barcode, store, StatusEnum.FLAG_N.getStatusMsg());
-		if(deviceEntity == null){
-			return null;
-		}
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void insertStock(StockMgmtDto stockMgmtDto) {
 
-		Stock stockEntity = deviceEntity.getStoreStock().getNextStock(); //현재 보유처
-		SearchMatchResponseDto responseDto = null;
-		if (stockEntity != null) {
-			responseDto = SearchMatchResponseDto
-					.builder()
-					.stockId(stockEntity.getStockId())
-					.stockName(stockEntity.getStockName())
-					.build();
-		}
-		return responseDto;
-	}
+        //내부 관리 창고는 현재 로그인 기준으로 storeId 설정
+        if (TypeEnum.STOCK_TYPE_I.getStatusCode().equals(stockMgmtDto.getStockType())) {
+            //관리점(영업점) 회원 가입시, 내부 창고가 생성되며 로그인 이전 상태이므로 예외처리 추가
+            if (!authenticationUtil.hasRole("ROLE_ANONYMOUS")
+                    || authenticationUtil.getStoreId() > 0) {
+                stockMgmtDto.setStoreId(authenticationUtil.getStoreId());
+            }
+        }
+
+        if (stockMgmtDto.getRegiStoreId() == 0) {
+            stockMgmtDto.setRegiStoreId(authenticationUtil.getStoreId());
+        }
+
+        if (stockMgmtDto.getRegiUserId() == 0) {
+            stockMgmtDto.setRegiUserId(authenticationUtil.getMemberSeq());
+            stockMgmtDto.setUpdUserId(authenticationUtil.getMemberSeq());
+        }
+
+        if (stockMgmtDto.getParentStockId() > 0) {
+            stockMgmtDto.setParentStock(Stock.builder().stockId(stockMgmtDto.getParentStockId()).build());
+        }
+
+        stockRepository.save(
+                Stock.builder()
+                        .stockId(stockMgmtDto.getStockId())
+                        .stockName(stockMgmtDto.getStockName())
+                        .parentStock(stockMgmtDto.getParentStock())
+                        .storeId(stockMgmtDto.getStoreId())
+                        .stockType(stockMgmtDto.getStockType())
+                        .regiStoreId(stockMgmtDto.getRegiStoreId())
+                        .chargerName(stockMgmtDto.getChargerName())
+                        .chargerPhone(
+                                stockMgmtDto.getChargerPhone1()
+                                        .concat(stockMgmtDto.getChargerPhone2())
+                                        .concat(stockMgmtDto.getChargerPhone3())
+                        )
+                        .chargerPhone1(stockMgmtDto.getChargerPhone1())
+                        .chargerPhone2(stockMgmtDto.getChargerPhone2())
+                        .chargerPhone3(stockMgmtDto.getChargerPhone3())
+                        .delYn(StatusEnum.FLAG_N.getStatusMsg())
+                        .regiUserId(stockMgmtDto.getRegiUserId())
+                        .regiDateTime(LocalDateTime.now())
+                        .updUserId(stockMgmtDto.getUpdUserId())
+                        .updDateTime(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @Transactional
+    public void updateStock(StockMgmtDto stockMgmtDto) {
+
+        Stock stock = stockRepository.findById(stockMgmtDto.getStockId()).orElse(null);
+        long storeId = authenticationUtil.getStoreId();
+
+        if (stock != null
+                && stock.getRegiStoreId() == storeId) {
+            stock.setStockName(stockMgmtDto.getStockName());
+            stock.setChargerName(stockMgmtDto.getChargerName());
+            stock.setChargerPhone(
+                    stockMgmtDto.getChargerPhone1()
+                            .concat(stockMgmtDto.getChargerPhone2())
+                            .concat(stockMgmtDto.getChargerPhone3())
+            );
+            stock.setChargerPhone1(stockMgmtDto.getChargerPhone1());
+            stock.setChargerPhone2(stockMgmtDto.getChargerPhone2());
+            stock.setChargerPhone3(stockMgmtDto.getChargerPhone3());
+        } else {
+            throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<SelectStockDto> selectStockList(Long telecom) {
+        long storeId = authenticationUtil.getStoreId();
+        return stockRepository.selectStockList(storeId, telecom);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SelectStockDto> innerStockList() {
+        long storeId = authenticationUtil.getStoreId();
+        return stockRepository.innerStockList(storeId);
+    }
+
+    @Transactional(readOnly = true)
+    public SearchMatchResponseDto getDeviceStock(String selDvcId) {
+        long storeId = authenticationUtil.getStoreId();
+        Store store = Store.builder().storeId(storeId).build();
+        //device 테이블에 중복된 기기가 있는지 확인
+        Device deviceEntity = deviceMgmtService.retrieveDeviceFromSelDvcId(selDvcId);
+
+        if (deviceEntity == null) {
+            return null;
+        }
+
+        Stock stockEntity = deviceEntity.getStoreStock().getNextStock(); //현재 보유처
+        SearchMatchResponseDto responseDto = null;
+        if (stockEntity != null) {
+            responseDto = SearchMatchResponseDto
+                    .builder()
+                    .stockId(stockEntity.getStockId())
+                    .stockName(stockEntity.getStockName())
+                    .build();
+        }
+        return responseDto;
+    }
 
 
-	@Transactional
-	public void deleteStock(Long stockId) {
+    @Transactional
+    public void deleteStock(Long stockId) {
 
-		Long hasDeviceCnt = stockRepository.stockHasDevice(stockId, authenticationUtil.getStoreId());
+        Long hasDeviceCnt = stockRepository.stockHasDevice(stockId, authenticationUtil.getStoreId());
 
-		if(hasDeviceCnt <= 0){
+        if (hasDeviceCnt <= 0) {
 
-			Stock stock = stockRepository.findById(stockId).orElse(null);
-			long storeId = authenticationUtil.getStoreId();
+            Stock stock = stockRepository.findById(stockId).orElse(null);
+            long storeId = authenticationUtil.getStoreId();
 
-			if(stock != null
-					&& stock.getRegiStoreId() == storeId) {
+            if (stock != null
+                    && stock.getRegiStoreId() == storeId) {
 
-				stock.updateDelYn(stock, StatusEnum.FLAG_Y.getStatusMsg(), authenticationUtil.getMemberSeq());
+                stock.updateDelYn(stock, StatusEnum.FLAG_Y.getStatusMsg(), authenticationUtil.getMemberSeq());
 
-			}else{
-				throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
-			}
+            } else {
+                throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_PRESENT.name());
+            }
 
-		}else{
-			throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_EMPTY.name());
-		}
-	}
+        } else {
+            throw new DataNotFoundException(ServiceReturnMsgEnum.IS_NOT_EMPTY.name());
+        }
+    }
+
+    public HashMap<String, List<Long>> migrationTelkitMoveStockData() {
+
+        HashMap<String, List<Long>> failMap = new HashMap<>();
+
+        List<Long> moveStockCnt = new ArrayList<>();
+        List<Long> sellStockCnt = new ArrayList<>();
+
+        //이동재고
+        List<StockTmp> moveStockList = stockTmpRepository.getTelkitStockList(1L);
+
+        //판매이동
+        List<StockTmp> sellMoveList = stockTmpRepository.getTelkitStockList(2L);
+
+
+        //StockMoveInsertReqDto
+        //moveStockMgmtService.insertStockMove(requestDto);
+
+        //SellMoveInsertReqDto
+        //moveStockMgmtService.insertSellMove(requestDto);
+
+        failMap.put("이동재고", moveStockCnt);
+        failMap.put("판매재고", sellStockCnt);
+
+        return failMap;
+    }
 }
 
 

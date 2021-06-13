@@ -1,8 +1,8 @@
 package com.daema.rest.wms.service;
 
-import com.daema.base.enums.StatusEnum;
 import com.daema.base.repository.CodeDetailRepository;
 import com.daema.commgmt.domain.Store;
+import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.DeviceDto;
@@ -11,6 +11,7 @@ import com.daema.rest.wms.dto.StockMgmtDto;
 import com.daema.rest.wms.dto.response.DeviceResponseDto;
 import com.daema.wms.domain.Device;
 import com.daema.wms.domain.Stock;
+import com.daema.wms.domain.dto.response.DeviceListResponseDto;
 import com.daema.wms.repository.DeviceRepository;
 import com.daema.wms.repository.DeviceStatusRepository;
 import com.daema.wms.repository.InStockRepository;
@@ -35,9 +36,9 @@ public class DeviceMgmtService {
 		this.authenticationUtil = authenticationUtil;
 	}
 
-	public DeviceResponseDto getDeviceInfoFromBarcode(String barcode){
+	public DeviceResponseDto getDeviceInfoFromSelDvcId(String selDvcId){
 
-		Device device = retrieveBarcode(barcode);
+		Device device = retrieveDeviceFromSelDvcId(selDvcId);
 
 		DeviceResponseDto deviceResponseDto = new DeviceResponseDto();
 
@@ -73,9 +74,12 @@ public class DeviceMgmtService {
 		return deviceResponseDto;
 	}
 
-	public Device retrieveBarcode(String barcode){
-		return deviceRepository.getDeviceWithBarcode(barcode
-				, Store.builder().storeId(authenticationUtil.getStoreId()).build()
-				, StatusEnum.FLAG_N.getStatusMsg());
+	public Device retrieveDeviceFromSelDvcId(String selDvcId){
+		return deviceRepository.findById(Long.parseLong(selDvcId)).orElseGet(null);
+	}
+
+	public ResponseDto<DeviceListResponseDto> getDeviceList(String barcode){
+		return new ResponseDto(deviceRepository.getDeviceWithBarcode(barcode
+				, Store.builder().storeId(authenticationUtil.getStoreId()).build()));
 	}
 }

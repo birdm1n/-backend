@@ -59,9 +59,9 @@ public class ReturnStockMgmtService {
 		return new ResponseDto(dataList);
 	}
 
-	public Set<String> insertReturnStock(List<ReturnStockReqDto> returnStockDtoList) {
+	public List<String> insertReturnStock(List<ReturnStockReqDto> returnStockDtoList) {
 
-		Set<String> failBarcode = new HashSet<>();
+		List<String> failBarcode = new ArrayList<>();
 
 		if (CommonUtil.isNotEmptyList(returnStockDtoList)) {
 
@@ -90,9 +90,9 @@ public class ReturnStockMgmtService {
 		return failBarcode;
 	}
 
-	public Set<String> insertReturnStockExcel(MultipartHttpServletRequest mRequest) {
+	public List<String> insertReturnStockExcel(MultipartHttpServletRequest mRequest) {
 
-		Set<String> failBarcode = new HashSet<>();
+		List<String> failBarcode = new ArrayList<>();
 
 		try{
 			Map<String, Object> excelMap = fileUpload.uploadExcelAndParser(mRequest.getFile("excelFile"), authenticationUtil.getMemberSeq());

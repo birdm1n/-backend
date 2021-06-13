@@ -1,11 +1,16 @@
 package com.daema.rest.wms.web;
 
+import com.daema.rest.base.dto.common.ResponseDto;
 import com.daema.rest.commgmt.service.GoodsMgmtService;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
-import com.daema.rest.wms.service.*;
+import com.daema.rest.wms.service.DeviceMgmtService;
+import com.daema.rest.wms.service.InStockMgmtService;
+import com.daema.rest.wms.service.ProviderMgmtService;
+import com.daema.rest.wms.service.StockMgmtService;
+import com.daema.wms.domain.dto.response.DeviceListResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -22,6 +27,8 @@ public class WmsSearchController {
     private final GoodsMgmtService goodsMgmtService;
     private final StockMgmtService stockMgmtService;
     private final ProviderMgmtService providerMgmtService;
+    private final DeviceMgmtService deviceMgmtService;
+
     private final ResponseHandler responseHandler;
 
 
@@ -52,16 +59,21 @@ public class WmsSearchController {
         return responseHandler.getResponseMessageAsRetrieveResult(goodsMgmtService.getColorList(goodsId, capacity), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-    @ApiOperation(value = "바코드로 기기의 현재 보유처 조회", notes = "바코드로 재고를 조회하여 현재 보유처 정보를 가져온다.")
+    @ApiOperation(value = "기기ID로 기기의 현재 보유처 조회", notes = "기기ID로 재고를 조회하여 현재 보유처 정보를 가져온다.")
     @GetMapping("/getDeviceStock")
-    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getDeviceStock(@ApiParam(value = "기기 바코드", required = true) @RequestParam String barcode) {
-        return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.getDeviceStock(barcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getDeviceStock(@ApiParam(value = "기기ID", required = true) @RequestParam String selDvcId) {
+        return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.getDeviceStock(selDvcId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
-    @ApiOperation(value = "바코드로 기기의 공급처 조회", notes = "바코드로 입고를 조회하여 현재 공급처 정보를 가져온다.")
+    @ApiOperation(value = "기기ID로 기기의 공급처 조회", notes = "기기ID로 입고를 조회하여 현재 공급처 정보를 가져온다.")
     @GetMapping("/getDeviceProvInfo")
-    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getDeviceProvInfo(@ApiParam(value = "기기 바코드", required = true) @RequestParam String barcode) {
-        return responseHandler.getResponseMessageAsRetrieveResult(providerMgmtService.getDeviceProvInfo(barcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    public ResponseEntity<CommonResponse<SearchMatchResponseDto>> getDeviceProvInfo(@ApiParam(value = "기기ID", required = true) @RequestParam String selDvcId) {
+        return responseHandler.getResponseMessageAsRetrieveResult(providerMgmtService.getDeviceProvInfo(selDvcId), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
+    @ApiOperation(value = "바코드로 기기 조회", notes = "바코드로 재고를 조회하여 기기 목록을 가져온다.")
+    @GetMapping("/getDeviceListFromBarcode")
+    public ResponseEntity<CommonResponse<ResponseDto<DeviceListResponseDto>>> getDeviceListFromBarcode(@ApiParam(value = "기기 바코드", required = true) @RequestParam String barcode) {
+        return responseHandler.getResponseMessageAsRetrieveResult(deviceMgmtService.getDeviceList(barcode), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+    }
 }
