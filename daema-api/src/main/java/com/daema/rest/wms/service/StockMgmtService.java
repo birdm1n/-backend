@@ -4,6 +4,7 @@ import com.daema.base.enums.StatusEnum;
 import com.daema.base.enums.TypeEnum;
 import com.daema.commgmt.domain.Store;
 import com.daema.commgmt.repository.StoreRepository;
+import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.util.AuthenticationUtil;
@@ -18,6 +19,7 @@ import com.daema.wms.domain.Stock;
 import com.daema.wms.domain.StockTmp;
 import com.daema.wms.domain.dto.request.StockRequestDto;
 import com.daema.wms.domain.dto.response.SelectStockDto;
+import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.StockRepository;
 import com.daema.wms.repository.StockTmpRepository;
 import lombok.RequiredArgsConstructor;
@@ -209,68 +211,58 @@ public class StockMgmtService {
         List<Long> sellStockCnt = new ArrayList<>();
 
         //이동재고
-        List<StockTmp> moveStockList = stockTmpRepository.getTelkitStockList(1L);
-
-        /*
-        private WmsEnum.DeliveryType deliveryType;
-
-        @ApiModelProperty(value = "이동처 ID", example = "0", required = true)
-        private Long nextStockId;
-
-        @ApiModelProperty(value = "원시 바코드 or 정재된 바코드 or 시리얼 넘버", required = false)
-        private String barcode;
-
-        @ApiModelProperty(value = "기기 ID", required = true)
-        private String selDvcId;
-
-        @ApiModelProperty(value = "택배사", example = "0",required = true)
-        private Long courier;
-
-        @ApiModelProperty(value = "송장번호", required = true)
-        private String invoiceNo;
-
-        @ApiModelProperty(value = "메모입력")
-        private String deliveryMemo;
-        */
+        Long[] longs = {1L, 2L};
+        List<StockTmp> moveAndSellStockList = stockTmpRepository.getTelkitStockList(longs);
 
         long dvcId = 0L;
+        ResponseCodeEnum resultCode =  ResponseCodeEnum.OK;
 
-        for(StockTmp stockTmp : moveStockList){
+        for(StockTmp stockTmp : moveAndSellStockList){
 
             StockMoveInsertReqDto requestDto = new StockMoveInsertReqDto();
-            requestDto.setDeliveryType(null);
-
+            requestDto.setDeliveryType(WmsEnum.DeliveryType.UNKNOWN);
+            requestDto.setNextStockId(stockTmp.getNowStockId());
+            requestDto.setDeliveryMemo(stockTmp.getMemo());
             dvcId = stockTmp.getSelDvcId();
 
             try {
 
                 //StockMoveInsertReqDto
-                moveStockMgmtService.insertStockMove(requestDto);
+                resultCode = moveStockMgmtService.insertStockMove(requestDto);
             }catch (Exception e){
                 e.getMessage();
+                moveStockCnt.add(dvcId);
+            }
+            if(resultCode != ResponseCodeEnum.OK){
                 moveStockCnt.add(dvcId);
             }
         }
 
         //재 INIT;
         dvcId = 0;
+        resultCode =  ResponseCodeEnum.OK;
 
         //판매이동
-        List<StockTmp> sellMoveList = stockTmpRepository.getTelkitStockList(2L);
+        Long[] sellLongs = {2L};
+        List<StockTmp> sellMoveList = stockTmpRepository.getTelkitStockList(sellLongs);
 
-        for(StockTmp stockTmp : moveStockList){
-
+        for(StockTmp stockTmp : sellMoveList){
             SellMoveInsertReqDto requestDto = new SellMoveInsertReqDto();
-            requestDto.setDeliveryType(null);
+            requestDto.setDeliveryType(WmsEnum.DeliveryType.UNKNOWN);
+            requestDto.setDeliveryMemo(stockTmp.getMemo());
+            requestDto.setCusName(stockTmp.getMemo());
 
             dvcId = stockTmp.getSelDvcId();
 
             try {
                 //SellMoveInsertReqDto
-                //moveStockMgmtService.insertSellMove(requestDto);
+                resultCode = moveStockMgmtService.insertSellMove(requestDto);
             }catch (Exception e){
                 e.getMessage();
-                moveStockCnt.add(dvcId);
+                sellStockCnt.add(dvcId);
+            }
+            if(resultCode != ResponseCodeEnum.OK){
+                sellStockCnt.add(dvcId);
             }
         }
 

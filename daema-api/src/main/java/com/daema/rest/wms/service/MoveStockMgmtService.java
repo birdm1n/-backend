@@ -143,7 +143,7 @@ public class MoveStockMgmtService {
     @Transactional  /* 이동 재고 */
     public ResponseCodeEnum insertStockMove(StockMoveInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
-        String barcode = requestDto.getBarcode();
+//        String barcode = requestDto.getBarcode(); selDvcId로 바뀜
         Store store = Store.builder()
                 .storeId(storeId)
                 .build();
@@ -449,7 +449,7 @@ public class MoveStockMgmtService {
         // 기기가 개통상태인지 확인
         long openingCount = openingRepository.countByDeviceAndStoreAndDelYn(device, store, StatusEnum.FLAG_N.getStatusMsg());
 
-        boolean isValidSellMove = (prevStockType == WmsEnum.StockType.IN_STOCK || prevStockType == WmsEnum.StockType.RETURN_STOCK) && openingCount == 0L;
+        boolean isValidSellMove = (prevStockType == WmsEnum.StockType.IN_STOCK || prevStockType == WmsEnum.StockType.RETURN_STOCK || prevStockType == WmsEnum.StockType.STOCK_MOVE) && openingCount == 0L;
         boolean isValidStockMove = (prevStockType == WmsEnum.StockType.IN_STOCK || prevStockType == WmsEnum.StockType.RETURN_STOCK || prevStockType == WmsEnum.StockType.STOCK_MOVE) && openingCount == 0L;
         boolean isValidStockTrns = isValidStockMove; /* 이동 재고와 같음 추후 변경가능 */
         boolean isValidFaultyTrns = isValidStockMove; /* 이동 재고와 같음 추후 변경가능 */

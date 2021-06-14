@@ -18,7 +18,7 @@ public class StockTmpRepositoryImpl extends QuerydslRepositorySupport implements
     }
 
     @Override
-    public List<StockTmp> getTelkitStockList(long moveType) {
+    public List<StockTmp> getTelkitStockList(Long[] moveType) {
 
         JPQLQuery<StockTmp> query = getQuerydsl().createQuery();
 /*
@@ -43,7 +43,7 @@ public class StockTmpRepositoryImpl extends QuerydslRepositorySupport implements
                 .innerJoin(device)
                 .on(
                         stockTmp.goodsOptionId.eq(device.goodsOption.goodsOptionId)
-                        ,stockTmp.moveType.eq(moveType)
+                        ,stockTmp.moveType.in(moveType)
                         ,stockTmp.goodsId.isNotNull()
                 );
 

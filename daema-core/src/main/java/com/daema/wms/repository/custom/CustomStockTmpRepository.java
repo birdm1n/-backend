@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface CustomStockTmpRepository {
 
-    List<StockTmp> getTelkitStockList(long moveType);
+    List<StockTmp> getTelkitStockList(Long[] moveType);
 }
