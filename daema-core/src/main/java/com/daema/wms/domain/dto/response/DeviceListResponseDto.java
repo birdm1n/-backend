@@ -22,4 +22,7 @@ public class DeviceListResponseDto {
 
     private String colorName;
     private String capacity;
+
+    private String commonBarcode;
+    private String unLockYn;
 }
