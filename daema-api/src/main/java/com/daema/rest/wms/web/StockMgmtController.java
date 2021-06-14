@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(value = "보유처 관리 API", tags = "보유처 관리 API")
 @RestController
 @RequestMapping(value = {"/v1/api/StockManagement/StockMgmt", "/api/StockManagement/StockMgmt" })
@@ -71,7 +73,7 @@ public class StockMgmtController {
     }
 
     @GetMapping("/migrationTelkitMoveStockData")
-    public ResponseEntity<CommonResponse<SelectStockDto>> migrationTelkitMoveStockData() {
+    public ResponseEntity<CommonResponse<List<String>>> migrationTelkitMoveStockData() {
         return responseHandler.getResponseMessageAsRetrieveResult(stockMgmtService.migrationTelkitMoveStockData(), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 }

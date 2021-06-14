@@ -203,12 +203,14 @@ public class StockMgmtService {
         }
     }
 
-    public HashMap<String, List<Long>> migrationTelkitMoveStockData() {
+    public HashMap<String, List<String>> migrationTelkitMoveStockData() {
 
-        HashMap<String, List<Long>> failMap = new HashMap<>();
+        HashMap<String, List<String>> failMap = new HashMap<>();
 
-        List<Long> moveStockCnt = new ArrayList<>();
-        List<Long> sellStockCnt = new ArrayList<>();
+        List<String> moveStockCnt = new ArrayList<>();
+        List<String> sellStockCnt = new ArrayList<>();
+        List<String> moveStockMsges = new ArrayList<>();
+        List<String> sellStockMsges = new ArrayList<>();
 
         //이동재고
         Long[] longs = {1L, 2L};
@@ -231,10 +233,12 @@ public class StockMgmtService {
                 resultCode = moveStockMgmtService.insertStockMove(requestDto);
             }catch (Exception e){
                 e.getMessage();
-                moveStockCnt.add(dvcId);
+                moveStockCnt.add(String.valueOf(dvcId));
+                sellStockMsges.add(e.getMessage());
             }
             if(resultCode != ResponseCodeEnum.OK){
-                moveStockCnt.add(dvcId);
+                moveStockCnt.add(String.valueOf(dvcId));
+                moveStockMsges.add(resultCode.getResultMsg());
             }
         }
 
@@ -259,15 +263,19 @@ public class StockMgmtService {
                 resultCode = moveStockMgmtService.insertSellMove(requestDto);
             }catch (Exception e){
                 e.getMessage();
-                sellStockCnt.add(dvcId);
+                sellStockCnt.add(String.valueOf(dvcId));
+                sellStockMsges.add(e.getMessage());
             }
             if(resultCode != ResponseCodeEnum.OK){
-                sellStockCnt.add(dvcId);
+                sellStockCnt.add(String.valueOf(dvcId));
+                sellStockMsges.add(resultCode.getResultMsg());
             }
         }
 
-        failMap.put("이동재고", moveStockCnt);
-        failMap.put("판매재고", sellStockCnt);
+        failMap.put("이동재고 실패 아아디", moveStockCnt);
+        failMap.put("판매이동 실패 아이디", sellStockCnt);
+        failMap.put("이동재고 실패 메세지", moveStockMsges);
+        failMap.put("판매이동 실패 메세지", sellStockMsges);
 
         return failMap;
     }
