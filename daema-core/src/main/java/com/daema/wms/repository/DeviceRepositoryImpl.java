@@ -371,6 +371,8 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
 
                 , goodsOption.colorName.as("colorName")
                 , goodsOption.capacity.as("capacity")
+                , goodsOption.commonBarcode.as("commonBarcode")
+                , goodsOption.unLockYn.as("unLockYn")
                 )
         )
                 .from(device)
