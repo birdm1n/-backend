@@ -11,7 +11,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @org.hibernate.annotations.Table(appliesTo = "stock_tmp", comment = "텔킷 재고")
-@Builder
 public class StockTmp {
 
     @Id
@@ -40,5 +39,7 @@ public class StockTmp {
     private long upStockId;
     private long moveType;
 
+    @Transient
+    private long selDvcId;
 
 }

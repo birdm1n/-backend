@@ -8,6 +8,8 @@ import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.StockMgmtDto;
+import com.daema.rest.wms.dto.request.SellMoveInsertReqDto;
+import com.daema.rest.wms.dto.request.StockMoveInsertReqDto;
 import com.daema.rest.wms.dto.response.SearchMatchResponseDto;
 import com.daema.rest.wms.dto.response.StockListDto;
 import com.daema.rest.wms.dto.response.StockMgmtResponseDto;
@@ -209,15 +211,68 @@ public class StockMgmtService {
         //이동재고
         List<StockTmp> moveStockList = stockTmpRepository.getTelkitStockList(1L);
 
+        /*
+        private WmsEnum.DeliveryType deliveryType;
+
+        @ApiModelProperty(value = "이동처 ID", example = "0", required = true)
+        private Long nextStockId;
+
+        @ApiModelProperty(value = "원시 바코드 or 정재된 바코드 or 시리얼 넘버", required = false)
+        private String barcode;
+
+        @ApiModelProperty(value = "기기 ID", required = true)
+        private String selDvcId;
+
+        @ApiModelProperty(value = "택배사", example = "0",required = true)
+        private Long courier;
+
+        @ApiModelProperty(value = "송장번호", required = true)
+        private String invoiceNo;
+
+        @ApiModelProperty(value = "메모입력")
+        private String deliveryMemo;
+        */
+
+        long dvcId = 0L;
+
+        for(StockTmp stockTmp : moveStockList){
+
+            StockMoveInsertReqDto requestDto = new StockMoveInsertReqDto();
+            requestDto.setDeliveryType(null);
+
+            dvcId = stockTmp.getSelDvcId();
+
+            try {
+
+                //StockMoveInsertReqDto
+                moveStockMgmtService.insertStockMove(requestDto);
+            }catch (Exception e){
+                e.getMessage();
+                moveStockCnt.add(dvcId);
+            }
+        }
+
+        //재 INIT;
+        dvcId = 0;
+
         //판매이동
         List<StockTmp> sellMoveList = stockTmpRepository.getTelkitStockList(2L);
 
+        for(StockTmp stockTmp : moveStockList){
 
-        //StockMoveInsertReqDto
-        //moveStockMgmtService.insertStockMove(requestDto);
+            SellMoveInsertReqDto requestDto = new SellMoveInsertReqDto();
+            requestDto.setDeliveryType(null);
 
-        //SellMoveInsertReqDto
-        //moveStockMgmtService.insertSellMove(requestDto);
+            dvcId = stockTmp.getSelDvcId();
+
+            try {
+                //SellMoveInsertReqDto
+                //moveStockMgmtService.insertSellMove(requestDto);
+            }catch (Exception e){
+                e.getMessage();
+                moveStockCnt.add(dvcId);
+            }
+        }
 
         failMap.put("이동재고", moveStockCnt);
         failMap.put("판매재고", sellStockCnt);

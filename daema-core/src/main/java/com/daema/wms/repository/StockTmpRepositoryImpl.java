@@ -1,10 +1,8 @@
 package com.daema.wms.repository;
 
 import com.daema.wms.domain.StockTmp;
-import com.daema.wms.domain.enums.WmsEnum;
 import com.daema.wms.repository.custom.CustomStockTmpRepository;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
@@ -35,10 +33,10 @@ public class StockTmpRepositoryImpl extends QuerydslRepositorySupport implements
 
         query.select(Projections.fields(
                 StockTmp.class
-                , Expressions.asEnum(WmsEnum.DeliveryType.UNKNOWN).as("deliveryType")
-                , stockTmp.nowStockId.as("nextStockId")
+                , stockTmp.nowStockId.as("nowStockId")
                 , stockTmp.barcode.as("barcode")
-                , stockTmp.memo.as("deliveryMemo")
+                , stockTmp.memo.as("memo")
+                , device.dvcId.as("selDvcId")
                 )
         )
                 .from(stockTmp)
