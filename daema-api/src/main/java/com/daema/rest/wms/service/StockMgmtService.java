@@ -203,6 +203,7 @@ public class StockMgmtService {
         }
     }
 
+    @Transactional
     public HashMap<String, List<String>> migrationTelkitMoveStockData() {
 
         HashMap<String, List<String>> failMap = new HashMap<>();
@@ -228,6 +229,8 @@ public class StockMgmtService {
             requestDto.setSelDvcId(String.valueOf(stockTmp.getSelDvcId()));
             dvcId = stockTmp.getSelDvcId();
 
+            resultCode =  ResponseCodeEnum.OK;
+
             try {
 
                 //StockMoveInsertReqDto
@@ -237,11 +240,20 @@ public class StockMgmtService {
                 moveStockCnt.add(String.valueOf(dvcId));
                 sellStockMsges.add(e.getMessage());
             }
+
             if(resultCode != ResponseCodeEnum.OK){
                 moveStockCnt.add(String.valueOf(dvcId));
                 moveStockMsges.add(resultCode.getResultMsg());
             }
         }
+
+
+
+
+
+
+
+
 
         //재 INIT;
         dvcId = 0;
@@ -256,8 +268,14 @@ public class StockMgmtService {
             requestDto.setDeliveryType(WmsEnum.DeliveryType.UNKNOWN);
             requestDto.setDeliveryMemo(stockTmp.getMemo());
             requestDto.setCusName(stockTmp.getMemo());
+            requestDto.setCusPhone1("");
+            requestDto.setCusPhone2("");
+            requestDto.setCusPhone3("");
             requestDto.setSelDvcId(String.valueOf(stockTmp.getSelDvcId()));
+
             dvcId = stockTmp.getSelDvcId();
+
+            resultCode =  ResponseCodeEnum.OK;
 
             try {
                 //SellMoveInsertReqDto

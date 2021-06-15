@@ -42,7 +42,7 @@ public class StockTmpRepositoryImpl extends QuerydslRepositorySupport implements
                 .from(stockTmp)
                 .innerJoin(device)
                 .on(
-                        stockTmp.goodsOptionId.eq(device.goodsOption.goodsOptionId)
+                        stockTmp.barcode.eq(device.serialNo)
                         ,stockTmp.moveType.in(moveType)
                         ,stockTmp.goodsId.isNotNull()
                 );
