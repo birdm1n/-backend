@@ -225,6 +225,7 @@ public class StockMgmtService {
             requestDto.setDeliveryType(WmsEnum.DeliveryType.UNKNOWN);
             requestDto.setNextStockId(stockTmp.getNowStockId());
             requestDto.setDeliveryMemo(stockTmp.getMemo());
+            requestDto.setSelDvcId(String.valueOf(stockTmp.getSelDvcId()));
             dvcId = stockTmp.getSelDvcId();
 
             try {
@@ -255,7 +256,7 @@ public class StockMgmtService {
             requestDto.setDeliveryType(WmsEnum.DeliveryType.UNKNOWN);
             requestDto.setDeliveryMemo(stockTmp.getMemo());
             requestDto.setCusName(stockTmp.getMemo());
-
+            requestDto.setSelDvcId(String.valueOf(stockTmp.getSelDvcId()));
             dvcId = stockTmp.getSelDvcId();
 
             try {
