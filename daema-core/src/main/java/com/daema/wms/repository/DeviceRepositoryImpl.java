@@ -248,6 +248,16 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                                         storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE)
                                 )
                         ) /* 개통 데이터가 없으면서, 이동재고/판매이동 경우 개통 가능 - (미개통 상태)*/
+                        .then(StatusEnum.FLAG_Y.getStatusMsg())
+                        /* 이동재고/판매이동 상태가 아닌 경우 개통 불가능 - (-) */
+                        .otherwise(StatusEnum.FLAG_N.getStatusMsg())
+                        .as("openingYn")
+                , new CaseBuilder()
+                        .when(
+                                opening.isNull().and(
+                                        storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE)
+                                )
+                        ) /* 개통 데이터가 없으면서, 이동재고/판매이동 경우 개통 가능 - (미개통 상태)*/
                         .then(WmsEnum.OpeningText.NOT_OPENING.getStatusMsg())
                         .when(
                                 opening.isNotNull().and(

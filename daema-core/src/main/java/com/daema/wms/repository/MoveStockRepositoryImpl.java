@@ -72,6 +72,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                         , goods.modelName.as("modelName")
                         , goodsOption.capacity.as("capacity")
                         , goodsOption.colorName.as("colorName")
+                        , device.dvcId.as("dvcId")
                         , device.rawBarcode.as("rawBarcode")
                         , device.inStockAmt.as("inStockAmt")
                         , deviceStatus.inStockStatus.as("inStockStatus")
@@ -100,6 +101,32 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                                 .when(storeStock.isNotNull().and(opening.isNull()))
                                 .then(StatusEnum.FLAG_Y.getStatusMsg())
                                 .otherwise(StatusEnum.FLAG_N.getStatusMsg()).as("updateYn")
+                        , new CaseBuilder()
+                                .when(
+                                        opening.isNull().and(
+                                                storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE)
+                                        )
+                                ) /* 개통 데이터가 없으면서, 이동재고/판매이동 경우 개통 가능 - (미개통 상태)*/
+                                .then(StatusEnum.FLAG_Y.getStatusMsg())
+                                /* 이동재고/판매이동 상태가 아닌 경우 개통 불가능 - (-) */
+                                .otherwise(StatusEnum.FLAG_N.getStatusMsg())
+                                .as("openingYn")
+                        , new CaseBuilder()
+                                .when(
+                                        opening.isNull().and(
+                                                storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE)
+                                        )
+                                ) /* 개통 데이터가 없으면서, 이동재고/판매이동 경우 개통 가능 - (미개통 상태)*/
+                                .then(WmsEnum.OpeningText.NOT_OPENING.getStatusMsg())
+                                .when(
+                                        opening.isNotNull().and(
+                                                storeStock.stockType.in(WmsEnum.StockType.SELL_MOVE, WmsEnum.StockType.STOCK_MOVE)
+                                        )
+                                )/* 개통 불가 가능 - (개통 상태)*/
+                                .then(WmsEnum.OpeningText.OPENING.getStatusMsg())
+                                /* 이동재고/판매이동 상태가 아닌 경우 개통 불가능 - (-) */
+                                .otherwise(WmsEnum.OpeningText.NONE.getStatusMsg())
+                                .as("openingText")
                 )
         )
                 .from(moveStock)

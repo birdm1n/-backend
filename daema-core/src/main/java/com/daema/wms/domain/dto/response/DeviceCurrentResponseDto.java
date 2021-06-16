@@ -129,6 +129,9 @@ public class DeviceCurrentResponseDto {
     private String zipCode;
 
     // 개통 가능 여부
+    private String openingYn;
+
+    // 개통 flag 텍스트
     private String openingText;
 
 

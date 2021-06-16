@@ -17,6 +17,8 @@ public class MoveStockResponseDto {
 
     private Long moveStockId;
 
+    private Long dvcId;
+
     // 통신사
     private String telecomName;
 
@@ -88,6 +90,12 @@ public class MoveStockResponseDto {
     private String updUserName;
     // 추가 - 판매이동 수정 불가처리 위해 (판매이동 상태만 수정)
     private String updateYn;
+    // 추가 - 개통처리 기능추가
+    // 개통 가능 여부
+    private String openingYn;
+
+    // 개통 flag 텍스트
+    private String openingText;
 
     // 입고일
     private LocalDateTime inStockRegiDateTime;
