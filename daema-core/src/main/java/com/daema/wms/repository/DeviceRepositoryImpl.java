@@ -371,6 +371,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
         query.select(Projections.fields(
                 DeviceListResponseDto.class
                 , device.dvcId.as("dvcId")
+                , device.rawBarcode.as("rawBarcode")
 
                 , telecom.codeNm.as("telecomName")
                 , maker.codeNm.as("makerName")
@@ -381,7 +382,6 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
 
                 , goodsOption.colorName.as("colorName")
                 , goodsOption.capacity.as("capacity")
-                , goodsOption.commonBarcode.as("commonBarcode")
                 , goodsOption.unLockYn.as("unLockYn")
                 )
         )
@@ -389,9 +389,9 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .innerJoin(device.goodsOption, goodsOption).on(
                     device.store.storeId.eq(store.getStoreId()),
                     device.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
-                    device.rawBarcode.eq(barcode).or(
-                            device.fullBarcode.eq(barcode).or(
-                                    device.serialNo.eq(barcode)
+                    device.rawBarcode.contains(barcode).or(
+                            device.fullBarcode.contains(barcode).or(
+                                    device.serialNo.contains(barcode)
                             )
                     )
                 )

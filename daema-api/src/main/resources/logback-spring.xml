@@ -6,11 +6,11 @@
     <springProfile name="test">
         <property resource="logback-test.properties"/>
     </springProfile>
-    <springProfile name="prod">
-        <property resource="logback-prod.properties"/>
-    </springProfile>
     <springProfile name="stag">
         <property resource="logback-stag.properties"/>
+    </springProfile>
+    <springProfile name="prod">
+        <property resource="logback-prod.properties"/>
     </springProfile>
     <property name="LOG_PATH" value="${log.config.path}"/>
     <property name="LOG_FILE_NAME" value="${log.config.filename}"/>
@@ -52,6 +52,9 @@
             <maxHistory>60</maxHistory>
         </rollingPolicy>
     </appender>
+
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" />
+
     <root level="${logging.level.root}">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
