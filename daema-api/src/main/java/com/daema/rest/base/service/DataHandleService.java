@@ -23,6 +23,7 @@ import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.common.util.JwtUtil;
 import com.daema.rest.common.util.RedisUtil;
 import com.daema.rest.wms.dto.ProviderMgmtDto;
+import com.daema.rest.wms.service.StockMgmtService;
 import com.daema.wms.domain.Provider;
 import com.daema.wms.domain.dto.response.DeviceHistoryResponseDto;
 import com.daema.wms.repository.DeviceRepository;
@@ -47,6 +48,7 @@ public class DataHandleService {
     private final FuncMgmtRepository funcMgmtRepository;
     private final PubNotiRawDataRepository pubNotiRawDataRepository;
     private final StoreRepository storeRepository;
+    private final StockMgmtService stockMgmtService;
     private final CodeDetailRepository codeDetailRepository;
     private final MemberRepository memberRepository;
     private final ProviderRepository providerRepository;
@@ -62,7 +64,7 @@ public class DataHandleService {
     private final static long JOIN_URL_TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 24 * 365 * 10;
 
     public DataHandleService(FuncMgmtRepository funcMgmtRepository, PubNotiRawDataRepository pubNotiRawDataRepository
-            , StoreRepository storeRepository, CodeDetailRepository codeDetailRepository
+            , StoreRepository storeRepository, StockMgmtService stockMgmtService, CodeDetailRepository codeDetailRepository
             , MemberRepository memberRepository
             , ProviderRepository providerRepository
             , OrganizationRepository organizationRepository
@@ -72,6 +74,7 @@ public class DataHandleService {
         this.funcMgmtRepository = funcMgmtRepository;
         this.pubNotiRawDataRepository = pubNotiRawDataRepository;
         this.storeRepository = storeRepository;
+        this.stockMgmtService = stockMgmtService;
         this.codeDetailRepository = codeDetailRepository;
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
@@ -188,6 +191,9 @@ public class DataHandleService {
                 if (initData.contains("provListAll")) {
                     responseDto.setProvList(retrieveProvList(true));
                 }
+                if (initData.contains("stockList")) {
+                    responseDto.setStockList(stockMgmtService.selectStockList(0L));
+                }
             }
 
             if (reqModel.containsKey("code")
@@ -204,7 +210,7 @@ public class DataHandleService {
 
     private List<SaleStoreMgmtDto> retrieveStoreList() {
 
-        List<Store> storeList = storeRepository.findByUseYnOrderByStoreName(StatusEnum.FLAG_Y.getStatusMsg());
+        List<Store> storeList = storeRepository.findByUseYnOrderByStoreName(StatusEnum.FLAG_N.getStatusMsg());
         return storeList.stream().map(SaleStoreMgmtDto::ofInitData).collect(Collectors.toList());
     }
 

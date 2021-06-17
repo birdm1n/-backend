@@ -2,7 +2,7 @@ package com.daema.rest.base.dto;
 
 import com.daema.rest.commgmt.dto.SaleStoreMgmtDto;
 import com.daema.rest.wms.dto.ProviderMgmtDto;
-import com.daema.wms.domain.Stock;
+import com.daema.wms.domain.dto.response.SelectStockDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
@@ -23,5 +23,6 @@ public class RetrieveInitDataResponseDto {
     private List<ProviderMgmtDto> provList;
     private List<SaleStoreMgmtDto> storeList;
     private Map<String, List<CodeDetailDto>> codeList;
+    private List<SelectStockDto> stockList;
 
 }
