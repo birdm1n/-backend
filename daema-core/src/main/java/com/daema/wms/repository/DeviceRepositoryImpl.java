@@ -268,6 +268,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                         /* 이동재고/판매이동 상태가 아닌 경우 개통 불가능 - (-) */
                         .otherwise(WmsEnum.OpeningText.NONE.getStatusMsg())
                         .as("openingText")
+                , opening.openingDate.as("openingDate")
         ))
                 .from(device)
                 .innerJoin(device.store, store).on

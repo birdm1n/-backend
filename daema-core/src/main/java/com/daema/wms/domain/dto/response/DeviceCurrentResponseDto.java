@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -134,6 +135,8 @@ public class DeviceCurrentResponseDto {
     // 개통 flag 텍스트
     private String openingText;
 
+    // 개통 일자
+    private LocalDate openingDate;
 
     public String getInStockStatusMsg() {
         return this.inStockStatus != null ? this.inStockStatus.getStatusMsg() : "";

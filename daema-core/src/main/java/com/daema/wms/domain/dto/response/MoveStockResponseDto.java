@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -96,6 +97,9 @@ public class MoveStockResponseDto {
 
     // 개통 flag 텍스트
     private String openingText;
+
+    // 개통 일자
+    private LocalDate openingDate;
 
     // 입고일
     private LocalDateTime inStockRegiDateTime;
