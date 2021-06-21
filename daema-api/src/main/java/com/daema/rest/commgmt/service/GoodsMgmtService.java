@@ -332,7 +332,15 @@ public class GoodsMgmtService {
         } catch (Exception e) {
             return null;
         }
-        return goodsRepository.goodsMatchBarcode(commonBarcode);
+
+        GoodsMatchRespDto goodsMatchRespDto = goodsRepository.goodsMatchBarcode(commonBarcode);
+
+        if(goodsMatchRespDto == null){
+            //바코드 조회 결과 없는 경우, 자급제인지 한번 더 조회
+            goodsMatchRespDto = goodsRepository.goodsMatchBarcode(CommonUtil.getUnLockCmnBarcode(barcode));
+        }
+
+        return goodsMatchRespDto;
     }
 
     @Transactional(readOnly = true)

@@ -369,6 +369,10 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
         QCodeDetail telecom = new QCodeDetail("telecom");
         QCodeDetail network = new QCodeDetail("network");
 
+        String subBarcode = StringUtils.hasText(barcode) && barcode.length() > 3
+                ? barcode.substring(1, barcode.length() - 1)
+                : barcode;
+
         query.select(Projections.fields(
                 DeviceListResponseDto.class
                 , device.dvcId.as("dvcId")
@@ -394,6 +398,12 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                             device.fullBarcode.contains(barcode).or(
                                     device.serialNo.contains(barcode)
                             )
+                    ).or(
+                        device.rawBarcode.contains(subBarcode).or(
+                                device.fullBarcode.contains(subBarcode).or(
+                                        device.serialNo.contains(subBarcode)
+                                )
+                        )
                     )
                 )
                 .innerJoin(goodsOption.goods, goods)

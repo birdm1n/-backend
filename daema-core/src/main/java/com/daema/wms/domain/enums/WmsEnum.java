@@ -102,6 +102,15 @@ public enum WmsEnum {
         FAULTY_TRNS("착하"),
         SELL_TRNS("판매이관"),
         RETURN_STOCK("반품"),
+
+        //요청에 의해 제거 등 수기 처리
+        SYSTEM_MGMT_IN_STOCK("시스템관리_입고"),
+        SYSTEM_MGMT_SELL_MOVE("시스템관리_판매이동"),
+        SYSTEM_MGMT_STOCK_MOVE("시스템관리_이동재고"),
+        SYSTEM_MGMT_STOCK_TRNS("시스템관리_재고이관"),
+        SYSTEM_MGMT_FAULTY_TRNS("시스템관리_착하"),
+        SYSTEM_MGMT_SELL_TRNS("시스템관리_판매이관"),
+        SYSTEM_MGMT_RETURN_STOCK("시스템관리_반품"),
         ;
 
         private final String statusMsg;

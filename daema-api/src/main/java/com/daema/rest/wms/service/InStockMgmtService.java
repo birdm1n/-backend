@@ -201,8 +201,14 @@ public class InStockMgmtService {
         String fullBarcode = rawBarcode.substring(0, rawBarcode.length() - 1); /* 원시 바코드 length -1 */
 
         // 상품정보
-        GoodsMatchRespDto goodsMatchRespDto = goodsRepository.goodsMatchBarcode(commonBarcode);
-        if (goodsMatchRespDto == null) return ResponseCodeEnum.NO_GOODS;
+        GoodsMatchRespDto goodsMatchRespDto = goodsRepository.goodsMatchBarcode(commonBarcode, requestDto.getTelecom());
+        if (goodsMatchRespDto == null){
+
+            //바코드 조회 결과 없는 경우, 자급제인지 한번 더 조회
+            goodsMatchRespDto = goodsRepository.goodsMatchBarcode(CommonUtil.getUnLockCmnBarcode(requestDto.getBarcode()), requestDto.getTelecom());
+
+            if(goodsMatchRespDto == null) return ResponseCodeEnum.NO_GOODS;
+        }
         if (requestDto.getTelecom() != goodsMatchRespDto.getTelecom()) return ResponseCodeEnum.NOT_MATCH_TELECOM;
 
 

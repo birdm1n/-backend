@@ -277,8 +277,8 @@ public class StockRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         stock.stockId.eq(stockId),
                         stock.regiStoreId.eq(storeId),
                         stock.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
-                        stock.parentStock.isNull(),
-                        store.telecom.eq(telecom)
+                        stock.parentStock.isNull()
+                        //store.telecom.eq(telecom)
                 )
                 .orderBy(
                         new CaseBuilder()

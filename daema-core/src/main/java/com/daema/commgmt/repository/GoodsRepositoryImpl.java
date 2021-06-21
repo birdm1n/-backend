@@ -230,6 +230,58 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
     }
 
     @Override
+    public GoodsMatchRespDto goodsMatchBarcode(String commonBarcode, Long telecomId) {
+        QCodeDetail telecom = new QCodeDetail("telecom");
+        QCodeDetail maker = new QCodeDetail("maker");
+
+        JPQLQuery<GoodsMatchRespDto> query = getQuerydsl().createQuery();
+
+        GoodsMatchRespDto goodsMatchRespDto = null;
+
+        query.select(Projections.fields(
+                        GoodsMatchRespDto.class
+                        , maker.codeSeq.as("maker")
+                        , maker.codeNm.as("makerName")
+                        , telecom.codeSeq.as("telecom")
+                        , telecom.codeNm.as("telecomName")
+                        , goods.goodsId.as("goodsId")
+                        , goods.goodsName.as("goodsName")
+                        , goods.modelName.as("modelName")
+                        , goodsOption.goodsOptionId.as("goodsOptionId")
+                        , goodsOption.capacity.as("capacity")
+                        , goodsOption.colorName.as("colorName")
+                        , goodsOption.commonBarcode.as("commonBarcode")
+                )).from(goodsOption)
+                        .innerJoin(goodsOption.goods, goods)
+                        .on(
+                                goodsOption.commonBarcode.eq(commonBarcode),
+                                goods.networkAttribute.telecom.eq(telecomId),
+                                goods.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
+                                goodsOption.delYn.eq(StatusEnum.FLAG_N.getStatusMsg()),
+                                goods.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg())
+                                //TODO 매칭 YN 추가. 운영 편의를 위해 현재는 USE_YN 만 적용
+                        )
+                        .innerJoin(maker)
+                        .on(
+                                goods.maker.eq(maker.codeSeq),
+                                maker.useYn.eq("Y")
+                        )
+                        .innerJoin(telecom)
+                        .on(
+                                goods.networkAttribute.telecom.eq(telecom.codeSeq),
+                                telecom.useYn.eq("Y")
+                        );
+
+        long barcodeCnt = query.fetchCount();
+
+        if(barcodeCnt == 1){
+            goodsMatchRespDto = query.fetchOne();
+        }
+
+        return goodsMatchRespDto;
+    }
+
+    @Override
     public List<Goods> getGoodsSelectList(Long telecomId) {
         JPQLQuery<Goods> query = getQuerydsl().createQuery();
 

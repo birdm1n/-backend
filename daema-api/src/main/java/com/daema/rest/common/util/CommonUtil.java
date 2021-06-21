@@ -2,6 +2,7 @@ package com.daema.rest.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -87,6 +88,17 @@ public class CommonUtil {
             }
         }
         return outBarcode;
+    }
+
+    //일련번호에서 자급제 바코드 추출. 자급제 판단은 불가하며, 앞 5자리 DB 조회해서 검증
+    public static String getUnLockCmnBarcode(String inBarcode) {
+
+        if(StringUtils.hasText(inBarcode)
+            && inBarcode.length() > 5){
+            inBarcode = inBarcode.substring(0, 5);
+        }
+
+        return inBarcode;
     }
 
     public static boolean isNumeric(final CharSequence cs) {

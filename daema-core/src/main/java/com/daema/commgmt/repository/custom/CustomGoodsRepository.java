@@ -15,6 +15,8 @@ public interface CustomGoodsRepository {
 
 	GoodsMatchRespDto goodsMatchBarcode(String commonBarcode);
 
+	GoodsMatchRespDto goodsMatchBarcode(String commonBarcode, Long telecom);
+
 
 	List<GoodsOption> getColorList(long goodsId, String capacity);
 
