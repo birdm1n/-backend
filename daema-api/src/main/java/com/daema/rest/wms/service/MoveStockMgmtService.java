@@ -234,7 +234,8 @@ public class MoveStockMgmtService {
     @Transactional(readOnly = true)
     public List<SearchMatchResponseDto> getTransStoreList() {
         long storeId = authenticationUtil.getStoreId();
-        List<Store> transStoreList = moveStockRepository.getTransStoreList(storeId);
+        boolean isAdmin = authenticationUtil.isAdmin();
+        List<Store> transStoreList = moveStockRepository.getTransStoreList(storeId, isAdmin);
 
         return transStoreList.stream()
                 .map(store -> SearchMatchResponseDto.builder()

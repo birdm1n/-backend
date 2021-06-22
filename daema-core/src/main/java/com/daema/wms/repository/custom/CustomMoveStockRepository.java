@@ -6,7 +6,6 @@ import com.daema.wms.domain.dto.request.MoveMgmtRequestDto;
 import com.daema.wms.domain.dto.request.MoveStockRequestDto;
 import com.daema.wms.domain.dto.response.MoveMgmtResponseDto;
 import com.daema.wms.domain.dto.response.MoveStockResponseDto;
-import com.daema.wms.domain.dto.response.SelectStockDto;
 import com.daema.wms.domain.dto.response.TransResponseDto;
 import com.daema.wms.domain.enums.WmsEnum;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,7 @@ public interface CustomMoveStockRepository {
 
     Page<TransResponseDto> getFaultyTransTypeList(WmsEnum.MovePathType movePathType, MoveStockRequestDto moveStockRequestDto);
 
-    List<Store> getTransStoreList(long storeId);
+    List<Store> getTransStoreList(long storeId,boolean isAdmin);
 
 
     Page<MoveMgmtResponseDto> getMoveMgmtList(MoveMgmtRequestDto requestDto);

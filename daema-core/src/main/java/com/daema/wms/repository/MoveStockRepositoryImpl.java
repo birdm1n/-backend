@@ -361,13 +361,14 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
     }
 
     @Override
-    public List<Store> getTransStoreList(long storeId) {
+    public List<Store> getTransStoreList(long storeId, boolean isAdmin) {
         JPQLQuery<Store> query = getQuerydsl().createQuery();
         return query.select(store)
                 .from(store)
                 .where(
                         store.useYn.eq("Y"),
-                        store.storeId.ne(storeId)
+                        store.storeId.ne(storeId),
+                        neStoreId(isAdmin)
                 )
                 .fetch();
     }
@@ -653,6 +654,11 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                 RetrieveClauseBuilder.stringToLocalDateTime(endDt, "e")
         );
     }
-
+    private BooleanExpression neStoreId(boolean isAdmin) {
+        if (isAdmin) {
+            return null;
+        }
+        return store.storeId.ne(1L);
+    }
 }
 
