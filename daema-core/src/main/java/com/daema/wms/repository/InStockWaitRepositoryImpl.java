@@ -85,12 +85,18 @@ public class InStockWaitRepositoryImpl extends QuerydslRepositorySupport impleme
                 .where(
                         inStockWait.ownStoreId.eq(storeId),
                         inStockWait.delYn.eq("N"),
+                        inStockWait.rawBarcode.eq(barcode)
+                        /*  rawBarcode 는 del_yn = 'N' 에서는 유니크.
+                            다른 기기이지만 fullBarcode 는 뒷 1자리를 제거하기 때문에 중복으로 필터될 수 있음.
+                            상품 정보에 상관 없이 rawBarcode 겹치면 안됨. 20210622
                         inStockWait.rawBarcode.eq(barcode).or(
                                 inStockWait.fullBarcode.eq(barcode).or(
                                         inStockWait.serialNo.eq(barcode)
                                 )
                         ),
                         eqGoodsId(goodsId)
+                        */
+
                 )
                 .fetchCount();
         return resultCount;

@@ -93,7 +93,7 @@ public class InStockMgmtService {
         long inStockWaitCnt = inStockWaitRepository.inStockWaitDuplCk(storeId, requestDto.getBarcode(), requestDto.getGoodsId());
         if (inStockWaitCnt > 0L) return ResponseCodeEnum.DUPL_DATA;
 
-        //device 테이블에 중복된 기기가 있는지 확인
+        /*
         List<Long> goodsOptionIds = null;
         if(requestDto.getGoodsId() != null) {
             goodsOptionIds = goodsRepository.findById(requestDto.getGoodsId()).orElseGet(null)
@@ -101,10 +101,14 @@ public class InStockMgmtService {
                     .stream().map(GoodsOption::getGoodsOptionId)
                     .collect(Collectors.toList());
         }
+        */
 
-        //기등록된 기기 정보에서 optionId 와 바코드가 겹치면 동일 기기로 판단
-        long deviceCnt = deviceRepository.deviceDuplCk(store, requestDto.getBarcode(), goodsOptionIds);
+        //- device 테이블에 중복된 기기가 있는지 확인
+        //  기등록된 기기 정보에서 optionId 와 바코드가 겹치면 동일 기기로 판단
+        //- optionId 와 상관없이 rawBarocde 일치 여부로 정책 변경. 20210622
+        long deviceCnt = deviceRepository.deviceDuplCk(store, requestDto.getBarcode(), null);
         if (deviceCnt > 0L) return ResponseCodeEnum.DUPL_DVC;
+
 
         // 보유처 정보
         SelectStockDto stockDto = stockRepository.getStock(storeId, requestDto.getTelecom(), requestDto.getStockId());
