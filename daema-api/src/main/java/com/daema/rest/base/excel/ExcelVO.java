@@ -306,6 +306,45 @@ public class ExcelVO {
 		@ExcelTemplate(columnName = "입고단가")
 		private String inStockAmt;
 	}
+	// 불량이관
+	public static class ReturnTransList  {
+		@ExcelTemplate(columnName = "통신사")
+		private String telecomName;
+		@ExcelTemplate(columnName = "입고일")
+		private LocalDateTime inStockRegiDateTime;
+		@ExcelTemplate(columnName = "입고일-경과일")
+		private String diffInStockRegiDate;
+		@ExcelTemplate(columnName = "출고일")
+		private LocalDateTime regiDateTime;
+		@ExcelTemplate(columnName = "출고일-경과일")
+		private String diffRegiDate;
+		@ExcelTemplate(columnName = "재고구분")
+		private String outStockTypeMsg;
+		@ExcelTemplate(columnName = "보유처")
+		private String prevStockName;
+		@ExcelTemplate(columnName = "공급처")
+		private String nextProvName;
+		@ExcelTemplate(columnName = "제조사")
+		private String makerName;
+		@ExcelTemplate(columnName = "기기명")
+		private String goodsName;
+		@ExcelTemplate(columnName = "모델명")
+		private String modelName;
+		@ExcelTemplate(columnName = "기기일련번호")
+		private String rawBarcode;
+		@ExcelTemplate(columnName = "용량")
+		private String capacity;
+		@ExcelTemplate(columnName = "색상")
+		private String colorName;
+		@ExcelTemplate(columnName = "입고상태")
+		private String inStockStatusMsg;
+		@ExcelTemplate(columnName = "제품상태")
+		private String productFaultyYn;
+		@ExcelTemplate(columnName = "외장상태")
+		private String extrrStatusMsg;
+		@ExcelTemplate(columnName = "입고단가")
+		private String inStockAmt;
+	}
 
 	// 이동현황
 	public static class MoveMgmtList {

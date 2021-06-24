@@ -141,7 +141,8 @@ public class ExcelDownloadService {
                 || "STOCK_MOVEExcel".equals(pageType)
                 || "STOCK_TRNSExcel".equals(pageType)
                 || "FAULTY_TRNSExcel".equals(pageType)
-                || "SELL_TRNSExcel".equals(pageType)) {
+                || "SELL_TRNSExcel".equals(pageType)
+                || "RETURN_TRNSExcel".equals(pageType)) {
 
             WmsEnum.MovePathType movePathType = null;
             dataList = new ArrayList();
@@ -166,6 +167,10 @@ public class ExcelDownloadService {
                 fileName = "판매이관_";
                 cls = ExcelVO.SellTransList.class;
                 movePathType = WmsEnum.MovePathType.SELL_TRNS;
+            } else if ("RETURN_TRNSExcel".equals(pageType)) {
+                fileName = "반품이관_";
+                cls = ExcelVO.ReturnTransList.class;
+                movePathType = WmsEnum.MovePathType.RETURN_TRNS;
             }
 
             if(movePathType != null) {
