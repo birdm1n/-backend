@@ -15,6 +15,9 @@ public enum TypeEnum {
     JOIN_STORE("S", "STORE"),
     JOIN_USER("U", "USER"),
 
+    //정렬 구분
+    DESC("DESC", "DESC"),
+    ASC("ASC", "ASC"),
     ;
 
     private String statusCode;

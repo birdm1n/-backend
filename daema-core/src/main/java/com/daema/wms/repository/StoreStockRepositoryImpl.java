@@ -313,8 +313,14 @@ public class StoreStockRepositoryImpl extends QuerydslRepositorySupport implemen
                         eqCapacity(requestDto.getCapacity()),
                         eqTelecom(requestDto.getTelecom()),
                         eqMaker(requestDto.getMaker())
-                )
-                .orderBy(moveStock.regiDateTime.desc());
+                );
+
+        if(!StringUtils.hasText(requestDto.getOrderMoveDate())
+            || TypeEnum.ASC.getStatusMsg().equals(requestDto.getOrderMoveDate())){
+            query.orderBy(moveStock.regiDateTime.asc());
+        }else{
+            query.orderBy(moveStock.regiDateTime.desc());
+        }
 
         PageRequest pageable = RetrieveClauseBuilder.setOffsetLimit(query, requestDto);
 
