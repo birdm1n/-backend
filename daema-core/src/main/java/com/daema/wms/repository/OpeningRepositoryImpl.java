@@ -151,7 +151,7 @@ public class OpeningRepositoryImpl extends QuerydslRepositorySupport implements 
                 .leftJoin(moveStock.delivery, moveDelivery)
                 .leftJoin(outStock).on
                 (
-                        storeStock.stockType.in(WmsEnum.StockType.SELL_TRNS, WmsEnum.StockType.STOCK_TRNS, WmsEnum.StockType.FAULTY_TRNS),
+                        storeStock.stockType.in(WmsEnum.StockType.SELL_TRNS, WmsEnum.StockType.STOCK_TRNS, WmsEnum.StockType.FAULTY_TRNS, WmsEnum.StockType.RETURN_TRNS),
                         storeStock.stockTypeId.eq(outStock.outStockId)
                 )
                 .leftJoin(outStock.delivery, outDelivery)

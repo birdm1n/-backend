@@ -120,6 +120,8 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                         .then(WmsEnum.StockType.FAULTY_TRNS.getStatusMsg())
                         .when(outStock.outStockType.eq(WmsEnum.OutStockType.SELL_TRNS))
                         .then(WmsEnum.StockType.SELL_TRNS.getStatusMsg())
+                        .when(outStock.outStockType.eq(WmsEnum.OutStockType.RETURN_TRNS))
+                        .then(WmsEnum.StockType.RETURN_TRNS.getStatusMsg())
                         .otherwise(WmsEnum.StockType.UNKNOWN.getStatusMsg())
                         .as("stockTypeMsg")
                 , outStock.regiDateTime.as("regiDateTime")
@@ -305,7 +307,7 @@ public class DeviceRepositoryImpl extends QuerydslRepositorySupport implements C
                 .leftJoin(moveStock.delivery, moveDelivery)
                 .leftJoin(outStock).on
                 (
-                        storeStock.stockType.in(WmsEnum.StockType.SELL_TRNS, WmsEnum.StockType.STOCK_TRNS, WmsEnum.StockType.FAULTY_TRNS),
+                        storeStock.stockType.in(WmsEnum.StockType.SELL_TRNS, WmsEnum.StockType.STOCK_TRNS, WmsEnum.StockType.FAULTY_TRNS, WmsEnum.StockType.RETURN_TRNS),
                         storeStock.stockTypeId.eq(outStock.outStockId)
                 )
                 .leftJoin(outStock.delivery, outDelivery)

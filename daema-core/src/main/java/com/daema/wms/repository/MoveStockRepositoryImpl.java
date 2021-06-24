@@ -401,7 +401,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                 , prevStock.stockName.as("prevStockName")
                 , nextStock.stockName.as("nextStockName")
                 , new CaseBuilder()
-                        .when(storeStockHistory.stockType.eq(WmsEnum.StockType.FAULTY_TRNS))
+                        .when(storeStockHistory.stockType.in(WmsEnum.StockType.FAULTY_TRNS, WmsEnum.StockType.RETURN_TRNS))
                         .then(provider.provName)
                         .otherwise("")
                         .as("transProvName") // 공급처
@@ -478,7 +478,7 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                 .leftJoin(moveStock.delivery, moveDelivery)
                 .leftJoin(outStock).on
                 (
-                        storeStockHistory.stockType.in(WmsEnum.StockType.SELL_TRNS, WmsEnum.StockType.STOCK_TRNS, WmsEnum.StockType.FAULTY_TRNS),
+                        storeStockHistory.stockType.in(WmsEnum.StockType.SELL_TRNS, WmsEnum.StockType.STOCK_TRNS, WmsEnum.StockType.FAULTY_TRNS, WmsEnum.StockType.RETURN_TRNS),
                         storeStockHistory.stockTypeId.eq(outStock.outStockId)
                 )
                 .leftJoin(outStock.delivery, outDelivery)
@@ -516,7 +516,8 @@ public class MoveStockRepositoryImpl extends QuerydslRepositorySupport implement
                                         , WmsEnum.StockType.STOCK_MOVE
                                         , WmsEnum.StockType.STOCK_TRNS
                                         , WmsEnum.StockType.FAULTY_TRNS
-                                        , WmsEnum.StockType.SELL_TRNS),
+                                        , WmsEnum.StockType.SELL_TRNS
+                                        , WmsEnum.StockType.RETURN_TRNS),
                         storeStockHistory.historyStatus.ne(WmsEnum.HistoryStatus.DEL)
                 )
                 .orderBy(storeStockHistory.regiDateTime.desc());

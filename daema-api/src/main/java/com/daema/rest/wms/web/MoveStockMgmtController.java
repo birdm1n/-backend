@@ -97,6 +97,17 @@ public class MoveStockMgmtController {
         return responseHandler.ok();
     }
 
+    @ApiOperation(value = "반품이관 등록", notes = "반품이관 등록 기능을 수행합니다.")
+    @PostMapping("/insertReturnTrans")
+    public ResponseEntity<CommonResponse<Void>> insertReturnTrans(@RequestBody ReturnTransInsertReqDto requestDto) {
+        ResponseCodeEnum responseCodeEnum = moveStockMgmtService.insertReturnTrans(requestDto);
+
+        if (ResponseCodeEnum.OK != responseCodeEnum) {
+            return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
+        }
+        return responseHandler.ok();
+    }
+
     @ApiOperation(value = "판매이동 삭제", notes = "판매이동 데이터를 삭제합니다.")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "이동재고 ID", required = true, example = "1", name = "moveStockId", paramType = "query", allowMultiple = true)

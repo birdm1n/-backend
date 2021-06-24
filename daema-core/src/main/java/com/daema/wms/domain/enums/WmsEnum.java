@@ -81,6 +81,7 @@ public enum WmsEnum {
         STOCK_TRNS("재고이관"),
         FAULTY_TRNS("착하"),
         SELL_TRNS("판매이관"),
+        RETURN_TRNS("반품이관"),
 
         ;
         private final String statusMsg;
@@ -101,6 +102,7 @@ public enum WmsEnum {
         STOCK_TRNS("재고이관"),
         FAULTY_TRNS("착하"),
         SELL_TRNS("판매이관"),
+        RETURN_TRNS("반품이관"),
         RETURN_STOCK("반품"),
 
         //요청에 의해 제거 등 수기 처리
@@ -129,6 +131,7 @@ public enum WmsEnum {
         STOCK_TRNS("재고이관"),
         FAULTY_TRNS("착하"),
         SELL_TRNS("판매이관"),
+        RETURN_TRNS("반품이관"),
         ;
 
         private final String statusMsg;

@@ -63,8 +63,9 @@ public class MoveStockMgmtService {
             Page<TransResponseDto> responseDtoPage = moveStockRepository.getTransTypeList(movePathType, moveStockRequestDto);
             return new ResponseDto(responseDtoPage);
         }
-        // 불량이관 프로세스
-        if (WmsEnum.MovePathType.FAULTY_TRNS == movePathType) {
+        // 불량이관/반품이관 프로세스
+        if (WmsEnum.MovePathType.FAULTY_TRNS == movePathType ||
+                WmsEnum.MovePathType.RETURN_TRNS == movePathType ) {
             Page<TransResponseDto> responseDtoPage = moveStockRepository.getFaultyTransTypeList(movePathType, moveStockRequestDto);
             return new ResponseDto(responseDtoPage);
         }
@@ -378,7 +379,6 @@ public class MoveStockMgmtService {
     @Transactional
     public ResponseCodeEnum insertFaultyTrans(FaultyTransInsertReqDto requestDto) {
         long storeId = authenticationUtil.getStoreId();
-        String barcode = requestDto.getBarcode();
         Store store = Store.builder()
                 .storeId(storeId)
                 .build();
@@ -439,6 +439,69 @@ public class MoveStockMgmtService {
         return ResponseCodeEnum.OK;
     }
 
+    @Transactional
+    public ResponseCodeEnum insertReturnTrans(ReturnTransInsertReqDto requestDto) {
+        long storeId = authenticationUtil.getStoreId();
+        Store store = Store.builder()
+                .storeId(storeId)
+                .build();
+        // 1. [기기] 정보 조회
+        Device device = deviceMgmtService.retrieveDeviceFromSelDvcId(requestDto.getSelDvcId());
+        if (device == null) return ResponseCodeEnum.NO_DEVICE;
+
+        // 2. [재고 ]조회
+        StoreStock storeStock = device.getStoreStock();
+        if (storeStock == null) return ResponseCodeEnum.NO_STORE_STOCK;
+
+        // 재고타입 변경에 대한 유효성 체크
+        ResponseCodeEnum validCode = changeCkStockType(storeStock, WmsEnum.StockType.RETURN_TRNS);
+        if (validCode != ResponseCodeEnum.OK) {
+            return validCode;
+        }
+
+        // 택배 타입인 경우 = 배송중
+        WmsEnum.DeliveryStatus deliveryStatus =
+                requestDto.getDeliveryType() == WmsEnum.DeliveryType.PS ? WmsEnum.DeliveryStatus.PROGRESS : WmsEnum.DeliveryStatus.NONE;
+
+        // 3. [배송] 정보 저장
+        Delivery delivery = Delivery.builder()
+                .deliveryType(requestDto.getDeliveryType())
+                .courier(requestDto.getCourier())
+                .invoiceNo(requestDto.getInvoiceNo())
+                .deliveryMemo(requestDto.getDeliveryMemo())
+                .deliveryStatus(deliveryStatus)
+                .build();
+        deliveryRepository.save(delivery);
+
+        // 이전 보유처, 이동할 보유처 정보
+        Stock prevStock = storeStock.getNextStock(); //이전 보유처
+
+        // 4. [출고] insert
+        OutStock outStock = OutStock
+                .builder()
+                .outStockType(WmsEnum.OutStockType.RETURN_TRNS)
+                .targetId(requestDto.getProvId())
+                .device(device)
+                .delivery(delivery)
+                .prevStock(prevStock)
+                .store(store)
+                .build();
+
+        outStockRepository.save(outStock);
+
+        // 5. [재고] update
+        // - 재고 테이블에 moveId
+        // - 재고 상태, 창고 ID(moveStock ID) 변경 => 판매이동 ( 소유권 변하는지 체크 )
+        storeStock.updateToTrans(outStock);
+
+        // 6. [재고이력] insert, update
+        storeStockHistoryMgmtService.insertStoreStockHistory(storeStock);
+        storeStockHistoryMgmtService.arrangeStoreStockHistory(storeStock, false);
+        // 7. 이관시 기기 delYn => 'Y'
+        device.deleteDevice();
+        return ResponseCodeEnum.OK;
+    }
+
     public ResponseCodeEnum changeCkStockType(StoreStock storeStock, WmsEnum.StockType changeStockType) {
         ResponseCodeEnum validCode = ResponseCodeEnum.NO_STORE_STOCK;
         if (storeStock == null) return validCode;
@@ -455,6 +518,7 @@ public class MoveStockMgmtService {
         boolean isValidStockTrns = isValidStockMove; /* 이동 재고와 같음 추후 변경가능 */
         boolean isValidFaultyTrns = isValidStockMove; /* 이동 재고와 같음 추후 변경가능 */
         boolean isValidSellTrns = isValidStockMove; /* 이동 재고와 같음 추후 변경가능 */
+        boolean isValidReturnTrns = isValidStockMove; /* 이동 재고와 같음 추후 변경가능 */
         boolean isValidReturnStock = (prevStockType == WmsEnum.StockType.SELL_MOVE || prevStockType == WmsEnum.StockType.STOCK_MOVE) && openingCount == 0L;
 
         switch (changeStockType) {
@@ -475,6 +539,9 @@ public class MoveStockMgmtService {
                 break;
             case RETURN_STOCK: /* 반품 */
                 if (isValidReturnStock) validCode = ResponseCodeEnum.OK;
+                break;
+            case RETURN_TRNS:/* 반품이관 */
+                if (isValidReturnTrns) validCode = ResponseCodeEnum.OK;
                 break;
         }
 
@@ -560,6 +627,7 @@ public class MoveStockMgmtService {
         Page<MoveMgmtResponseDto> responseDtoPage = moveStockRepository.getMoveMgmtList(requestDto);
         return new ResponseDto(responseDtoPage);
     }
+
 
 
 }
