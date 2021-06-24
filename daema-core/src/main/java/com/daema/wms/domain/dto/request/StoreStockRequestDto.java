@@ -68,4 +68,7 @@ public class StoreStockRequestDto extends SearchParamDto {
     // 기기ID
     private Long dvcId;
 
+    // 이동일 정렬
+    private String orderMoveDate;
+
 }
