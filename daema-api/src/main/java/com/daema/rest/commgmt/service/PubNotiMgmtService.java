@@ -6,7 +6,7 @@ import com.daema.commgmt.domain.dto.response.PubNotiMappingDto;
 import com.daema.commgmt.domain.dto.response.PubNotiRawDataListDto;
 import com.daema.commgmt.repository.PubNotiRawDataRepository;
 import com.daema.commgmt.repository.PubNotiRepository;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.commgmt.dto.ChargeMgmtDto;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.commgmt.dto.PubNotiMgmtDto;

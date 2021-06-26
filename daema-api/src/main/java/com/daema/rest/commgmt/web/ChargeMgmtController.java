@@ -1,7 +1,7 @@
 package com.daema.rest.commgmt.web;
 
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.commgmt.dto.ChargeMgmtDto;
 import com.daema.rest.commgmt.dto.ChargeRegReqDto;
 import com.daema.rest.commgmt.service.ChargeMgmtService;

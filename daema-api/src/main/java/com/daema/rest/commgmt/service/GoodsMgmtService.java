@@ -12,7 +12,7 @@ import com.daema.commgmt.repository.GoodsOptionRepository;
 import com.daema.commgmt.repository.GoodsRegReqRejectRepository;
 import com.daema.commgmt.repository.GoodsRegReqRepository;
 import com.daema.commgmt.repository.GoodsRepository;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.commgmt.dto.GoodsOptionDto;
 import com.daema.rest.commgmt.dto.GoodsRegReqDto;

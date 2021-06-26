@@ -1,7 +1,7 @@
 package com.daema.rest.commgmt.web;
 
 import com.daema.commgmt.domain.dto.response.PubNotiRawDataListDto;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.commgmt.dto.PubNotiMgmtDto;
 import com.daema.rest.commgmt.dto.response.PubNotiMgmtResponseDto;
 import com.daema.rest.commgmt.service.PubNotiMgmtService;

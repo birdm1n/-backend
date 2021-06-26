@@ -2,7 +2,7 @@ package com.daema.rest.wms.service;
 
 import com.daema.base.repository.CodeDetailRepository;
 import com.daema.commgmt.domain.Store;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.DeviceDto;

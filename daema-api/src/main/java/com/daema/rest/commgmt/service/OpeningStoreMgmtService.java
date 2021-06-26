@@ -14,7 +14,7 @@ import com.daema.commgmt.repository.OpenStoreRepository;
 import com.daema.commgmt.repository.OpenStoreSaleStoreMapRepository;
 import com.daema.commgmt.repository.OpenStoreUserMapRepository;
 import com.daema.commgmt.repository.StoreRepository;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.commgmt.dto.OpeningStoreMgmtDto;
 import com.daema.rest.commgmt.dto.response.OpeningStoreSaleStoreResponseDto;
 import com.daema.rest.commgmt.dto.response.OpeningStoreUserResponseDto;

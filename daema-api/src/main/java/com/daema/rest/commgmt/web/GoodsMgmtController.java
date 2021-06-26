@@ -2,7 +2,7 @@ package com.daema.rest.commgmt.web;
 
 import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
 import com.daema.commgmt.domain.dto.response.GoodsMatchRespDto;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.commgmt.dto.GoodsOptionDto;
 import com.daema.rest.commgmt.dto.GoodsRegReqDto;

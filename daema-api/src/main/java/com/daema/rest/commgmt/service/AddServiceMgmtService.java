@@ -8,7 +8,7 @@ import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
 import com.daema.commgmt.repository.AddServiceRegReqRejectRepository;
 import com.daema.commgmt.repository.AddServiceRegReqRepository;
 import com.daema.commgmt.repository.AddServiceRepository;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.commgmt.dto.AddServiceMgmtDto;
 import com.daema.rest.commgmt.dto.AddServiceRegReqDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;

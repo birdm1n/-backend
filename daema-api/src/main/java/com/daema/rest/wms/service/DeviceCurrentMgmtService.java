@@ -1,7 +1,7 @@
 package com.daema.rest.wms.service;
 
 import com.daema.commgmt.domain.Store;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.util.AuthenticationUtil;
 import com.daema.rest.wms.dto.request.OpeningInsertReqDto;

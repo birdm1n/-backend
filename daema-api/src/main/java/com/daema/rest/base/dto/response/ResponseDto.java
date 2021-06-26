@@ -1,4 +1,4 @@
-package com.daema.rest.base.dto.common;
+package com.daema.rest.base.dto.response;
 
 import com.daema.rest.common.util.CommonUtil;
 import com.daema.base.dto.PagingDto;

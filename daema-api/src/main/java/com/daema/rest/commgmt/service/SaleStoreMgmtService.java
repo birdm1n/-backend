@@ -12,7 +12,7 @@ import com.daema.commgmt.domain.pk.StoreMapPK;
 import com.daema.commgmt.repository.FuncMgmtRepository;
 import com.daema.commgmt.repository.StoreMapRepository;
 import com.daema.commgmt.repository.StoreRepository;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.commgmt.dto.OrganizationMemberDto;
 import com.daema.rest.commgmt.dto.OrganizationMgmtDto;
 import com.daema.rest.commgmt.dto.SaleStoreMgmtDto;

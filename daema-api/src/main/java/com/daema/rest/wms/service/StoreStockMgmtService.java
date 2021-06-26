@@ -4,7 +4,7 @@ import com.daema.base.domain.Members;
 import com.daema.base.enums.StatusEnum;
 import com.daema.base.repository.MemberRepository;
 import com.daema.commgmt.domain.Store;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.util.AuthenticationUtil;

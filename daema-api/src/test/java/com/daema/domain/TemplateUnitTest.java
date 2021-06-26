@@ -36,8 +36,11 @@ public class TemplateUnitTest {
         Goods goods = Goods.builder()
                 .goodsId(1L)
                 .build();
-        GoodsOption goodsOption = goodsOptionRepository.findTopByGoodsAndCapacityAndColorNameAndDelYn(goods, "250G", "레드", "N");
-        log.info("데이터 확인용 = {}", goodsOption);
+
+        // error code exclude
+        // GoodsOption goodsOption = goodsOptionRepository.findTopByGoodsAndCapacityAndColorNameAndDelYn(goods, "250G", "레드", "N");
+        GoodsOption goodsOption = null;
+                log.info("데이터 확인용 = {}", goodsOption);
 
     }
 

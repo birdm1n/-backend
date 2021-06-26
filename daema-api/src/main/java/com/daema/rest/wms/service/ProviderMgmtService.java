@@ -2,7 +2,7 @@ package com.daema.rest.wms.service;
 
 import com.daema.base.enums.StatusEnum;
 import com.daema.commgmt.domain.Store;
-import com.daema.rest.base.dto.common.ResponseDto;
+import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;
