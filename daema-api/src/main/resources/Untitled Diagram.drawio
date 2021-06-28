@@ -1,1 +1,121 @@
-<mxfile host="app.diagrams.net" modified="2021-06-28T03:46:49.143Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36" version="14.8.1" etag="yXDLPGWor-mEeWwsQcgq" type="github"><diagram id="GhYvYZBozTd1P3fofjM4">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-06-28T08:02:59.062Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36" etag="gmsjJ1UaMQNZ7qENES6i" version="14.8.1" type="github">
+  <diagram id="GhYvYZBozTd1P3fofjM4" name="Page-1">
+    <mxGraphModel dx="1422" dy="1931" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="I1sewo5vSoxkKhjDisVo-2" value="User" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="230" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-3" value="-유저유형&#xa;-이름&#xa;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-2">
+          <mxGeometry y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-5" value="Application root" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="290" y="-180" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-6" value="-업무진행상태&#xa;&#xa;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-5">
+          <mxGeometry y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-7" value="Customer" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="400" width="160" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-8" value="-고객명&#xa;-주민등록번호&#xa;-요금감면&#xa;-휴대폰번호&#xa;-비상연락망 nullable&#xa;-이메일 nullable&#xa;-주소&#xa;-상세주소&#xa;-고객유형" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-7">
+          <mxGeometry y="30" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-11" value="고객유형" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="580" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-12" value="+개인&#xa;+미성년자&#xa;+개인사업자&#xa;+법인&#xa;+외국인" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-11">
+          <mxGeometry y="26" width="160" height="134" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-15" value="법정대리인" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="200" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-16" value="-성명&#xa;-주민번호&#xa;-연락처&#xa;-관계" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-15">
+          <mxGeometry y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-18" value="신분증진위" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="240" y="200" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-19" value="-신분증타입&#xa;-발급일자&#xa;-만료일자&#xa;-외국인 등록번호&#xa;-국가" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-18">
+          <mxGeometry y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-20" value="Payment" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="414" y="200" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-21" value="-납부방법&#xa;+Attribute2&#xa;+Attribute3" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-20">
+          <mxGeometry y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-22" value="account" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="350" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-23" value="-은행정보&#xa;-계좌번호&#xa;-예금주&#xa;-예금주생년월일" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-22">
+          <mxGeometry y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-24" value="card" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="240" y="350" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-25" value="-카드정보&#xa;-카드번호&#xa;-카드주&#xa;-주민번호&#xa;-유효기간" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-24">
+          <mxGeometry y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-26" value="가입" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="420" y="350" width="160" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-27" value="-개통 휴대폰번호&#xa;-개통 희망번호&#xa;-기존 통신사&#xa;-개통 통신사&#xa;-개통점&#xa;-가입 유형&#xa;-단말기&#xa;-모델&#xa;-색상&#xa;-용량&#xa;-단말기 일련번호&#xa;-유심&#xa;-유심 일련번호&#xa;-약정유형&#xa;-약정기간&#xa;-할부기간&#xa;-요금제&#xa;-부가서비스&#xa;-보험&#xa;-공시지원금&#xa;-추가지원금&#xa;-프리할부(선수납)&#xa;-기타할인금&#xa;-실판매가&#xa;-월 단말기금액&#xa;-월 기본료&#xa;-월 납부금액&#xa;-입금받을 금액&#xa;-입금여부&#xa;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-26">
+          <mxGeometry y="30" width="160" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-28" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="I1sewo5vSoxkKhjDisVo-27" target="I1sewo5vSoxkKhjDisVo-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-30" value="delivery" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="590" y="200" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-31" value="-배송구분&#xa;-택배사&#xa;-송장번호&#xa;-우편번호&#xa;-주소&#xa;상세주소" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-30">
+          <mxGeometry y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-32" value="기타" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="600" y="350" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-33" value="-사은품 동봉여부&#xa;-사은품&#xa;-중고퐁 회수여부&#xa;-중고폰 모델명&#xa;-중고보상 &#xa;-첨부파일" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-32">
+          <mxGeometry y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-36" value="부가서비스" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="60" y="480" width="160" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-37" value="Item 1" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-36">
+          <mxGeometry y="26" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-38" value="Item 2" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-36">
+          <mxGeometry y="56" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-39" value="Item 3" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-36">
+          <mxGeometry y="86" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-40" value="요금제" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="240" y="480" width="160" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-41" value="Item 1" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-40">
+          <mxGeometry y="26" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-42" value="Item 2" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-40">
+          <mxGeometry y="56" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-43" value="Item 3" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-40">
+          <mxGeometry y="86" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-44" value="보험" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="60" y="620" width="160" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-45" value="Item 1" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-44">
+          <mxGeometry y="26" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-46" value="Item 2" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-44">
+          <mxGeometry y="56" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I1sewo5vSoxkKhjDisVo-47" value="Item 3" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-44">
+          <mxGeometry y="86" width="160" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
