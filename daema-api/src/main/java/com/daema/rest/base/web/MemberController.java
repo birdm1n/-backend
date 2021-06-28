@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Log
 @RestController
-@RequestMapping(value = {"/user", "/api/user" })
+@RequestMapping(value = {"/user", "/v1/api/user" })
 public class MemberController {
 
     final AuthenticationManager authenticationManager;
