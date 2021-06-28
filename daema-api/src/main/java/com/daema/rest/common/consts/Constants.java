@@ -22,7 +22,9 @@ public class Constants {
             "/dataHandle/**", "/oauth/**", "/**/joinStore", "/**/insertUser",
 
             "/api/user/signup", "/api/user/login", "/api/user/invalidate", "/api/user/verify/**",
-            "/api/dataHandle/**", "/api/oauth/**"
+            "/api/dataHandle/**", "/api/oauth/**",
+
+            "/v1/api/user/login"
     };
 
     public static final String[] SECURITY_EXCLUDE_URLS = {
