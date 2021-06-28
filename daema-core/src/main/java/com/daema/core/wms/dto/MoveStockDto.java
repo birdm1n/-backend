@@ -1,8 +1,8 @@
-package com.daema.rest.wms.dto;
+package com.daema.core.wms.dto;
 
-import com.daema.rest.commgmt.dto.MemberMgmtDto;
-import com.daema.wms.domain.MoveStock;
-import com.daema.wms.domain.enums.WmsEnum;
+import com.daema.core.commgmt.dto.MemberMgmtDto;
+import com.daema.core.wms.domain.MoveStock;
+import com.daema.core.wms.domain.enums.WmsEnum;
 import lombok.*;
 
 import java.time.LocalDateTime;

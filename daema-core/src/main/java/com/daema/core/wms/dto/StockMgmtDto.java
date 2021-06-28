@@ -1,6 +1,6 @@
-package com.daema.rest.wms.dto;
+package com.daema.core.wms.dto;
 
-import com.daema.wms.domain.Stock;
+import com.daema.core.wms.domain.Stock;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.*;

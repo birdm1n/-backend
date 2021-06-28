@@ -1,9 +1,7 @@
-package com.daema.rest.wms.dto;
+package com.daema.core.wms.dto;
 
-import com.daema.wms.domain.enums.WmsEnum;
+import com.daema.core.wms.domain.enums.WmsEnum;
 import lombok.*;
-
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter

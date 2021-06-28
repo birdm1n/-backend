@@ -1,11 +1,11 @@
-package com.daema.rest.wms.dto;
+package com.daema.core.wms.dto;
 
-import com.daema.commgmt.domain.GoodsOption;
-import com.daema.commgmt.domain.Store;
-import com.daema.rest.commgmt.dto.GoodsOptionDto;
-import com.daema.rest.commgmt.dto.StoreDto;
-import com.daema.wms.domain.Device;
-import com.daema.wms.domain.enums.WmsEnum;
+import com.daema.core.commgmt.domain.GoodsOption;
+import com.daema.core.commgmt.domain.Store;
+import com.daema.core.commgmt.dto.GoodsOptionDto;
+import com.daema.core.commgmt.dto.StoreDto;
+import com.daema.core.wms.domain.Device;
+import com.daema.core.wms.domain.enums.WmsEnum;
 import lombok.*;
 
 import java.time.LocalDateTime;
