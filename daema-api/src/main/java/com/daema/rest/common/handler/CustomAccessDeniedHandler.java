@@ -1,6 +1,6 @@
 package com.daema.rest.common.handler;
 
-import com.daema.base.enums.UserRole;
+import com.daema.core.base.enums.UserRole;
 import com.daema.rest.base.dto.SecurityMember;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.io.response.CommonResponse;

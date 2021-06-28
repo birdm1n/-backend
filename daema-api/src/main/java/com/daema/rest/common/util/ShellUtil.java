@@ -1,6 +1,6 @@
 package com.daema.rest.common.util;
 
-import com.daema.base.enums.ShellEnum;
+import com.daema.core.base.enums.ShellEnum;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;

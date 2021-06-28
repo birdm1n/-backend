@@ -1,22 +1,22 @@
 package com.daema.rest.commgmt.service;
 
-import com.daema.base.domain.Members;
-import com.daema.base.enums.StatusEnum;
-import com.daema.base.enums.UserRole;
-import com.daema.base.repository.MemberRepository;
-import com.daema.base.repository.MemberRoleRepository;
-import com.daema.commgmt.domain.MembersRole;
-import com.daema.commgmt.domain.Organization;
-import com.daema.commgmt.domain.RoleMgmt;
-import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
-import com.daema.commgmt.domain.dto.response.OrgnztListDto;
-import com.daema.commgmt.domain.dto.response.OrgnztMemberListDto;
-import com.daema.commgmt.repository.OrganizationRepository;
+import com.daema.core.base.domain.Members;
+import com.daema.core.base.enums.StatusEnum;
+import com.daema.core.base.enums.UserRole;
+import com.daema.core.base.repository.MemberRepository;
+import com.daema.core.base.repository.MemberRoleRepository;
+import com.daema.core.commgmt.domain.MembersRole;
+import com.daema.core.commgmt.domain.Organization;
+import com.daema.core.commgmt.domain.RoleMgmt;
+import com.daema.core.commgmt.dto.request.ComMgmtRequestDto;
+import com.daema.core.commgmt.dto.response.OrgnztListDto;
+import com.daema.core.commgmt.dto.response.OrgnztMemberListDto;
+import com.daema.core.commgmt.repository.OrganizationRepository;
 import com.daema.rest.base.service.AuthService;
-import com.daema.rest.commgmt.dto.FuncRoleMgmtDto;
-import com.daema.rest.commgmt.dto.OrganizationMemberDto;
-import com.daema.rest.commgmt.dto.OrganizationMgmtDto;
-import com.daema.rest.commgmt.dto.response.OrganizationMgmtResponseDto;
+import com.daema.core.commgmt.dto.FuncRoleMgmtDto;
+import com.daema.core.commgmt.dto.OrganizationMemberDto;
+import com.daema.core.commgmt.dto.OrganizationMgmtDto;
+import com.daema.core.commgmt.dto.response.OrganizationMgmtResponseDto;
 import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
@@ -36,7 +36,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.daema.rest.commgmt.dto.response.OrganizationMgmtResponseDto.OrgnztMemberAndRoleDto;
+import static com.daema.core.commgmt.dto.response.OrganizationMgmtResponseDto.OrgnztMemberAndRoleDto;
 
 @Service
 public class OrganizationMgmtService {

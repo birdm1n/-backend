@@ -1,10 +1,10 @@
 package com.daema.rest.commgmt.web;
 
-import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
+import com.daema.core.commgmt.dto.request.ComMgmtRequestDto;
 import com.daema.rest.base.dto.response.ResponseDto;
-import com.daema.rest.commgmt.dto.OpeningStoreMgmtDto;
-import com.daema.rest.commgmt.dto.response.OpeningStoreSaleStoreResponseDto;
-import com.daema.rest.commgmt.dto.response.OpeningStoreUserResponseDto;
+import com.daema.core.commgmt.dto.OpeningStoreMgmtDto;
+import com.daema.core.commgmt.dto.response.OpeningStoreSaleStoreResponseDto;
+import com.daema.core.commgmt.dto.response.OpeningStoreUserResponseDto;
 import com.daema.rest.commgmt.service.OpeningStoreMgmtService;
 import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.enums.ResponseCodeEnum;

@@ -1,6 +1,6 @@
 package com.daema.rest.common.filter;
 
-import com.daema.base.domain.Members;
+import com.daema.core.base.domain.Members;
 import com.daema.rest.base.dto.SecurityMember;
 import com.daema.rest.base.service.MyUserDetailsService;
 import com.daema.rest.commgmt.service.RoleFuncMgmtService;

@@ -1,20 +1,20 @@
 package com.daema.rest.wms.service;
 
-import com.daema.base.repository.CodeDetailRepository;
-import com.daema.commgmt.domain.Store;
+import com.daema.core.base.repository.CodeDetailRepository;
+import com.daema.core.commgmt.domain.Store;
+import com.daema.core.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.base.dto.response.ResponseDto;
-import com.daema.rest.commgmt.dto.GoodsMgmtDto;
 import com.daema.rest.common.util.AuthenticationUtil;
-import com.daema.rest.wms.dto.DeviceDto;
-import com.daema.rest.wms.dto.InStockMgmtDto;
-import com.daema.rest.wms.dto.StockMgmtDto;
-import com.daema.rest.wms.dto.response.DeviceResponseDto;
-import com.daema.wms.domain.Device;
-import com.daema.wms.domain.Stock;
-import com.daema.wms.domain.dto.response.DeviceListResponseDto;
-import com.daema.wms.repository.DeviceRepository;
-import com.daema.wms.repository.DeviceStatusRepository;
-import com.daema.wms.repository.InStockRepository;
+import com.daema.core.wms.domain.Device;
+import com.daema.core.wms.domain.Stock;
+import com.daema.core.wms.dto.DeviceDto;
+import com.daema.core.wms.dto.InStockMgmtDto;
+import com.daema.core.wms.dto.StockMgmtDto;
+import com.daema.core.wms.dto.response.DeviceListResponseDto;
+import com.daema.core.wms.dto.response.DeviceResponseDto;
+import com.daema.core.wms.repository.DeviceRepository;
+import com.daema.core.wms.repository.DeviceStatusRepository;
+import com.daema.core.wms.repository.InStockRepository;
 import org.springframework.stereotype.Service;
 
 @Service

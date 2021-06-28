@@ -1,6 +1,6 @@
 package com.daema.rest.base.web;
 
-import com.daema.base.enums.ShellEnum;
+import com.daema.core.base.enums.ShellEnum;
 import com.daema.rest.base.service.ShellService;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.io.response.CommonResponse;

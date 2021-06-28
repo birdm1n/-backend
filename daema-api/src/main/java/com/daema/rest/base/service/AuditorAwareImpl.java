@@ -1,6 +1,6 @@
 package com.daema.rest.base.service;
 
-import com.daema.base.domain.Members;
+import com.daema.core.base.domain.Members;
 import com.daema.rest.base.dto.SecurityMember;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;

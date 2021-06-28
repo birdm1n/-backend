@@ -1,8 +1,8 @@
 package com.daema.rest.base.service;
 
-import com.daema.base.domain.Members;
+import com.daema.core.base.domain.Members;
 import com.daema.rest.base.dto.SecurityMember;
-import com.daema.base.repository.MemberRepository;
+import com.daema.core.base.repository.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

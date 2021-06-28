@@ -1,16 +1,16 @@
 package com.daema.rest.commgmt.service;
 
-import com.daema.base.enums.StatusEnum;
-import com.daema.commgmt.domain.AddService;
-import com.daema.commgmt.domain.AddServiceRegReq;
-import com.daema.commgmt.domain.AddServiceRegReqReject;
-import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
-import com.daema.commgmt.repository.AddServiceRegReqRejectRepository;
-import com.daema.commgmt.repository.AddServiceRegReqRepository;
-import com.daema.commgmt.repository.AddServiceRepository;
+import com.daema.core.base.enums.StatusEnum;
+import com.daema.core.commgmt.domain.AddService;
+import com.daema.core.commgmt.domain.AddServiceRegReq;
+import com.daema.core.commgmt.domain.AddServiceRegReqReject;
+import com.daema.core.commgmt.dto.request.ComMgmtRequestDto;
+import com.daema.core.commgmt.repository.AddServiceRegReqRejectRepository;
+import com.daema.core.commgmt.repository.AddServiceRegReqRepository;
+import com.daema.core.commgmt.repository.AddServiceRepository;
 import com.daema.rest.base.dto.response.ResponseDto;
-import com.daema.rest.commgmt.dto.AddServiceMgmtDto;
-import com.daema.rest.commgmt.dto.AddServiceRegReqDto;
+import com.daema.core.commgmt.dto.AddServiceMgmtDto;
+import com.daema.core.commgmt.dto.AddServiceRegReqDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;

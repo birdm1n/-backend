@@ -1,16 +1,16 @@
 package com.daema.rest.wms.service;
 
-import com.daema.commgmt.domain.Store;
+import com.daema.core.commgmt.domain.Store;
 import com.daema.rest.base.dto.response.ResponseDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.util.AuthenticationUtil;
-import com.daema.rest.wms.dto.request.OpeningInsertReqDto;
-import com.daema.wms.domain.Device;
-import com.daema.wms.domain.Opening;
-import com.daema.wms.domain.dto.request.DeviceCurrentRequestDto;
-import com.daema.wms.domain.dto.response.DeviceCurrentResponseDto;
-import com.daema.wms.repository.DeviceRepository;
-import com.daema.wms.repository.OpeningRepository;
+import com.daema.core.wms.dto.request.OpeningInsertReqDto;
+import com.daema.core.wms.domain.Device;
+import com.daema.core.wms.domain.Opening;
+import com.daema.core.wms.dto.request.DeviceCurrentRequestDto;
+import com.daema.core.wms.dto.response.DeviceCurrentResponseDto;
+import com.daema.core.wms.repository.DeviceRepository;
+import com.daema.core.wms.repository.OpeningRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

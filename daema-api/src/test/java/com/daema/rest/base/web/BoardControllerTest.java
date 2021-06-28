@@ -1,8 +1,8 @@
 package com.daema.rest.base.web;
 
 import com.daema.ApiApplication;
-import com.daema.sample.domain.Board;
-import com.daema.sample.repository.BoardRepository;
+import com.daema.core.sample.domain.Board;
+import com.daema.core.sample.repository.BoardRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

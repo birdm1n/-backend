@@ -1,12 +1,12 @@
 package com.daema.rest.base.service;
 
-import com.daema.base.domain.Members;
-import com.daema.base.domain.Salt;
-import com.daema.base.domain.SocialData;
-import com.daema.base.enums.StatusEnum;
-import com.daema.base.enums.UserRole;
-import com.daema.base.repository.MemberRepository;
-import com.daema.base.repository.SocialDataRepository;
+import com.daema.core.base.domain.Members;
+import com.daema.core.base.domain.Salt;
+import com.daema.core.base.domain.SocialData;
+import com.daema.core.base.enums.StatusEnum;
+import com.daema.core.base.enums.UserRole;
+import com.daema.core.base.repository.MemberRepository;
+import com.daema.core.base.repository.SocialDataRepository;
 import com.daema.rest.base.dto.request.SocialDataRequest;
 import com.daema.rest.common.consts.PropertiesValue;
 import com.daema.rest.common.enums.ResponseCodeEnum;

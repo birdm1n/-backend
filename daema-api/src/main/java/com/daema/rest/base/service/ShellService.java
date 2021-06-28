@@ -1,8 +1,8 @@
 package com.daema.rest.base.service;
 
-import com.daema.base.enums.ShellEnum;
+import com.daema.core.base.enums.ShellEnum;
 import com.daema.rest.common.util.ShellUtil;
-import com.daema.wms.repository.DeviceRepository;
+import com.daema.core.wms.repository.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

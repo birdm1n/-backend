@@ -1,9 +1,9 @@
 package com.daema.rest.commgmt.web;
 
-import com.daema.commgmt.domain.dto.request.ComMgmtRequestDto;
-import com.daema.rest.commgmt.dto.OrganizationMemberDto;
-import com.daema.rest.commgmt.dto.OrganizationMgmtDto;
-import com.daema.rest.commgmt.dto.response.OrganizationMgmtResponseDto;
+import com.daema.core.commgmt.dto.request.ComMgmtRequestDto;
+import com.daema.core.commgmt.dto.OrganizationMemberDto;
+import com.daema.core.commgmt.dto.OrganizationMgmtDto;
+import com.daema.core.commgmt.dto.response.OrganizationMgmtResponseDto;
 import com.daema.rest.commgmt.service.OrganizationMgmtService;
 import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.enums.ResponseCodeEnum;

@@ -1,6 +1,6 @@
 package com.daema.rest.base.dto;
 
-import com.daema.base.domain.Members;
+import com.daema.core.base.domain.Members;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 

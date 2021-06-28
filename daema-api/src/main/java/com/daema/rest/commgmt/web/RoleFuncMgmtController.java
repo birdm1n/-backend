@@ -1,7 +1,7 @@
 package com.daema.rest.commgmt.web;
 
-import com.daema.rest.commgmt.dto.FuncRoleMgmtDto;
-import com.daema.rest.commgmt.dto.response.FuncRoleResponseDto;
+import com.daema.core.commgmt.dto.FuncRoleMgmtDto;
+import com.daema.core.commgmt.dto.response.FuncRoleResponseDto;
 import com.daema.rest.commgmt.service.RoleFuncMgmtService;
 import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.enums.ResponseCodeEnum;

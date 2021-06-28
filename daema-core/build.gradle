@@ -11,6 +11,10 @@ dependencies {
     implementation 'com.querydsl:querydsl-jpa'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'com.querydsl:querydsl-jpa'
+
+    /* swagger */
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 }
 
 test {

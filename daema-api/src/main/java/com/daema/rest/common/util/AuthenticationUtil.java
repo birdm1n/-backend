@@ -1,6 +1,6 @@
 package com.daema.rest.common.util;
 
-import com.daema.base.enums.UserRole;
+import com.daema.core.base.enums.UserRole;
 import com.daema.rest.base.dto.SecurityMember;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,6 +1,6 @@
 package com.daema.rest.common.io.file;
 
-import com.daema.base.enums.TypeEnum;
+import com.daema.core.base.enums.TypeEnum;
 import com.daema.rest.base.service.ExcelDownloadService;
 import com.daema.rest.common.consts.Constants;
 import com.daema.rest.common.util.ExcelUtil;

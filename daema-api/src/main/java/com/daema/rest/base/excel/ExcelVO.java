@@ -1,6 +1,6 @@
 package com.daema.rest.base.excel;
 
-import com.daema.wms.domain.dto.response.DeviceStatusListDto;
+import com.daema.core.wms.dto.response.DeviceStatusListDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

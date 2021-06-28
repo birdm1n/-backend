@@ -1,8 +1,8 @@
 package com.daema.rest.wms.service;
 
-import com.daema.wms.domain.*;
-import com.daema.wms.domain.enums.WmsEnum;
-import com.daema.wms.repository.*;
+import com.daema.core.wms.domain.*;
+import com.daema.core.wms.domain.enums.WmsEnum;
+import com.daema.core.wms.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

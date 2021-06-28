@@ -1,6 +1,6 @@
 package com.daema.rest.base.web;
 
-import com.daema.base.domain.Members;
+import com.daema.core.base.domain.Members;
 import com.daema.rest.base.dto.request.ChangePassword1Request;
 import com.daema.rest.base.dto.request.ChangePassword2Request;
 import com.daema.rest.base.dto.request.LoginUserRequest;

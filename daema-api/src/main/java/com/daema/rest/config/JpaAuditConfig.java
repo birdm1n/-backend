@@ -1,6 +1,6 @@
 package com.daema.rest.config;
 
-import com.daema.base.domain.Members;
+import com.daema.core.base.domain.Members;
 import com.daema.rest.base.service.AuditorAwareImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

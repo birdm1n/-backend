@@ -1,16 +1,16 @@
 package com.daema.rest.commgmt.service;
 
-import com.daema.base.enums.StatusEnum;
-import com.daema.commgmt.domain.PubNoti;
-import com.daema.commgmt.domain.dto.response.PubNotiMappingDto;
-import com.daema.commgmt.domain.dto.response.PubNotiRawDataListDto;
-import com.daema.commgmt.repository.PubNotiRawDataRepository;
-import com.daema.commgmt.repository.PubNotiRepository;
+import com.daema.core.base.enums.StatusEnum;
+import com.daema.core.commgmt.domain.PubNoti;
+import com.daema.core.commgmt.dto.response.PubNotiMappingDto;
+import com.daema.core.commgmt.dto.response.PubNotiRawDataListDto;
+import com.daema.core.commgmt.repository.PubNotiRawDataRepository;
+import com.daema.core.commgmt.repository.PubNotiRepository;
 import com.daema.rest.base.dto.response.ResponseDto;
-import com.daema.rest.commgmt.dto.ChargeMgmtDto;
-import com.daema.rest.commgmt.dto.GoodsMgmtDto;
-import com.daema.rest.commgmt.dto.PubNotiMgmtDto;
-import com.daema.rest.commgmt.dto.response.PubNotiMgmtResponseDto;
+import com.daema.core.commgmt.dto.ChargeMgmtDto;
+import com.daema.core.commgmt.dto.GoodsMgmtDto;
+import com.daema.core.commgmt.dto.PubNotiMgmtDto;
+import com.daema.core.commgmt.dto.response.PubNotiMgmtResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.ProcessErrorException;
 import com.daema.rest.common.exception.UnAuthorizedException;

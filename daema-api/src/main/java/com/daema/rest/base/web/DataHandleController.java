@@ -1,11 +1,11 @@
 package com.daema.rest.base.web;
 
-import com.daema.rest.base.dto.RetrieveInitDataResponseDto;
+import com.daema.core.base.dto.RetrieveInitDataResponseDto;
 import com.daema.rest.base.service.DataHandleService;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.wms.domain.dto.response.DeviceHistoryResponseDto;
+import com.daema.core.wms.dto.response.DeviceHistoryResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;

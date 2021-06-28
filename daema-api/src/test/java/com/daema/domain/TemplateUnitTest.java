@@ -2,10 +2,10 @@ package com.daema.domain;
 
 import com.daema.ApiApplication;
 import com.daema.DemoApplication;
-import com.daema.commgmt.domain.Goods;
-import com.daema.commgmt.domain.GoodsOption;
-import com.daema.commgmt.repository.GoodsOptionRepository;
-import com.daema.commgmt.repository.GoodsRepository;
+import com.daema.core.commgmt.domain.Goods;
+import com.daema.core.commgmt.domain.GoodsOption;
+import com.daema.core.commgmt.repository.GoodsOptionRepository;
+import com.daema.core.commgmt.repository.GoodsRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

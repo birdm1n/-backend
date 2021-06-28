@@ -1,7 +1,7 @@
 package com.daema.rest.base.dto.response;
 
 import com.daema.rest.common.util.CommonUtil;
-import com.daema.base.dto.PagingDto;
+import com.daema.core.base.dto.PagingDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

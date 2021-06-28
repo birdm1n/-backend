@@ -1,15 +1,15 @@
 package com.daema.rest.commgmt.service;
 
-import com.daema.base.enums.StatusEnum;
-import com.daema.base.enums.UserRole;
-import com.daema.commgmt.domain.FuncMgmt;
-import com.daema.commgmt.domain.FuncRoleMap;
-import com.daema.commgmt.domain.RoleMgmt;
-import com.daema.commgmt.repository.FuncMgmtRepository;
-import com.daema.commgmt.repository.FuncRoleMapRepository;
-import com.daema.commgmt.repository.RoleMgmtRepository;
-import com.daema.rest.commgmt.dto.FuncRoleMgmtDto;
-import com.daema.rest.commgmt.dto.response.FuncRoleResponseDto;
+import com.daema.core.base.enums.StatusEnum;
+import com.daema.core.base.enums.UserRole;
+import com.daema.core.commgmt.domain.FuncMgmt;
+import com.daema.core.commgmt.domain.FuncRoleMap;
+import com.daema.core.commgmt.domain.RoleMgmt;
+import com.daema.core.commgmt.repository.FuncMgmtRepository;
+import com.daema.core.commgmt.repository.FuncRoleMapRepository;
+import com.daema.core.commgmt.repository.RoleMgmtRepository;
+import com.daema.core.commgmt.dto.FuncRoleMgmtDto;
+import com.daema.core.commgmt.dto.response.FuncRoleResponseDto;
 import com.daema.rest.common.enums.ServiceReturnMsgEnum;
 import com.daema.rest.common.exception.DataNotFoundException;
 import com.daema.rest.common.exception.ProcessErrorException;

@@ -1,6 +1,6 @@
 package com.daema.rest.common.util;
 
-import com.daema.base.domain.Members;
+import com.daema.core.base.domain.Members;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
