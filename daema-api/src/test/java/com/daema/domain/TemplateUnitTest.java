@@ -6,6 +6,9 @@ import com.daema.core.commgmt.domain.Goods;
 import com.daema.core.commgmt.domain.GoodsOption;
 import com.daema.core.commgmt.repository.GoodsOptionRepository;
 import com.daema.core.commgmt.repository.GoodsRepository;
+import com.daema.core.sms.domain.Card;
+import com.daema.core.sms.domain.Payment;
+import com.daema.core.sms.repository.PaymentRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +28,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class TemplateUnitTest {
     Logger log = (Logger) LoggerFactory.getLogger(TemplateUnitTest.class);
 
+    private Payment payment;
+
     @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Test
+    public void setUP() throws Exception {
+
+
+        payment = payment.builder()
+                .paymentId(1L)
+                .build();
+
+        payment.setCard(new Card());
+
+        paymentRepository.save(payment);
+    }
+
+   /* @Autowired
     private GoodsOptionRepository goodsOptionRepository;
 
     @Autowired
@@ -42,6 +63,6 @@ public class TemplateUnitTest {
         GoodsOption goodsOption = null;
                 log.info("데이터 확인용 = {}", goodsOption);
 
-    }
+    }*/
 
 }

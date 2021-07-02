@@ -1,12 +1,15 @@
 package com.daema.core.commgmt.domain;
 
 import com.daema.core.commgmt.dto.response.OpenStoreListDto;
+import com.daema.core.sms.domain.JoinInfo;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @SqlResultSetMapping(
         name="OpenStoreList",
@@ -103,6 +106,8 @@ public class OpenStore {
 
     @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     private LocalDateTime regiDateTime;
+    @OneToMany(mappedBy = "openStore")
+    private List<JoinInfo> joinInfoList = new ArrayList<>();
 
     @Builder
     public OpenStore(long openStoreId, long storeId, String openStoreName, Long telecom, String telecomName, String bizNo, String chargerName

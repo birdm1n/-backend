@@ -6,8 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = ApiApplication.class)
 class ApiApplicationTest {
 
-    @Test
-    void contextLoads() {
+    public void contextLoads() {
 
     }
 }

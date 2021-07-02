@@ -10,7 +10,7 @@ public class DemoApplication {
 
         String profile = System.getProperty("spring.profiles.active");
         if(profile == null) {
-            System.setProperty("spring.profiles.active", "local");
+            System.setProperty("spring.profiles.active", "test");
         }
 
         SpringApplication.run(DemoApplication.class, args);

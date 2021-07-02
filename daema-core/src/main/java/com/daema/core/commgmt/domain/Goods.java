@@ -1,6 +1,7 @@
 package com.daema.core.commgmt.domain;
 
 import com.daema.core.commgmt.domain.attr.NetworkAttribute;
+import com.daema.core.sms.domain.JoinInfo;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -48,6 +49,8 @@ public class Goods extends GoodsBase{
     @OneToMany(mappedBy = "goods")
     private List<GoodsOption> optionList;
 
+    @OneToOne(mappedBy = "goods")
+    private JoinInfo join;
     @Builder
     public Goods(long goodsId, String goodsName, String modelName, Long maker, Long telecom, Long network
             , String originKey, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn, String makerName, String networkName, String telecomName){

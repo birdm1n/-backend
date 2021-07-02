@@ -77,7 +77,7 @@ public class GoodsRepositoryImpl extends QuerydslRepositorySupport implements Cu
                         .and(maker.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
                 .innerJoin(telecom)
-                .on(goods.networkAttribute.telecom.eq(telecom.codeSeq)
+                .on(goods.networkAttribute.telecom.eq( telecom.codeSeq)
                         .and(telecom.codeId.eq("TELECOM"))
                         .and(telecom.useYn.eq(StatusEnum.FLAG_Y.getStatusMsg()))
                 )
