@@ -1,6 +1,10 @@
 package com.daema.core.sms.dto.request;
 
 import com.daema.core.sms.domain.enums.SmsEnum;
+import com.daema.core.sms.dto.AccountDto;
+import com.daema.core.sms.dto.CourtProctorDto;
+import com.daema.core.sms.dto.CustomerDto;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 @Builder
@@ -8,8 +12,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FillOutApplicationRequestDto {
+public class ApplicationFormRequestDto {
     //Id
+    @ApiModelProperty(value = "계좌 아이디",  required = true)
     private Long accountId;
     private Long additionId;
     private Long callingPlanId;
@@ -30,6 +35,18 @@ public class FillOutApplicationRequestDto {
     private String accountHolder;
     private int dateOfBirth;
     private String relation;
+
+  /*  public AccountDto getAccountDto(FillOutApplicationRequestDto fillOutApplicationRequestDto){
+        AccountDto accountDto = new AccountDto()
+                .builder()
+                .bank(this.bank)
+                .accountNo(this.accountNo)
+                .accountHolder(this.accountHolder)
+                .dateOfBirth(this.dateOfBirth)
+                .relation(this.relation)
+                .build();
+        return accountDto;
+    }*/
 
     //addtionDto
     private SmsEnum.AdditionCategory additionCategory;
@@ -63,6 +80,7 @@ public class FillOutApplicationRequestDto {
     private String cusStreet;
     private String cusZipcode;
     private SmsEnum.CustomerType customerType;
+    // customer in LicenseAuth
     private SmsEnum.LicenseType cusLicenseType;
     private int cusIssueDate;
     private int cusExpiredDate;
@@ -71,6 +89,7 @@ public class FillOutApplicationRequestDto {
     private int cusLicenseNo;
     private int cusStayCode;
     private String cusCountry;
+
 
     //GiroDto
     private String giroPaymentCity;
