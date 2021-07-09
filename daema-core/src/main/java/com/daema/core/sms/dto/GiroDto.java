@@ -15,21 +15,6 @@ import javax.persistence.*;
 public class GiroDto {
     private Long giroId;
     private Address paymentAddress;
-    private Payment payment;
 
-    public static GiroDto from(Giro giro) {
-        return GiroDto.builder()
-                .giroId(giro.getGiroId())
-                .paymentAddress(giro.getPaymentAddress())
-                .payment(giro.getPayment())
-                .build();
-    }
 
-    public static Giro toEntity(GiroDto giroDto) {
-        return Giro.builder()
-                .giroId(giroDto.getGiroId())
-                .paymentAddress(giroDto.getPaymentAddress())
-                .payment(giroDto.getPayment())
-                .build();
-    }
 }

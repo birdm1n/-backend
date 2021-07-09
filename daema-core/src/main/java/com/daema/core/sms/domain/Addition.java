@@ -1,9 +1,12 @@
 package com.daema.core.sms.domain;
 
 import com.daema.core.sms.domain.enums.SmsEnum;
+import com.daema.core.sms.dto.AdditionDto;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Getter
@@ -29,7 +32,46 @@ public class Addition {
     @Column(name = "charge", columnDefinition = "INT comment '요금'")
     private int charge;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "join_info_id", columnDefinition = "BIGINT UNSIGNED comment '가입 정보'")
-    private JoinInfo joinInfo;
+    @OneToMany(mappedBy = "addition")
+    private List<JoinAddition> joinAdditionList = new ArrayList<>();
+
+    public static AdditionDto from(Addition addition) {
+        return AdditionDto.builder()
+                .additionId(addition.getAdditionId())
+                .additionCategory(addition.getAdditionCategory())
+                .productName(addition.getProductName())
+                .charge(addition.getCharge())
+                /*.joinInfoId(addition.getJoinInfo().getJoinInfoId())*/
+                .build();
+    }
+
+    public static Addition toEntity(AdditionDto additionDto) {
+        return Addition.builder()
+                .additionId(additionDto.getAdditionId())
+                .additionCategory(additionDto.getAdditionCategory())
+                .productName(additionDto.getProductName())
+                .charge(additionDto.getCharge())
+                /* .joinInfo(JoinInfo.builder()
+                         .joinInfoId(additionDto.getJoinInfoId())
+                         .build())*/
+                .build();
+    }
+    public static List<Addition> toEntity(List<AdditionDto> additionDtos) {
+        List<Addition> additionList = new ArrayList<>();
+        for(AdditionDto additionDto : additionDtos){
+            additionList.add(
+                    Addition.builder()
+                            .additionId(additionDto.getAdditionId())
+                            .additionCategory(additionDto.getAdditionCategory())
+                            .productName(additionDto.getProductName())
+                            .charge(additionDto.getCharge())
+                            /* .joinInfo(JoinInfo.builder()
+                                     .joinInfoId(additionDto.getJoinInfoId())
+                                     .build())*/
+                            .build()
+            );
+        }
+        return additionList;
+
+    }
 }

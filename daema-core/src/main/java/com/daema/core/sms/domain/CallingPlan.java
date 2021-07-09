@@ -1,5 +1,6 @@
 package com.daema.core.sms.domain;
 
+import com.daema.core.sms.dto.CallingPlanDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,6 +27,19 @@ public class CallingPlan {
     private JoinInfo joinInfo;
 
 
+    public static CallingPlanDto from(CallingPlan callingPlan) {
+        return CallingPlanDto.builder()
+                .callingPlanId(callingPlan.getCallingPlanId())
+                .name(callingPlan.getName())
+                .build();
+    }
+
+    public static CallingPlan toEntity(CallingPlanDto callingPlanDto) {
+        return CallingPlan.builder()
+                .callingPlanId(callingPlanDto.getCallingPlanId())
+                .name(callingPlanDto.getName())
+                .build();
+    }
 
 
 }

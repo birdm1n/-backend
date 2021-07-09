@@ -1,6 +1,7 @@
 package com.daema.core.sms.domain;
 
 import com.daema.core.base.domain.common.BaseEntity;
+import com.daema.core.sms.dto.CardDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,4 +40,30 @@ public class Card  {
 
     @OneToOne(mappedBy = "card")
     private Payment payment;
+
+    public static CardDto from(Card card) {
+        return CardDto.builder()
+                .cardId(card.getCardId())
+                .cardInfo(card.getCardInfo())
+                .cardNo(card.getCardNo())
+                .cardHolder(card.getCardHolder())
+                .residentRegistrationNo(card.getResidentRegistrationNo())
+                .expiryDate(card.getExpiryDate())
+                /*  .paymentId(card.getPayment().getPaymentId())*/
+                .build();
+    }
+
+    public static Card toEntity(CardDto cardDto) {
+        return Card.builder()
+                .cardId(cardDto.getCardId())
+                .cardInfo(cardDto.getCardInfo())
+                .cardNo(cardDto.getCardNo())
+                .cardHolder(cardDto.getCardHolder())
+                .residentRegistrationNo(cardDto.getResidentRegistrationNo())
+                .expiryDate(cardDto.getExpiryDate())
+                /* .payment(Payment.builder()
+                         .paymentId(cardDto.getPaymentId())
+                         .build())*/
+                .build();
+    }
 }

@@ -1,10 +1,8 @@
 package com.daema.rest.sms.service;
 
-import com.daema.core.sms.domain.CourtProctor;
 import com.daema.core.sms.domain.Customer;
-import com.daema.core.sms.dto.CourtProctorDto;
 import com.daema.core.sms.dto.CustomerDto;
-import com.daema.core.sms.dto.request.FillOutApplicationReqDto;
+import com.daema.core.sms.dto.request.AppFormReqDto;
 
 import com.daema.core.sms.repository.CustomerRepository;
 import com.daema.rest.common.enums.ResponseCodeEnum;
@@ -17,15 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class CustomerMgmtService2 {
+public class CustomerMgmtService {
 
     private final CustomerRepository customerRepository;
     private final AuthenticationUtil authenticationUtil;
 
     @Transactional
-    public ResponseCodeEnum insertCustomer(FillOutApplicationReqDto fillOutApplicationReqDto) {
-        Customer customer = CustomerDto.buildEntity(fillOutApplicationReqDto.getCustomerDto());
-       
+    public ResponseCodeEnum insertCustomer(AppFormReqDto appFormReqDto) {
+        Customer customer = CustomerDto.buildEntity(appFormReqDto.getCustomerDto());
+
 
         if(customer == null) {
             return ResponseCodeEnum.FAIL;

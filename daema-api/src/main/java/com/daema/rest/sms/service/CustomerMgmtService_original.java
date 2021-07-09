@@ -1,3 +1,4 @@
+/*
 package com.daema.rest.sms.service;
 
 import com.daema.core.sms.domain.CourtProctor;
@@ -69,3 +70,4 @@ public class CustomerMgmtService {
 
 }
 
+*/

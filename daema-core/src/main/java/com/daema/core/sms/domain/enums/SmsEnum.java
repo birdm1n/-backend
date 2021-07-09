@@ -3,6 +3,131 @@ package com.daema.core.sms.domain.enums;
 public enum SmsEnum {
     ;
 
+    public enum TaskState{
+
+        //LogisState
+
+        DLVR_REQ("배송요청(상담/개통)"),
+        DLVR_PEND("배송보류(재고없음)"),
+        DLVR_READY("배송준비"),
+        DLVR_BFR_CANCEL_REQ("배송전취소요청"),
+        DLVR_ING("배송중"),
+        DLVR_COMPL("배송완료"),
+        RETURN_REQ("반품요청"),
+        RETURN_COMPL("반품완료"),
+
+        //OpeningState
+        OPENING_REQ_PEND_CONSULT("개통요청보류(상담)"),
+        OPENING_REQ_CONSULT("개통요청(상담)"),
+        OPENING_ING("개통중"),
+        OPENING_CANCEL("개통취소"),
+        OPENING_COMPL("개통완료"),
+        OPENING_PEND("개통보류"),
+        RTRCT_REQ("철회요청(상담)"),
+        RTRCT_COMPL("철회완료"),
+        USIM_CHANGE_REQ_CONSULT("유심변경요청(상담)"),
+        USIM_CHANGE_COMPL("유심변경완료"),
+        EXCHANGE_REQ_CONSULT("교퓸요청(상담)"),
+        EXCHANGE_COMPL("교퓸완료"),
+        BFR_AGREE_ING("사전동의진행중"),
+        BFR_AGREE_COMPL("사전동의완료"),
+
+        //ConsultState
+        RCPT_ING("접수중"),
+        RCPT_CANCEL("접수취소"),
+        RCPT_COMPL("접수완료"),
+        OPENING_REQ("개통요청"),
+        OPENING_REQ_PEND("개통요청보류"),
+        USIM_CHANGE_REQ("유심변경요청"),
+        EXCHANGE_REQ("교퓸요청");
+
+
+        private final String statusMsg;
+
+        TaskState(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+
+        public String getStatusMsg() {
+            return statusMsg;
+        }
+    }
+
+
+
+      /*  public enum LogisState {
+
+            DLVR_REQ("배송요청(상담/개통)"),
+            DLVR_PEND("배송보류(재고없음)"),
+            DLVR_READY("배송준비"),
+            DLVR_BFR_CANCEL_REQ("배송전취소요청"),
+            DLVR_ING("배송중"),
+            DLVR_COMPL("배송완료"),
+            RETURN_REQ("반품요청"),
+            RETURN_COMPL("반품완료");
+
+
+            private final String statusMsg;
+
+            LogisState(String statusMsg) {
+                this.statusMsg = statusMsg;
+            }
+
+            public String getStatusMsg() {
+                return statusMsg;
+            }
+        }*/
+/*
+        public enum OpeningState {
+
+            OPENING_REQ_PEND("개통요청보류(상담)"),
+            OPENING_REQ("개통요청(상담)"),
+            OPENING_ING("개통중"),
+            OPENING_CANCEL("개통취소"),
+            OPENING_COMPL("개통완료"),
+            OPENING_PEND("개통보류"),
+            RTRCT_REQ("철회요청(상담)"),
+            RTRCT_COMPL("철회완료"),
+            USIM_CHANGE_REQ("유심변경요청(상담)"),
+            USIM_CHANGE_COMPL("유심변경완료"),
+            EXCHANGE_REQ("교퓸요청(상담)"),
+            EXCHANGE_COMPL("교퓸완료"),
+            BFR_AGREE_ING("사전동의진행중"),
+            BFR_AGREE_COMPL("사전동의완료");
+
+
+            private final String statusMsg;
+
+            OpeningState(String statusMsg) {
+                this.statusMsg = statusMsg;
+            }
+
+            public String getStatusMsg() {
+                return statusMsg;
+            }
+        }
+
+        public enum ConsultState {
+            RCPT_ING("접수중"),
+            RCPT_CANCEL("접수취소"),
+            RCPT_COMPL("접수완료"),
+            OPENING_REQ("개통요청"),
+            OPENING_REQ_PEND("개통요청보류"),
+            USIM_CHANGE_REQ("유심변경요청"),
+            EXCHANGE_REQ("교퓸요청");
+
+
+            private final String statusMsg;
+
+            ConsultState(String statusMsg) {
+                this.statusMsg = statusMsg;
+            }
+
+            public String getStatusMsg() {
+                return statusMsg;
+            }
+        }*/
+
     public enum InstallmentsPeriod{
 
         CASH("현금개통"),

@@ -2,6 +2,10 @@ package com.daema.core.sms.domain;
 
 import com.daema.core.base.domain.common.BaseEntity;
 import com.daema.core.sms.domain.enums.SmsEnum;
+import com.daema.core.sms.dto.AccountDto;
+import com.daema.core.sms.dto.CardDto;
+import com.daema.core.sms.dto.GiroDto;
+import com.daema.core.sms.dto.PaymentDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,6 +45,34 @@ public class Payment {
     @JoinColumn(name = "giro_id", columnDefinition = "BIGINT UNSIGNED comment '지로'", nullable = true)
     private Giro giro;
 
+    @OneToOne(mappedBy = "payment")
+    private AppForm appForm;
+
+    public static PaymentDto from(Payment payment) {
+        return PaymentDto.builder()
+                .paymentId(payment.getPaymentId())
+                .paymentWay(payment.getPaymentWay())
+                .accountDto(AccountDto.builder()
+                        .accountId(payment.getAccount().getAccountId()).build())
+                .cardDto(CardDto.builder()
+                        .cardId(payment.getCard().getCardId()).build())
+                .giroDto(GiroDto.builder()
+                        .giroId(payment.getGiro().getGiroId()).build())
+                .build();
+    }
+
+    public static Payment toEntity(PaymentDto paymentDto) {
+        return Payment.builder()
+                .paymentId(paymentDto.getPaymentId())
+                .paymentWay(paymentDto.getPaymentWay())
+                .account(Account.toEntity(paymentDto.getAccountDto())
+                )
+                .card(Card.toEntity(paymentDto.getCardDto())
+                )
+                .giro(Giro.toEntity(paymentDto.getGiroDto())
+                )
+                .build();
+    }
 
 
     }

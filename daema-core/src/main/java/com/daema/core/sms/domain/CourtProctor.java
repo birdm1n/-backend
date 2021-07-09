@@ -1,6 +1,7 @@
 package com.daema.core.sms.domain;
 
 
+import com.daema.core.sms.dto.CourtProctorDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,4 +38,44 @@ public class CourtProctor {
 
     @OneToOne(mappedBy = "courtProctor")
     private Customer customer;
+
+    public static CourtProctorDto from(CourtProctor courtProctor) {
+        return CourtProctorDto.builder()
+                .courtProctorId(courtProctor.getCourtProctorId())
+                .name(courtProctor.getName())
+                .email(courtProctor.getEmail())
+                .registNo(courtProctor.getRegistNo())
+                .phoneNo(courtProctor.getPhoneNo())
+                .relationship(courtProctor.getRelationship())
+                /*  .customerId(courtProctor.getCustomer().getCustomerId())*/
+                .build();
+    }
+
+    public static CourtProctor toEntity(CourtProctorDto courtProctorDto) {
+        return CourtProctor.builder()
+                .courtProctorId(courtProctorDto.getCourtProctorId())
+                .name(courtProctorDto.getName())
+                .email(courtProctorDto.getEmail())
+                .registNo(courtProctorDto.getRegistNo())
+                .phoneNo(courtProctorDto.getPhoneNo())
+                .relationship(courtProctorDto.getRelationship())
+                /*  .customer(Customer.builder()
+                          .customerId(courtProctorDto.getCustomerId())
+                          .build())*/
+                .build();
+    }
+    public CourtProctor toEntity(Customer customer) {
+        return CourtProctor.builder()
+                .courtProctorId(this.getCourtProctorId())
+                .name(this.getName())
+                .email(this.getEmail())
+                .registNo(this.getRegistNo())
+                .phoneNo(this.getPhoneNo())
+                .relationship(this.getRelationship())
+                .customer(customer)
+                /*.customer(Customer.builder()
+                        .customerId(this.getCustomerId())
+                        .build())*/
+                .build();
+    }
 }

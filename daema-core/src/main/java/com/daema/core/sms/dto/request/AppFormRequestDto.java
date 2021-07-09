@@ -1,3 +1,4 @@
+/*
 package com.daema.core.sms.dto.request;
 
 import com.daema.core.sms.domain.enums.SmsEnum;
@@ -12,7 +13,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationFormRequestDto {
+public class AppFormRequestDto {
     //Id
     @ApiModelProperty(value = "계좌 아이디",  required = true)
     private Long accountId;
@@ -36,7 +37,8 @@ public class ApplicationFormRequestDto {
     private int dateOfBirth;
     private String relation;
 
-  /*  public AccountDto getAccountDto(FillOutApplicationRequestDto fillOutApplicationRequestDto){
+  */
+/*  public AccountDto getAccountDto(FillOutApplicationRequestDto fillOutApplicationRequestDto){
         AccountDto accountDto = new AccountDto()
                 .builder()
                 .bank(this.bank)
@@ -46,7 +48,8 @@ public class ApplicationFormRequestDto {
                 .relation(this.relation)
                 .build();
         return accountDto;
-    }*/
+    }*//*
+
 
     //addtionDto
     private SmsEnum.AdditionCategory additionCategory;
@@ -127,3 +130,4 @@ public class ApplicationFormRequestDto {
 
     private SmsEnum.PaymentWay paymentWay;
 }
+*/

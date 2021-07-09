@@ -2,10 +2,7 @@ package com.daema.core.sms.dto;
 
 import com.daema.core.commgmt.domain.Goods;
 import com.daema.core.commgmt.domain.OpenStore;
-import com.daema.core.sms.domain.Addition;
-import com.daema.core.sms.domain.CallingPlan;
-import com.daema.core.sms.domain.Giro;
-import com.daema.core.sms.domain.JoinInfo;
+import com.daema.core.sms.domain.*;
 import com.daema.core.sms.domain.enums.SmsEnum;
 import lombok.*;
 
@@ -40,69 +37,14 @@ public class JoinInfoDto {
     private int monthDevicePrice;
     private int monthBasicPrice;
     private int monthPaymentPrice;
-    private int amountToBeDeposited;
+    private int amtDeposited;
     private String depositYN;
-    private CallingPlan callingPlan;
-    private List<Addition> addition = new ArrayList<>();
-    private OpenStore openStore;
-    private Goods goods;
+    private Long callingPlanId;
+    private Long openStoreId;
+    private Long goodsId;
 
-    public static JoinInfoDto from(JoinInfo joinInfo) {
-        return JoinInfoDto.builder()
-                .openPhoneNo(joinInfo.getOpenPhoneNo())
-                .openHopePhoneNo(joinInfo.getOpenHopePhoneNo())
-                .joinType(joinInfo.getJoinType())
-                .certNo(joinInfo.getCertNo())
-                .usim(joinInfo.getUsim())
-                .usimSN(joinInfo.getUsimSN())
-                .aggrementPeriod(joinInfo.getAggrementPeriod())
-                .aggrementType(joinInfo.getAggrementType())
-                .installmentsPeriod(joinInfo.getInstallmentsPeriod())
-                .outStockPrice(joinInfo.getOutStockPrice())
-                .pubNotiSupAmt(joinInfo.getPubNotiSupAmt())
-                .extraSupAmt(joinInfo.getExtraSupAmt())
-                .freeInstl(joinInfo.getFreeInstl())
-                .actuallSellPrice(joinInfo.getActuallSellPrice())
-                .monthDevicePrice(joinInfo.getMonthDevicePrice())
-                .monthBasicPrice(joinInfo.getMonthBasicPrice())
-                .monthPaymentPrice(joinInfo.getMonthPaymentPrice())
-                .amountToBeDeposited(joinInfo.getAmountToBeDeposited())
-                .depositYN(joinInfo.getDepositYN())
-                .callingPlan(joinInfo.getCallingPlan())
-                .addition(joinInfo.getAddition())
-                .openStore(joinInfo.getOpenStore())
-                .goods(joinInfo.getGoods())
-                .build();
-    }
+   private List<Long> additionIds;
+    private Long additionId;
 
 
-
-
-    public static JoinInfo toEntity(JoinInfoDto joinInfoDto) {
-        return JoinInfo.builder()
-                .openPhoneNo(joinInfoDto.getOpenPhoneNo())
-                .openHopePhoneNo(joinInfoDto.getOpenHopePhoneNo())
-                .joinType(joinInfoDto.getJoinType())
-                .certNo(joinInfoDto.getCertNo())
-                .usim(joinInfoDto.getUsim())
-                .usimSN(joinInfoDto.getUsimSN())
-                .aggrementPeriod(joinInfoDto.getAggrementPeriod())
-                .aggrementType(joinInfoDto.getAggrementType())
-                .installmentsPeriod(joinInfoDto.getInstallmentsPeriod())
-                .outStockPrice(joinInfoDto.getOutStockPrice())
-                .pubNotiSupAmt(joinInfoDto.getPubNotiSupAmt())
-                .extraSupAmt(joinInfoDto.getExtraSupAmt())
-                .freeInstl(joinInfoDto.getFreeInstl())
-                .actuallSellPrice(joinInfoDto.getActuallSellPrice())
-                .monthDevicePrice(joinInfoDto.getMonthDevicePrice())
-                .monthBasicPrice(joinInfoDto.getMonthBasicPrice())
-                .monthPaymentPrice(joinInfoDto.getMonthPaymentPrice())
-                .amountToBeDeposited(joinInfoDto.getAmountToBeDeposited())
-                .depositYN(joinInfoDto.getDepositYN())
-                .callingPlan(joinInfoDto.getCallingPlan())
-                .addition(joinInfoDto.getAddition())
-                .openStore(joinInfoDto.getOpenStore())
-                .goods(joinInfoDto.getGoods())
-                .build();
-    }
 }

@@ -4,6 +4,8 @@ package com.daema.core.sms.domain;
 import com.daema.core.sms.domain.VO.Address;
 import com.daema.core.sms.domain.VO.LicenseAuth;
 import com.daema.core.sms.domain.enums.SmsEnum;
+import com.daema.core.sms.dto.CourtProctorDto;
+import com.daema.core.sms.dto.CustomerDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -47,12 +49,44 @@ public class Customer {
     @Embedded
     private LicenseAuth licenseAuth;
 
-     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "court_proctor_id", columnDefinition = "BIGINT UNSIGNED comment '법정 대리인 아이디'")
     private CourtProctor courtProctor;
 
+    @OneToOne(mappedBy = "customer")
+    private AppForm appform;
 
 
+    public static Customer toEntity(CustomerDto customerDto) {
+        return Customer.builder()
+                .customerId(customerDto.getCustomerId())
+                .registNo(customerDto.getRegistNo())
+                .chargeReduct(customerDto.getChargeReduct())
+                .phoneNo(customerDto.getPhoneNo())
+                .emgPhone(customerDto.getEmgPhone())
+                .email(customerDto.getEmail())
+                .cusAddress(customerDto.getCusAddress())
+                .customerType(customerDto.getCustomerType())
+                .licenseAuth(customerDto.getLicenseAuth())
+                .courtProctor(CourtProctor.toEntity(customerDto.getCourtProctorDto()))
+                .build();
+    }
 
-}
+    public static CustomerDto from(Customer customer) {
+        return CustomerDto.builder()
+                .customerId(customer.getCustomerId())
+                .registNo(customer.getRegistNo())
+                .chargeReduct(customer.getChargeReduct())
+                .phoneNo(customer.getPhoneNo())
+                .emgPhone(customer.getEmgPhone())
+                .email(customer.getEmail())
+                .cusAddress(customer.getCusAddress())
+                .customerType(customer.getCustomerType())
+                .licenseAuth(customer.getLicenseAuth())
+                .courtProctorDto(CourtProctor.from(customer.getCourtProctor()))
+                .build();
+    }
+
+    }
+
 

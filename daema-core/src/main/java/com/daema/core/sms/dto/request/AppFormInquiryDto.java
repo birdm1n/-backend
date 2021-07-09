@@ -7,7 +7,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationFormInquiryDto {
+public class AppFormInquiryDto {
+
+    private Long appFormId;
 
 
 }

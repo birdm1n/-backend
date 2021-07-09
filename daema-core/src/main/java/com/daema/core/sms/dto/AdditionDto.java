@@ -7,6 +7,8 @@ import com.daema.core.sms.domain.enums.SmsEnum;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,25 +20,7 @@ public class AdditionDto {
     private SmsEnum.AdditionCategory additionCategory;
     private String productName;
     private int charge;
-    private JoinInfo joinInfo;
 
-    public static AdditionDto from(Addition addition) {
-        return AdditionDto.builder()
-                .additionId(addition.getAdditionId())
-                .additionCategory(addition.getAdditionCategory())
-                .productName(addition.getProductName())
-                .charge(addition.getCharge())
-                .joinInfo(addition.getJoinInfo())
-                .build();
-    }
 
-    public static Addition toEntity(AdditionDto additionDto) {
-        return Addition.builder()
-                .additionId(additionDto.getAdditionId())
-                .additionCategory(additionDto.getAdditionCategory())
-                .productName(additionDto.getProductName())
-                .charge(additionDto.getCharge())
-                .joinInfo(additionDto.getJoinInfo())
-                .build();
-    }
+
 }

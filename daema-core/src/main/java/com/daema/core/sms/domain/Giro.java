@@ -1,6 +1,7 @@
 package com.daema.core.sms.domain;
 
 import com.daema.core.sms.domain.VO.Address;
+import com.daema.core.sms.dto.GiroDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,4 +26,18 @@ public class Giro{
 
     @OneToOne(mappedBy = "giro")
     private Payment payment;
+
+    public static GiroDto from(Giro giro) {
+        return GiroDto.builder()
+                .giroId(giro.getGiroId())
+                .paymentAddress(giro.getPaymentAddress())
+                .build();
+    }
+
+    public static Giro toEntity(GiroDto giroDto) {
+        return Giro.builder()
+                .giroId(giroDto.getGiroId())
+                .paymentAddress(giroDto.getPaymentAddress())
+                .build();
+    }
 }

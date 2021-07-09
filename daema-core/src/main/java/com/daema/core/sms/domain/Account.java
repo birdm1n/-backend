@@ -1,6 +1,7 @@
 package com.daema.core.sms.domain;
 
 import com.daema.core.base.domain.common.BaseEntity;
+import com.daema.core.sms.dto.AccountDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,8 +39,17 @@ public class Account {
     @OneToOne(mappedBy = "account")
     private Payment payment;
 
-   /* @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id", columnDefinition = "BIGINT UNSIGNED comment '계좌'")
-    private Payment payment;*/
+
+    public static Account toEntity(AccountDto accountDto) {
+        return Account.builder()
+                .accountId(accountDto.getAccountId())
+                .bank(accountDto.getBank())
+                .accountNo(accountDto.getAccountNo())
+                .accountHolder(accountDto.getAccountHolder())
+                .dateOfBirth(accountDto.getDateOfBirth())
+                .relation(accountDto.getRelation())
+                .build();
+    }
+
 
 }
