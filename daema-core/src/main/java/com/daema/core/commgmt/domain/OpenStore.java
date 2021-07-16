@@ -1,7 +1,7 @@
 package com.daema.core.commgmt.domain;
 
 import com.daema.core.commgmt.dto.response.OpenStoreListDto;
-import com.daema.core.sms.domain.JoinInfo;
+import com.daema.core.scm.domain.joininfo.JoinInfo;
 import lombok.*;
 
 import javax.persistence.*;
