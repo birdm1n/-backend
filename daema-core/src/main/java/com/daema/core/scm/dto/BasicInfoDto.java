@@ -1,8 +1,15 @@
 package com.daema.core.scm.dto;
 
 
+import com.daema.core.base.domain.Members;
+import com.daema.core.commgmt.domain.OpenStore;
+import com.daema.core.commgmt.domain.Store;
+import com.daema.core.scm.domain.enums.ScmEnum;
+import com.daema.core.scm.domain.taskupdateboard.TaskUpdateBoard;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -11,10 +18,24 @@ import lombok.*;
 @Builder
 public class BasicInfoDto {
 
-    @ApiModelProperty(value = "기본정보 아이디")
-    private Long basicInfoId;
-/*
-    @ApiModelProperty(value = "멤버",  required = true)*/
-    private Long members;
 
+    private Long appFormId;
+
+    private ScmEnum.TaskState.LogisState logisState;
+
+    private ScmEnum.TaskState.ConsultState consultState;
+
+    private ScmEnum.TaskState.OpeningState openingState;
+
+    private Long saleStoreId;
+
+    private Long openingStoreId;
+
+    private Long parentSaleStoreId;
+
+    private String priorityTargetYn;
+
+    private Long membersId;
+
+    private Long taskUpdateBoardId;
 }

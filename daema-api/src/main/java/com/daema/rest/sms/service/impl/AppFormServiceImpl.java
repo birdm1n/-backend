@@ -1,9 +1,8 @@
 package com.daema.rest.sms.service.impl;
 
-import com.daema.core.scm.domain.BasicInfo;
 import com.daema.core.scm.domain.appform.AppForm;
-import com.daema.core.scm.domain.customer.Customer;
 import com.daema.core.scm.domain.enums.ScmEnum;
+import com.daema.core.scm.dto.request.AppFormCreateDto;
 import com.daema.core.scm.dto.request.AppFormInquiryDto;
 import com.daema.core.scm.dto.request.AppFormUpdateDto;
 import com.daema.core.scm.dto.response.AppFormRepDto;
@@ -23,14 +22,13 @@ public class AppFormServiceImpl implements AppFormService {
     private final AuthenticationUtil authenticationUtil;
 
 
-    @Override
     @Transactional
-    public ResponseCodeEnum insertApplication(AppFormUpdateDto appFormUpdateDto) {
+    public ResponseCodeEnum createAppForm(AppFormCreateDto appFormCreateDto) {
         Long membersId = authenticationUtil.getMemberSeq();
-        appFormUpdateDto.getBasicInfoDto().setMembers(membersId);
-        appFormUpdateDto.setConsultState(ScmEnum.TaskState.ConsultState.RCPT_ING);
+        appFormCreateDto.getBasicInfoDto().setMembersId(membersId);
+        appFormCreateDto.getBasicInfoDto().setConsultState(ScmEnum.TaskState.ConsultState.RCPT_ING);
 
-        AppForm appForm = AppForm.toEntity(appFormUpdateDto);
+        AppForm appForm = AppForm.create(appFormCreateDto);
 
         if (appForm == null) {
             return ResponseCodeEnum.FAIL;
@@ -42,22 +40,24 @@ public class AppFormServiceImpl implements AppFormService {
 
     @Override
     @Transactional(readOnly = true)
-    public AppFormRepDto getApplication(AppFormInquiryDto appFormInquiryDto) {
+    public AppFormRepDto getAppForm(AppFormInquiryDto appFormInquiryDto) {
 
         AppForm appForm = appFormRepository.findById((appFormInquiryDto.getAppFormId())).orElseGet(null);
 
-        return AppForm.responseFrom(appForm);
+        return AppForm.repAppForm(appForm);
 
     }
 
     @Override
     @Transactional
-    public ResponseCodeEnum updateApplication(Long appFormId, AppFormUpdateDto appFormUpdateDto) {
+    public ResponseCodeEnum updateAppForm(AppFormUpdateDto appFormUpdateDto) {
     /*    Long membersId = authenticationUtil.getMemberSeq();
         appFormUpdateDto.getBasicInfoDto().setMembers(membersId);
    appForm.getCustomer().updateCustomer(appFormUpdateDto.getCustomerDto());
 */
-        AppForm appForm = appFormRepository.findById(appFormId).orElseGet(null);
+        Long Id = appFormUpdateDto.getBasicInfoDto().getAppFormId();
+
+        AppForm appForm = appFormRepository.findById(Id).orElseGet(null);
         if(appForm != null){
             AppForm.updateAppForm(appForm, appFormUpdateDto);
         }

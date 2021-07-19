@@ -11,9 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class AppFormUpdateDto {
 
-    private ScmEnum.TaskState.LogisState logisState;
-    private ScmEnum.TaskState.ConsultState consultState;
-    private ScmEnum.TaskState.OpeningState openingState;
+    private AppFormDto appFormDto;
     private BasicInfoDto basicInfoDto;
     private CustomerDto customerDto;
     private JoinInfoDto joinInfoDto;

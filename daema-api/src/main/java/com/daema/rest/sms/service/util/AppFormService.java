@@ -1,5 +1,6 @@
 package com.daema.rest.sms.service.util;
 
+import com.daema.core.scm.dto.request.AppFormCreateDto;
 import com.daema.core.scm.dto.request.AppFormInquiryDto;
 import com.daema.core.scm.dto.request.AppFormUpdateDto;
 import com.daema.core.scm.dto.response.AppFormRepDto;
@@ -11,14 +12,14 @@ public interface AppFormService {
      * @param appFormUpdateDto
      * @return
      */
-    ResponseCodeEnum insertApplication(AppFormUpdateDto appFormUpdateDto);
+    ResponseCodeEnum createAppForm(AppFormCreateDto appFormCreateDto);
 
     /**
      * 신청서 조회
      * @param appFormInquiryDto
      * @return
      */
-    AppFormRepDto getApplication(AppFormInquiryDto appFormInquiryDto);
+    AppFormRepDto getAppForm(AppFormInquiryDto appFormInquiryDto);
 
     /**
      * 신청서 업데이트(수정)
@@ -26,6 +27,6 @@ public interface AppFormService {
      * @param appFormUpdateDto
      * @return
      */
-    ResponseCodeEnum updateApplication(Long appFormId, AppFormUpdateDto appFormUpdateDto);
+    ResponseCodeEnum updateAppForm(AppFormUpdateDto appFormUpdateDto);
 }
 

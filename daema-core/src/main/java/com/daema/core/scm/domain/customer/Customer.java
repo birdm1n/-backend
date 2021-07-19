@@ -56,7 +56,7 @@ public class Customer {
     private AppForm appform;
 
 
-    public static Customer toEntity(CustomerDto customerDto) {
+    public static Customer create(CustomerDto customerDto) {
         return Customer.builder()
                 .customerId(customerDto.getCustomerId())
                 .registNo(customerDto.getRegistNo())

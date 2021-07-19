@@ -50,7 +50,7 @@ public class Payment {
                 .build();
     }
 
-    public static Payment toEntity(PaymentDto paymentDto) {
+    public static Payment create(PaymentDto paymentDto) {
         return Payment.builder()
                 .paymentId(paymentDto.getPaymentId())
                 .paymentWay(paymentDto.getPaymentWay())

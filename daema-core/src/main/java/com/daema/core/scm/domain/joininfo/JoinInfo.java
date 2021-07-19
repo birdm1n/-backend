@@ -159,7 +159,7 @@ public class JoinInfo {
 
 
 
-    public static JoinInfo toEntity(JoinInfoDto joinInfoDto) {
+    public static JoinInfo create(JoinInfoDto joinInfoDto) {
         return JoinInfo.builder()
                 .openPhoneNo(joinInfoDto.getOpenPhoneNo())
                 .openHopePhoneNo(joinInfoDto.getOpenHopePhoneNo())

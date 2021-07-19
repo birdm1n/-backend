@@ -1,4 +1,10 @@
 package com.daema.core.scm.dto;
 
-public class AppFromDto {
+public class AppFormDto {
+
+    private Long appFormId;
+
+
+
+
 }
