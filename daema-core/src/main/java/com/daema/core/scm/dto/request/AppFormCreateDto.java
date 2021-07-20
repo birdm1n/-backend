@@ -1,6 +1,5 @@
 package com.daema.core.scm.dto.request;
 
-import com.daema.core.scm.domain.enums.ScmEnum;
 import com.daema.core.scm.dto.*;
 import lombok.*;
 
@@ -15,5 +14,5 @@ public class AppFormCreateDto {
     private CustomerDto customerDto;
     private JoinInfoDto joinInfoDto;
     private PaymentDto paymentDto;
-    private TaskUpdateBoardDto taskUpdateBoardDto;
+    private TaskBoardDto taskBoardDto;
 }

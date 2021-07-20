@@ -51,6 +51,8 @@ public class Payment {
     }
 
     public static Payment create(PaymentDto paymentDto) {
+        
+
         return Payment.builder()
                 .paymentId(paymentDto.getPaymentId())
                 .paymentWay(paymentDto.getPaymentWay())

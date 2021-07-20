@@ -9,16 +9,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaskUpdateBoardDto {
+public class TaskBoardDto {
 
     @ApiModelProperty(value = "업무수정 보드 아이디")
-    private Long taskUpdateBoardId;
+    private Long taskBoardId;
 
     private String checkYN;
 
-    /*@ApiModelProperty(value = "전체 코멘트 아이디")
-    private List<Long> taskUpdateCommentIds;
-*/
-    private List<TaskUpdateCommentDto> taskUpdateCommentDtoList;
+    private List<TaskMemoDto> taskMemoDtoList;
 }
 

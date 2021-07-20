@@ -9,7 +9,7 @@ import com.daema.rest.common.enums.ResponseCodeEnum;
 public interface AppFormService {
     /**
      * 신청서 작성
-     * @param appFormUpdateDto
+     * @param appFormCreateDto
      * @return
      */
     ResponseCodeEnum createAppForm(AppFormCreateDto appFormCreateDto);
@@ -22,8 +22,7 @@ public interface AppFormService {
     AppFormRepDto getAppForm(AppFormInquiryDto appFormInquiryDto);
 
     /**
-     * 신청서 업데이트(수정)
-     * @param appFormId
+     * 신청서 수정
      * @param appFormUpdateDto
      * @return
      */

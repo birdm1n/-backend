@@ -1,15 +1,8 @@
 package com.daema.core.scm.dto;
 
 
-import com.daema.core.base.domain.Members;
-import com.daema.core.commgmt.domain.OpenStore;
-import com.daema.core.commgmt.domain.Store;
 import com.daema.core.scm.domain.enums.ScmEnum;
-import com.daema.core.scm.domain.taskupdateboard.TaskUpdateBoard;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-
-import javax.persistence.*;
 
 @Getter
 @Setter
@@ -36,6 +29,4 @@ public class BasicInfoDto {
     private String priorityTargetYn;
 
     private Long membersId;
-
-    private Long taskUpdateBoardId;
 }

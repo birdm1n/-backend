@@ -4,8 +4,7 @@ import com.daema.core.scm.domain.BasicInfo;
 import com.daema.core.scm.domain.customer.Customer;
 import com.daema.core.scm.domain.joininfo.JoinInfo;
 import com.daema.core.scm.domain.payment.Payment;
-import com.daema.core.scm.domain.taskupdateboard.TaskUpdateBoard;
-import com.daema.core.scm.dto.AppFormDto;
+import com.daema.core.scm.domain.taskboard.TaskBoard;
 import com.daema.core.scm.dto.request.AppFormCreateDto;
 import com.daema.core.scm.dto.request.AppFormUpdateDto;
 import com.daema.core.scm.dto.response.AppFormRepDto;
@@ -33,8 +32,8 @@ public class AppForm {
     private BasicInfo basicInfo;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "task_update_board_id")
-    private TaskUpdateBoard taskUpdateBoard;
+    @JoinColumn(name = "task_board_id")
+    private TaskBoard taskBoard;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "payment_id")
@@ -56,7 +55,7 @@ public class AppForm {
      */
     public static void updateAppForm(AppForm appForm, AppFormUpdateDto appFormUpdateDto) {
 
-        TaskUpdateBoard.update(appForm.getTaskUpdateBoard(), appFormUpdateDto.getTaskUpdateBoardDto());
+        TaskBoard.update(appForm.getTaskBoard(), appFormUpdateDto.getTaskBoardDto());
 
         BasicInfo.update(appForm.getBasicInfo(), appFormUpdateDto.getBasicInfoDto());
 
@@ -78,13 +77,13 @@ public class AppForm {
 
         Customer customer = Customer.create(appFormCreateDto.getCustomerDto());
         BasicInfo basicInfo = BasicInfo.create(appFormCreateDto.getBasicInfoDto());
-        TaskUpdateBoard taskUpdateBoard = TaskUpdateBoard.create(appFormCreateDto.getTaskUpdateBoardDto());
+        TaskBoard taskBoard = TaskBoard.create(appFormCreateDto.getTaskBoardDto());
         Payment payment = Payment.create(appFormCreateDto.getPaymentDto());
         JoinInfo joinInfo = JoinInfo.create(appFormCreateDto.getJoinInfoDto());
 
         return AppForm.builder()
                 .basicInfo(basicInfo)
-                .taskUpdateBoard(taskUpdateBoard)
+                .taskBoard(taskBoard)
                 .customer(customer)
                 .payment(payment)
                 .joinInfo(joinInfo)
@@ -100,7 +99,7 @@ public class AppForm {
 
         return AppFormRepDto.builder()
                 .basicInfoDto(BasicInfo.From(appForm.getBasicInfo()))
-                .taskUpdateBoardDto(TaskUpdateBoard.From(appForm.getTaskUpdateBoard()))
+                .taskBoardDto(TaskBoard.From(appForm.getTaskBoard()))
                 .customerDto(Customer.from(appForm.getCustomer()))
                 .paymentDto(Payment.from(appForm.getPayment()))
                 .joinInfoDto(JoinInfo.from(appForm.getJoinInfo()))

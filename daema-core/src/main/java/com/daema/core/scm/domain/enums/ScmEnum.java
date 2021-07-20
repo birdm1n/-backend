@@ -224,7 +224,7 @@ public enum ScmEnum {
     }
 
     public enum AdditionCategory{
-        INSURACE("보험"),
+        INSURANCE("보험"),
         ;
         private final String statusMsg;
 

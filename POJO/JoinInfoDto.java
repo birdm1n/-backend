@@ -17,76 +17,76 @@ import java.time.LocalDateTime;
 @Builder
 public class JoinInfoDto {
 
-    @ApiModelProperty(value = "°¡ÀÔ ¾ÆÀÌµð", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½", example = "0")
     private Long joinInfoId;
 
-    @ApiModelProperty(value = "½ÇÆÇ¸Å°¡", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½Ç¸Å°ï¿½", example = "0")
     private Integer actuallSellPrice;
 
-    @ApiModelProperty(value = "¾àÁ¤ ±â°£")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ ï¿½â°£")
     private String aggremntPeriod;
 
-    @ApiModelProperty(value = "¾àÁ¤ À¯Çü")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")
     private String aggrementType;
 
-    @ApiModelProperty(value = "ÀÔ±Ý ¹ÞÀ» ±Ý¾×", example = "0")
+    @ApiModelProperty(value = "ï¿½Ô±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¾ï¿½", example = "0")
     private Integer amtDeposited;
 
-    @ApiModelProperty(value = "ÀÎÁõ ¹øÈ£", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£", example = "0")
     private Integer certNum;
 
-    @ApiModelProperty(value = "ÀÔ±Ý ¿©ºÎ")
+    @ApiModelProperty(value = "ï¿½Ô±ï¿½ ï¿½ï¿½ï¿½ï¿½")
     private String depositYn;
 
-    @ApiModelProperty(value = "±âÅ¸ÇÒÀÎ±Ý", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½Å¸ï¿½ï¿½ï¿½Î±ï¿½", example = "0")
     private Integer etcDiscountAmt;
 
-    @ApiModelProperty(value = "Ãß°¡Áö¿ø±Ý", example = "0")
+    @ApiModelProperty(value = "ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", example = "0")
     private Integer extraSupAmt;
 
-    @ApiModelProperty(value = "ÇÁ¸®ÇÒºÎ", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ï¿½Òºï¿½", example = "0")
     private Integer freeInstl;
 
-    @ApiModelProperty(value = "ÇÒºÎ ±â°£")
+    @ApiModelProperty(value = "ï¿½Òºï¿½ ï¿½â°£")
     private String insPeriod;
 
-    @ApiModelProperty(value = "°¡ÀÔ À¯Çü")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")
     private String joinType;
 
-    @ApiModelProperty(value = "¿ù ±âº»·á", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ ï¿½âº»ï¿½ï¿½", example = "0")
     private Integer monthBasicPrice;
 
-    @ApiModelProperty(value = "¿ù ´Ü¸»±â ±Ý¾×", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ ï¿½Ü¸ï¿½ï¿½ï¿½ ï¿½Ý¾ï¿½", example = "0")
     private Integer monthDevicePrice;
 
-    @ApiModelProperty(value = "¿ù ³³ºÎ±Ý¾×", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ ï¿½ï¿½ï¿½Î±Ý¾ï¿½", example = "0")
     private Integer monthPaymentPrice;
 
-    @ApiModelProperty(value = "°³Åë Èñ¸Á ¹øÈ£")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½È£")
     private String openHopePhoneNum;
 
-    @ApiModelProperty(value = "°³Åë ÈÞ´ëÆù ¹øÈ£", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½ï¿½È£", example = "0")
     private Integer openPhoneNum;
 
-    @ApiModelProperty(value = "Ãâ°í°¡", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½", example = "0")
     private Integer outStockPrice;
 
-    @ApiModelProperty(value = "°ø½ÃÁö¿ø±Ý", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", example = "0")
     private Integer pubNotiSupAmt;
 
-    @ApiModelProperty(value = "À¯½É")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½")
     private String usim;
 
-    @ApiModelProperty(value = "À¯½É ÀÏ·Ã¹øÈ£")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·Ã¹ï¿½È£")
     private String usimSn;
 
-    @ApiModelProperty(value = "¿ä±ÝÁ¦", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ï¿½", example = "0")
     private Long callingPlanId;
 
-    @ApiModelProperty(value = "»óÇ°", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½Ç°", example = "0")
     private Long goodsId;
 
-    @ApiModelProperty(value = "°³ÅëÁ¡", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", example = "0")
     private Long openingStoreId;
 
 

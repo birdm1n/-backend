@@ -9,10 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaskUpdateCommentDto
+public class TaskMemoDto
 {
     @ApiModelProperty(value = "업무수정 코멘트 아이디")
-    private Long taskUpdateCommentId;
+    private Long taskMemoId;
 
     @ApiModelProperty(value = "상담 상태",  required = true)
     private ScmEnum.TaskState.ConsultState consultState;
@@ -27,6 +27,6 @@ public class TaskUpdateCommentDto
     private String reason;
 
     @ApiModelProperty(value = "업무수정 보드 아이디")
-    private Long taskUpdateBoardId;
+    private Long taskBoardId;
 
 }

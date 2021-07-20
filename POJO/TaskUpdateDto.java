@@ -20,10 +20,10 @@ public class TaskUpdateDto {
     @ApiModelProperty(value = "null", example = "0")
     private Long taskUpdateId;
 
-    @ApiModelProperty(value = "»çÀ¯")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½")
     private String reason;
 
-    @ApiModelProperty(value = "¾÷¹« »óÅÂ")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")
     private String taskState;
 
 

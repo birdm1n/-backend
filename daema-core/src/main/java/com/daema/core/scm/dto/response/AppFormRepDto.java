@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AppFormRepDto {
     private BasicInfoDto basicInfoDto;
-    private TaskUpdateBoardDto taskUpdateBoardDto;
+    private TaskBoardDto taskBoardDto;
     private CustomerDto customerDto;
     private JoinInfoDto joinInfoDto;
     private PaymentDto paymentDto;
