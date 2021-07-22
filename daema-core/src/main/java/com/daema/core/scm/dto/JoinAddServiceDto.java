@@ -8,11 +8,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JoinAdditionDto {
+public class JoinAddServiceDto {
 
-    private Long joinAdditionId;
+    private Long joinAddServiceId;
     private Long joinInfoId;
-    private Long additionId;
+    private Long addServiceId;
 
 
 }

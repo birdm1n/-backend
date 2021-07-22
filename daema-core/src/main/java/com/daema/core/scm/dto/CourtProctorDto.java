@@ -22,8 +22,17 @@ public class CourtProctorDto {
     @ApiModelProperty(value = "")*/
     private int registNo;
 
-    @ApiModelProperty(value = "휴대폰 번호")
-    private int phoneNo;
+    @ApiModelProperty(value = "대리인 연락처")
+    private String courtProctorPhone;
+
+    @ApiModelProperty(value = "대리인 연락처1")
+    private String courtProctorPhone1;
+
+    @ApiModelProperty(value = "대리인 연락처2")
+    private String courtProctorPhone2;
+
+    @ApiModelProperty(value = "대리인 연락처3")
+    private String courtProctorPhone3;
 
     @ApiModelProperty(value = "관계")
     private String relationship;

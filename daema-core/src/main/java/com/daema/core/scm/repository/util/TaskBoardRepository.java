@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 
-public interface TaskBoardRepository extends JpaRepository<TaskBoard, Long>, CustomTaskBoardRepository {
+public interface TaskBoardRepository extends JpaRepository<TaskBoard, Long> {
 }

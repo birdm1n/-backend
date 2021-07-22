@@ -223,12 +223,12 @@ public enum ScmEnum {
         }
     }
 
-    public enum AdditionCategory{
+    public enum AppFormAddServiceCategory {
         INSURANCE("보험"),
         ;
         private final String statusMsg;
 
-        AdditionCategory(String statusMsg){
+        AppFormAddServiceCategory(String statusMsg){
             this.statusMsg = statusMsg;
         }
 

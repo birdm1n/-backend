@@ -15,18 +15,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AdditionDto {
+public class AddServiceDto {
 
-    @ApiModelProperty(value = "ºÎ°¡¼­ºñ½º ¾ÆÀÌµð", example = "0")
-    private Long additionId;
+    @ApiModelProperty(value = "ï¿½Î°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½", example = "0")
+    private Long addServiceId;
 
-    @ApiModelProperty(value = "ºÎ°¡¼­ºñ½º Ä«Å×°í¸®")
-    private String additionCategory;
+    @ApiModelProperty(value = "ï¿½Î°ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½×°ï¿½")
+    private String addServiceCategory;
 
-    @ApiModelProperty(value = "¿ä±Ý", example = "0")
+    @ApiModelProperty(value = "ï¿½ï¿½ï¿½", example = "0")
     private Integer charge;
 
-    @ApiModelProperty(value = "»óÇ°¸í")
+    @ApiModelProperty(value = "ï¿½ï¿½Ç°ï¿½ï¿½")
     private String productName;
 
 

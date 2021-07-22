@@ -1,5 +1,6 @@
 package com.daema.core.scm.domain.taskboard;
 
+import com.daema.core.base.domain.common.BaseUserInfoEntity;
 import com.daema.core.scm.domain.enums.ScmEnum;
 import com.daema.core.scm.dto.TaskMemoDto;
 import lombok.*;
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @org.hibernate.annotations.Table(appliesTo = "task_memo", comment = "업무 메모")
-public class TaskMemo {
+public class TaskMemo extends BaseUserInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

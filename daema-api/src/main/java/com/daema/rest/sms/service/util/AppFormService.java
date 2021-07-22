@@ -27,5 +27,12 @@ public interface AppFormService {
      * @return
      */
     ResponseCodeEnum updateAppForm(AppFormUpdateDto appFormUpdateDto);
+
+    /**
+     * 신청서 삭제
+     * @param appFormInquiryDto
+     * @return
+     */
+    ResponseCodeEnum deleteAppForm(AppFormInquiryDto appFormInquiryDto);
 }
 

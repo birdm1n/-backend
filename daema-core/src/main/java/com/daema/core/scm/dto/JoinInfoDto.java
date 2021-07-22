@@ -85,11 +85,9 @@ public class JoinInfoDto {
     @ApiModelProperty(value = "상품 아이디",  required = true)
     private Long goodsId;
 
-    @ApiModelProperty(value = "전체 부가서비스")
-    private List<Long> additionIds;
+    @ApiModelProperty(value = "부가서비스 리스트")
+    private List<AppFormAddServiceDto> appFormAddServiceDtoList;
 
-    @ApiModelProperty(value = "부가서비스",  required = true)
-    private Long additionId;
 
 
 }

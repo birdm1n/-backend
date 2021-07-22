@@ -63,6 +63,14 @@ public class AppFormServiceImpl implements AppFormService {
         }
         return ResponseCodeEnum.OK;
     }
+
+    @Override
+    @Transactional
+    public ResponseCodeEnum deleteAppForm(AppFormInquiryDto appFormInquiryDto) {
+     /*   appFormRepository.deleteById(appFormInquiryDto.getAppFormId());*/
+        appFormRepository.deleteAll();
+        return ResponseCodeEnum.OK;
+    }
 }
 
 

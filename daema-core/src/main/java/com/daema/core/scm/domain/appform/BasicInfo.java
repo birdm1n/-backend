@@ -1,6 +1,8 @@
 package com.daema.core.scm.domain;
 
 import com.daema.core.base.domain.Members;
+import com.daema.core.base.domain.common.BaseEntity;
+import com.daema.core.base.domain.common.BaseUserInfoEntity;
 import com.daema.core.commgmt.domain.OpenStore;
 import com.daema.core.commgmt.domain.Store;
 import com.daema.core.scm.domain.customer.CourtProctor;
@@ -21,7 +23,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @org.hibernate.annotations.Table(appliesTo = "basic_info", comment = "기본 정보")
-public class BasicInfo {
+public class BasicInfo extends BaseUserInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

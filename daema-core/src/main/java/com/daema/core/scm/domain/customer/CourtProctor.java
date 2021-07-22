@@ -1,6 +1,7 @@
 package com.daema.core.scm.domain.customer;
 
 
+import com.daema.core.scm.domain.vo.PhoneAttribute;
 import com.daema.core.scm.dto.CourtProctorDto;
 import lombok.*;
 
@@ -30,8 +31,15 @@ public class CourtProctor {
     @Column(name = "regist_num", columnDefinition = "INT comment '주민등록번호'")
     private int registNo;
 
-    @Column(name = "phone_num", columnDefinition = "INT comment '휴대폰 번호'")
-    private int phoneNo;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "phone", column = @Column(name = "court_proctor_phone", columnDefinition = "varchar(255) comment '개통 연락처'")),
+            @AttributeOverride(name = "phone1", column = @Column(name = "court_proctor_phone2", columnDefinition = "varchar(255) comment '개통 연락처1'")),
+            @AttributeOverride(name = "phone2", column = @Column(name = "court_proctor_phone3", columnDefinition = "varchar(255) comment '개통 연락처2'")),
+            @AttributeOverride(name = "phone3", column = @Column(name = "court_proctor_phone4", columnDefinition = "varchar(255) comment '개통 연락처3'"))
+
+    })
+    private PhoneAttribute courtProctorPhone;
 
     @Column(name = "relationship", columnDefinition = "varchar(255) comment '관계'")
     private String relationship;
@@ -45,30 +53,26 @@ public class CourtProctor {
                 .name(courtProctor.getName())
                 .email(courtProctor.getEmail())
                 .registNo(courtProctor.getRegistNo())
-                .phoneNo(courtProctor.getPhoneNo())
+                .courtProctorPhone(courtProctor.getCourtProctorPhone().getPhone())
+                .courtProctorPhone1(courtProctor.getCourtProctorPhone().getPhone1())
+                .courtProctorPhone2(courtProctor.getCourtProctorPhone().getPhone2())
+                .courtProctorPhone3(courtProctor.getCourtProctorPhone().getPhone3())
                 .relationship(courtProctor.getRelationship())
                 .build();
     }
 
-    public static CourtProctor toEntity(CourtProctorDto courtProctorDto) {
+    public static CourtProctor create(CourtProctorDto courtProctorDto) {
         return CourtProctor.builder()
-                .courtProctorId(courtProctorDto.getCourtProctorId())
                 .name(courtProctorDto.getName())
                 .email(courtProctorDto.getEmail())
                 .registNo(courtProctorDto.getRegistNo())
-                .phoneNo(courtProctorDto.getPhoneNo())
+                .courtProctorPhone(PhoneAttribute.createAttribute(
+                        courtProctorDto.getCourtProctorPhone1()
+                        ,courtProctorDto.getCourtProctorPhone2()
+                        ,courtProctorDto.getCourtProctorPhone3())
+                        )
                 .relationship(courtProctorDto.getRelationship())
                 .build();
     }
-    public CourtProctor toEntity(Customer customer) {
-        return CourtProctor.builder()
-                .courtProctorId(this.getCourtProctorId())
-                .name(this.getName())
-                .email(this.getEmail())
-                .registNo(this.getRegistNo())
-                .phoneNo(this.getPhoneNo())
-                .relationship(this.getRelationship())
-                .customer(customer)
-                .build();
-    }
+
 }

@@ -1,6 +1,7 @@
 package com.daema.core.scm.domain.customer;
 
 
+import com.daema.core.base.domain.common.BaseUserInfoEntity;
 import com.daema.core.scm.domain.appform.AppForm;
 import com.daema.core.scm.domain.vo.Address;
 import com.daema.core.scm.domain.enums.ScmEnum;
@@ -17,7 +18,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @org.hibernate.annotations.Table(appliesTo = "customer", comment = "고객")
-public class Customer {
+public class Customer extends BaseUserInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id", columnDefinition = "BIGINT UNSIGNED comment '고객 아이디'")
@@ -39,6 +40,11 @@ public class Customer {
     private String email;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "zipCode", column = @Column(name = "cus_zip_code", columnDefinition = "varchar(255) comment '고객 우편 코드'")),
+            @AttributeOverride(name = "addr", column = @Column(name = "cus_addr", columnDefinition = "varchar(255) comment '고객 주소'")),
+            @AttributeOverride(name = "addrDetail", column = @Column(name = "cus_addr_detail", columnDefinition = "varchar(255) comment '고객 주소 상세'"))
+    })
     private Address cusAddress;
 
     @Enumerated(EnumType.STRING)
@@ -67,7 +73,7 @@ public class Customer {
                 .cusAddress(customerDto.getCusAddress())
                 .customerType(customerDto.getCustomerType())
                 .licenseAuth(customerDto.getLicenseAuth())
-                .courtProctor(CourtProctor.toEntity(customerDto.getCourtProctorDto()))
+                .courtProctor(CourtProctor.create(customerDto.getCourtProctorDto()))
                 .build();
     }
 
@@ -104,7 +110,7 @@ public class Customer {
         Customer.setChargeReduct(customerDto.getChargeReduct());
         Customer.setCustomerType(customerDto.getCustomerType());
         Customer.setCusAddress(customerDto.getCusAddress());
-        Customer.setCourtProctor(CourtProctor.toEntity(customerDto.getCourtProctorDto()));
+        Customer.setCourtProctor(CourtProctor.create(customerDto.getCourtProctorDto()));
         Customer.setPhoneNo(customerDto.getPhoneNo());
         Customer.setLicenseAuth(customerDto.getLicenseAuth());
         Customer.setRegistNo(customerDto.getRegistNo());

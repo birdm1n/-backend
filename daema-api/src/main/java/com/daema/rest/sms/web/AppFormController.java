@@ -42,7 +42,7 @@ public class AppFormController {
     @ApiOperation(value = "신청서 조회", notes = "신청서 조회합니다.")
     @GetMapping("/inquiryAppForm")
     public ResponseEntity<CommonResponse<AppFormRepDto>> getApplication(@ApiParam(value = "신청서 조회", required = true) AppFormInquiryDto appFormInquiryDto) {
-        return responseHandler.getResponseMessageAsRetrieveResult(appFormService.getAppForm(appFormInquiryDto) , ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
+        return responseHandler.getResponseMessageAsRetrieveResult(appFormService.getAppForm(appFormInquiryDto), ResponseCodeEnum.NODATA.getResultCode(), ResponseCodeEnum.NODATA.getResultMsg());
     }
 
     @ApiOperation(value = "신청서 수정", notes = "신청서를 수정 처리 합니다.")
@@ -57,4 +57,16 @@ public class AppFormController {
         return responseHandler.ok();
     }
 
+    @ApiOperation(value = "신청서 삭제", notes = "신청서 삭제처리.")
+    @PostMapping("deleteAppForm")
+    public ResponseEntity<CommonResponse<Void>> deleteApplication(@ApiParam(value = "신청서 삭제", required = true) @RequestBody AppFormInquiryDto appFormInquiryDto) {
+
+        ResponseCodeEnum responseCodeEnum = appFormService.deleteAppForm(appFormInquiryDto);
+
+        if (ResponseCodeEnum.OK != responseCodeEnum) {
+            return responseHandler.fail(responseCodeEnum.getResultCode(), responseCodeEnum.getResultMsg());
+        }
+        return responseHandler.ok();
+    }
 }
+

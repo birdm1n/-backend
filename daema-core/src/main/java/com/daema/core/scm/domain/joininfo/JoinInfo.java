@@ -1,5 +1,6 @@
 package com.daema.core.scm.domain.joininfo;
 
+import com.daema.core.base.domain.common.BaseUserInfoEntity;
 import com.daema.core.commgmt.domain.Goods;
 import com.daema.core.commgmt.domain.OpenStore;
 import com.daema.core.scm.domain.appform.AppForm;
@@ -19,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @org.hibernate.annotations.Table(appliesTo = "join_info", comment = "가입 정보")
-public class JoinInfo {
+public class JoinInfo extends BaseUserInfoEntity {
 
 
     @Id
@@ -97,7 +98,7 @@ public class JoinInfo {
     private CallingPlan callingPlan;
 
     @OneToMany(mappedBy = "joinInfo", cascade = CascadeType.ALL)
-    private List<JoinAddition> joinAdditionList = new ArrayList<>();
+    private List<JoinAddService> joinAddServiceList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "opening_store_id", columnDefinition = "BIGINT UNSIGNED comment '개통점'")
@@ -112,20 +113,11 @@ public class JoinInfo {
 
 
 
-    public void createJoinAdditionList(List<Long> additionIds) {
-        List<JoinAddition> QjoinAdditionList = new ArrayList<>();
-        for (Long additionId : additionIds)
-        {
-            QjoinAdditionList.add(JoinAddition.builder()
-                    .joinInfo(JoinInfo.builder()
-                            .joinInfoId(this.getJoinInfoId())
-                            .build())
-                    .addition(Addition.builder()
-                            .additionId(additionId)
-                            .build())
-                    .build());
-        }
-        joinAdditionList = QjoinAdditionList;
+    public static JoinInfo create(JoinInfoDto joinInfoDto) {
+        JoinInfo joinInfo = build(joinInfoDto);
+        joinInfo.joinAddServiceList = JoinAddService.createList(joinInfo, joinInfoDto.getAppFormAddServiceDtoList());
+
+        return joinInfo;
     }
 
 
@@ -159,7 +151,7 @@ public class JoinInfo {
 
 
 
-    public static JoinInfo create(JoinInfoDto joinInfoDto) {
+    public static JoinInfo build(JoinInfoDto joinInfoDto) {
         return JoinInfo.builder()
                 .openPhoneNo(joinInfoDto.getOpenPhoneNo())
                 .openHopePhoneNo(joinInfoDto.getOpenHopePhoneNo())

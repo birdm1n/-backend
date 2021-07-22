@@ -1,5 +1,6 @@
 package com.daema.core.scm.domain.taskboard;
 
+import com.daema.core.base.domain.common.BaseUserInfoEntity;
 import com.daema.core.scm.dto.TaskBoardDto;
 import com.daema.core.scm.dto.TaskMemoDto;
 import com.daema.core.scm.dto.request.MemoReqDto;
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @org.hibernate.annotations.Table(appliesTo = "task_board", comment = "업무 보드")
-public class TaskBoard {
+public class TaskBoard extends BaseUserInfoEntity {
 
     @Id
     @Column(name = "task_board_id", columnDefinition = "BIGINT UNSIGNED comment '업무 보드 아이디'")

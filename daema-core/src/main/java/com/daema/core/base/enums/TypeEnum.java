@@ -50,4 +50,28 @@ public enum TypeEnum {
             return this.statusMsg;
         }
     }
+
+    public enum DeliveryType{
+        UNKNOWN("UNKNOWN"),
+        PS("택배"),
+        QUICK("퀵"),
+        DIRECT("직접전달"),
+        ;
+        private final String statusMsg;
+
+        DeliveryType(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+        public String getStatusMsg() {
+            return this.statusMsg;
+        }
+
+        public String getKey() {
+            return name();
+        }
+
+        public String getValue() {
+            return statusMsg;
+        }
+    }
 }

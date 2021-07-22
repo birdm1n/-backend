@@ -1,5 +1,6 @@
 package com.daema.core.scm.domain.payment;
 
+import com.daema.core.base.domain.common.BaseUserInfoEntity;
 import com.daema.core.scm.domain.appform.AppForm;
 import com.daema.core.scm.domain.enums.ScmEnum;
 import com.daema.core.scm.dto.PaymentDto;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity  //  aggregate ...
 @org.hibernate.annotations.Table(appliesTo = "payment", comment = "납부")
-public class Payment {
+public class Payment extends BaseUserInfoEntity {
 
 
     @Id

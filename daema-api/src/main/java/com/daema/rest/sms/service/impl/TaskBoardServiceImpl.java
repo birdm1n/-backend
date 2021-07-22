@@ -3,7 +3,6 @@ package com.daema.rest.sms.service.impl;
 import com.daema.core.scm.domain.appform.AppForm;
 import com.daema.core.scm.domain.taskboard.TaskBoard;
 import com.daema.core.scm.dto.request.MemoReqDto;
-import com.daema.core.scm.repository.impl.TaskBoardRepositoryImpl;
 import com.daema.core.scm.repository.util.AppFormRepository;
 import com.daema.core.scm.repository.util.TaskBoardRepository;
 import com.daema.rest.common.enums.ResponseCodeEnum;
