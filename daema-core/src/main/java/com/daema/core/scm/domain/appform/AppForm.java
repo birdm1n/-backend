@@ -1,9 +1,6 @@
 package com.daema.core.scm.domain.appform;
 
-import com.daema.core.base.domain.Members;
 import com.daema.core.base.domain.common.BaseEntity;
-import com.daema.core.commgmt.domain.OpenStore;
-import com.daema.core.commgmt.domain.Store;
 import com.daema.core.scm.domain.BasicInfo;
 import com.daema.core.scm.domain.customer.Customer;
 import com.daema.core.scm.domain.delivery.AppFormDelivery;
@@ -69,7 +66,7 @@ public class AppForm extends BaseEntity {
      */
     public static void updateAppForm(AppForm appForm, AppFormUpdateDto appFormUpdateDto) {
 
-        TaskBoard.update(appForm.getTaskBoard(), appFormUpdateDto.getTaskBoardDto());
+        TaskBoard.updateTaskMemos(appForm.getTaskBoard(), appFormUpdateDto.getTaskBoardDto());
 
         BasicInfo.update(appForm.getBasicInfo(), appFormUpdateDto.getBasicInfoDto());
 
@@ -83,6 +80,7 @@ public class AppForm extends BaseEntity {
 
     /**
      * 신청서 작성
+     *
      * @param appFormCreateDto
      * @return
      */
@@ -90,20 +88,12 @@ public class AppForm extends BaseEntity {
     public static AppForm create(AppFormCreateDto appFormCreateDto) {
 
         AppForm appForm = build(appFormCreateDto.getAppFormDto());
-
-        Customer customer = Customer.create(appFormCreateDto.getCustomerDto());
-        BasicInfo basicInfo = BasicInfo.create(appFormCreateDto.getBasicInfoDto());
-        TaskBoard taskBoard = TaskBoard.create(appFormCreateDto.getTaskBoardDto());
-        Payment payment = Payment.create(appFormCreateDto.getPaymentDto());
-        JoinInfo joinInfo = JoinInfo.create(appFormCreateDto.getJoinInfoDto());
-        AppFormDelivery appFormDelivery = AppFormDelivery.create(appForm, appFormCreateDto.getAppFormDeliveryDto());
-
-        appForm.setCustomer(customer);
-        appForm.setBasicInfo(basicInfo);
-        appForm.setTaskBoard(taskBoard);
-        appForm.setPayment(payment);
-        appForm.setJoinInfo(joinInfo);
-        appForm.setAppFormDelivery(appFormDelivery);
+        appForm.customer = Customer.create(appFormCreateDto.getCustomerDto());
+        appForm.basicInfo = BasicInfo.create(appFormCreateDto.getBasicInfoDto());
+        appForm.taskBoard = TaskBoard.create(appFormCreateDto.getTaskBoardDto());
+        appForm.payment = Payment.create(appFormCreateDto.getPaymentDto());
+        appForm.joinInfo = JoinInfo.create(appFormCreateDto.getJoinInfoDto());
+        appForm.appFormDelivery = AppFormDelivery.create(appForm, appFormCreateDto.getAppFormDeliveryDto());
 
         return appForm;
         /* AppForm.builder()
@@ -124,6 +114,7 @@ public class AppForm extends BaseEntity {
 
     /**
      * 신청서 조회
+     *
      * @param appForm
      * @return
      */

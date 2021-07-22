@@ -1,6 +1,7 @@
 package com.daema.core.scm.domain.taskboard;
 
 import com.daema.core.base.domain.common.BaseUserInfoEntity;
+import com.daema.core.scm.dto.InsertMemoReqDto;
 import com.daema.core.scm.dto.TaskBoardDto;
 import com.daema.core.scm.dto.TaskMemoDto;
 import com.daema.core.scm.dto.request.MemoReqDto;
@@ -31,6 +32,8 @@ public class TaskBoard extends BaseUserInfoEntity {
     @OneToMany(mappedBy = "taskBoard", cascade = CascadeType.ALL)
     private List<TaskMemo> taskMemos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "taskBoard", cascade = CascadeType.ALL)
+    private List<Memo> Memos = new ArrayList<>();
 
     public static TaskBoard build(TaskBoardDto taskBoardDto) {
         return TaskBoard.builder()
@@ -52,7 +55,7 @@ public class TaskBoard extends BaseUserInfoEntity {
         taskBoard.setTaskMemos(taskMemoList);
         return taskBoard;
     }
-    public static void update(TaskBoard taskBoard, MemoReqDto memoReqDto){
+    public static void updateTaskMemos(TaskBoard taskBoard, MemoReqDto memoReqDto){
         /*Long taskBoardId = taskBoard.getTaskBoardId();*/
         taskBoard.getTaskMemos().add(TaskMemo.builder()
                 .taskBoard(TaskBoard.builder()
@@ -65,7 +68,9 @@ public class TaskBoard extends BaseUserInfoEntity {
 
     }
 
-    public static void update(TaskBoard taskBoard, TaskBoardDto taskBoardDto) {
+
+
+    public static void updateTaskMemos(TaskBoard taskBoard, TaskBoardDto taskBoardDto) {
         Long taskUpdateBoardId = taskBoard.getTaskBoardId();
         List<TaskMemo> taskMemoList = taskBoard.getTaskMemos();
         List<TaskMemoDto> taskMemoDtoList = taskBoardDto.getTaskMemoDtoList();
@@ -101,5 +106,14 @@ public class TaskBoard extends BaseUserInfoEntity {
         return list;
     }
 
+
+    public static void updateMemo(TaskBoard taskBoard, InsertMemoReqDto memo){
+        /*Long taskBoardId = taskBoard.getTaskBoardId();*/
+        taskBoard.getMemos().add(Memo.builder()
+                .memoContents(memo.getMemoContents())
+                .category(memo.getCategory())
+                .build());
+
+    }
 }
 

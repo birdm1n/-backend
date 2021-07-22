@@ -2,6 +2,29 @@ package com.daema.core.scm.domain.enums;
 
 public enum ScmEnum {
     ;
+    public enum MemoCategory {
+        ALL("전체"),
+        GROUP("그룹"),
+        INDV("개인"),
+
+        ;
+        private final String statusMsg;
+
+        MemoCategory(String statusMsg) {
+            this.statusMsg = statusMsg;
+        }
+/*
+        @Override
+        public String getKey() {
+            return name();
+        }
+
+        @Override
+        public String getValue() {
+            return statusMsg;
+        }*/
+    }
+
 
    /* public enum TaskState{
 

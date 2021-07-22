@@ -25,7 +25,7 @@ public class TaskBoardServiceImpl implements TaskBoardService {
         AppForm appForm = appFormRepository.findById(memoReqDto.getAppFormId()).orElseGet(null);
         TaskBoard taskBoard = taskBoardRepository.findById(appForm.getTaskBoard().getTaskBoardId()).orElseGet(null);
 
-        TaskBoard.update(taskBoard, memoReqDto);
+        TaskBoard.updateTaskMemos(taskBoard, memoReqDto);
 
     return ResponseCodeEnum.OK;
     }
