@@ -2,8 +2,8 @@ package com.daema.domain;
 
 import com.daema.ApiApplication;
 import com.daema.DemoApplication;
-import com.daema.core.scm.domain.payment.Card;
-import com.daema.core.scm.domain.payment.Payment;
+import com.daema.core.scm.domain.payment.ApplicationPayment;
+import com.daema.core.scm.domain.payment.CardAttribute;
 import com.daema.core.scm.repository.util.PaymentRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TemplateUnitTest {
     Logger log = (Logger) LoggerFactory.getLogger(TemplateUnitTest.class);
 
-    private Payment payment;
+    private ApplicationPayment applicationPayment;
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -33,13 +33,13 @@ public class TemplateUnitTest {
     public void setUP() throws Exception {
 
 
-        payment = payment.builder()
+        applicationPayment = applicationPayment.builder()
                 .paymentId(1L)
                 .build();
 
-        payment.setCard(new Card());
+        applicationPayment.setCardAttribute(new CardAttribute());
 
-        paymentRepository.save(payment);
+        paymentRepository.save(applicationPayment);
     }
 
    /* @Autowired

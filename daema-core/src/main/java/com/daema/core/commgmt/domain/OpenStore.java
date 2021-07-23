@@ -1,7 +1,7 @@
 package com.daema.core.commgmt.domain;
 
 import com.daema.core.commgmt.dto.response.OpenStoreListDto;
-import com.daema.core.scm.domain.joininfo.JoinInfo;
+import com.daema.core.scm.domain.join.ApplicationJoin;
 import lombok.*;
 
 import javax.persistence.*;
@@ -107,7 +107,7 @@ public class OpenStore {
     @Column(name = "regi_datetime", columnDefinition = "DATETIME(6) comment '등록 일시'")
     private LocalDateTime regiDateTime;
     @OneToMany(mappedBy = "openStore")
-    private List<JoinInfo> joinInfoList = new ArrayList<>();
+    private List<ApplicationJoin> applicationJoinList = new ArrayList<>();
 
     @Builder
     public OpenStore(long openStoreId, long storeId, String openStoreName, Long telecom, String telecomName, String bizNo, String chargerName

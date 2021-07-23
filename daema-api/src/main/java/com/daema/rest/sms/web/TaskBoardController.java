@@ -1,15 +1,9 @@
 package com.daema.rest.sms.web;
 
-import com.daema.core.scm.domain.taskboard.TaskBoard;
-import com.daema.core.scm.dto.request.AppFormCreateDto;
-import com.daema.core.scm.dto.request.AppFormInquiryDto;
-import com.daema.core.scm.dto.request.AppFormUpdateDto;
 import com.daema.core.scm.dto.request.MemoReqDto;
-import com.daema.core.scm.dto.response.AppFormRepDto;
 import com.daema.rest.common.enums.ResponseCodeEnum;
 import com.daema.rest.common.handler.ResponseHandler;
 import com.daema.rest.common.io.response.CommonResponse;
-import com.daema.rest.sms.service.util.AppFormService;
 import com.daema.rest.sms.service.util.TaskBoardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +24,7 @@ public class TaskBoardController {
 
     }
 
-    @ApiOperation(value = "메모 작성", notes = "신청서를 작성 완료 처리 합니다.")
+    @ApiOperation(value = "메모 작성", notes = "메모 작성 완료 처리 합니다.")
     @PostMapping("/insertTaskMemo")
     public ResponseEntity<CommonResponse<Void>> insertTaskMemo(@ApiParam(value = "메모 작성 처리", required = true) @RequestBody MemoReqDto memoReqDto) {
 

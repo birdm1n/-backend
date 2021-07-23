@@ -21,7 +21,7 @@
         <mxCell id="I1sewo5vSoxkKhjDisVo-6" value="-업무진행상태&#xa;&#xa;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-5">
           <mxGeometry y="30" width="160" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="I1sewo5vSoxkKhjDisVo-7" value="Customer" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+        <mxCell id="I1sewo5vSoxkKhjDisVo-7" value="ApplicationCustomer" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
           <mxGeometry x="400" width="160" height="190" as="geometry" />
         </mxCell>
         <mxCell id="I1sewo5vSoxkKhjDisVo-8" value="-고객명&#xa;-주민등록번호&#xa;-요금감면&#xa;-휴대폰번호&#xa;-비상연락망 nullable&#xa;-이메일 nullable&#xa;-주소&#xa;-상세주소&#xa;-고객유형" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-7">
@@ -51,7 +51,7 @@
         <mxCell id="I1sewo5vSoxkKhjDisVo-3" value="-유저유형&#xa;-이름&#xa;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-2">
           <mxGeometry y="30" width="160" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="I1sewo5vSoxkKhjDisVo-7" value="Customer aggregate" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
+        <mxCell id="I1sewo5vSoxkKhjDisVo-7" value="ApplicationCustomer aggregate" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;" vertex="1" parent="1">
           <mxGeometry x="580" y="-50" width="160" height="185" as="geometry" />
         </mxCell>
         <mxCell id="I1sewo5vSoxkKhjDisVo-8" value="-고객명&#xa;-주민등록번호&#xa;-요금감면&#xa;-휴대폰번호&#xa;-비상연락망 nullable&#xa;-이메일 nullable&#xa;-주소&#xa;-상세주소&#xa;-고객유형" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" vertex="1" parent="I1sewo5vSoxkKhjDisVo-7">

@@ -1,7 +1,7 @@
 package com.daema.core.commgmt.domain;
 
 import com.daema.core.commgmt.domain.attr.NetworkAttribute;
-import com.daema.core.scm.domain.joininfo.JoinInfo;
+import com.daema.core.scm.domain.join.ApplicationJoin;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -50,7 +50,7 @@ public class Goods extends GoodsBase{
     private List<GoodsOption> optionList;
 
     @OneToOne(mappedBy = "goods")
-    private JoinInfo join;
+    private ApplicationJoin join;
     @Builder
     public Goods(long goodsId, String goodsName, String modelName, Long maker, Long telecom, Long network
             , String originKey, LocalDateTime regiDateTime, String useYn, String matchingYn, String delYn, String makerName, String networkName, String telecomName){
